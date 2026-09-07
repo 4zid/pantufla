@@ -35,13 +35,19 @@ una pantalla con los pasos que faltan en vez de romper.
 
 ### Sanity
 
-1. Creá un proyecto en [sanity.io/manage](https://www.sanity.io/manage) con el
-   dataset `production`.
-2. Pegá el Project ID en `NEXT_PUBLIC_SANITY_PROJECT_ID`.
-3. En **API → CORS origins**, agregá `http://localhost:3000` y tu dominio, los dos
-   con *Allow credentials*.
-4. En **API → Tokens**, creá uno con permiso *Editor* y pegalo en
-   `SANITY_API_WRITE_TOKEN`. Solo se usa para guardar los briefs del formulario.
+El proyecto ya existe: **`6zkp4mb1`**, dataset `production`. El ID vive en
+`sanity/env.ts` porque es público, así que leer contenido y abrir `/studio`
+funciona sin configurar nada.
+
+Lo único que hace falta cargar es el token de escritura, que se usa **solo** para
+guardar los briefs que llegan del formulario:
+
+1. En [sanity.io/manage](https://www.sanity.io/manage) → API → Tokens, creá uno
+   con permiso *Editor*.
+2. Cargalo como `SANITY_API_WRITE_TOKEN` en Vercel y en tu `.env.local`.
+
+Si agregás un dominio nuevo, sumalo en **API → CORS origins** con *Allow
+credentials* tildado, o `/studio` no va a abrir ahí.
 
 El panel queda en `/studio`, dentro del mismo deploy. No hay que hostearlo aparte.
 
@@ -55,8 +61,12 @@ guardado en Sanity, y al revés. Solo devuelve error si no hay ninguno de los do
 
 ### Vercel
 
-Importá el repo, cargá las mismas variables de entorno y listo. `NEXT_PUBLIC_SITE_URL`
-tiene que apuntar al dominio final para que el sitemap y los metadatos salgan bien.
+El repo ya está enlazado: cada push a la branch de producción dispara un deploy.
+
+Las únicas variables que hay que cargar en el panel de Vercel son los secretos:
+`SANITY_API_WRITE_TOKEN` y, si vas a usar mail, las de Resend. Sumá también
+`NEXT_PUBLIC_SITE_URL` con el dominio final para que el sitemap y los metadatos
+salgan bien.
 
 ---
 
