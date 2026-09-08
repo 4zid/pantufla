@@ -2,6 +2,7 @@ import Image from "next/image";
 
 import { urlForImage } from "@/sanity/image";
 import type { SanityTestimonial } from "@/sanity/types";
+import { Reveal } from "@/components/motion/reveal";
 import { Section, SectionHead } from "@/components/ui/section";
 
 export function Testimonials({ items }: { items: SanityTestimonial[] }) {
@@ -14,7 +15,7 @@ export function Testimonials({ items }: { items: SanityTestimonial[] }) {
         title="Lo que dicen los que ya pasaron por el proceso."
       />
 
-      <div className="mt-14 grid gap-6 md:grid-cols-3">
+      <Reveal stagger className="mt-14 grid gap-6 md:grid-cols-3">
         {items.slice(0, 3).map((item) => {
           const avatar = urlForImage(item.avatar)?.width(96).height(96).url();
           return (
@@ -49,7 +50,7 @@ export function Testimonials({ items }: { items: SanityTestimonial[] }) {
             </figure>
           );
         })}
-      </div>
+      </Reveal>
     </Section>
   );
 }

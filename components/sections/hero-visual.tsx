@@ -1,17 +1,106 @@
+"use client";
+
+import { useGSAP } from "@gsap/react";
+import { useRef } from "react";
+
+import { ease, gsap, registerGsap } from "@/lib/motion";
+
 /**
- * Composición del hero: una ventana de navegador con una vista previa
- * abstracta del sitio, y encima la tarjeta de presupuesto que resume la
- * promesa comercial (alcance, plazo y precio cerrados).
- * Todo es HTML y CSS: no hay imágenes que cargar.
+ * Escena de producto del hero: una ventana de navegador que se arma sola al
+ * cargar y una tarjeta de presupuesto que entra girando hasta su lugar. Todo
+ * HTML y CSS, sin imágenes.
  */
 export function HeroVisual() {
+  const scope = useRef<HTMLDivElement>(null);
+
+  useGSAP(
+    () => {
+      registerGsap();
+      const root = scope.current;
+      if (!root) return;
+
+      const mm = gsap.matchMedia();
+
+      mm.add(
+        {
+          motion: "(prefers-reduced-motion: no-preference)",
+          reduced: "(prefers-reduced-motion: reduce)",
+        },
+        (context) => {
+          const { reduced } = context.conditions as { reduced: boolean };
+          const q = gsap.utils.selector(root);
+
+          if (reduced) {
+            gsap.set(q("[data-anim]"), { opacity: 1, y: 0, x: 0, scale: 1 });
+            gsap.set(q("[data-quote]"), { opacity: 1, rotate: -2.5, x: 0, y: 0 });
+            return;
+          }
+
+          const tl = gsap.timeline({ delay: 0.35 });
+
+          tl.from(q("[data-window]"), {
+            opacity: 0,
+            y: 60,
+            scale: 0.97,
+            duration: 1.1,
+            ease,
+          })
+            .from(
+              q("[data-anim]"),
+              { opacity: 0, y: 18, duration: 0.6, ease, stagger: 0.07 },
+              "-=0.55",
+            )
+            .from(
+              q("[data-quote]"),
+              {
+                opacity: 0,
+                x: -40,
+                y: 30,
+                rotate: -14,
+                duration: 0.9,
+                ease: "back.out(1.4)",
+              },
+              "-=0.35",
+            );
+
+          // Parallax suave: la ventana y la tarjeta se separan al hacer scroll.
+          gsap.to(q("[data-window]"), {
+            y: -50,
+            ease: "none",
+            scrollTrigger: {
+              trigger: root,
+              start: "top bottom",
+              end: "bottom top",
+              scrub: 0.6,
+            },
+          });
+
+          gsap.to(q("[data-quote]"), {
+            y: 30,
+            ease: "none",
+            scrollTrigger: {
+              trigger: root,
+              start: "top bottom",
+              end: "bottom top",
+              scrub: 0.6,
+            },
+          });
+        },
+      );
+
+      return () => mm.revert();
+    },
+    { scope },
+  );
+
   return (
-    <div className="relative mt-16 md:mt-20">
+    <div ref={scope} className="relative mt-16 md:mt-20">
       <div className="shell">
         <div className="relative mx-auto max-w-5xl">
-          {/* Ventana */}
-          <div className="overflow-hidden rounded-t-panel border border-line-strong border-b-0 bg-card shadow-[0_-1px_0_rgba(255,255,255,0.8)_inset,0_40px_80px_-40px_rgba(35,28,18,0.28)]">
-            {/* Chrome */}
+          <div
+            data-window
+            className="overflow-hidden rounded-t-panel border border-line-strong border-b-0 bg-card shadow-[0_-1px_0_rgba(255,255,255,0.8)_inset,0_40px_80px_-40px_rgba(35,28,18,0.28)]"
+          >
             <div className="flex items-center gap-3 border-b border-line bg-paper-alt/70 px-4 py-3">
               <div className="flex gap-1.5">
                 <span className="h-2.5 w-2.5 rounded-full bg-line-strong" />
@@ -32,34 +121,36 @@ export function HeroVisual() {
               <div className="w-12" />
             </div>
 
-            {/* Vista previa del sitio */}
             <div className="relative h-[300px] px-6 pt-7 sm:h-[380px] sm:px-10 md:h-[440px] md:px-14">
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
+                <div data-anim className="flex items-center gap-2">
                   <div className="h-4 w-4 rounded-[5px] bg-ink" />
                   <div className="h-2 w-14 rounded-full bg-ink/85" />
                 </div>
-                <div className="hidden gap-5 sm:flex">
+                <div data-anim className="hidden gap-5 sm:flex">
                   <div className="h-1.5 w-9 rounded-full bg-line-strong" />
                   <div className="h-1.5 w-12 rounded-full bg-line-strong" />
                   <div className="h-1.5 w-8 rounded-full bg-line-strong" />
                 </div>
-                <div className="h-6 w-20 rounded-full bg-ink" />
+                <div data-anim className="h-6 w-20 rounded-full bg-ink" />
               </div>
 
               <div className="mt-12 grid gap-8 sm:mt-16 md:grid-cols-[1.15fr_1fr] md:items-center">
                 <div>
-                  <div className="h-1.5 w-24 rounded-full bg-clay/45" />
-                  <p className="mt-4 text-[1.6rem] font-semibold leading-[1.05] tracking-[-0.03em] text-ink sm:text-[2.1rem] md:text-[2.5rem]">
+                  <div data-anim className="h-1.5 w-24 rounded-full bg-clay/45" />
+                  <p
+                    data-anim
+                    className="mt-4 text-[1.6rem] font-semibold leading-[1.05] tracking-[-0.03em] text-ink sm:text-[2.1rem] md:text-[2.5rem]"
+                  >
                     Arquitectura
                     <br />
                     que se habita.
                   </p>
-                  <div className="mt-5 space-y-2">
+                  <div data-anim className="mt-5 space-y-2">
                     <div className="h-1.5 w-full max-w-[280px] rounded-full bg-line-strong" />
                     <div className="h-1.5 w-full max-w-[230px] rounded-full bg-line-strong" />
                   </div>
-                  <div className="mt-6 flex gap-2.5">
+                  <div data-anim className="mt-6 flex gap-2.5">
                     <div className="h-8 w-28 rounded-full bg-ink" />
                     <div className="h-8 w-24 rounded-full border border-line-strong" />
                   </div>
@@ -67,6 +158,7 @@ export function HeroVisual() {
 
                 <div className="hidden gap-3 md:grid md:grid-cols-2">
                   <div
+                    data-anim
                     className="h-40 rounded-xl"
                     style={{
                       background:
@@ -75,24 +167,30 @@ export function HeroVisual() {
                   />
                   <div className="grid gap-3">
                     <div
+                      data-anim
                       className="h-[74px] rounded-xl"
                       style={{
                         background:
                           "linear-gradient(155deg, #e6cfc3 0%, #c98d70 100%)",
                       }}
                     />
-                    <div className="h-[74px] rounded-xl border border-line bg-paper-alt" />
+                    <div
+                      data-anim
+                      className="h-[74px] rounded-xl border border-line bg-paper-alt"
+                    />
                   </div>
                 </div>
               </div>
 
-              {/* Desvanecido inferior para que la ventana se funda con la página */}
               <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-white to-transparent" />
             </div>
           </div>
 
-          {/* Tarjeta de presupuesto */}
-          <div className="absolute -bottom-6 left-2 w-[260px] rotate-[-2.5deg] rounded-card border border-line-strong bg-card p-4 shadow-[0_24px_50px_-24px_rgba(35,28,18,0.35)] sm:-bottom-8 sm:left-6 sm:w-[290px] md:-bottom-10 md:left-0">
+          <div
+            data-quote
+            style={{ rotate: "-2.5deg" }}
+            className="absolute -bottom-6 left-2 w-[260px] rounded-card border border-line-strong bg-card p-4 shadow-[0_24px_50px_-24px_rgba(35,28,18,0.35)] sm:-bottom-8 sm:left-6 sm:w-[290px] md:-bottom-10 md:left-0"
+          >
             <div className="flex items-center justify-between border-b border-line pb-3">
               <p className="text-[0.72rem] font-semibold uppercase tracking-[0.08em] text-ink-faint">
                 Propuesta

@@ -87,14 +87,17 @@ export const approach = {
   pillars: [
     {
       title: "Alcance cerrado antes de empezar",
+      art: "precio",
       body: "Elegís un plan y sabés exactamente qué entra, qué no y cuánto sale. Si aparece algo fuera de alcance, se cotiza aparte y lo decidís vos.",
     },
     {
       title: "Ritmo corto y fechas visibles",
+      art: "reloj",
       body: "Trabajamos en bloques de días, no de meses. Cada etapa tiene una fecha y una sola ronda de cambios para que el proyecto no se enfríe.",
     },
     {
       title: "Te lo entregamos andando",
+      art: "llaves",
       body: "El sitio se publica en tu cuenta, con tu dominio y un panel para que edites los textos, las fotos y las notas sin depender de nosotros.",
     },
   ],
@@ -113,6 +116,7 @@ export const process = {
     {
       number: "01",
       name: "Brief",
+      art: "brief",
       when: "Día 1",
       body: "Completás un formulario de cinco minutos con qué hacés, a quién le vendés y qué necesitás que el sitio consiga. Si el proyecto encaja, en 24 horas tenés alcance, precio y fecha de entrega por escrito.",
       deliverable: "Propuesta cerrada",
@@ -121,6 +125,7 @@ export const process = {
     {
       number: "02",
       name: "Estructura y diseño",
+      art: "diseno",
       when: "Días 2 a 6",
       body: "Definimos qué secciones van, en qué orden y qué dice cada una. Sobre esa base diseñamos el sitio completo en desktop y mobile. Lo revisás y anotás cambios en un solo lugar.",
       deliverable: "Diseño final aprobado",
@@ -129,6 +134,7 @@ export const process = {
     {
       number: "03",
       name: "Desarrollo",
+      art: "desarrollo",
       when: "Días 7 a 13",
       body: "Construimos el sitio, cargamos tu contenido real y lo probamos en todos los tamaños de pantalla. Configuramos el panel de edición, la analítica y el formulario de contacto.",
       deliverable: "Sitio en un link de prueba",
@@ -137,6 +143,7 @@ export const process = {
     {
       number: "04",
       name: "Publicación",
+      art: "llaves",
       when: "Días 14 y 15",
       body: "Publicamos en tu dominio, te pasamos los accesos y grabamos un video corto mostrándote cómo editar cada cosa. Después quedan quince días de ajustes finos incluidos.",
       deliverable: "Sitio online y las llaves",

@@ -111,6 +111,32 @@ misma mecánica de descuento, aplicada a algo real, y alineada con cobrar rápid
 
 ---
 
+## Movimiento
+
+El sitio usa GSAP con ScrollTrigger. Las primitivas están en `components/motion/`
+y se combinan en las secciones:
+
+| Componente | Qué hace |
+| --- | --- |
+| `Reveal` | Aparición al entrar en pantalla. Con `stagger` escalona los hijos directos. |
+| `SplitHeading` | Titular que sube palabra por palabra detrás de una máscara. |
+| `Counter` | Cifra que rueda hasta su valor. Se usa en los precios al cambiar el toggle. |
+| `Magnetic` | El botón sigue apenas al cursor. Solo con puntero fino. |
+| `DrawnLineArt` | Dibuja la ilustración trazo por trazo al entrar en pantalla. |
+
+**Dos reglas que sostienen todo esto:**
+
+1. Nada se oculta desde CSS a secas. Un script inline agrega `.motion-ready` a
+   `<html>` antes del primer pintado, y recién entonces el CSS oculta lo que se
+   va a animar. Si el JS no corre, el sitio queda completo y visible.
+2. Cada animación pasa por `gsap.matchMedia()`. Con `prefers-reduced-motion:
+   reduce` no se anima nada y todo aparece en su lugar final.
+
+Las dos están verificadas: con reduced-motion y con JavaScript desactivado,
+cero elementos quedan invisibles.
+
+---
+
 ## Decisiones de diseño
 
 - **Una sola familia tipográfica** (Schibsted Grotesk), trabajada por peso, tamaño
@@ -120,6 +146,15 @@ misma mecánica de descuento, aplicada a algo real, y alineada con cobrar rápid
 - Bandas oscuras en Proceso y en el cierre para marcar el ritmo de lectura.
 - Sin degradados en texto, sin vidrio esmerilado, sin emoji como iconos: los
   iconos son SVG propios en `components/ui/icons.tsx`.
+- La marca en chico delante de cada volanta es la firma que se repite en todo el
+  sitio. Es el rol que en el ref de GSAP cumplen los `{ }`, resuelto con algo
+  propio en vez de prestado.
+- Los assets son código, no imágenes: los blobs (`components/art/blob.tsx`) son
+  SVG con gradientes multi-stop y luz interna, sin `box-shadow`; la ilustración
+  (`components/art/line-art.tsx`) es un set de trazos con la misma mano.
+- Del ref se tomó el lenguaje, no la paleta: tipografía como imagen, movimiento,
+  contención suelta de las formas. El papel cálido se mantiene porque es lo que
+  distingue a Pantufla del resto de los estudios.
 
 ---
 

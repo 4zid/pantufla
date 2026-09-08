@@ -1,4 +1,5 @@
 import { problem } from "@/content/site";
+import { Reveal } from "@/components/motion/reveal";
 import { Section, SectionHead } from "@/components/ui/section";
 
 export function Problem() {
@@ -10,9 +11,15 @@ export function Problem() {
         lead={problem.lead}
       />
 
-      <div className="mt-14 grid gap-px overflow-hidden rounded-panel border border-line bg-line sm:grid-cols-2">
+      <Reveal
+        stagger
+        className="mt-14 grid gap-px overflow-hidden rounded-panel border border-line bg-line sm:grid-cols-2"
+      >
         {problem.items.map((item, i) => (
-          <div key={item.title} className="bg-paper p-7 md:p-9">
+          <div
+            key={item.title}
+            className="group bg-paper p-7 transition-colors duration-300 hover:bg-card md:p-9"
+          >
             <span className="text-[0.8rem] font-semibold tabular-nums text-clay">
               {String(i + 1).padStart(2, "0")}
             </span>
@@ -24,7 +31,7 @@ export function Problem() {
             </p>
           </div>
         ))}
-      </div>
+      </Reveal>
     </Section>
   );
 }

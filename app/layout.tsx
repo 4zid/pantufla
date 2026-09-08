@@ -52,6 +52,18 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es">
+      <head>
+        {/*
+          Marca el documento antes del primer pintado para que el CSS pueda
+          ocultar lo que se va a animar. Si el JS está desactivado la clase
+          nunca se agrega y el contenido queda visible.
+        */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `document.documentElement.classList.add("motion-ready")`,
+          }}
+        />
+      </head>
       <body className="min-h-dvh antialiased">
         <a
           href="#contenido"

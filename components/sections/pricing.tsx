@@ -3,6 +3,8 @@
 import { useId, useState } from "react";
 
 import { pricing, type BillingMode } from "@/content/site";
+import { Counter } from "@/components/motion/counter";
+import { Reveal } from "@/components/motion/reveal";
 import { ButtonLink } from "@/components/ui/button";
 import { CheckIcon, MinusIcon } from "@/components/ui/icons";
 import { Section, SectionHead } from "@/components/ui/section";
@@ -38,9 +40,11 @@ function PlanPrice({ price, mode }: { price: Price; mode: BillingMode }) {
       {mode === "once" ? (
         <>
           <div className="flex items-baseline gap-2">
-            <span className="text-[2.4rem] font-semibold leading-none tracking-[-0.035em]">
-              ${money.format(price.once)}
-            </span>
+            <Counter
+              value={price.once}
+              prefix="$"
+              className="text-[2.4rem] font-semibold leading-none tracking-[-0.035em]"
+            />
             <span className="text-[0.95rem] text-ink-faint line-through">
               ${money.format(total)}
             </span>
@@ -52,9 +56,11 @@ function PlanPrice({ price, mode }: { price: Price; mode: BillingMode }) {
       ) : (
         <>
           <div className="flex items-baseline gap-1.5">
-            <span className="text-[2.4rem] font-semibold leading-none tracking-[-0.035em]">
-              ${money.format(price.split)}
-            </span>
+            <Counter
+              value={price.split}
+              prefix="$"
+              className="text-[2.4rem] font-semibold leading-none tracking-[-0.035em]"
+            />
             <span className="text-[0.95rem] text-ink-soft">
               × {price.splitCount}
             </span>
@@ -99,7 +105,7 @@ export function Pricing() {
                 aria-checked={active}
                 onClick={() => setMode(value)}
                 className={cn(
-                  "flex flex-1 items-center justify-center gap-2 whitespace-nowrap rounded-full px-3.5 py-2.5 text-[0.85rem] font-medium transition-colors duration-200 sm:flex-none sm:px-4 sm:text-[0.9rem]",
+                  "flex flex-1 items-center justify-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-2.5 text-[0.8rem] font-medium transition-colors duration-200 sm:flex-none sm:gap-2 sm:px-4 sm:text-[0.9rem]",
                   active ? "bg-ink text-paper" : "text-ink-soft hover:text-ink",
                 )}
               >
@@ -121,7 +127,7 @@ export function Pricing() {
         </div>
       </div>
 
-      <div className="mt-14 grid gap-6 lg:grid-cols-3 lg:items-start">
+      <Reveal stagger className="mt-14 grid gap-6 lg:grid-cols-3 lg:items-start">
         {pricing.plans.map((plan) => {
           const featured = plan.featured;
           return (
@@ -131,7 +137,7 @@ export function Pricing() {
                 "relative flex h-full flex-col rounded-panel border p-7 md:p-8",
                 featured
                   ? "border-ink bg-card shadow-[0_30px_60px_-40px_rgba(35,28,18,0.45)] lg:-mt-4 lg:pb-10"
-                  : "border-line bg-card/60",
+                  : "border-line bg-card/60 hover:border-line-strong",
               )}
             >
               {featured && "badge" in plan && plan.badge ? (
@@ -191,7 +197,7 @@ export function Pricing() {
             </div>
           );
         })}
-      </div>
+      </Reveal>
 
       {/* Garantía */}
       <div className="mt-10 flex flex-col gap-3 rounded-panel border border-line bg-paper-alt p-6 sm:flex-row sm:items-center sm:gap-5 md:p-7">

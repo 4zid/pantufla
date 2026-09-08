@@ -28,10 +28,16 @@
   --radius-card: 16px;
   --radius-panel: 24px;
 
-  --text-display: clamp(2.75rem, 7.2vw, 5.25rem);
-  --text-display--line-height: 0.94;
-  --text-display--letter-spacing: -0.035em;
+  --text-display: clamp(2.9rem, 9.4vw, 8.25rem);
+  --text-display--line-height: 0.9;
+  --text-display--letter-spacing: -0.042em;
   --text-display--font-weight: 600;
+
+  /* Números gigantes del proceso: el texto como imagen. */
+  --text-numeral: clamp(3.25rem, 7.5vw, 6.25rem);
+  --text-numeral--line-height: 0.8;
+  --text-numeral--letter-spacing: -0.05em;
+  --text-numeral--font-weight: 600;
 
   --text-h2: clamp(2rem, 4.2vw, 3.25rem);
   --text-h2--line-height: 1.02;
@@ -120,6 +126,43 @@
     height: 1px;
     background-color: var(--color-line);
   }
+}
+
+
+/* ------------------------------------------------------------------
+   Movimiento
+   Los elementos animados se ocultan SOLO cuando <html> tiene .motion-ready,
+   clase que pone un script inline antes del primer pintado. Con eso no hay
+   destello de contenido, y si el JS nunca corre queda todo visible.
+   ------------------------------------------------------------------ */
+
+.motion-ready [data-reveal],
+.motion-ready [data-reveal-group] > * {
+  opacity: 0;
+}
+
+.motion-ready [data-split] [data-word] {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .motion-ready [data-reveal],
+  .motion-ready [data-reveal-group] > *,
+  .motion-ready [data-split] [data-word] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* Deriva lenta de los blobs. Se apaga sola con reduced-motion (ver abajo). */
+@keyframes drift {
+  0%   { transform: translate3d(0, 0, 0) scale(1); }
+  50%  { transform: translate3d(2%, -3%, 0) scale(1.05); }
+  100% { transform: translate3d(0, 0, 0) scale(1); }
+}
+
+.drift {
+  animation: drift 18s ease-in-out infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
