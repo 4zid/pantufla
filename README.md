@@ -105,11 +105,22 @@ que es el que mejor rinde en sitios de servicios:
    mantenimiento, formas de pago, uso de IA.
 8. **Cierre** — un solo CTA.
 
-El hero es una sola pantalla: gradiente de los cuatro colores muy desenfocado,
-titular centrado, y cuatro tarjetas de producto flotando recortadas por los
-bordes. Cada tarjeta muestra algo real —la propuesta, el sitio publicado, la
-entrega, la consulta que entra— y lleva uno de los colores. Abajo de `lg` se
-ocultan: en pantallas chicas le compiten al titular.
+El hero cuenta el resultado, no el proceso. Sobre un gradiente de los cuatro
+colores flotan cuatro paneles —el sitio publicado, las visitas subiendo, una
+venta nueva y la conversación de aprobación— y al bajar **convergen en el
+dashboard** que se arma debajo del título: es lo que el cliente tiene un mes
+después de la entrega.
+
+El vuelo funciona así: cada hueco del dashboard mide **exactamente lo mismo** que
+su panel, así que converger es una traslación pura, sin escalado ni deformación.
+Los paneles y los huecos viven en el mismo contenedor, de modo que la diferencia
+entre sus rectángulos no depende del scroll y se puede recalcular en cada
+`refresh`. La colocación en la grilla va explícita (`col-start` / `row-start`):
+con colocación automática, los paneles que ocupan dos filas empujan al resto.
+
+Arriba de `lg` la sección mide dos pantallas y el escenario queda fijo, que es
+lo que da el recorrido. Abajo de `lg` no hay vuelo: el dashboard se muestra ya
+armado debajo del título.
 
 El toggle de precios no es mensual/anual, porque el estudio no vende una
 suscripción. Ofrece **pago único con 15% de descuento** contra **dos pagos**: la

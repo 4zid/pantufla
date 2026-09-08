@@ -40,9 +40,9 @@ export const hero = {
   primary: { label: "Empezar un proyecto", href: "/contacto" },
   secondary: { label: "Ver planes y precios", href: "/#planes" },
   proof: [
-    "Precio cerrado desde el día uno",
-    "Primera versión de diseño en 5 días",
-    "El sitio y el dominio quedan a tu nombre",
+    "Precio cerrado",
+    "Primera versión en 5 días",
+    "El sitio queda a tu nombre",
   ],
 } as const;
 

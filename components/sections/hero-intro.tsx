@@ -7,7 +7,6 @@ import { hero } from "@/content/site";
 import { Magnetic } from "@/components/motion/magnetic";
 import { SplitHeading } from "@/components/motion/split-heading";
 import { ButtonLink } from "@/components/ui/button";
-import { CheckIcon } from "@/components/ui/icons";
 import { ease, gsap, registerGsap } from "@/lib/motion";
 
 export function HeroIntro() {
@@ -35,13 +34,6 @@ export function HeroIntro() {
             return;
           }
 
-          gsap.from(q("[data-badge]"), {
-            opacity: 0,
-            y: 12,
-            duration: 0.7,
-            ease,
-          });
-
           gsap.fromTo(
             targets,
             { opacity: 0, y: 20 },
@@ -65,30 +57,15 @@ export function HeroIntro() {
   return (
     <div ref={scope} className="shell relative z-10">
       <div className="mx-auto max-w-3xl text-center">
-        <p
-          data-badge
-          className="inline-flex max-w-full items-center gap-2 rounded-full border border-line-strong bg-card px-3.5 py-1.5 text-[0.82rem] font-medium text-ink-soft"
-        >
-          <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-aqua-deep" />
-          <span className="whitespace-nowrap">{hero.badge}</span>
-          <span
-            aria-hidden
-            className="hidden h-3 w-px bg-line-strong sm:block"
-          />
-          <span className="hidden whitespace-nowrap text-ink-faint sm:inline">
-            {hero.badgeNote}
-          </span>
-        </p>
-
         <SplitHeading
           as="h1"
           text={hero.title}
-          delay={0.18}
+          delay={0.1}
           immediate
-          className="mt-7 text-display"
+          className="text-display"
         />
 
-        <p data-reveal className="mx-auto mt-7 max-w-xl text-lead text-ink-soft">
+        <p data-reveal className="mx-auto mt-6 max-w-xl text-lead text-ink-soft">
           {hero.lead}
         </p>
 
@@ -117,14 +94,16 @@ export function HeroIntro() {
 
         <ul
           data-reveal
-          className="mx-auto mt-9 flex max-w-3xl flex-col items-center justify-center gap-x-7 gap-y-2.5 sm:flex-row sm:flex-wrap"
+          className="mx-auto mt-7 flex max-w-3xl flex-wrap items-center justify-center gap-y-1.5 text-[0.85rem] text-ink-faint"
         >
-          {hero.proof.map((item) => (
-            <li
-              key={item}
-              className="flex items-center gap-2 text-[0.88rem] text-ink-soft"
-            >
-              <CheckIcon className="h-3.5 w-3.5 shrink-0 text-aqua-deep" />
+          {hero.proof.map((item, i) => (
+            <li key={item} className="flex items-center">
+              {i > 0 ? (
+                <span
+                  aria-hidden
+                  className="mx-3 h-3 w-px bg-line-strong sm:mx-4"
+                />
+              ) : null}
               {item}
             </li>
           ))}
