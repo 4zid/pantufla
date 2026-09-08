@@ -68,13 +68,13 @@ export function Faq() {
                       aria-controls={`faq-panel-${i}`}
                       className="group flex w-full items-start justify-between gap-6 py-5 text-left"
                     >
-                      <span className="text-[1.02rem] font-medium leading-snug tracking-[-0.015em] transition-colors group-hover:text-clay">
+                      <span className="text-[1.02rem] font-medium leading-snug tracking-[-0.015em] transition-colors group-hover:text-aqua-deep">
                         {item.q}
                       </span>
                       <PlusIcon
                         className={cn(
                           "mt-1 h-4 w-4 shrink-0 text-ink-faint transition-transform duration-300",
-                          isOpen && "rotate-45 text-clay",
+                          isOpen && "rotate-45 text-aqua-deep",
                         )}
                       />
                     </button>

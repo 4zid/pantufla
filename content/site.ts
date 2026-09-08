@@ -87,16 +87,19 @@ export const approach = {
   pillars: [
     {
       title: "Alcance cerrado antes de empezar",
+      tone: "aqua",
       art: "precio",
       body: "Elegís un plan y sabés exactamente qué entra, qué no y cuánto sale. Si aparece algo fuera de alcance, se cotiza aparte y lo decidís vos.",
     },
     {
       title: "Ritmo corto y fechas visibles",
+      tone: "rosa",
       art: "reloj",
       body: "Trabajamos en bloques de días, no de meses. Cada etapa tiene una fecha y una sola ronda de cambios para que el proyecto no se enfríe.",
     },
     {
       title: "Te lo entregamos andando",
+      tone: "verde",
       art: "llaves",
       body: "El sitio se publica en tu cuenta, con tu dominio y un panel para que edites los textos, las fotos y las notas sin depender de nosotros.",
     },
@@ -117,6 +120,7 @@ export const process = {
       number: "01",
       name: "Brief",
       art: "brief",
+      tone: "aqua",
       when: "Día 1",
       body: "Completás un formulario de cinco minutos con qué hacés, a quién le vendés y qué necesitás que el sitio consiga. Si el proyecto encaja, en 24 horas tenés alcance, precio y fecha de entrega por escrito.",
       deliverable: "Propuesta cerrada",
@@ -126,6 +130,7 @@ export const process = {
       number: "02",
       name: "Estructura y diseño",
       art: "diseno",
+      tone: "rosa",
       when: "Días 2 a 6",
       body: "Definimos qué secciones van, en qué orden y qué dice cada una. Sobre esa base diseñamos el sitio completo en desktop y mobile. Lo revisás y anotás cambios en un solo lugar.",
       deliverable: "Diseño final aprobado",
@@ -135,6 +140,7 @@ export const process = {
       number: "03",
       name: "Desarrollo",
       art: "desarrollo",
+      tone: "verde",
       when: "Días 7 a 13",
       body: "Construimos el sitio, cargamos tu contenido real y lo probamos en todos los tamaños de pantalla. Configuramos el panel de edición, la analítica y el formulario de contacto.",
       deliverable: "Sitio en un link de prueba",
@@ -144,6 +150,7 @@ export const process = {
       number: "04",
       name: "Publicación",
       art: "llaves",
+      tone: "miel",
       when: "Días 14 y 15",
       body: "Publicamos en tu dominio, te pasamos los accesos y grabamos un video corto mostrándote cómo editar cada cosa. Después quedan quince días de ajustes finos incluidos.",
       deliverable: "Sitio online y las llaves",
@@ -174,6 +181,7 @@ export const pricing = {
   plans: [
     {
       id: "landing",
+      tone: "aqua",
       name: "Landing",
       summary: "Una página que explica lo que hacés y te trae consultas.",
       bestFor: "Lanzamientos, servicios puntuales y campañas.",
@@ -193,6 +201,7 @@ export const pricing = {
     },
     {
       id: "sitio",
+      tone: "rosa",
       name: "Sitio",
       summary: "Tu sitio completo con un panel para que lo edites vos.",
       bestFor: "Estudios, agencias, clínicas, marcas y productos.",
@@ -214,6 +223,7 @@ export const pricing = {
     },
     {
       id: "medida",
+      tone: "verde",
       name: "A medida",
       summary: "Cuando el proyecto no entra en una caja.",
       bestFor: "E-commerce, plataformas y productos con lógica propia.",

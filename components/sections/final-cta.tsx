@@ -10,12 +10,12 @@ export function FinalCta() {
   return (
     <Section tone="deep" className="overflow-hidden py-24 md:py-32">
       <Blob
-        tone="clay"
+        tone="aqua"
         shape="dome"
         className="pointer-events-none absolute -left-16 top-1/2 hidden h-56 w-56 -translate-y-1/2 opacity-30 blur-[2px] lg:block"
       />
       <Blob
-        tone="dusk"
+        tone="rosa"
         shape="drop"
         className="pointer-events-none absolute -right-12 top-10 hidden h-48 w-48 opacity-25 lg:block"
       />

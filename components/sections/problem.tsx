@@ -20,7 +20,7 @@ export function Problem() {
             key={item.title}
             className="group bg-paper p-7 transition-colors duration-300 hover:bg-card md:p-9"
           >
-            <span className="text-[0.8rem] font-semibold tabular-nums text-clay">
+            <span className="text-[0.8rem] font-semibold tabular-nums text-aqua-deep">
               {String(i + 1).padStart(2, "0")}
             </span>
             <h3 className="mt-3 text-[1.15rem] font-semibold leading-snug tracking-[-0.02em]">

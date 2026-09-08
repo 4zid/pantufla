@@ -105,6 +105,12 @@ que es el que mejor rinde en sitios de servicios:
    mantenimiento, formas de pago, uso de IA.
 8. **Cierre** — un solo CTA.
 
+El hero es una sola pantalla: gradiente de los cuatro colores muy desenfocado,
+titular centrado, y cuatro tarjetas de producto flotando recortadas por los
+bordes. Cada tarjeta muestra algo real —la propuesta, el sitio publicado, la
+entrega, la consulta que entra— y lleva uno de los colores. Abajo de `lg` se
+ocultan: en pantallas chicas le compiten al titular.
+
 El toggle de precios no es mensual/anual, porque el estudio no vende una
 suscripción. Ofrece **pago único con 15% de descuento** contra **dos pagos**: la
 misma mecánica de descuento, aplicada a algo real, y alineada con cobrar rápido.
@@ -141,8 +147,26 @@ cero elementos quedan invisibles.
 
 - **Una sola familia tipográfica** (Schibsted Grotesk), trabajada por peso, tamaño
   y color. Sin mono decorativa en etiquetas ni versalitas de relleno.
-- **Paleta de papel cálido** con un acento arcilla, en vez del gris azulado
-  habitual. Un grano muy leve sobre el fondo para que no quede plano.
+- **Papel cálido de base y cuatro colores de marca** en pastel: aqua, rosa, verde
+  y miel. Un grano muy leve sobre el fondo para que no quede plano.
+
+### Cómo se usan los cuatro colores
+
+Cada color viene en tres pasos y cada paso tiene un uso fijo. La regla que los
+mantiene legibles: **el pastel base nunca lleva texto chico sobre papel** — no
+llega a 2:1. Para eso está la variante profunda, que pasa AA en los dos fondos
+claros.
+
+| Paso | Para qué | Contraste sobre papel |
+| --- | --- | --- |
+| `-soft` | fondo de pastillas y washes | — |
+| base | rellenos, formas, ilustración, y texto sobre la banda oscura | 9,6–11,9:1 en oscuro |
+| `-deep` | texto e iconos chicos sobre papel | 4,9–5,8:1 |
+
+El color es taxonomía, no decoración: cada etapa del proceso, cada plan y cada
+pilar del método tiene su color asignado en `content/site.ts` y se resuelve con
+los mapas de `lib/tones.ts`. Tailwind no arma nombres de clase en runtime, así
+que las variantes están escritas enteras ahí.
 - Bandas oscuras en Proceso y en el cierre para marcar el ritmo de lectura.
 - Sin degradados en texto, sin vidrio esmerilado, sin emoji como iconos: los
   iconos son SVG propios en `components/ui/icons.tsx`.

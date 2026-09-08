@@ -8,6 +8,8 @@ import { Reveal } from "@/components/motion/reveal";
 import { ButtonLink } from "@/components/ui/button";
 import { CheckIcon, MinusIcon } from "@/components/ui/icons";
 import { Section, SectionHead } from "@/components/ui/section";
+import { toneSolid, toneTextDeep } from "@/lib/tones";
+import type { Tone } from "@/components/art/blob";
 import { cn } from "@/lib/cn";
 
 const money = new Intl.NumberFormat("es-AR", { maximumFractionDigits: 0 });
@@ -115,7 +117,7 @@ export function Pricing() {
                     "rounded-full px-2 py-0.5 text-[0.72rem] font-semibold tabular-nums",
                     active
                       ? "bg-white/15 text-paper"
-                      : "bg-clay-soft text-clay",
+                      : "bg-aqua-soft text-aqua-deep",
                   )}
                 >
                   <span className="sm:hidden">{option.note}</span>
@@ -141,7 +143,7 @@ export function Pricing() {
               )}
             >
               {featured && "badge" in plan && plan.badge ? (
-                <span className="absolute -top-3 left-7 rounded-full bg-clay px-3 py-1 text-[0.72rem] font-semibold text-white">
+                <span className={cn("absolute -top-3 left-7 rounded-full px-3 py-1 text-[0.72rem] font-semibold", toneSolid[plan.tone as Tone])}>
                   {plan.badge}
                 </span>
               ) : null}
@@ -180,7 +182,12 @@ export function Pricing() {
               <ul className="mt-6 space-y-3 border-t border-line pt-6">
                 {plan.features.map((feature) => (
                   <li key={feature} className="flex gap-2.5 text-[0.92rem]">
-                    <CheckIcon className="mt-[3px] h-4 w-4 shrink-0 text-clay" />
+                    <CheckIcon
+                      className={cn(
+                        "mt-[3px] h-4 w-4 shrink-0",
+                        toneTextDeep[plan.tone as Tone],
+                      )}
+                    />
                     <span className="leading-snug">{feature}</span>
                   </li>
                 ))}
@@ -201,7 +208,7 @@ export function Pricing() {
 
       {/* Garantía */}
       <div className="mt-10 flex flex-col gap-3 rounded-panel border border-line bg-paper-alt p-6 sm:flex-row sm:items-center sm:gap-5 md:p-7">
-        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-clay-soft text-clay">
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-aqua-soft text-aqua-deep">
           <CheckIcon className="h-4.5 w-4.5" />
         </span>
         <p className="text-[0.98rem] leading-relaxed">{pricing.guarantee}</p>
@@ -213,7 +220,7 @@ export function Pricing() {
         <ul className="mt-6 grid gap-x-8 gap-y-3.5 sm:grid-cols-2 lg:grid-cols-3">
           {pricing.alwaysIncluded.map((item) => (
             <li key={item} className="flex gap-2.5 text-[0.95rem]">
-              <CheckIcon className="mt-[4px] h-4 w-4 shrink-0 text-clay" />
+              <CheckIcon className="mt-[4px] h-4 w-4 shrink-0 text-aqua-deep" />
               <span className="leading-snug text-ink-soft">{item}</span>
             </li>
           ))}

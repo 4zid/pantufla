@@ -44,7 +44,7 @@ export default function ContactPage() {
             <ul className="mt-6 space-y-4">
               {expectations.map((item) => (
                 <li key={item} className="flex gap-3 text-[0.95rem]">
-                  <CheckIcon className="mt-[5px] h-4 w-4 shrink-0 text-clay" />
+                  <CheckIcon className="mt-[5px] h-4 w-4 shrink-0 text-aqua-deep" />
                   <span className="leading-relaxed text-ink-soft">{item}</span>
                 </li>
               ))}

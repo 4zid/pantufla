@@ -20,7 +20,7 @@ const components: PortableTextComponents = {
       </h3>
     ),
     blockquote: ({ children }) => (
-      <blockquote className="mt-8 border-l-2 border-clay pl-5 text-[1.1rem] leading-relaxed">
+      <blockquote className="mt-8 border-l-2 border-aqua pl-5 text-[1.1rem] leading-relaxed">
         {children}
       </blockquote>
     ),
@@ -46,7 +46,7 @@ const components: PortableTextComponents = {
         href={value?.href}
         target="_blank"
         rel="noreferrer"
-        className="text-ink underline decoration-line-strong underline-offset-4 transition-colors hover:decoration-clay"
+        className="text-ink underline decoration-line-strong underline-offset-4 transition-colors hover:decoration-aqua-deep"
       >
         {children}
       </a>

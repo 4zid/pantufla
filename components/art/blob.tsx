@@ -6,19 +6,20 @@ import { cn } from "@/lib/cn";
  * ref. Son SVG puro, no cargan nada.
  */
 
-type Tone = "clay" | "sand" | "olive" | "dusk";
+export type Tone = "aqua" | "rosa" | "verde" | "miel";
 
+/** Claro, medio y profundo de cada color de marca: la luz sale del gradiente. */
 const tones: Record<Tone, [string, string, string]> = {
-  clay: ["#f2d9cd", "#d98f6e", "#a83e21"],
-  sand: ["#f4ece0", "#dcc7a8", "#a98f66"],
-  olive: ["#e8e9de", "#c2c5ae", "#8b8f74"],
-  dusk: ["#efdcd8", "#c9a2a8", "#7e5f74"],
+  aqua: ["#d7f2f0", "#6fcfca", "#2b8d89"],
+  rosa: ["#fce0e6", "#f2a5b6", "#c8657e"],
+  verde: ["#e3f1dc", "#a6cf95", "#6a9a57"],
+  miel: ["#fdedd2", "#f4c87d", "#c99340"],
 };
 
 type Shape = "dome" | "pill" | "drop";
 
 export function Blob({
-  tone = "clay",
+  tone = "aqua",
   shape = "dome",
   className,
   drift = true,

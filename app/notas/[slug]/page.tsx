@@ -70,7 +70,7 @@ export default async function PostPage({ params }: Params) {
           <div className="flex items-center gap-2.5 text-[0.85rem] text-ink-faint">
             {post.topic ? (
               <>
-                <span className="font-medium text-clay">{post.topic}</span>
+                <span className="font-medium text-aqua-deep">{post.topic}</span>
                 <span className="h-1 w-1 rounded-full bg-line-strong" />
               </>
             ) : null}

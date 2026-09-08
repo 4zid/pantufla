@@ -64,7 +64,7 @@ export default async function NotesPage() {
                     <div className="flex items-center gap-2.5 text-[0.8rem] text-ink-faint">
                       {post.topic ? (
                         <>
-                          <span className="font-medium text-clay">{post.topic}</span>
+                          <span className="font-medium text-aqua-deep">{post.topic}</span>
                           <span className="h-1 w-1 rounded-full bg-line-strong" />
                         </>
                       ) : null}
@@ -74,7 +74,7 @@ export default async function NotesPage() {
                     </div>
                     <h2 className="mt-3 flex items-start justify-between gap-3 text-[1.12rem] font-semibold leading-snug tracking-[-0.02em]">
                       {post.title}
-                      <ArrowUpRightIcon className="mt-1 h-4 w-4 shrink-0 text-ink-faint transition-colors group-hover:text-clay" />
+                      <ArrowUpRightIcon className="mt-1 h-4 w-4 shrink-0 text-ink-faint transition-colors group-hover:text-aqua-deep" />
                     </h2>
                     {post.excerpt ? (
                       <p className="mt-2.5 text-[0.92rem] leading-relaxed text-ink-soft">

@@ -53,7 +53,7 @@ export function ProjectCard({
           <h3 className="text-[1.15rem] font-semibold tracking-[-0.02em]">
             {project.title}
           </h3>
-          <ArrowUpRightIcon className="mt-1 h-4 w-4 shrink-0 text-ink-faint transition-colors group-hover:text-clay" />
+          <ArrowUpRightIcon className="mt-1 h-4 w-4 shrink-0 text-ink-faint transition-colors group-hover:text-aqua-deep" />
         </div>
 
         {project.tagline ? (

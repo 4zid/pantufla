@@ -63,13 +63,13 @@ export function HeroIntro() {
   );
 
   return (
-    <div ref={scope} className="shell relative">
-      <div className="mx-auto max-w-5xl text-center">
+    <div ref={scope} className="shell relative z-10">
+      <div className="mx-auto max-w-3xl text-center">
         <p
           data-badge
           className="inline-flex max-w-full items-center gap-2 rounded-full border border-line-strong bg-card px-3.5 py-1.5 text-[0.82rem] font-medium text-ink-soft"
         >
-          <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-clay" />
+          <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-aqua-deep" />
           <span className="whitespace-nowrap">{hero.badge}</span>
           <span
             aria-hidden
@@ -107,7 +107,7 @@ export function HeroIntro() {
           </Magnetic>
           <ButtonLink
             href={hero.secondary.href}
-            variant="secondary"
+            variant="ghost"
             size="lg"
             className="w-full sm:w-auto"
           >
@@ -124,7 +124,7 @@ export function HeroIntro() {
               key={item}
               className="flex items-center gap-2 text-[0.88rem] text-ink-soft"
             >
-              <CheckIcon className="h-3.5 w-3.5 shrink-0 text-clay" />
+              <CheckIcon className="h-3.5 w-3.5 shrink-0 text-aqua-deep" />
               {item}
             </li>
           ))}

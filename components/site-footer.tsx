@@ -12,7 +12,7 @@ export function SiteFooter() {
         <div className="grid gap-10 md:grid-cols-[1.4fr_1fr_1fr]">
           <div className="max-w-sm">
             <Link href="/" className="flex items-center gap-2.5">
-              <Logo className="h-7 w-7 text-clay" />
+              <Logo className="h-7 w-7 text-aqua-deep" />
               <span className="text-[1.06rem] font-semibold tracking-[-0.02em]">
                 {site.name}
               </span>

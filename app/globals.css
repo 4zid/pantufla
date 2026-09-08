@@ -20,15 +20,40 @@
   --color-ink-faint: #8d8779;
   --color-line: #e3ddd1;
   --color-line-strong: #d3cbba;
-  --color-clay: #b8482a;
-  --color-clay-soft: #f3e3dc;
   --color-deep: #14120e;
   --color-deep-alt: #211e18;
+
+  /* ----------------------------------------------------------------
+     Cuatro colores de marca.
+
+     Cada uno viene en tres pasos y cada paso tiene un uso fijo:
+       -soft  fondos de pastilla y washes
+       (base) rellenos, formas, ilustración, y texto sobre fondo oscuro
+       -deep  texto e iconos chicos sobre papel — todos pasan AA (>4.5:1)
+
+     El base NUNCA se usa para texto chico sobre papel: no llega a 2:1.
+     ---------------------------------------------------------------- */
+
+  --color-aqua: #6fcfca;
+  --color-aqua-soft: #ddf2f0;
+  --color-aqua-deep: #166b67;
+
+  --color-rosa: #f2a5b6;
+  --color-rosa-soft: #fbe4e9;
+  --color-rosa-deep: #a3405a;
+
+  --color-verde: #a6cf95;
+  --color-verde-soft: #e6f2df;
+  --color-verde-deep: #456f35;
+
+  --color-miel: #f4c87d;
+  --color-miel-soft: #fdeed4;
+  --color-miel-deep: #8a5a12;
 
   --radius-card: 16px;
   --radius-panel: 24px;
 
-  --text-display: clamp(2.9rem, 9.4vw, 8.25rem);
+  --text-display: clamp(2.6rem, 6.9vw, 6rem);
   --text-display--line-height: 0.9;
   --text-display--letter-spacing: -0.042em;
   --text-display--font-weight: 600;

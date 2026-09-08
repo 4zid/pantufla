@@ -5,9 +5,12 @@ import { useRef } from "react";
 
 import { process } from "@/content/site";
 import { DrawnLineArt } from "@/components/art/drawn-line-art";
+import type { Tone } from "@/components/art/blob";
 import type { LineArtName } from "@/components/art/line-art";
+import { cn } from "@/lib/cn";
 import { Reveal } from "@/components/motion/reveal";
 import { Section, SectionHead } from "@/components/ui/section";
+import { toneTextBase } from "@/lib/tones";
 import { ease, gsap, registerGsap } from "@/lib/motion";
 
 export function Process() {
@@ -72,7 +75,7 @@ export function Process() {
           aria-hidden
           className="absolute left-0 top-0 hidden h-full w-px bg-white/10 lg:block"
         >
-          <div data-progress className="h-full w-full bg-clay" />
+          <div data-progress className="h-full w-full bg-aqua" />
         </div>
 
         <ol className="border-t border-white/10 lg:pl-14">
@@ -99,7 +102,10 @@ export function Process() {
                   <div className="flex items-center gap-4">
                     <DrawnLineArt
                       name={step.art as LineArtName}
-                      className="h-9 w-9 shrink-0 text-clay"
+                      className={cn(
+                        "h-9 w-9 shrink-0",
+                        toneTextBase[step.tone as Tone],
+                      )}
                     />
                     <h3 className="text-h3 text-paper">{step.name}</h3>
                   </div>

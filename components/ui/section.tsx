@@ -45,7 +45,7 @@ export function Eyebrow({
 }) {
   return (
     <p className={cn("eyebrow flex items-center gap-2", onDark && "text-white/45")}>
-      <Logo className="h-3.5 w-3.5 shrink-0 text-clay" />
+      <Logo className="h-3.5 w-3.5 shrink-0 text-aqua-deep" />
       {children}
     </p>
   );

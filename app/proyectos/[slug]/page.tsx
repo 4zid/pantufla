@@ -79,7 +79,7 @@ export default async function ProjectPage({ params }: Params) {
                   className="group mt-6 inline-flex items-center gap-2 text-[0.95rem] font-medium"
                 >
                   Ver el sitio publicado
-                  <ArrowUpRightIcon className="h-4 w-4 text-ink-faint transition-colors group-hover:text-clay" />
+                  <ArrowUpRightIcon className="h-4 w-4 text-ink-faint transition-colors group-hover:text-aqua-deep" />
                 </a>
               ) : null}
             </div>

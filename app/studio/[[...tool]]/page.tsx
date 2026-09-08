@@ -39,7 +39,7 @@ function StudioSetup() {
         <ol className="mt-9 space-y-4 border-t border-line pt-8">
           {steps.map((step, i) => (
             <li key={step} className="flex gap-4">
-              <span className="text-[0.85rem] font-semibold tabular-nums text-clay">
+              <span className="text-[0.85rem] font-semibold tabular-nums text-aqua-deep">
                 {String(i + 1).padStart(2, "0")}
               </span>
               <span className="text-[0.98rem] leading-relaxed text-ink-soft">

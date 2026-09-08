@@ -58,7 +58,7 @@ export function BriefForm() {
   if (status === "sent") {
     return (
       <div className="rounded-panel border border-line bg-card p-8 md:p-10">
-        <span className="flex h-11 w-11 items-center justify-center rounded-full bg-clay-soft text-clay">
+        <span className="flex h-11 w-11 items-center justify-center rounded-full bg-aqua-soft text-aqua-deep">
           <CheckIcon className="h-5 w-5" />
         </span>
         <h2 className="mt-5 text-h3">Recibido. Gracias.</h2>
@@ -212,7 +212,7 @@ export function BriefForm() {
       </div>
 
       {error ? (
-        <p role="alert" className="mt-5 text-[0.9rem] text-clay">
+        <p role="alert" className="mt-5 text-[0.9rem] text-aqua-deep">
           {error}
         </p>
       ) : null}
