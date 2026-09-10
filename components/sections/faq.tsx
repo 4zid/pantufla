@@ -45,7 +45,7 @@ export function Faq() {
     <Section id="faq" tone="alt">
       <div className="grid gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:gap-16">
         <div className="lg:sticky lg:top-28 lg:self-start">
-          <SectionHead eyebrow={faq.eyebrow} title={faq.title} />
+          <SectionHead accent="verde" eyebrow={faq.eyebrow} title={faq.title} />
           <Reveal delay={0.2}>
             <p className="mt-6 text-[0.95rem] leading-relaxed text-ink-soft">
               ¿Falta alguna? Escribinos y te la respondemos sin vueltas antes de

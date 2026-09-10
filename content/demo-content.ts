@@ -48,7 +48,7 @@ export const demoProjects: SanityProject[] = [
     tagline: "Tienda de deco con catálogo, pagos y retiro por sucursal.",
     sector: "E-commerce",
     year: "2025",
-    plan: "A medida",
+    plan: "Sitio",
     deliveredIn: "5 semanas",
     services: ["Diseño", "Desarrollo", "Integraciones"],
     results: [

@@ -18,6 +18,7 @@ export function Approach() {
       />
 
       <SectionHead
+        accent="aqua"
         eyebrow={approach.eyebrow}
         title={approach.title}
         lead={approach.lead}

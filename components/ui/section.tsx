@@ -1,8 +1,9 @@
 import type { ReactNode } from "react";
 
+import type { Tone } from "@/components/art/blob";
 import { Reveal } from "@/components/motion/reveal";
 import { SplitHeading } from "@/components/motion/split-heading";
-import { Logo } from "@/components/ui/icons";
+import { Eyebrow } from "@/components/ui/eyebrow";
 import { cn } from "@/lib/cn";
 
 export function Section({
@@ -32,49 +33,36 @@ export function Section({
   );
 }
 
-/**
- * La marca en chico delante de cada volanta es la firma que se repite en todo
- * el sitio, el equivalente a los { } del ref. Es propia y no hay que explicarla.
- */
-export function Eyebrow({
-  children,
-  onDark = false,
-}: {
-  children: ReactNode;
-  onDark?: boolean;
-}) {
-  return (
-    <p className={cn("eyebrow flex items-center gap-2", onDark && "text-white/45")}>
-      <Logo className="h-3.5 w-3.5 shrink-0 text-aqua-deep" />
-      {children}
-    </p>
-  );
-}
-
 export function SectionHead({
   eyebrow,
   title,
   lead,
   align = "left",
   onDark = false,
+  accent = "aqua",
 }: {
   eyebrow?: string;
   title: string;
   lead?: string;
   align?: "left" | "center";
   onDark?: boolean;
+  accent?: Tone;
 }) {
   return (
     <div className={cn("max-w-2xl", align === "center" && "mx-auto text-center")}>
       {eyebrow ? (
         <Reveal>
-          <Eyebrow onDark={onDark}>{eyebrow}</Eyebrow>
+          <div className={cn(align === "center" && "flex justify-center")}>
+            <Eyebrow tone={accent} onDark={onDark}>
+              {eyebrow}
+            </Eyebrow>
+          </div>
         </Reveal>
       ) : null}
 
       <SplitHeading
         text={title}
-        className={cn("mt-4 text-h2", onDark && "text-paper")}
+        className={cn("mt-5 text-h2", onDark && "text-paper")}
       />
 
       {lead ? (

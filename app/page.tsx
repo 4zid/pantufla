@@ -1,4 +1,5 @@
 import { Approach } from "@/components/sections/approach";
+import { ClientsMap } from "@/components/sections/clients-map";
 import { Faq } from "@/components/sections/faq";
 import { FinalCta } from "@/components/sections/final-cta";
 import { Hero } from "@/components/sections/hero";
@@ -34,6 +35,7 @@ export default async function HomePage() {
       <Pricing />
       <Work projects={projects} />
       <Testimonials items={testimonials} />
+      <ClientsMap />
       <Faq />
       <FinalCta />
       <StructuredData />
@@ -62,7 +64,7 @@ function StructuredData() {
           name: plan.name,
           description: plan.summary,
           priceCurrency: "USD",
-          price: "once" in plan.price ? plan.price.once : plan.price.from,
+          price: plan.price.once,
         })),
       },
     },

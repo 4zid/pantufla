@@ -63,6 +63,7 @@ export function Process() {
   return (
     <Section id="proceso" tone="deep">
       <SectionHead
+        accent="miel"
         eyebrow={process.eyebrow}
         title={process.title}
         lead={process.lead}

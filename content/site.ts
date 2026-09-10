@@ -169,9 +169,9 @@ export type BillingMode = "once" | "split";
 
 export const pricing = {
   eyebrow: "Planes",
-  title: "Elegí el tamaño del proyecto.",
+  title: "Dos formas de empezar.",
   lead:
-    "Precios en dólares. El plan define el alcance y el presupuesto que te mandamos lo confirma por escrito, con la fecha de entrega incluida.",
+    "Una página sola o el sitio completo. Precios en dólares y cerrados: lo que ves acá es lo que sale.",
   toggle: {
     once: { label: "Pago único", note: "−15%", noteLong: "15% menos" },
     split: { label: "En 2 pagos", note: "50/50", noteLong: "50% y 50%" },
@@ -190,14 +190,13 @@ export const pricing = {
       featured: false,
       cta: { label: "Empezar con Landing", href: "/contacto?plan=landing" },
       features: [
-        "Una página de hasta 6 secciones",
-        "Estructura y textos orientados a conversión",
-        "Formulario de contacto con aviso por mail",
-        "Diseño propio, responsive, sin plantillas",
-        "SEO base, analítica y velocidad optimizada",
-        "Publicación en tu dominio",
+        "Una página, hasta 6 secciones",
+        "Escribimos los textos con vos",
+        "Formulario que te avisa por mail",
+        "Anda perfecto en celular",
+        "Publicado en tu dominio",
       ],
-      excluded: ["Panel de edición", "Blog o listados"],
+      excluded: [],
     },
     {
       id: "sitio",
@@ -212,36 +211,17 @@ export const pricing = {
       cta: { label: "Empezar con Sitio", href: "/contacto?plan=sitio" },
       features: [
         "Todo lo del plan Landing",
-        "Hasta 6 páginas internas",
-        "Panel de contenido para blog, proyectos o servicios",
+        "Hasta 6 páginas",
+        "Panel para que lo edites vos",
+        "Blog o listado de proyectos",
         "Cargamos tu contenido inicial",
-        "Páginas dinámicas con URLs y metadatos propios",
-        "Video de capacitación para tu equipo",
         "15 días de ajustes después de publicar",
-      ],
-      excluded: ["Tienda online", "Integraciones a medida"],
-    },
-    {
-      id: "medida",
-      tone: "verde",
-      name: "A medida",
-      summary: "Cuando el proyecto no entra en una caja.",
-      bestFor: "E-commerce, plataformas y productos con lógica propia.",
-      price: { from: 4500 },
-      delivery: "Se define en el brief",
-      featured: false,
-      cta: { label: "Pedir presupuesto", href: "/contacto?plan=medida" },
-      features: [
-        "Tienda online y pasarelas de pago",
-        "Integraciones con tu CRM, reservas o facturación",
-        "Sistema de diseño y librería de componentes",
-        "Migraciones desde WordPress, Wix o Squarespace",
-        "Multi-idioma y sitios por región",
-        "Acompañamiento mensual opcional",
       ],
       excluded: [],
     },
   ],
+  outside:
+    "¿Tu proyecto no entra en ninguno de los dos? Contanos qué necesitás y te decimos si podemos, con precio y fecha, en 24 horas.",
   alwaysIncluded: [
     "Diseño original, nada de plantillas",
     "Responsive real en mobile, tablet y desktop",
@@ -262,7 +242,7 @@ export const faq = {
   items: [
     {
       q: "¿Y si necesito más páginas de las que incluye el plan?",
-      a: "Se suman por separado y con precio fijo antes de empezar, así el presupuesto nunca se mueve solo. Si desde el brief se ve que necesitás bastante más, te proponemos el plan A medida en vez de estirar uno chico.",
+      a: "Se suman por separado y con precio fijo antes de empezar, así el presupuesto nunca se mueve solo. Si desde el brief se ve que necesitás bastante más, te lo decimos ahí mismo con un número aparte.",
     },
     {
       q: "¿De quién es el sitio cuando termina el proyecto?",
@@ -270,7 +250,7 @@ export const faq = {
     },
     {
       q: "¿Puedo editar el contenido sin saber programar?",
-      a: "Sí, en los planes Sitio y A medida. Entrás a un panel, cambiás textos, subís fotos, publicás una nota nueva y el sitio se actualiza solo. Te dejamos un video corto explicando cada parte.",
+      a: "Sí, en el plan Sitio. Entrás a un panel, cambiás textos, subís fotos, publicás una nota nueva y el sitio se actualiza solo. Te dejamos un video corto explicando cada parte.",
     },
     {
       q: "¿Cuánto sale mantenerlo por mes?",
@@ -306,6 +286,23 @@ export const finalCta = {
   primary: { label: "Completar el brief", href: "/contacto" },
   secondary: { label: `Escribir a ${site.email}`, href: `mailto:${site.email}` },
 } as const;
+
+/**
+ * ⚠️ Reemplazar por los países donde realmente hay clientes antes de publicar.
+ * El pie de la sección cuenta esta lista, así que el número siempre coincide
+ * con lo que se muestra: no hay una cifra escrita a mano que se desactualice.
+ */
+export const clients = [
+  { city: "Buenos Aires", country: "Argentina", lon: -58.4, lat: -34.6 },
+  { city: "Córdoba", country: "Argentina", lon: -64.2, lat: -31.4 },
+  { city: "Montevideo", country: "Uruguay", lon: -56.2, lat: -34.9 },
+  { city: "Santiago", country: "Chile", lon: -70.7, lat: -33.4 },
+  { city: "Ciudad de México", country: "México", lon: -99.1, lat: 19.4 },
+  { city: "Miami", country: "Estados Unidos", lon: -80.2, lat: 25.8 },
+  { city: "Madrid", country: "España", lon: -3.7, lat: 40.4 },
+  { city: "Barcelona", country: "España", lon: 2.2, lat: 41.4 },
+  { city: "Berlín", country: "Alemania", lon: 13.4, lat: 52.5 },
+] as const;
 
 export const budgetRanges = [
   "Menos de $1.000",

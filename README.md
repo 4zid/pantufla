@@ -15,9 +15,12 @@ Tres cosas quedaron con contenido de relleno a propósito. Reemplazalas:
    inventados. Se muestran **solo mientras el CMS esté vacío**: apenas cargues el
    primer proyecto real en `/studio`, Sanity gana y el relleno desaparece. No
    publiques el sitio con esos datos.
-2. **El logo.** `components/ui/icons.tsx` → `Logo`. Es una pantufla dibujada en
+2. **Los países del mapa.** `content/site.ts` → `clients`. El pie de la sección
+   cuenta esa lista, así que el número siempre coincide con lo que se muestra:
+   sacá las ciudades donde todavía no hubo un proyecto y el texto se ajusta solo.
+3. **El logo.** `components/ui/icons.tsx` → `Logo`. Es una pantufla dibujada en
    dos trazos, pensada como marca provisoria hasta que tengas la tuya.
-3. **Datos de contacto y redes.** `content/site.ts` → `site`.
+4. **Datos de contacto y redes.** `content/site.ts` → `site`.
 
 ---
 
@@ -97,9 +100,11 @@ que es el que mejor rinde en sitios de servicios:
 3. **Método** — cómo se resuelve cada una.
 4. **Proceso** — cuatro etapas con fecha, entregable y qué pone el cliente. Baja
    la ansiedad de "¿y esto cuánto tarda?".
-5. **Planes** — tres niveles, el del medio destacado (la insignia de "más elegido"
-   sube su elección de forma consistente), toggle con el ahorro visible y una
-   garantía debajo para bajar el riesgo percibido.
+5. **Planes** — dos opciones y nada más: una página sola o el sitio completo.
+   El cliente que busca una web no siempre sabe lo que necesita, y tres niveles
+   con un "a medida" abierto lo obligan a decidir algo que todavía no puede.
+   La segunda va en oscuro y con la insignia de "más elegido"; debajo quedan la
+   garantía y una salida por escrito para lo que no entra en ninguno de los dos.
 6. **Proyectos y testimonios** — prueba social después del precio, no antes.
 7. **Preguntas frecuentes** — objeciones de compra: propiedad del sitio, costo de
    mantenimiento, formas de pago, uso de IA.
@@ -181,9 +186,13 @@ que las variantes están escritas enteras ahí.
 - Bandas oscuras en Proceso y en el cierre para marcar el ritmo de lectura.
 - Sin degradados en texto, sin vidrio esmerilado, sin emoji como iconos: los
   iconos son SVG propios en `components/ui/icons.tsx`.
-- La marca en chico delante de cada volanta es la firma que se repite en todo el
-  sitio. Es el rol que en el ref de GSAP cumplen los `{ }`, resuelto con algo
-  propio en vez de prestado.
+- **La volanta de sección no va en mayúsculas con tracking.** Ese tratamiento
+  está en medio internet y se lee a plantilla. Acá es una regla corta más el
+  texto en caja baja, en el color que le toca a esa sección: el color es lo que
+  la vuelve nuestra.
+- **Ninguna sección repite el patrón de grilla de tarjetas con borde.** Problema
+  y testimonios van con filetes y aire en vez de cajas, que es lo que les sacaba
+  personalidad.
 - Los assets son código, no imágenes: los blobs (`components/art/blob.tsx`) son
   SVG con gradientes multi-stop y luz interna, sin `box-shadow`; la ilustración
   (`components/art/line-art.tsx`) es un set de trazos con la misma mano.

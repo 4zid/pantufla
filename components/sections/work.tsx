@@ -13,6 +13,7 @@ export function Work({ projects }: { projects: SanityProject[] }) {
     <Section id="proyectos" tone="alt">
       <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
         <SectionHead
+          accent="aqua"
           eyebrow="Proyectos"
           title="Algunos sitios que salieron de acá."
           lead="Distintos rubros, distintos tamaños, el mismo método."

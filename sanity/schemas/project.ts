@@ -43,7 +43,6 @@ export const project = defineType({
         list: [
           { title: "Landing", value: "Landing" },
           { title: "Sitio", value: "Sitio" },
-          { title: "A medida", value: "A medida" },
         ],
         layout: "radio",
       },

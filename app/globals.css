@@ -138,13 +138,31 @@
     .shell { padding-inline: 2rem; }
   }
 
-  /* Etiqueta de sección: versalitas en el gris cálido, no mono. */
+  /*
+     Etiqueta de sección.
+
+     Antes iba en mayúsculas con tracking abierto, que es exactamente el
+     patrón de plantilla que hay en medio internet. Ahora va en caja baja,
+     sin tracking y acompañada de una regla corta del color de la sección:
+     se lee como una entradilla editorial y no como una etiqueta pegada.
+  */
   .eyebrow {
-    font-size: 0.78rem;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--color-ink-faint);
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: var(--color-ink-soft);
+  }
+
+  .eyebrow::before {
+    content: "";
+    width: 1.75rem;
+    height: 1px;
+    flex: none;
+    background-color: currentColor;
+    opacity: 0.45;
   }
 
   .rule {
