@@ -123,9 +123,11 @@ entre sus rectángulos no depende del scroll y se puede recalcular en cada
 `refresh`. La colocación en la grilla va explícita (`col-start` / `row-start`):
 con colocación automática, los paneles que ocupan dos filas empujan al resto.
 
-Arriba de `lg` la sección mide dos pantallas y el escenario queda fijo, que es
-lo que da el recorrido. Abajo de `lg` no hay vuelo: el dashboard se muestra ya
-armado debajo del título.
+Los cuatro paneles viven en la **mitad de abajo** de la pantalla: arriba manda
+el título y ahí no entra nada. Antes salían por los costados y el texto quedaba
+cortado contra el borde. Por eso además aparecen recién a partir de **1440px**,
+que es el ancho donde caben sin pisar el titular; abajo de eso el dashboard se
+muestra ya armado y no hay vuelo.
 
 El toggle de precios no es mensual/anual, porque el estudio no vende una
 suscripción. Ofrece **pago único con 15% de descuento** contra **dos pagos**: la
@@ -145,6 +147,11 @@ y se combinan en las secciones:
 | `Counter` | Cifra que rueda hasta su valor. Se usa en los precios al cambiar el toggle. |
 | `Magnetic` | El botón sigue apenas al cursor. Solo con puntero fino. |
 | `DrawnLineArt` | Dibuja la ilustración trazo por trazo al entrar en pantalla. |
+| `ProjectStack` | Fichas de proyecto que se apilan con el scroll, una sobre otra. |
+
+En `ProjectStack` la ficha que se va se achica pero **no baja su opacidad**: si
+se transparentara el elemento entero, su texto se leería a través de la que
+llega. El apagado lo hace un velo dentro de la propia ficha.
 
 **Dos reglas que sostienen todo esto:**
 

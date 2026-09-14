@@ -1,10 +1,10 @@
 import Link from "next/link";
 
-import type { SanityProject } from "@/sanity/types";
 import { Reveal } from "@/components/motion/reveal";
 import { ArrowIcon } from "@/components/ui/icons";
-import { ProjectCard } from "@/components/ui/project-card";
+import { ProjectStack } from "@/components/ui/project-stack";
 import { Section, SectionHead } from "@/components/ui/section";
+import type { SanityProject } from "@/sanity/types";
 
 export function Work({ projects }: { projects: SanityProject[] }) {
   if (!projects.length) return null;
@@ -29,11 +29,9 @@ export function Work({ projects }: { projects: SanityProject[] }) {
         </Reveal>
       </div>
 
-      <Reveal stagger className="mt-14 grid gap-6 md:grid-cols-3">
-        {projects.map((project, i) => (
-          <ProjectCard key={project._id} project={project} index={i} />
-        ))}
-      </Reveal>
+      <div className="mt-14">
+        <ProjectStack projects={projects} />
+      </div>
     </Section>
   );
 }

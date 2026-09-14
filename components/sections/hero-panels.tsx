@@ -34,25 +34,16 @@ export function PanelSitio() {
         </p>
         <div className="mt-4 grid grid-cols-3 gap-2">
           <div
-            className="h-16 rounded-md"
+            className="h-14 rounded-md"
             style={{ background: "linear-gradient(150deg,#fce0e6,#f2a5b6)" }}
           />
           <div
-            className="h-16 rounded-md"
+            className="h-14 rounded-md"
             style={{ background: "linear-gradient(150deg,#e8ddd0,#cdbca8)" }}
           />
-          <div className="h-16 rounded-md border border-line bg-paper-alt" />
+          <div className="h-14 rounded-md border border-line bg-paper-alt" />
         </div>
-        <div className="mt-2 grid grid-cols-2 gap-2">
-          <div
-            className="h-14 rounded-md"
-            style={{ background: "linear-gradient(150deg,#ddf2f0,#6fcfca)" }}
-          />
-          <div
-            className="h-14 rounded-md"
-            style={{ background: "linear-gradient(150deg,#fdeed4,#f4c87d)" }}
-          />
-        </div>
+
       </div>
     </div>
   );
@@ -74,7 +65,7 @@ export function PanelAnalytics() {
       <p className="mt-1.5 text-[1.4rem] font-semibold leading-none tracking-[-0.03em]">
         3.482
       </p>
-      <div className="mt-auto flex h-11 items-end gap-[3px] pt-3">
+      <div className="mt-auto flex h-8 items-end gap-[3px] pt-2">
         {bars.map((h, i) => (
           <span
             key={i}

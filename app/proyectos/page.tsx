@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 import { FinalCta } from "@/components/sections/final-cta";
 import { PageHeader } from "@/components/ui/page-header";
-import { ProjectCard } from "@/components/ui/project-card";
+import { ProjectStack } from "@/components/ui/project-stack";
 import { demoProjects } from "@/content/demo-content";
 import { sanityFetch } from "@/sanity/client";
 import { allProjectsQuery } from "@/sanity/queries";
@@ -35,11 +35,7 @@ export default async function ProjectsPage() {
       />
 
       <div className="shell py-16 md:py-20">
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {projects.map((project, i) => (
-            <ProjectCard key={project._id} project={project} index={i} />
-          ))}
-        </div>
+        <ProjectStack projects={projects} />
       </div>
 
       <FinalCta />

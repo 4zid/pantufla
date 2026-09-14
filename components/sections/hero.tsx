@@ -9,8 +9,8 @@ import { HeroScene } from "@/components/sections/hero-scene";
  */
 export function Hero() {
   return (
-    <section className="relative lg:h-[220vh]">
-      <div className="relative overflow-hidden pb-16 pt-14 md:pb-20 lg:sticky lg:top-0 lg:flex lg:h-screen lg:flex-col lg:justify-start lg:pb-0 lg:pt-24 xl:pt-28">
+    <section className="relative min-[1440px]:h-[220vh]">
+      <div className="relative overflow-hidden pb-16 pt-14 md:pb-20 min-[1440px]:sticky min-[1440px]:top-0 min-[1440px]:flex min-[1440px]:h-screen min-[1440px]:flex-col min-[1440px]:justify-start min-[1440px]:pb-0 min-[1440px]:pt-28">
         <HeroAurora />
         <HeroIntro />
         <HeroScene />

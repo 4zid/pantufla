@@ -27,18 +27,27 @@ import { cn } from "@/lib/cn";
  */
 
 const panels = [
-  { id: "sitio", node: <PanelSitio />, w: 400, h: 294, rotate: 3 },
-  { id: "analytics", node: <PanelAnalytics />, w: 250, h: 140, rotate: -4 },
-  { id: "ventas", node: <PanelVentas />, w: 250, h: 140, rotate: 2.5 },
-  { id: "chat", node: <PanelChat />, w: 290, h: 294, rotate: -2 },
+  { id: "sitio", node: <PanelSitio />, w: 330, h: 230, rotate: 3 },
+  { id: "analytics", node: <PanelAnalytics />, w: 206, h: 108, rotate: -4 },
+  { id: "ventas", node: <PanelVentas />, w: 206, h: 108, rotate: 2.5 },
+  { id: "chat", node: <PanelChat />, w: 240, h: 230, rotate: -2 },
 ] as const;
 
-/** Dónde arranca cada panel antes de converger. */
+/**
+ * Dónde arranca cada panel antes de converger.
+ *
+ * Los cuatro viven en la mitad de abajo, que es la zona libre: arriba manda el
+ * título y ahí no entra nada. Antes se cruzaban con el titular por los costados
+ * y además sobresalían del borde, así que el texto quedaba cortado.
+ *
+ * Por eso también aparecen recién a partir de 1440px: abajo de ese ancho no hay
+ * lugar para ponerlos sin pisar algo.
+ */
 const scattered: Record<string, string> = {
-  sitio: "right-[-7rem] top-[8%] xl:right-[-3rem] 2xl:right-6",
-  analytics: "left-[-3rem] top-[15%] xl:left-4 2xl:left-16",
-  ventas: "left-[2%] bottom-[20%] xl:left-[6%]",
-  chat: "right-[1%] bottom-[12%] xl:right-[5%]",
+  analytics: "left-[4%] top-[55%]",
+  chat: "left-[6%] top-[66%]",
+  sitio: "right-[4%] top-[53%]",
+  ventas: "right-[8%] top-[76%]",
 };
 
 /**
@@ -46,10 +55,10 @@ const scattered: Record<string, string> = {
  * automática los paneles que ocupan dos filas empujan a los demás de celda.
  */
 const placed: Record<string, string> = {
-  sitio: "lg:col-start-1 lg:row-start-1 lg:row-span-2",
-  analytics: "lg:col-start-2 lg:row-start-1",
-  ventas: "lg:col-start-2 lg:row-start-2",
-  chat: "lg:col-start-3 lg:row-start-1 lg:row-span-2",
+  sitio: "min-[1440px]:col-start-1 min-[1440px]:row-start-1 min-[1440px]:row-span-2",
+  analytics: "min-[1440px]:col-start-2 min-[1440px]:row-start-1",
+  ventas: "min-[1440px]:col-start-2 min-[1440px]:row-start-2",
+  chat: "min-[1440px]:col-start-3 min-[1440px]:row-start-1 min-[1440px]:row-span-2",
 };
 
 export function HeroScene() {
@@ -66,8 +75,8 @@ export function HeroScene() {
       mm.add(
         {
           desktop:
-            "(min-width: 1024px) and (prefers-reduced-motion: no-preference)",
-          simple: "(max-width: 1023px), (prefers-reduced-motion: reduce)",
+            "(min-width: 1440px) and (prefers-reduced-motion: no-preference)",
+          simple: "(max-width: 1439px), (prefers-reduced-motion: reduce)",
         },
         (context) => {
           const { desktop } = context.conditions as { desktop: boolean };
@@ -158,7 +167,7 @@ export function HeroScene() {
     <div ref={scope} className="pointer-events-none">
       {/* Paneles sueltos: solo en desktop, donde hay lugar para dispersarlos.
           Van encima del dashboard para que se vean al aterrizar. */}
-      <div aria-hidden className="absolute inset-0 z-20 hidden lg:block">
+      <div aria-hidden className="absolute inset-0 z-20 hidden min-[1440px]:block">
         {panels.map((panel) => (
           <div
             key={panel.id}
@@ -173,11 +182,11 @@ export function HeroScene() {
 
       {/* Dashboard. En desktop los huecos quedan vacíos hasta que llegan los
           paneles; en mobile ya vienen adentro. */}
-      <div className="mt-12 lg:absolute lg:inset-x-0 lg:-bottom-8 lg:z-10 lg:mt-0">
+      <div className="mt-12 min-[1440px]:absolute min-[1440px]:inset-x-0 min-[1440px]:bottom-0 min-[1440px]:z-10 min-[1440px]:mt-0">
         <div className="shell">
           <div
             data-dashboard
-            className="mx-auto w-full overflow-hidden rounded-t-panel border border-line-strong border-b-0 bg-card shadow-[0_-1px_0_rgba(255,255,255,0.8)_inset,0_40px_80px_-40px_rgba(35,28,18,0.28)] lg:w-fit"
+            className="mx-auto w-full overflow-hidden rounded-t-panel border border-line-strong border-b-0 bg-card shadow-[0_-1px_0_rgba(255,255,255,0.8)_inset,0_40px_80px_-40px_rgba(35,28,18,0.28)] min-[1440px]:w-fit"
           >
             <div className="flex items-center gap-3 border-b border-line bg-paper-alt/70 px-4 py-3">
               <div className="flex gap-1.5">
@@ -191,19 +200,19 @@ export function HeroScene() {
               <div className="w-12" />
             </div>
 
-            <div className="grid grid-cols-1 gap-3.5 p-3.5 lg:grid-cols-[400px_250px_290px] lg:grid-rows-[140px_140px]">
+            <div className="grid grid-cols-1 gap-3.5 p-3.5 min-[1440px]:grid-cols-[330px_206px_240px] min-[1440px]:grid-rows-[108px_108px]">
               {panels.map((panel) => (
                 <div
                   key={panel.id}
                   data-slot={panel.id}
                   style={{ height: panel.h }}
                   className={cn(
-                    "overflow-hidden rounded-card border border-line bg-paper-alt/30 lg:h-auto",
+                    "overflow-hidden rounded-card border border-line bg-paper-alt/30 min-[1440px]:h-auto",
                     placed[panel.id],
                   )}
                 >
                   {/* En desktop el hueco queda vacío: lo llena la tarjeta. */}
-                  <div className="h-full lg:hidden">{panel.node}</div>
+                  <div className="h-full min-[1440px]:hidden">{panel.node}</div>
                 </div>
               ))}
             </div>

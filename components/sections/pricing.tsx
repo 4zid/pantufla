@@ -196,36 +196,17 @@ export function Pricing() {
         })}
       </Reveal>
 
-      {/* Garantía y salida para lo que no entra en ninguno de los dos. */}
-      <Reveal stagger className="mt-8 grid gap-4 md:grid-cols-2">
-        <div className="flex gap-4 rounded-panel border border-line bg-paper-alt p-6">
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-verde-soft text-verde-deep">
-            <CheckIcon className="h-4 w-4" />
-          </span>
-          <p className="text-[0.96rem] leading-relaxed">{pricing.guarantee}</p>
-        </div>
-        <div className="rounded-panel border border-dashed border-line-strong p-6">
-          <p className="text-[0.96rem] leading-relaxed text-ink-soft">
-            {pricing.outside}
-          </p>
-        </div>
+      <Reveal>
+        <p className="mt-8 flex flex-wrap items-center gap-x-2 gap-y-1 text-[0.92rem] text-ink-soft">
+          <CheckIcon className="h-4 w-4 shrink-0 text-verde-deep" />
+          {pricing.guarantee}
+        </p>
       </Reveal>
 
-      <div className="mt-16">
-        <Reveal>
-          <p className="text-[0.9rem] font-medium text-ink-soft">
-            En los dos planes
-          </p>
-        </Reveal>
-        <Reveal stagger className="mt-6 grid gap-x-8 gap-y-3.5 sm:grid-cols-2 lg:grid-cols-3">
-          {pricing.alwaysIncluded.map((item) => (
-            <div key={item} className="flex gap-2.5 text-[0.95rem]">
-              <CheckIcon className="mt-[4px] h-4 w-4 shrink-0 text-verde-deep" />
-              <span className="leading-snug text-ink-soft">{item}</span>
-            </div>
-          ))}
-        </Reveal>
-      </div>
+      <Reveal delay={0.1}>
+        <p className="mt-3 text-[0.92rem] text-ink-faint">{pricing.outside}</p>
+      </Reveal>
+
     </Section>
   );
 }
