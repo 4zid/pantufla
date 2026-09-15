@@ -13,7 +13,7 @@ export function PageHeader({
 }) {
   return (
     <header className="border-b border-line">
-      <div className="shell py-16 md:py-24">
+      <div className="shell pb-16 pt-32 md:pb-24 md:pt-40">
         <div className="max-w-3xl">
           {eyebrow ? <p className="eyebrow">{eyebrow}</p> : null}
           <h1 className="mt-4 text-h2">{title}</h1>

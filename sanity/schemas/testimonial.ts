@@ -36,6 +36,14 @@ export const testimonial = defineType({
       to: [{ type: "project" }],
     }),
     defineField({
+      name: "rating",
+      title: "Puntaje",
+      type: "number",
+      description: "De 1 a 5. Si se deja vacío se muestran 5.",
+      validation: (rule) => rule.min(1).max(5),
+      initialValue: 5,
+    }),
+    defineField({
       name: "order",
       title: "Orden",
       type: "number",

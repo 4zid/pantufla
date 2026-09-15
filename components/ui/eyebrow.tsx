@@ -1,5 +1,4 @@
-import type { Tone } from "@/components/art/blob";
-import { toneTextBase, toneTextDeep } from "@/lib/tones";
+import { toneTextBase, toneTextDeep, type Tone } from "@/lib/tones";
 import { cn } from "@/lib/cn";
 
 /**

@@ -123,8 +123,8 @@ entre sus rectángulos no depende del scroll y se puede recalcular en cada
 `refresh`. La colocación en la grilla va explícita (`col-start` / `row-start`):
 con colocación automática, los paneles que ocupan dos filas empujan al resto.
 
-Los cuatro paneles viven en la **mitad de abajo** de la pantalla: arriba manda
-el título y ahí no entra nada. Antes salían por los costados y el texto quedaba
+Los cuatro paneles se reparten entre la zona media y la de abajo, siempre por
+debajo del título: arriba manda el titular y ahí no entra nada. Antes salían por los costados y el texto quedaba
 cortado contra el borde. Por eso además aparecen recién a partir de **1440px**,
 que es el ancho donde caben sin pisar el titular; abajo de eso el dashboard se
 muestra ya armado y no hay vuelo.
@@ -148,6 +148,11 @@ y se combinan en las secciones:
 | `Magnetic` | El botón sigue apenas al cursor. Solo con puntero fino. |
 | `DrawnLineArt` | Dibuja la ilustración trazo por trazo al entrar en pantalla. |
 | `ProjectStack` | Fichas de proyecto que se apilan con el scroll, una sobre otra. |
+
+Los paneles del hero además **se arrastran**. El arrastre vive en un hijo del
+marco que vuela, así los dos transforms no compiten por el mismo elemento; al
+empezar la convergencia, lo que se haya movido a mano vuelve a cero para que el
+panel aterrice donde corresponde.
 
 En `ProjectStack` la ficha que se va se achica pero **no baja su opacidad**: si
 se transparentara el elemento entero, su texto se leería a través de la que

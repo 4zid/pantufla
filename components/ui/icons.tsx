@@ -48,6 +48,17 @@ export function PlusIcon({ className }: IconProps) {
   );
 }
 
+export function StarIcon({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 16 16" className={className} aria-hidden="true">
+      <path
+        d="M8 1.6l1.94 3.93 4.34.63-3.14 3.06.74 4.32L8 11.5l-3.88 2.04.74-4.32L1.72 6.16l4.34-.63L8 1.6Z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+}
+
 /** Marca: una pantufla reducida a dos trazos. */
 export function Logo({ className }: IconProps) {
   return (

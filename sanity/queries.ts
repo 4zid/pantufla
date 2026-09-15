@@ -59,6 +59,6 @@ export const postSlugsQuery = groq`
 
 export const testimonialsQuery = groq`
   *[_type == "testimonial"] | order(order asc)[0...6] {
-    _id, quote, name, role, avatar
+    _id, quote, name, role, rating, avatar
   }
 `;

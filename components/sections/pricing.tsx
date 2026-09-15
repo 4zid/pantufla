@@ -2,30 +2,32 @@
 
 import { useId, useState } from "react";
 
-import type { Tone } from "@/components/art/blob";
 import { Counter } from "@/components/motion/counter";
 import { Reveal } from "@/components/motion/reveal";
 import { pricing, type BillingMode } from "@/content/site";
 import { ButtonLink } from "@/components/ui/button";
 import { CheckIcon } from "@/components/ui/icons";
 import { Section, SectionHead } from "@/components/ui/section";
-import { toneTextBase, toneTextDeep } from "@/lib/tones";
+import { toneTextBase, toneTextDeep, type Tone } from "@/lib/tones";
 import { cn } from "@/lib/cn";
 
 const money = new Intl.NumberFormat("es-AR", { maximumFractionDigits: 0 });
+
+/** Marco común de las tres tarjetas, para que entren parejas en una pantalla. */
+const card =
+  "flex h-full flex-col rounded-panel p-7 lg:p-8";
 
 export function Pricing() {
   const [mode, setMode] = useState<BillingMode>("once");
   const groupId = useId();
 
   return (
-    <Section id="planes">
-      <div className="flex flex-col gap-10 lg:flex-row lg:items-end lg:justify-between">
+    <Section id="planes" className="py-16 md:py-20">
+      <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
         <SectionHead
           accent="verde"
           eyebrow={pricing.eyebrow}
           title={pricing.title}
-          lead={pricing.lead}
         />
 
         <Reveal delay={0.2}>
@@ -46,14 +48,14 @@ export function Pricing() {
                   aria-checked={active}
                   onClick={() => setMode(value)}
                   className={cn(
-                    "flex flex-1 items-center justify-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-2.5 text-[0.8rem] font-medium transition-colors duration-200 sm:flex-none sm:gap-2 sm:px-4 sm:text-[0.9rem]",
+                    "flex flex-1 items-center justify-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-2 text-[0.8rem] font-medium transition-colors duration-200 sm:flex-none sm:gap-2 sm:px-4 sm:text-[0.88rem]",
                     active ? "bg-ink text-paper" : "text-ink-soft hover:text-ink",
                   )}
                 >
                   {option.label}
                   <span
                     className={cn(
-                      "rounded-full px-2 py-0.5 text-[0.72rem] font-semibold tabular-nums",
+                      "rounded-full px-2 py-0.5 text-[0.7rem] font-semibold tabular-nums",
                       active ? "bg-white/15 text-paper" : "bg-verde-soft text-verde-deep",
                     )}
                   >
@@ -67,7 +69,7 @@ export function Pricing() {
         </Reveal>
       </div>
 
-      <Reveal stagger className="mt-14 grid gap-6 md:grid-cols-2">
+      <Reveal stagger className="mt-10 grid gap-5 md:grid-cols-3">
         {pricing.plans.map((plan) => {
           const dark = plan.featured;
           const total = plan.price.split * plan.price.splitCount;
@@ -76,137 +78,112 @@ export function Pricing() {
             <div
               key={plan.id}
               className={cn(
-                "relative flex h-full flex-col rounded-panel p-8 md:p-10",
+                card,
                 dark
                   ? "bg-deep text-paper shadow-[0_30px_70px_-40px_rgba(35,28,18,0.6)]"
                   : "border border-line bg-card",
               )}
             >
               <div className="flex items-center justify-between gap-3">
-                <h3
-                  className={cn(
-                    "text-[1.6rem] font-semibold tracking-[-0.03em]",
-                    dark && "text-paper",
-                  )}
-                >
+                <h3 className={cn("text-[1.3rem] font-semibold tracking-[-0.03em]", dark && "text-paper")}>
                   {plan.name}
                 </h3>
                 {dark && "badge" in plan && plan.badge ? (
-                  <span className="rounded-full bg-white/12 px-3 py-1 text-[0.75rem] font-medium text-paper">
+                  <span className="rounded-full bg-white/12 px-2.5 py-1 text-[0.72rem] font-medium text-paper">
                     {plan.badge}
                   </span>
                 ) : null}
               </div>
 
-              <p
-                className={cn(
-                  "mt-3 max-w-sm text-[1.02rem] leading-relaxed",
-                  dark ? "text-white/60" : "text-ink-soft",
-                )}
-              >
+              <p className={cn("mt-2 text-[0.95rem] leading-snug", dark ? "text-white/60" : "text-ink-soft")}>
                 {plan.summary}
               </p>
 
-              {/* Precio: la cifra manda y el detalle queda abajo, chico. */}
-              <div className="mt-9">
-                {mode === "once" ? (
-                  <div className="flex items-baseline gap-3">
-                    <Counter
-                      value={plan.price.once}
-                      prefix="$"
-                      className="text-[3.4rem] font-semibold leading-none tracking-[-0.045em]"
-                    />
-                    <span
-                      className={cn(
-                        "text-[1.05rem] line-through",
-                        dark ? "text-white/35" : "text-ink-faint",
-                      )}
-                    >
+              <div className="mt-7">
+                <div className="flex items-baseline gap-2">
+                  <Counter
+                    value={mode === "once" ? plan.price.once : plan.price.split}
+                    prefix="$"
+                    className="text-[2.8rem] font-semibold leading-none tracking-[-0.045em]"
+                  />
+                  {mode === "once" ? (
+                    <span className={cn("text-[0.95rem] line-through", dark ? "text-white/35" : "text-ink-faint")}>
                       ${money.format(total)}
                     </span>
-                  </div>
-                ) : (
-                  <div className="flex items-baseline gap-2">
-                    <Counter
-                      value={plan.price.split}
-                      prefix="$"
-                      className="text-[3.4rem] font-semibold leading-none tracking-[-0.045em]"
-                    />
-                    <span
-                      className={cn(
-                        "text-[1.05rem]",
-                        dark ? "text-white/55" : "text-ink-soft",
-                      )}
-                    >
+                  ) : (
+                    <span className={cn("text-[0.95rem]", dark ? "text-white/55" : "text-ink-soft")}>
                       × {plan.price.splitCount}
                     </span>
-                  </div>
-                )}
-                <p
-                  className={cn(
-                    "mt-3 text-[0.9rem]",
-                    dark ? "text-white/45" : "text-ink-faint",
                   )}
-                >
-                  {mode === "once"
-                    ? `Pago único · Entrega en ${plan.delivery}`
-                    : `50% y 50% · Total $${money.format(total)} · Entrega en ${plan.delivery}`}
+                </div>
+                <p className={cn("mt-2 text-[0.85rem]", dark ? "text-white/45" : "text-ink-faint")}>
+                  {mode === "once" ? "Pago único" : `Total $${money.format(total)}`} · Entrega en {plan.delivery}
                 </p>
               </div>
 
               <ButtonLink
                 href={plan.cta.href}
                 variant={dark ? "onDark" : "primary"}
-                size="lg"
-                className="mt-8 w-full"
+                className="mt-6 w-full"
               >
                 {plan.cta.label}
               </ButtonLink>
 
-              <ul className="mt-9 space-y-3.5 border-t pt-8 [border-color:currentColor]/10">
+              <ul className="mt-6 space-y-2.5">
                 {plan.features.map((feature) => (
-                  <li key={feature} className="flex gap-3 text-[0.98rem]">
+                  <li key={feature} className="flex gap-2.5 text-[0.92rem]">
                     <CheckIcon
                       className={cn(
-                        "mt-[4px] h-4 w-4 shrink-0",
-                        dark
-                          ? toneTextBase[plan.tone as Tone]
-                          : toneTextDeep[plan.tone as Tone],
+                        "mt-[4px] h-3.5 w-3.5 shrink-0",
+                        dark ? toneTextBase[plan.tone as Tone] : toneTextDeep[plan.tone as Tone],
                       )}
                     />
-                    <span
-                      className={cn("leading-snug", dark && "text-white/85")}
-                    >
+                    <span className={cn("leading-snug", dark && "text-white/85")}>
                       {feature}
                     </span>
                   </li>
                 ))}
               </ul>
-
-              <p
-                className={cn(
-                  "mt-8 text-[0.88rem]",
-                  dark ? "text-white/40" : "text-ink-faint",
-                )}
-              >
-                Ideal para {plan.bestFor.charAt(0).toLowerCase() + plan.bestFor.slice(1)}
-              </p>
             </div>
           );
         })}
-      </Reveal>
 
-      <Reveal>
-        <p className="mt-8 flex flex-wrap items-center gap-x-2 gap-y-1 text-[0.92rem] text-ink-soft">
-          <CheckIcon className="h-4 w-4 shrink-0 text-verde-deep" />
-          {pricing.guarantee}
-        </p>
-      </Reveal>
+        {/* Tercera tarjeta: lo que no entra en ninguno de los dos planes. */}
+        <div className={cn(card, "border border-dashed border-line-strong")}>
+          <h3 className="text-[1.3rem] font-semibold tracking-[-0.03em]">
+            {pricing.contact.name}
+          </h3>
+          <p className="mt-2 text-[0.95rem] leading-snug text-ink-soft">
+            {pricing.contact.summary}
+          </p>
 
-      <Reveal delay={0.1}>
-        <p className="mt-3 text-[0.92rem] text-ink-faint">{pricing.outside}</p>
-      </Reveal>
+          <div className="mt-7">
+            <p className="text-[2.8rem] font-semibold leading-none tracking-[-0.045em]">
+              {pricing.contact.price}
+            </p>
+            <p className="mt-2 text-[0.85rem] text-ink-faint">
+              Según alcance · Respondemos en 24 h
+            </p>
+          </div>
 
+          <ButtonLink
+            href={pricing.contact.cta.href}
+            variant="secondary"
+            className="mt-6 w-full"
+          >
+            {pricing.contact.cta.label}
+          </ButtonLink>
+
+          <ul className="mt-6 space-y-2.5">
+            {pricing.contact.features.map((feature) => (
+              <li key={feature} className="flex gap-2.5 text-[0.92rem]">
+                <CheckIcon className="mt-[4px] h-3.5 w-3.5 shrink-0 text-miel-deep" />
+                <span className="leading-snug">{feature}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </Reveal>
     </Section>
   );
 }

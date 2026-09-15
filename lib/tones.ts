@@ -1,4 +1,4 @@
-import type { Tone } from "@/components/art/blob";
+export type Tone = "aqua" | "rosa" | "verde" | "miel";
 
 /**
  * Mapas explícitos de tono a clase. Tailwind no resuelve nombres de clase

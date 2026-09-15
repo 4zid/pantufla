@@ -1,8 +1,7 @@
-import type { Tone } from "@/components/art/blob";
 import { problem } from "@/content/site";
 import { Reveal } from "@/components/motion/reveal";
 import { Section, SectionHead } from "@/components/ui/section";
-import { toneTextDeep } from "@/lib/tones";
+import { toneTextDeep, type Tone } from "@/lib/tones";
 
 /** Un color por frustración: los mismos cuatro que usa el resto del sitio. */
 const tones: Tone[] = ["rosa", "miel", "verde", "aqua"];

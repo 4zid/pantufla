@@ -5,12 +5,11 @@ import { useRef } from "react";
 
 import { process } from "@/content/site";
 import { DrawnLineArt } from "@/components/art/drawn-line-art";
-import type { Tone } from "@/components/art/blob";
 import type { LineArtName } from "@/components/art/line-art";
 import { cn } from "@/lib/cn";
 import { Reveal } from "@/components/motion/reveal";
 import { Section, SectionHead } from "@/components/ui/section";
-import { toneTextBase } from "@/lib/tones";
+import { toneTextBase, type Tone } from "@/lib/tones";
 import { ease, gsap, registerGsap } from "@/lib/motion";
 
 export function Process() {

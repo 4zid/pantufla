@@ -5,10 +5,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRef } from "react";
 
-import type { Tone } from "@/components/art/blob";
 import { ArrowUpRightIcon } from "@/components/ui/icons";
 import { gsap, registerGsap } from "@/lib/motion";
-import { toneTextDeep } from "@/lib/tones";
+import { toneTextDeep, type Tone } from "@/lib/tones";
 import { urlForImage } from "@/sanity/image";
 import type { SanityProject } from "@/sanity/types";
 import { cn } from "@/lib/cn";

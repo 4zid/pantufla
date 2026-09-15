@@ -12,57 +12,66 @@ import { cn } from "@/lib/cn";
 /**
  * Mapa de puntos.
  *
- * Los continentes se aproximan con elipses en coordenadas geográficas: un
- * punto se dibuja si cae dentro de alguna. Es una silueta estilizada, no un
- * mapa exacto, y por eso no hace falta cargar ningún dataset ni imagen.
+ * La silueta va escrita a mano, fila por fila: cada renglón es un paralelo y
+ * cada par son las columnas de tierra en ese paralelo. Antes los continentes se
+ * aproximaban con elipses y el resultado era una nube de puntos en la que no se
+ * reconocía ningún lugar.
+ *
+ * 72 columnas cubren de -180° a 180° y 34 filas de 82°N a -52°S.
  */
-const LAND: [number, number, number, number][] = [
-  // Norteamérica
-  [-100, 50, 30, 15], [-95, 63, 28, 9], [-118, 44, 11, 13],
-  [-150, 63, 12, 6], [-88, 38, 18, 12], [-103, 24, 11, 8],
-  [-85, 14, 9, 4], [-78, 20, 6, 4],
-  // Groenlandia
-  [-42, 72, 15, 9],
-  // Sudamérica
-  [-60, -3, 20, 13], [-58, -18, 17, 14], [-63, -32, 12, 14], [-69, -46, 6, 8],
-  // Europa
-  [14, 52, 22, 11], [18, 63, 12, 8], [-4, 40, 8, 5], [30, 47, 14, 9],
-  // África
-  [12, 20, 22, 14], [20, 5, 18, 12], [24, -12, 14, 14],
-  [26, -28, 9, 8], [45, 8, 9, 6],
-  // Asia
-  [92, 60, 56, 14], [80, 45, 34, 14], [108, 34, 22, 12],
-  [78, 22, 12, 12], [47, 27, 14, 10], [102, 14, 10, 8],
-  [115, 0, 15, 6], [140, 38, 5, 8],
-  // Oceanía
-  [134, -25, 18, 11],
+const LAND: [number, number][][] = [
+  [[26, 31]],
+  [[25, 32], [50, 62]],
+  [[25, 32], [48, 66]],
+  [[4, 8], [10, 24], [26, 32], [36, 40], [42, 68]],
+  [[3, 8], [9, 24], [27, 31], [35, 40], [41, 69]],
+  [[4, 8], [9, 24], [28, 30], [35, 40], [41, 70]],
+  [[10, 24], [34, 34], [36, 40], [41, 70]],
+  [[11, 24], [33, 34], [36, 44], [45, 70]],
+  [[11, 23], [33, 33], [35, 45], [46, 70]],
+  [[11, 22], [34, 45], [46, 68]],
+  [[11, 22], [34, 35], [38, 38], [40, 45], [46, 66]],
+  [[11, 22], [34, 35], [37, 44], [45, 64]],
+  [[12, 21], [33, 46], [47, 63]],
+  [[13, 18], [33, 47], [48, 62]],
+  [[14, 19], [20, 21], [33, 48], [49, 62]],
+  [[15, 19], [33, 49], [50, 53], [55, 60]],
+  [[17, 20], [33, 50], [50, 53], [55, 60]],
+  [[18, 20], [33, 51], [56, 61]],
+  [[21, 23], [34, 51], [57, 62]],
+  [[21, 26], [35, 50], [57, 63]],
+  [[21, 28], [36, 49], [57, 64]],
+  [[21, 29], [37, 48], [58, 64]],
+  [[21, 29], [37, 47], [58, 64]],
+  [[22, 29], [37, 47], [59, 63]],
+  [[22, 29], [38, 46], [59, 66]],
+  [[22, 29], [38, 46], [58, 66]],
+  [[23, 28], [39, 45], [58, 66]],
+  [[23, 27], [40, 44], [59, 66]],
+  [[23, 27], [41, 43], [60, 65]],
+  [[23, 26], [42, 42], [61, 64]],
+  [[23, 25], [68, 69]],
+  [[23, 25], [68, 69]],
+  [[24, 25]],
+  [[24, 24]],
 ];
 
-const COLS = 88;
-const ROWS = 44;
-const LON0 = -170;
-const LON1 = 180;
-const LAT0 = 80;
-const LAT1 = -58;
+const COLS = 72;
+const ROWS = LAND.length;
+const LAT_TOP = 82;
+const LAT_BOTTOM = -52;
 
-const toX = (lon: number) => ((lon - LON0) / (LON1 - LON0)) * 100;
-const toY = (lat: number) => ((lat - LAT0) / (LAT1 - LAT0)) * 100;
-
-function isLand(lon: number, lat: number) {
-  return LAND.some(
-    ([cx, cy, rx, ry]) =>
-      ((lon - cx) / rx) ** 2 + ((lat - cy) / ry) ** 2 <= 1,
-  );
-}
+const toX = (lon: number) => ((lon + 180) / 360) * 100;
+const toY = (lat: number) => ((LAT_TOP - lat) / (LAT_TOP - LAT_BOTTOM)) * 100;
 
 const dots: { x: number; y: number }[] = [];
-for (let r = 0; r < ROWS; r++) {
-  const lat = LAT0 + ((LAT1 - LAT0) * r) / (ROWS - 1);
-  for (let c = 0; c < COLS; c++) {
-    const lon = LON0 + ((LON1 - LON0) * c) / (COLS - 1);
-    if (isLand(lon, lat)) dots.push({ x: (c / (COLS - 1)) * 100, y: (r / (ROWS - 1)) * 100 });
-  }
-}
+LAND.forEach((spans, r) => {
+  spans.forEach(([from, to]) => {
+    for (let c = from; c <= to; c++) {
+      dots.push({ x: (c / (COLS - 1)) * 100, y: (r / (ROWS - 1)) * 100 });
+    }
+  });
+});
 
 const countries = [...new Set(clients.map((c) => c.country))];
 
@@ -78,19 +87,20 @@ export function ClientsMap() {
 
       const mm = gsap.matchMedia();
       mm.add("(prefers-reduced-motion: no-preference)", () => {
+        gsap.from(gsap.utils.toArray("[data-dot]", root), {
+          opacity: 0,
+          duration: 0.8,
+          ease,
+          stagger: { amount: 0.6, from: "start" },
+          scrollTrigger: { trigger: root, start: START, once: true },
+        });
         gsap.from(gsap.utils.toArray("[data-pin]", root), {
           opacity: 0,
           scale: 0,
           duration: 0.6,
           ease: "back.out(2)",
           stagger: 0.06,
-          scrollTrigger: { trigger: root, start: START, once: true },
-        });
-        gsap.from(gsap.utils.toArray("[data-dot]", root), {
-          opacity: 0,
-          duration: 0.9,
-          ease,
-          stagger: { amount: 0.7, from: "start" },
+          delay: 0.35,
           scrollTrigger: { trigger: root, start: START, once: true },
         });
       });
@@ -110,24 +120,27 @@ export function ClientsMap() {
       />
 
       <Reveal>
-        <div ref={scope} className="relative mt-14">
-          <div className="relative mx-auto aspect-[2/1] w-full max-w-5xl">
-            {/* Silueta de puntos */}
+        <div ref={scope} className="mt-14">
+          <div
+            className="relative mx-auto w-full max-w-4xl"
+            style={{ aspectRatio: `${COLS} / ${ROWS}` }}
+          >
             {dots.map((dot, i) => (
               <span
                 key={i}
                 data-dot
                 aria-hidden
-                className="absolute h-[3px] w-[3px] rounded-full bg-ink-faint/60"
+                className="absolute rounded-full bg-ink-faint/50"
                 style={{
                   left: `${dot.x}%`,
                   top: `${dot.y}%`,
+                  width: `${100 / COLS / 1.9}%`,
+                  aspectRatio: "1",
                   transform: "translate(-50%, -50%)",
                 }}
               />
             ))}
 
-            {/* Ciudades */}
             {clients.map((client, i) => (
               <button
                 key={client.city}
@@ -137,7 +150,7 @@ export function ClientsMap() {
                 onMouseLeave={() => setActive(null)}
                 onFocus={() => setActive(i)}
                 onBlur={() => setActive(null)}
-                className="absolute flex h-6 w-6 items-center justify-center rounded-full"
+                className="absolute flex h-7 w-7 items-center justify-center rounded-full"
                 style={{
                   left: `${toX(client.lon)}%`,
                   top: `${toY(client.lat)}%`,
@@ -150,29 +163,23 @@ export function ClientsMap() {
                 <span
                   aria-hidden
                   className={cn(
-                    "absolute h-6 w-6 rounded-full bg-miel transition-opacity duration-300",
-                    active === i ? "opacity-45" : "opacity-20",
+                    "absolute h-7 w-7 rounded-full bg-miel transition-opacity duration-300",
+                    active === i ? "opacity-55" : "opacity-25",
                   )}
                 />
                 <span
                   aria-hidden
-                  className="relative h-2 w-2 rounded-full bg-miel-deep"
+                  className="relative h-2.5 w-2.5 rounded-full bg-miel-deep ring-2 ring-paper-alt"
                 />
 
                 {active === i ? (
-                  <span className="absolute bottom-full mb-2 whitespace-nowrap rounded-full border border-line bg-card px-2.5 py-1 text-[0.75rem] font-medium shadow-sm">
+                  <span className="absolute bottom-full z-10 mb-2 whitespace-nowrap rounded-full border border-line bg-card px-2.5 py-1 text-[0.75rem] font-medium shadow-sm">
                     {client.city}
                   </span>
                 ) : null}
               </button>
             ))}
           </div>
-
-          <ul className="mt-10 flex flex-wrap justify-center gap-x-5 gap-y-2 text-[0.88rem] text-ink-soft">
-            {countries.map((country) => (
-              <li key={country}>{country}</li>
-            ))}
-          </ul>
         </div>
       </Reveal>
     </Section>

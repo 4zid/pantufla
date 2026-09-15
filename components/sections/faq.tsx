@@ -28,14 +28,27 @@ export function Faq() {
 
       panels.forEach((panel, i) => {
         const isOpen = open === i;
-        const duration = reduced ? 0 : 0.42;
+        const inner = panel.firstElementChild;
+        const duration = reduced ? 0 : 0.55;
 
+        // La altura y el contenido se mueven por separado: el texto entra un
+        // poco después y con su propio desplazamiento, que es lo que le saca
+        // lo brusco a la apertura.
         gsap.to(panel, {
           height: isOpen ? "auto" : 0,
-          opacity: isOpen ? 1 : 0,
           duration,
-          ease: isOpen ? "power2.out" : "power2.in",
+          ease: "power3.inOut",
         });
+
+        if (inner) {
+          gsap.to(inner, {
+            opacity: isOpen ? 1 : 0,
+            y: isOpen ? 0 : -8,
+            duration: reduced ? 0 : 0.45,
+            delay: reduced || !isOpen ? 0 : 0.12,
+            ease: "power2.out",
+          });
+        }
       });
     },
     { dependencies: [open] },
@@ -84,9 +97,12 @@ export function Faq() {
                     data-faq-panel
                     aria-hidden={!isOpen}
                     className="overflow-hidden"
-                    style={isOpen ? undefined : { height: 0, opacity: 0 }}
+                    style={isOpen ? undefined : { height: 0 }}
                   >
-                    <p className="pb-6 pr-10 text-[0.96rem] leading-relaxed text-ink-soft">
+                    <p
+                      className="pb-6 pr-10 text-[0.96rem] leading-relaxed text-ink-soft"
+                      style={isOpen ? undefined : { opacity: 0 }}
+                    >
                       {item.a}
                     </p>
                   </div>

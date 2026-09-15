@@ -1,9 +1,9 @@
 import type { ReactNode } from "react";
 
-import type { Tone } from "@/components/art/blob";
 import { Reveal } from "@/components/motion/reveal";
 import { SplitHeading } from "@/components/motion/split-heading";
 import { Eyebrow } from "@/components/ui/eyebrow";
+import type { Tone } from "@/lib/tones";
 import { cn } from "@/lib/cn";
 
 export function Section({

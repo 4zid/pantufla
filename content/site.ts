@@ -169,9 +169,9 @@ export type BillingMode = "once" | "split";
 
 export const pricing = {
   eyebrow: "Planes",
-  title: "Dos formas de empezar.",
+  title: "Elegí cómo empezar.",
   lead:
-    "Una página sola o el sitio completo. Precios en dólares y cerrados: lo que ves acá es lo que sale.",
+    "Una página sola, el sitio completo, o contanos si necesitás otra cosa. Precios en dólares y cerrados.",
   toggle: {
     once: { label: "Pago único", note: "−15%", noteLong: "15% menos" },
     split: { label: "En 2 pagos", note: "50/50", noteLong: "50% y 50%" },
@@ -193,7 +193,6 @@ export const pricing = {
         "Una página, hasta 6 secciones",
         "Escribimos los textos con vos",
         "Formulario que te avisa por mail",
-        "Anda perfecto en celular",
         "Publicado en tu dominio",
       ],
       excluded: [],
@@ -214,14 +213,22 @@ export const pricing = {
         "Hasta 6 páginas",
         "Panel para que lo edites vos",
         "Blog o listado de proyectos",
-        "Cargamos tu contenido inicial",
-        "15 días de ajustes después de publicar",
       ],
       excluded: [],
     },
   ],
-  outside:
-    "¿Tu proyecto no entra en ninguno de los dos? Contanos qué necesitás y te decimos si podemos, con precio y fecha, en 24 horas.",
+  contact: {
+    name: "Contactanos",
+    summary: "Tu proyecto no entra en ninguno de los dos.",
+    price: "A convenir",
+    features: [
+      "Tiendas online y reservas",
+      "Integraciones con lo que ya usás",
+      "Migraciones desde otra plataforma",
+      "Te decimos en 24 horas si podemos",
+    ],
+    cta: { label: "Contarnos el proyecto", href: "/contacto?plan=otra-cosa" },
+  },
   alwaysIncluded: [
     "Diseño original, nada de plantillas",
     "Responsive real en mobile, tablet y desktop",

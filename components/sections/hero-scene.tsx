@@ -9,7 +9,7 @@ import {
   PanelSitio,
   PanelVentas,
 } from "@/components/sections/hero-panels";
-import { ease, gsap, registerGsap } from "@/lib/motion";
+import { Draggable, ease, gsap, registerGsap } from "@/lib/motion";
 import { cn } from "@/lib/cn";
 
 /**
@@ -27,10 +27,10 @@ import { cn } from "@/lib/cn";
  */
 
 const panels = [
-  { id: "sitio", node: <PanelSitio />, w: 330, h: 230, rotate: 3 },
-  { id: "analytics", node: <PanelAnalytics />, w: 206, h: 108, rotate: -4 },
-  { id: "ventas", node: <PanelVentas />, w: 206, h: 108, rotate: 2.5 },
-  { id: "chat", node: <PanelChat />, w: 240, h: 230, rotate: -2 },
+  { id: "sitio", node: <PanelSitio />, w: 420, h: 292, rotate: 3 },
+  { id: "analytics", node: <PanelAnalytics />, w: 262, h: 137, rotate: -4 },
+  { id: "ventas", node: <PanelVentas />, w: 262, h: 137, rotate: 2.5 },
+  { id: "chat", node: <PanelChat />, w: 305, h: 292, rotate: -2 },
 ] as const;
 
 /**
@@ -44,10 +44,10 @@ const panels = [
  * lugar para ponerlos sin pisar algo.
  */
 const scattered: Record<string, string> = {
-  analytics: "left-[4%] top-[55%]",
-  chat: "left-[6%] top-[66%]",
-  sitio: "right-[4%] top-[53%]",
-  ventas: "right-[8%] top-[76%]",
+  analytics: "left-[3%] top-[44%]",
+  ventas: "right-[3%] top-[45%]",
+  chat: "left-[5%] top-[66%]",
+  sitio: "right-[5%] top-[64%]",
 };
 
 /**
@@ -86,6 +86,18 @@ export function HeroScene() {
           if (!desktop) return;
 
           gsap.set(cards, { rotate: (i) => panels[i].rotate });
+
+          // Se pueden agarrar y mover. El arrastre vive en el hijo, así que no
+          // compite con el transform que usa el vuelo.
+          const draggables = cards.map((card) =>
+            Draggable.create(card.querySelector("[data-drag]"), {
+              type: "x,y",
+              bounds: root.parentElement ?? undefined,
+              inertia: false,
+              cursor: "grab",
+              activeCursor: "grabbing",
+            }),
+          );
           gsap.from(cards, {
             opacity: 0,
             y: 34,
@@ -136,6 +148,16 @@ export function HeroScene() {
           }
 
           cards.forEach((card, i) => {
+            const at = 0.18 + i * 0.05;
+
+            // Lo que el visitante haya movido a mano vuelve a cero antes de
+            // volar: si no, el panel aterriza corrido respecto del hueco.
+            tl.to(
+              card.querySelector("[data-drag]"),
+              { x: 0, y: 0, ease: "power2.inOut", duration: 0.3 },
+              at,
+            );
+
             tl.to(
               card,
               {
@@ -145,11 +167,12 @@ export function HeroScene() {
                 ease: "power2.inOut",
                 duration: 0.55,
               },
-              0.18 + i * 0.05,
+              at,
             );
           });
 
           return () => {
+            draggables.flat().forEach((d) => d.kill());
             gsap.set(cards, { clearProps: "all" });
           };
         },
@@ -173,9 +196,14 @@ export function HeroScene() {
             key={panel.id}
             data-card={panel.id}
             style={{ width: panel.w, height: panel.h }}
-            className={cn("absolute", frameClasses, scattered[panel.id])}
+            className={cn("absolute", scattered[panel.id])}
           >
-            {panel.node}
+            <div
+              data-drag
+              className={cn("pointer-events-auto h-full w-full", frameClasses)}
+            >
+              {panel.node}
+            </div>
           </div>
         ))}
       </div>
@@ -200,7 +228,7 @@ export function HeroScene() {
               <div className="w-12" />
             </div>
 
-            <div className="grid grid-cols-1 gap-3.5 p-3.5 min-[1440px]:grid-cols-[330px_206px_240px] min-[1440px]:grid-rows-[108px_108px]">
+            <div className="grid grid-cols-1 gap-[18px] p-[18px] min-[1440px]:grid-cols-[420px_262px_305px] min-[1440px]:grid-rows-[137px_137px]">
               {panels.map((panel) => (
                 <div
                   key={panel.id}
