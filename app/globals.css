@@ -29,6 +29,11 @@
   --color-deep: #0e0e0e;
   --color-deep-alt: #1b1b1b;
 
+  /* Bruma: el fondo del hero y de los huecos del tablero. Es el único azulado
+     del sistema y nunca lleva texto encima en tamaño chico; funciona como
+     superficie, no como color de marca. */
+  --color-mist: #eaedf8;
+
   /* Dorado de las estrellas de calificación. Es el único uso que tiene: la
      miel de la paleta queda demasiado clara sobre blanco para leerse como
      estrella llena. */

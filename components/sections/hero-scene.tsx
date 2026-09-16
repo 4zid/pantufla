@@ -4,9 +4,9 @@ import { useGSAP } from "@gsap/react";
 import { useRef } from "react";
 
 import {
-  PanelConsultas,
-  PanelGoogle,
+  PanelConversion,
   PanelTrafico,
+  PanelVelocidad,
   PanelVisitas,
 } from "@/components/sections/hero-panels";
 import { Draggable, ease, gsap, registerGsap } from "@/lib/motion";
@@ -28,61 +28,101 @@ import { cn } from "@/lib/cn";
  */
 
 /**
- * Los cuatro miden lo mismo y van en una sola fila.
+ * El tablero es modular: tres tamaños distintos que encastran en una grilla de
+ * tres columnas por dos filas.
  *
- * Antes eran de tres tamaños distintos y había que colocarlos a mano, celda
- * por celda; alrededor del título quedaban desparejos y se leían como cuatro
- * cosas sueltas. Iguales y simétricos se leen como un tablero.
+ *   ┌───────────────┬───────┬───────┐
+ *   │               │ conv. │ vel.  │
+ *   │    visitas    ├───────┴───────┤
+ *   │               │    tráfico    │
+ *   └───────────────┴───────────────┘
+ *
+ * Cuatro tarjetas iguales se leen como una grilla de relleno. Con tamaños
+ * distintos, el tamaño mismo dice qué mira uno primero.
+ *
+ * Cada caja mide exactamente lo que mide su hueco: el vuelo sigue siendo la
+ * diferencia entre dos rectángulos iguales.
  */
-const PANEL_W = 280;
-const PANEL_H = 185;
+const SLOT = { w: 400, h: 380, sw: 192, sh: 176, mw: 400, mh: 188 };
 
 const panels = [
-  { id: "visitas", node: <PanelVisitas />, rotate: -3.5 },
-  { id: "trafico", node: <PanelTrafico />, rotate: -2.5 },
-  { id: "consultas", node: <PanelConsultas />, rotate: -4 },
-  { id: "google", node: <PanelGoogle />, rotate: 4.5 },
+  {
+    id: "visitas",
+    node: <PanelVisitas />,
+    w: SLOT.w,
+    h: SLOT.h,
+    area: "min-[1440px]:col-start-1 min-[1440px]:row-start-1 min-[1440px]:row-span-2",
+    // Cada una levita con su propia inclinación: iguales se leerían como una
+    // sola lámina rígida partida en cuatro.
+    tilt: { rotate: 2.5, rotateX: 8, rotateY: -13 },
+  },
+  {
+    id: "conversion",
+    node: <PanelConversion />,
+    w: SLOT.sw,
+    h: SLOT.sh,
+    area: "min-[1440px]:col-start-2 min-[1440px]:row-start-1",
+    // Las de la izquierda fugan hacia la izquierda y las de la derecha hacia
+    // la derecha: dos tarjetas del mismo costado mirando a lugares opuestos
+    // se leen como dos escenas distintas pegadas.
+    tilt: { rotate: -3, rotateX: 11, rotateY: 12 },
+  },
+  {
+    id: "velocidad",
+    node: <PanelVelocidad />,
+    w: SLOT.sw,
+    h: SLOT.sh,
+    area: "min-[1440px]:col-start-3 min-[1440px]:row-start-1",
+    tilt: { rotate: 3.5, rotateX: 9, rotateY: 14 },
+  },
+  {
+    id: "trafico",
+    node: <PanelTrafico />,
+    w: SLOT.mw,
+    h: SLOT.mh,
+    area: "min-[1440px]:col-start-2 min-[1440px]:col-span-2 min-[1440px]:row-start-2",
+    tilt: { rotate: 2, rotateX: 10, rotateY: -11 },
+  },
 ] as const;
 
-/**
- * Cuánto más grandes se ven los paneles antes de converger.
- *
- * Es una escala y no un tamaño distinto a propósito: la caja de maquetado
- * sigue midiendo lo mismo que su hueco, así que el aterrizaje se sigue
- * calculando como una traslación pura entre dos rectángulos del mismo tamaño.
- * La escala vuelve a 1 durante el vuelo y el panel cae justo.
- */
-const SCATTER_SCALE = 1.45;
+const SCATTER_SCALE = 1.18;
 
 /**
  * Dónde arranca cada panel antes de converger.
  *
- * Dos por costado, flanqueando el titular, que así queda centrado en la
- * pantalla en vez de tener que cederles la mitad de abajo.
+ * Dos por costado, en diagonal, con el titular en el hueco del medio: así
+ * queda centrado en la pantalla en vez de tener que cederles la mitad de
+ * abajo.
  *
- * El corte es moderado: entra alrededor del 75% de cada una. Se probó con más
- * sangrado y no sirve: el contenido de las tarjetas está alineado a la
- * izquierda, así que cortar mucho por ese lado se come justo las etiquetas y
- * los números, que es lo único que hay para leer. El recorte tiene que dejar
- * ver de qué habla cada tarjeta.
+ * El reparto no es decorativo, sale de la medida. A 1440 el texto ocupa de 345
+ * a 1081, o sea que cada costado deja una franja de unos 350px. Ahí entra una
+ * tarjeta chica entera, o una grande sangrando por el borde, pero no dos al
+ * lado de la otra.
  *
- * De 1600 para arriba las posiciones son las que quedaron después de
- * acomodarlas a mano, y van en píxeles: lo que se buscaba es que apenas asomen
- * fuera de cuadro, y un porcentaje las corre hacia adentro a medida que crece
- * la pantalla hasta dejar de cortarlas.
+ * Y el sangrado va siempre por la derecha. El contenido de las tarjetas está
+ * alineado a la izquierda —título arriba, número abajo—, así que cortar por
+ * ese lado se lleva justo lo único que hay para leer: la grande arrancó a la
+ * izquierda y se veía el gráfico sin saber de qué era. Cortadas por la
+ * derecha se pierde la cola de los números y se entienden igual. Por eso las
+ * dos que sangran, la grande y la de tráfico, van a la derecha, y las dos
+ * chicas quedan enteras a la izquierda.
  *
- * Abajo de 1600 mandan los porcentajes, calculados contra 1440, que es donde
- * la columna de texto queda más cerca del borde. El borde interno nunca llega
- * al texto: la escala agranda desde el centro, o sea 203px hacia cada lado de
- * la caja.
+ * De 1600 para arriba las posiciones se corren hacia afuera: lo que se busca
+ * es que apenas asomen fuera de cuadro, y un porcentaje fijo las trae hacia
+ * adentro a medida que crece la pantalla hasta dejar de cortarlas.
+ *
+ * El arranque vertical tampoco es libre: arriba está la barra flotante, y una
+ * tarjeta que asoma por debajo deja ver un pedazo de dato suelto al lado del
+ * logo. Abajo sí pueden bajar todo lo que quieran, porque el tablero recién
+ * aparece cuando el visitante empieza a bajar.
  *
  * Aparecen recién a partir de 1440px: abajo de ese ancho no hay costado libre.
  */
 const scattered: Record<string, string> = {
-  visitas: "left-[-2%] top-[23%] min-[1600px]:left-[48px]",
-  trafico: "left-[-2%] top-[66%] min-[1600px]:left-[48px]",
-  consultas: "right-[-2%] top-[23%] min-[1600px]:right-[-39px]",
-  google: "right-[-2%] top-[72%] min-[1600px]:right-[45px]",
+  visitas: "right-[-10%] top-[11%] min-[1600px]:right-[-5%]",
+  conversion: "left-[2%] top-[15%] min-[1600px]:left-[5%]",
+  velocidad: "left-[3%] top-[52%] min-[1600px]:left-[6%]",
+  trafico: "right-[-6%] top-[67%] min-[1600px]:right-[-2%]",
 };
 
 export function HeroScene() {
@@ -110,8 +150,11 @@ export function HeroScene() {
           if (!desktop) return;
 
           gsap.set(cards, {
-            rotate: (i) => panels[i].rotate,
+            rotate: (i) => panels[i].tilt.rotate,
+            rotateX: (i) => panels[i].tilt.rotateX,
+            rotateY: (i) => panels[i].tilt.rotateY,
             scale: SCATTER_SCALE,
+            transformPerspective: 1400,
           });
 
           // Se pueden agarrar y mover. El arrastre vive en el hijo, así que no
@@ -144,9 +187,18 @@ export function HeroScene() {
               x: gsap.getProperty(card, "x") as number,
               y: gsap.getProperty(card, "y") as number,
               rotate: gsap.getProperty(card, "rotation") as number,
+              rotateX: gsap.getProperty(card, "rotationX") as number,
+              rotateY: gsap.getProperty(card, "rotationY") as number,
               scale: gsap.getProperty(card, "scaleX") as number,
             };
-            gsap.set(card, { x: 0, y: 0, rotate: 0, scale: 1 });
+            gsap.set(card, {
+              x: 0,
+              y: 0,
+              rotate: 0,
+              rotateX: 0,
+              rotateY: 0,
+              scale: 1,
+            });
             const c = card.getBoundingClientRect();
             const s = slot.getBoundingClientRect();
             gsap.set(card, saved);
@@ -198,6 +250,8 @@ export function HeroScene() {
                 x: () => flight(card).x,
                 y: () => flight(card).y,
                 rotate: 0,
+                rotateX: 0,
+                rotateY: 0,
                 scale: 1,
                 // Se pasa apenas del hueco y vuelve, como una pieza que se
                 // acomoda al encastrar. Va con back y no con un rebote aparte
@@ -223,8 +277,11 @@ export function HeroScene() {
     { scope },
   );
 
+  // Sin borde: lo que separa una tarjeta del fondo es la sombra, no una
+  // línea. Un borde de 1px sobre un fondo claro las endurece y las saca del
+  // registro de producto.
   const frameClasses =
-    "overflow-hidden rounded-card border border-line bg-card shadow-[0_28px_60px_-32px_rgba(35,28,18,0.3)]";
+    "overflow-hidden rounded-[20px] bg-card shadow-[0_2px_4px_-2px_rgba(17,24,60,0.06),0_24px_48px_-20px_rgba(17,24,60,0.22)]";
 
   return (
     <div ref={scope} className="pointer-events-none min-[1440px]:shrink-0">
@@ -238,7 +295,7 @@ export function HeroScene() {
           <div
             key={panel.id}
             data-card={panel.id}
-            style={{ width: PANEL_W, height: PANEL_H }}
+            style={{ width: panel.w, height: panel.h }}
             className={cn("absolute", scattered[panel.id])}
           >
             <div
@@ -265,31 +322,43 @@ export function HeroScene() {
         inferior— y reservando el alto completo el titular quedaba arrinconado
         contra la barra en pantallas bajas.
       */}
-      <div className="mt-12 min-[1440px]:mt-0 min-[1440px]:h-[175px] min-[1440px]:overflow-visible">
+      {/* relative z-10: el fondo del hero es absolute y el marco no tenía
+          posición, así que el degradé que apaga la bruma contra el pie le
+          pasaba por encima y se tragaba la cabecera del tablero. Se veían
+          las tarjetas —van en z-20— flotando sobre nada. */}
+      <div className="relative z-10 mt-12 min-[1440px]:mt-0 min-[1440px]:h-[180px] min-[1440px]:overflow-visible [@media(min-height:960px)]:min-[1440px]:h-[280px]">
         <div className="shell">
           <div
             data-dashboard
-            className="mx-auto w-full overflow-hidden rounded-t-panel border border-line-strong border-b-0 bg-card shadow-[0_-1px_0_rgba(255,255,255,0.8)_inset,0_40px_80px_-40px_rgba(35,28,18,0.28)] min-[1440px]:w-fit"
+            className="mx-auto w-full overflow-hidden rounded-t-[28px] bg-mist shadow-[0_-24px_60px_-30px_rgba(17,24,60,0.25)] min-[1440px]:w-fit"
           >
-            <div className="flex items-center gap-3 border-b border-line bg-paper-alt/70 px-4 py-3">
-              <div className="flex gap-1.5">
-                <span className="h-2.5 w-2.5 rounded-full bg-line-strong" />
-                <span className="h-2.5 w-2.5 rounded-full bg-line-strong" />
-                <span className="h-2.5 w-2.5 rounded-full bg-line-strong" />
+            {/* Cabecera del tablero, no de un navegador: lo que se muestra es
+                el panel del sitio, no una captura de pantalla. */}
+            <div className="flex items-center justify-between gap-6 px-6 pb-2 pt-5">
+              <div>
+                <p className="text-[1.05rem] font-semibold tracking-[-0.02em]">
+                  Tu sitio, un mes después
+                </p>
+                <p className="mt-0.5 flex items-center gap-1.5 text-[0.72rem] text-ink-soft">
+                  <span className="h-1.5 w-1.5 rounded-full bg-verde-deep" />
+                  Todo funcionando
+                </p>
               </div>
-              <div className="mx-auto rounded-full border border-line bg-card px-3 py-1 text-[0.7rem] text-ink-faint">
-                Tu sitio, un mes después
-              </div>
-              <div className="w-12" />
+              <span className="shrink-0 rounded-full bg-card px-3.5 py-2 text-[0.72rem] font-medium">
+                Últimos 30 días
+              </span>
             </div>
 
-            <div className="grid grid-cols-1 gap-[18px] p-[18px] min-[1440px]:grid-cols-[repeat(4,280px)] min-[1440px]:grid-rows-[185px]">
+            <div className="grid grid-cols-1 gap-4 p-4 min-[1440px]:grid-cols-[400px_192px_192px] min-[1440px]:grid-rows-[176px_188px]">
               {panels.map((panel) => (
                 <div
                   key={panel.id}
                   data-slot={panel.id}
-                  style={{ height: PANEL_H }}
-                  className="overflow-hidden rounded-card border border-line bg-paper-alt/40 min-[1440px]:h-auto"
+                  style={{ height: panel.h }}
+                  className={cn(
+                    "overflow-hidden rounded-[20px] bg-white/45 min-[1440px]:h-auto",
+                    panel.area,
+                  )}
                 >
                   {/* En desktop el hueco queda vacío: lo llena la tarjeta. */}
                   <div className="h-full min-[1440px]:hidden">{panel.node}</div>

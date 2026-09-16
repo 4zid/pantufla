@@ -23,7 +23,7 @@ export function Hero() {
     <section className="relative max-[1439px]:pb-16 max-[1439px]:pt-28 min-[1440px]:h-[220vh]">
       <div className="relative overflow-hidden min-[1440px]:sticky min-[1440px]:top-0 min-[1440px]:flex min-[1440px]:h-screen min-[1440px]:flex-col">
         <HeroAurora />
-        <div className="min-[1440px]:flex min-[1440px]:min-h-0 min-[1440px]:flex-1 min-[1440px]:items-center min-[1440px]:pt-[175px]">
+        <div className="min-[1440px]:flex min-[1440px]:min-h-0 min-[1440px]:flex-1 min-[1440px]:items-center min-[1440px]:pt-[180px] [@media(min-height:960px)]:min-[1440px]:pt-[280px]">
           <HeroIntro />
         </div>
         <HeroScene />

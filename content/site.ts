@@ -273,8 +273,13 @@ export const pricing = {
 
 export const faq = {
   eyebrow: "Preguntas",
-  title: "Lo que casi siempre nos preguntan.",
-  lead: "Todo lo que conviene saber antes de arrancar un proyecto con nosotros.",
+  title: "Acá están las respuestas.",
+  /** El cierre de abajo del acordeón, para el que no encontró su pregunta. */
+  cta: {
+    claim: "¿Te quedó alguna duda?",
+    label: "Hablemos",
+    href: "/contacto",
+  },
   items: [
     {
       q: "¿Y si necesito más páginas de las que incluye el plan?",
