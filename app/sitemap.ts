@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 
-import { demoProjects } from "@/content/demo-content";
+import { fallbackProjects } from "@/content/fallback-content";
 import { sanityFetch } from "@/sanity/client";
 import { postSlugsQuery, projectSlugsQuery } from "@/sanity/queries";
 
@@ -14,7 +14,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const projects = projectSlugs.length
     ? projectSlugs
-    : demoProjects.map((p) => p.slug);
+    : fallbackProjects.map((p) => p.slug);
 
   const now = new Date();
 

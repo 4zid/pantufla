@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { FinalCta } from "@/components/sections/final-cta";
 import { PageHeader } from "@/components/ui/page-header";
 import { ProjectStack } from "@/components/ui/project-stack";
-import { demoProjects } from "@/content/demo-content";
+import { fallbackProjects } from "@/content/fallback-content";
 import { sanityFetch } from "@/sanity/client";
 import { allProjectsQuery } from "@/sanity/queries";
 import type { SanityProject } from "@/sanity/types";
@@ -24,14 +24,14 @@ export default async function ProjectsPage() {
     [],
     ["project"],
   );
-  const projects = cms.length ? cms : demoProjects;
+  const projects = cms.length ? cms : fallbackProjects;
 
   return (
     <>
       <PageHeader
         eyebrow="Proyectos"
         title="Sitios que salieron de acá."
-        lead="Cada ficha muestra el rubro, el plan con el que se hizo y en cuánto tiempo se entregó."
+        lead="Entre landings de una sola página y sitios completos con panel de carga."
       />
 
       <div className="shell py-16 md:py-20">

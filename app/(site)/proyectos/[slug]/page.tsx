@@ -6,7 +6,7 @@ import { notFound } from "next/navigation";
 import { FinalCta } from "@/components/sections/final-cta";
 import { ArrowIcon, ArrowUpRightIcon } from "@/components/ui/icons";
 import { Prose } from "@/components/ui/portable-text";
-import { demoProjects } from "@/content/demo-content";
+import { fallbackProjects } from "@/content/fallback-content";
 import { sanityFetch } from "@/sanity/client";
 import { urlForImage } from "@/sanity/image";
 import { projectBySlugQuery, projectSlugsQuery } from "@/sanity/queries";
@@ -23,12 +23,12 @@ async function getProject(slug: string) {
     null,
     ["project"],
   );
-  return fromCms ?? demoProjects.find((p) => p.slug === slug) ?? null;
+  return fromCms ?? fallbackProjects.find((p) => p.slug === slug) ?? null;
 }
 
 export async function generateStaticParams() {
   const slugs = await sanityFetch<string[]>(projectSlugsQuery, {}, []);
-  const all = slugs.length ? slugs : demoProjects.map((p) => p.slug);
+  const all = slugs.length ? slugs : fallbackProjects.map((p) => p.slug);
   return all.map((slug) => ({ slug }));
 }
 

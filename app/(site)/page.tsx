@@ -8,7 +8,10 @@ import { Problem } from "@/components/sections/problem";
 import { Process } from "@/components/sections/process";
 import { Testimonials } from "@/components/sections/testimonials";
 import { Work } from "@/components/sections/work";
-import { demoProjects, demoTestimonials } from "@/content/demo-content";
+import {
+  fallbackProjects,
+  fallbackTestimonials,
+} from "@/content/fallback-content";
 import { faq, pricing, site } from "@/content/site";
 import { sanityFetch } from "@/sanity/client";
 import { featuredProjectsQuery, testimonialsQuery } from "@/sanity/queries";
@@ -19,12 +22,23 @@ export const revalidate = 60;
 export default async function HomePage() {
   const [cmsProjects, cmsTestimonials] = await Promise.all([
     sanityFetch<SanityProject[]>(featuredProjectsQuery, {}, [], ["project"]),
-    sanityFetch<SanityTestimonial[]>(testimonialsQuery, {}, [], ["testimonial"]),
+    sanityFetch<SanityTestimonial[]>(
+      testimonialsQuery,
+      {},
+      [],
+      ["testimonial"],
+    ),
   ]);
 
-  // Mientras el CMS esté vacío se muestra el contenido de muestra.
-  const projects = cmsProjects.length ? cmsProjects : demoProjects;
-  const testimonials = cmsTestimonials.length ? cmsTestimonials : demoTestimonials;
+  // Mientras el CMS esté vacío se muestra el contenido de respaldo. La home
+  // corta en tres porque es lo que devuelve la query de destacados: así el
+  // bloque mide igual con CMS o sin CMS. Los seis están en /proyectos.
+  const projects = cmsProjects.length
+    ? cmsProjects
+    : fallbackProjects.slice(0, 3);
+  const testimonials = cmsTestimonials.length
+    ? cmsTestimonials
+    : fallbackTestimonials;
 
   return (
     <>
