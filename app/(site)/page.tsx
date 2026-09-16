@@ -5,6 +5,7 @@ import { FinalCta } from "@/components/sections/final-cta";
 import { Hero } from "@/components/sections/hero";
 import { Pricing } from "@/components/sections/pricing";
 import { Process } from "@/components/sections/process";
+import { SocialProof } from "@/components/sections/social-proof";
 import { StackTicker } from "@/components/sections/stack-ticker";
 import { Testimonials } from "@/components/sections/testimonials";
 import { Work } from "@/components/sections/work";
@@ -43,6 +44,7 @@ export default async function HomePage() {
   return (
     <>
       <Hero />
+      <SocialProof />
       <Approach />
       <Process />
       <StackTicker />

@@ -1,6 +1,10 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useId, useRef, useState } from "react";
+
+import { useGSAP } from "@gsap/react";
+
+import { gsap, registerGsap } from "@/lib/motion";
 
 import { Counter } from "@/components/motion/counter";
 import { PricingExisting } from "@/components/sections/pricing-existing";
@@ -21,6 +25,37 @@ const card =
 export function Pricing() {
   const [mode, setMode] = useState<BillingMode>("once");
   const groupId = useId();
+  const toggle = useRef<HTMLDivElement>(null);
+
+  /**
+   * La pastilla oscura se desliza hasta la opción elegida en vez de aparecer
+   * y desaparecer. Se mide la posición real de cada botón porque los dos no
+   * miden lo mismo: cada uno lleva su propio distintivo de descuento al lado
+   * de la etiqueta.
+   */
+  useGSAP(
+    () => {
+      registerGsap();
+      const root = toggle.current;
+      if (!root) return;
+
+      const activo = root.querySelector<HTMLElement>(`[data-value="${mode}"]`);
+      const pastilla = root.querySelector<HTMLElement>("[data-thumb]");
+      if (!activo || !pastilla) return;
+
+      const reduced = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
+
+      gsap.to(pastilla, {
+        x: activo.offsetLeft,
+        width: activo.offsetWidth,
+        duration: reduced ? 0 : 0.45,
+        ease: "power3.out",
+      });
+    },
+    { dependencies: [mode] },
+  );
 
   return (
     <Section id="planes" className="py-16 md:py-20">
@@ -33,10 +68,18 @@ export function Pricing() {
 
         <Reveal delay={0.2}>
           <div
+            ref={toggle}
             role="radiogroup"
             aria-label="Forma de pago"
-            className="flex w-full shrink-0 rounded-full border border-line-strong bg-card p-1 sm:w-auto"
+            className="relative flex w-full shrink-0 rounded-full border border-line-strong bg-card p-1 sm:w-auto"
           >
+            {/* La pastilla que viaja. Va detrás de los botones y sin capturar
+                el puntero, así el clic sigue llegando al botón de abajo. */}
+            <span
+              aria-hidden
+              data-thumb
+              className="pointer-events-none absolute left-0 top-1 h-[calc(100%-0.5rem)] rounded-full bg-ink"
+            />
             {(["once", "split"] as const).map((value) => {
               const option = pricing.toggle[value];
               const active = mode === value;
@@ -44,19 +87,21 @@ export function Pricing() {
                 <button
                   key={value}
                   id={`${groupId}-${value}`}
+                  data-value={value}
                   type="button"
                   role="radio"
                   aria-checked={active}
                   onClick={() => setMode(value)}
                   className={cn(
-                    "flex flex-1 items-center justify-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-2 text-[0.8rem] font-medium transition-colors duration-200 sm:flex-none sm:gap-2 sm:px-4 sm:text-[0.88rem]",
-                    active ? "bg-ink text-paper" : "text-ink-soft hover:text-ink",
+                    "relative z-10 flex flex-1 items-center justify-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-2 text-[0.8rem] font-medium transition-colors duration-300 sm:flex-none sm:gap-2 sm:px-4 sm:text-[0.88rem]",
+                    active ? "text-paper" : "text-ink-soft hover:text-ink",
                   )}
                 >
                   {option.label}
                   <span
                     className={cn(
                       "rounded-full px-2 py-0.5 text-[0.7rem] font-semibold tabular-nums",
+                      "transition-colors duration-300",
                       active ? "bg-white/15 text-paper" : "bg-verde-soft text-verde-deep",
                     )}
                   >

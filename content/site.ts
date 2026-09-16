@@ -262,8 +262,9 @@ export const pricing = {
 /* ------------------------------------------------------------------ */
 
 export const faq = {
-  eyebrow: "Preguntas frecuentes",
-  title: "Lo que casi siempre nos preguntan antes de arrancar.",
+  eyebrow: "Preguntas",
+  title: "Lo que casi siempre nos preguntan.",
+  lead: "Todo lo que conviene saber antes de arrancar un proyecto con nosotros.",
   items: [
     {
       q: "¿Y si necesito más páginas de las que incluye el plan?",
@@ -327,6 +328,32 @@ export const finalCta = {
  * El pie de la sección cuenta esta lista, así que el número siempre coincide
  * con lo que se muestra: no hay una cifra escrita a mano que se desactualice.
  */
+/* ------------------------------------------------------------------ */
+/* Prueba social — la tira de abajo del hero                           */
+/* ------------------------------------------------------------------ */
+
+/**
+ * ⚠️ TODO DE RELLENO. Los cinco nombres son inventados y la cifra también.
+ *
+ * Es la afirmación más fuerte de la home —dice cuántos clientes hay y quiénes
+ * son— así que no puede quedar publicada como está. Reemplazar por marcas
+ * reales con permiso de uso, o borrar la sección entera de la home: no rompe
+ * nada, la página sigue cerrando sin ella.
+ *
+ * Las marcas van dibujadas en código para que se vea la forma de la tira. Los
+ * logos reales entran como SVG en public/logos, igual que los del stack.
+ */
+export const socialProof = {
+  claim: "Nos eligieron 40+ estudios y marcas, de proyectos nuevos a negocios con años.",
+  /** Iniciales para los avatares, hasta tener fotos reales. */
+  faces: [
+    { initials: "MP", from: "#6fcfca", to: "#166b67" },
+    { initials: "RL", from: "#f2a5b6", to: "#a3405a" },
+    { initials: "DF", from: "#f4c87d", to: "#8a5a12" },
+  ],
+  brands: ["Aureo", "Nimbo", "Cardinal", "Vela", "Tallo"],
+} as const;
+
 export const clients = [
   { city: "Buenos Aires", country: "Argentina", lon: -58.4, lat: -34.6 },
   { city: "Córdoba", country: "Argentina", lon: -64.2, lat: -31.4 },
