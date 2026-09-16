@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { Analytics } from "@vercel/analytics/next";
 
 import { site } from "@/content/site";
 
@@ -67,7 +68,10 @@ export default function RootLayout({
         (site): montados acá se colarían también en /studio, que cuelga de esta
         misma raíz y necesita la pantalla entera.
       */}
-      <body className="min-h-dvh antialiased">{children}</body>
+      <body className="min-h-dvh antialiased">
+        {children}
+        <Analytics />
+      </body>
     </html>
   );
 }
