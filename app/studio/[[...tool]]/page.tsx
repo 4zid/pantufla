@@ -1,3 +1,4 @@
+import type { Viewport } from "next";
 import Link from "next/link";
 
 import { hasSanity } from "@/sanity/env";
@@ -10,6 +11,13 @@ export const metadata = {
   title: "Contenido",
   robots: { index: false, follow: false },
 };
+
+/**
+ * La raíz declara color-scheme: light porque el sitio es de papel claro. El
+ * panel de Sanity sigue al sistema, así que acá se libera: si no, los
+ * controles nativos y las barras de scroll salen claros sobre el tema oscuro.
+ */
+export const viewport: Viewport = { colorScheme: "light dark" };
 
 export default function StudioPage() {
   // Sin projectId el Studio no puede arrancar: en vez de tirar un 500,

@@ -1,7 +1,5 @@
 import type { Metadata, Viewport } from "next";
 
-import { SiteFooter } from "@/components/site-footer";
-import { SiteHeader } from "@/components/site-header";
 import { site } from "@/content/site";
 
 import "./globals.css";
@@ -64,21 +62,12 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="min-h-dvh antialiased">
-        <a
-          href="#contenido"
-          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:bg-ink focus:px-5 focus:py-2.5 focus:text-paper"
-        >
-          Ir al contenido
-        </a>
-        <div className="relative z-10 flex min-h-dvh flex-col">
-          <SiteHeader />
-          <main id="contenido" className="flex-1">
-            {children}
-          </main>
-          <SiteFooter />
-        </div>
-      </body>
+      {/*
+        La raíz solo abre el documento. La barra y el pie los pone el grupo
+        (site): montados acá se colarían también en /studio, que cuelga de esta
+        misma raíz y necesita la pantalla entera.
+      */}
+      <body className="min-h-dvh antialiased">{children}</body>
     </html>
   );
 }
