@@ -6,6 +6,7 @@ import { Hero } from "@/components/sections/hero";
 import { Pricing } from "@/components/sections/pricing";
 import { Problem } from "@/components/sections/problem";
 import { Process } from "@/components/sections/process";
+import { StackTicker } from "@/components/sections/stack-ticker";
 import { Testimonials } from "@/components/sections/testimonials";
 import { Work } from "@/components/sections/work";
 import {
@@ -46,6 +47,7 @@ export default async function HomePage() {
       <Problem />
       <Approach />
       <Process />
+      <StackTicker />
       <Pricing />
       <Work projects={projects} />
       <Testimonials items={testimonials} />

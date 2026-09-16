@@ -14,6 +14,7 @@ const labelClass = "block text-[0.88rem] font-medium";
 
 const planOptions = [
   ...pricing.plans.map((plan) => ({ value: plan.id, label: plan.name })),
+  { value: "existente", label: "Ya tengo un sitio en Webflow o Framer" },
   { value: "no-se", label: "Todavía no sé cuál me sirve" },
   { value: "otra-cosa", label: "Otra cosa (contame en el mensaje)" },
 ];

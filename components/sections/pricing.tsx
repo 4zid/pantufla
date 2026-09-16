@@ -3,6 +3,7 @@
 import { useId, useState } from "react";
 
 import { Counter } from "@/components/motion/counter";
+import { PricingExisting } from "@/components/sections/pricing-existing";
 import { Reveal } from "@/components/motion/reveal";
 import { pricing, type BillingMode } from "@/content/site";
 import { ButtonLink } from "@/components/ui/button";
@@ -183,6 +184,10 @@ export function Pricing() {
             ))}
           </ul>
         </div>
+      </Reveal>
+
+      <Reveal delay={0.1}>
+        <PricingExisting />
       </Reveal>
     </Section>
   );

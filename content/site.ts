@@ -229,6 +229,55 @@ export const pricing = {
     ],
     cta: { label: "Contarnos el proyecto", href: "/contacto?plan=otra-cosa" },
   },
+  /**
+   * Para el que ya tiene un sitio hecho y no necesita empezar de cero. Va
+   * plegado abajo de los planes: es una puerta distinta, no un cuarto plan, y
+   * abierta de entrada le compite a los precios.
+   */
+  existing: {
+    title: "Ya tengo un sitio en Webflow o Framer.",
+    summary:
+      "No hace falta rehacerlo todo. Entramos a lo que ya tenés, lo dejamos prolijo y te lo devolvemos andando.",
+    platforms: [
+      {
+        name: "Webflow",
+        tone: "aqua",
+        detail:
+          "Entramos al Designer y al CMS. Ordenamos las clases, arreglamos el responsive y dejamos las colecciones listas para que cargues vos.",
+      },
+      {
+        name: "Framer",
+        tone: "rosa",
+        detail:
+          "Trabajamos sobre tu proyecto: componentes, variantes, breakpoints y CMS. Si hace falta código, lo sumamos.",
+      },
+    ],
+    services: [
+      {
+        title: "Administrarlo",
+        detail:
+          "Cargamos contenido y publicamos los cambios por vos. Por mes, y lo cortás cuando quieras.",
+      },
+      {
+        title: "Mejorarlo",
+        detail:
+          "Velocidad, SEO técnico, responsive y accesibilidad. Te decimos qué encontramos antes de tocar nada.",
+      },
+      {
+        title: "Rediseñarlo",
+        detail:
+          "Mismo contenido, otra cara. Se rehace el diseño sobre la plataforma que ya usás, sin migrar nada.",
+      },
+      {
+        title: "Un cambio puntual",
+        detail:
+          "Una sección nueva, un formulario que no anda, una landing para una campaña. Se presupuesta por cambio.",
+      },
+    ],
+    note: "Antes de presupuestar miramos tu sitio y te decimos qué conviene tocar y qué no.",
+    cta: { label: "Mostranos tu sitio", href: "/contacto?plan=existente" },
+  },
+
   alwaysIncluded: [
     "Diseño original, nada de plantillas",
     "Responsive real en mobile, tablet y desktop",
@@ -325,3 +374,41 @@ export const timelineOptions = [
   "En 1 a 3 meses",
   "Estoy explorando",
 ] as const;
+
+/**
+ * El stack, para el riel en movimiento.
+ *
+ * Van como texto y no como logos: no tengo los SVG de marca y dibujarlos de
+ * memoria sale mal —un diseñador le ve el trazo torcido a diez metros—. Cada
+ * ítem tiene su tono para el punto de color; si más adelante entran los SVG
+ * reales, el punto es el único lugar que hay que cambiar.
+ *
+ * Dos filas que corren en sentidos opuestos: la de arriba es con qué se
+ * diseña y dónde vive el contenido, la de abajo con qué se construye.
+ */
+export const stack = {
+  eyebrow: "Herramientas",
+  title: "Con qué está hecho esto.",
+  lead:
+    "Nada exótico y nada casero: herramientas conocidas, que vas a poder seguir usando con cualquier otro estudio.",
+  rows: [
+    [
+      { name: "Figma", tone: "aqua" },
+      { name: "Webflow", tone: "rosa" },
+      { name: "Framer", tone: "verde" },
+      { name: "Sanity", tone: "miel" },
+      { name: "Supabase", tone: "aqua" },
+      { name: "Resend", tone: "rosa" },
+      { name: "Vercel", tone: "verde" },
+    ],
+    [
+      { name: "Next.js", tone: "miel" },
+      { name: "TypeScript", tone: "aqua" },
+      { name: "Tailwind", tone: "rosa" },
+      { name: "GSAP", tone: "verde" },
+      { name: "GitHub", tone: "miel" },
+      { name: "Claude", tone: "aqua" },
+      { name: "ChatGPT", tone: "rosa" },
+    ],
+  ],
+} as const;

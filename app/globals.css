@@ -216,3 +216,66 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+@layer components {
+  /*
+     Riel en movimiento.
+
+     La lista se renderiza dos veces dentro de la pista y la animación la
+     desplaza exactamente la mitad de su ancho: cuando termina, la segunda
+     copia está donde arrancó la primera y el salto no se ve.
+
+     Por eso la separación entre ítems va como padding de cada ítem y no como
+     gap de la pista: con gap, el ancho total es la suma de los ítems más un
+     hueco menos, así que la mitad ya no cae en el borde de la copia y el
+     empalme pega un tirón.
+  */
+  .ticker {
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent,
+      #000 7rem,
+      #000 calc(100% - 7rem),
+      transparent
+    );
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      #000 7rem,
+      #000 calc(100% - 7rem),
+      transparent
+    );
+  }
+
+  .ticker-track {
+    display: flex;
+    width: max-content;
+    animation: ticker-shift var(--ticker-duration, 46s) linear infinite;
+  }
+
+  /* La fila de abajo corre al revés: arranca corrida y vuelve al origen. */
+  .ticker-track[data-direction="reverse"] {
+    animation-direction: reverse;
+  }
+
+  /* Al pasar el cursor se frena, para poder leer qué dice cada uno. */
+  .ticker:hover .ticker-track {
+    animation-play-state: paused;
+  }
+
+  @keyframes ticker-shift {
+    from {
+      transform: translate3d(0, 0, 0);
+    }
+    to {
+      transform: translate3d(-50%, 0, 0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ticker-track {
+      animation: none;
+      transform: none;
+    }
+  }
+}
