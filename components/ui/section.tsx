@@ -2,8 +2,7 @@ import type { ReactNode } from "react";
 
 import { Reveal } from "@/components/motion/reveal";
 import { SplitHeading } from "@/components/motion/split-heading";
-import { Eyebrow } from "@/components/ui/eyebrow";
-import type { Tone } from "@/lib/tones";
+import { Tag, type TagIconName } from "@/components/ui/tag";
 import { cn } from "@/lib/cn";
 
 export function Section({
@@ -11,11 +10,16 @@ export function Section({
   children,
   className,
   tone = "paper",
+  overlay,
 }: {
   id?: string;
   children: ReactNode;
   className?: string;
   tone?: "paper" | "alt" | "deep";
+  /** Capa decorativa a sangre, detrás del contenido y fuera del ancho de
+      lectura. Va acá y no dentro de los hijos porque el contenido vive en
+      .shell, que tiene ancho máximo: un degradé ahí adentro se corta. */
+  overlay?: ReactNode;
 }) {
   const tones = {
     paper: "",
@@ -28,7 +32,8 @@ export function Section({
       id={id}
       className={cn("relative py-20 md:py-28", tones[tone], className)}
     >
-      <div className="shell">{children}</div>
+      {overlay}
+      <div className="relative z-10 shell">{children}</div>
     </section>
   );
 }
@@ -39,23 +44,23 @@ export function SectionHead({
   lead,
   align = "left",
   onDark = false,
-  accent = "aqua",
+  icon,
 }: {
   eyebrow?: string;
   title: string;
   lead?: string;
   align?: "left" | "center";
   onDark?: boolean;
-  accent?: Tone;
+  icon?: TagIconName;
 }) {
   return (
     <div className={cn("max-w-2xl", align === "center" && "mx-auto text-center")}>
       {eyebrow ? (
         <Reveal>
           <div className={cn(align === "center" && "flex justify-center")}>
-            <Eyebrow tone={accent} onDark={onDark}>
+            <Tag icon={icon} onDark={onDark}>
               {eyebrow}
-            </Eyebrow>
+            </Tag>
           </div>
         </Reveal>
       ) : null}

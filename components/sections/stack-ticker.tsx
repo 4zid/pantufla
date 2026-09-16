@@ -1,7 +1,7 @@
 import Image from "next/image";
 
 import { Reveal } from "@/components/motion/reveal";
-import { Eyebrow } from "@/components/ui/eyebrow";
+import { Tag } from "@/components/ui/tag";
 import { SplitHeading } from "@/components/motion/split-heading";
 import { stack } from "@/content/site";
 import { toneBg, type Tone } from "@/lib/tones";
@@ -101,7 +101,7 @@ export function StackTicker() {
       <div className="shell">
         <div className="max-w-2xl">
           <Reveal>
-            <Eyebrow tone="miel">{stack.eyebrow}</Eyebrow>
+            <Tag icon="cubo">{stack.eyebrow}</Tag>
           </Reveal>
           <SplitHeading text={stack.title} className="mt-5 text-h2" />
           <Reveal delay={0.15}>

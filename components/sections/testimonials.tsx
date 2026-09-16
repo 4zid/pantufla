@@ -2,7 +2,7 @@ import Image from "next/image";
 
 import { Reveal } from "@/components/motion/reveal";
 import { SplitHeading } from "@/components/motion/split-heading";
-import { Eyebrow } from "@/components/ui/eyebrow";
+import { Tag } from "@/components/ui/tag";
 import { StarIcon } from "@/components/ui/icons";
 import { Section } from "@/components/ui/section";
 import { urlForImage } from "@/sanity/image";
@@ -43,7 +43,7 @@ export function Testimonials({ items }: { items: SanityTestimonial[] }) {
     <Section id="testimonios" tone="alt">
       <div className="max-w-2xl">
         <Reveal>
-          <Eyebrow tone="rosa">Testimonios</Eyebrow>
+          <Tag icon="cita">Testimonios</Tag>
         </Reveal>
         <SplitHeading
           text="Lo que dicen los que ya pasaron por el proceso."

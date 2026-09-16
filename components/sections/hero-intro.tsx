@@ -59,7 +59,7 @@ export function HeroIntro() {
       <div className="mx-auto max-w-3xl text-center">
         <SplitHeading
           as="h1"
-          text={hero.title}
+          segments={hero.titleSegments}
           delay={0.1}
           immediate
           className="text-display"

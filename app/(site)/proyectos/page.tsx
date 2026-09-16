@@ -29,6 +29,7 @@ export default async function ProjectsPage() {
   return (
     <>
       <PageHeader
+        icon="grilla"
         eyebrow="Proyectos"
         title="Sitios que salieron de acá."
         lead="Entre landings de una sola página y sitios completos con panel de carga."

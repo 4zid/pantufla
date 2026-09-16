@@ -113,7 +113,7 @@ export function ClientsMap() {
   return (
     <Section id="clientes" tone="alt">
       <SectionHead
-        accent="miel"
+        icon="globo"
         eyebrow="Dónde trabajamos"
         title="Trabajamos desde Buenos Aires para donde haga falta."
         lead={`Todo el proceso pasa por escrito y por video. Hasta hoy publicamos sitios para clientes en ${countries.length} países.`}

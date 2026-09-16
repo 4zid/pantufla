@@ -61,7 +61,7 @@ export function Pricing() {
     <Section id="planes" className="py-16 md:py-20">
       <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
         <SectionHead
-          accent="verde"
+          icon="etiqueta"
           eyebrow={pricing.eyebrow}
           title={pricing.title}
         />

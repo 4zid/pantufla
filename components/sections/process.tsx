@@ -7,6 +7,7 @@ import { process } from "@/content/site";
 import { Reveal } from "@/components/motion/reveal";
 import { Section, SectionHead } from "@/components/ui/section";
 import { gsap, registerGsap } from "@/lib/motion";
+import { cn } from "@/lib/cn";
 
 /**
  * El proceso, como línea de tiempo centrada.
@@ -15,15 +16,18 @@ import { gsap, registerGsap } from "@/lib/motion";
  * a la izquierda con las etapas en filas anchas: se leía como una tabla, y una
  * tabla no transmite que una cosa pasa después de la otra.
  *
- * El texto de cada etapa lleva el fondo de la sección para tapar el riel. Sin
- * eso la línea cruza el título y el párrafo por el medio, que es lo que pasa
- * siempre que se centra una línea de tiempo y se olvida que el centro es
- * justo donde vive el texto.
+ * El riel no es una línea entera detrás del contenido sino un tramo por cada
+ * par de etapas. Entera había que taparla con bloques opacos para que no
+ * cruzara el texto —el centro es justo donde vive el texto— y esos bloques se
+ * recortaban como rectángulos oscuros sobre el resplandor del fondo.
  */
 
-/** El degradé del relleno, de la aqua profunda a la clara. */
-const FILL =
-  "linear-gradient(to bottom, #166b67 0%, #2f9d97 32%, #6fcfca 68%, #a8e3df 100%)";
+/**
+ * Un paso de color por etapa. Cada tramo del riel va del color de la etapa que
+ * deja al de la que viene, así el degradé recorre la sección entera aunque
+ * esté partido en pedazos sueltos.
+ */
+const STOPS = ["#166b67", "#2f9d97", "#6fcfca", "#a8e3df"] as const;
 
 export function Process() {
   const scope = useRef<HTMLDivElement>(null);
@@ -53,25 +57,31 @@ export function Process() {
             return;
           }
 
-          // El relleno arranca cuando el primer marcador llega a la mitad de
-          // la pantalla y termina cuando llega el último: así el recorrido
-          // corresponde con lo que el visitante está leyendo.
-          gsap.fromTo(
-            q("[data-progress]"),
-            { scaleY: 0 },
-            {
-              scaleY: 1,
-              ease: "none",
-              transformOrigin: "top",
-              scrollTrigger: {
-                trigger: root,
-                start: "top 55%",
-                end: "bottom 65%",
-                scrub: 0.6,
-                invalidateOnRefresh: true,
+          // Cada tramo se llena solo, atado a la etapa que lo sigue: empieza
+          // cuando esa etapa asoma y termina cuando llega a su lugar de
+          // lectura. Un único scrub para toda la sección desincronizaba el
+          // relleno del texto en pantallas de distinto alto.
+          pasos.forEach((paso) => {
+            const tramo = paso.querySelector("[data-progress]");
+            if (!tramo) return;
+
+            gsap.fromTo(
+              tramo,
+              { scaleY: 0 },
+              {
+                scaleY: 1,
+                ease: "none",
+                transformOrigin: "top",
+                scrollTrigger: {
+                  trigger: paso,
+                  start: "top 92%",
+                  end: "top 58%",
+                  scrub: 0.6,
+                  invalidateOnRefresh: true,
+                },
               },
-            },
-          );
+            );
+          });
 
           pasos.forEach((paso) => {
             const dot = paso.querySelector("[data-dot]");
@@ -111,9 +121,26 @@ export function Process() {
   );
 
   return (
-    <Section id="proceso" tone="deep">
+    <Section
+      id="proceso"
+      tone="deep"
+      className="overflow-hidden"
+      overlay={
+        /* El resplandor sube desde el borde de abajo y se apaga antes de la
+           mitad. Centrado quedaría como una mancha; naciendo del piso se lee
+           como si la línea de tiempo fuera lo que lo enciende. */
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-[70%]"
+          style={{
+            background:
+              "radial-gradient(120% 100% at 50% 118%, #6fcfca 0%, rgba(111,207,202,0.42) 26%, rgba(47,157,151,0.16) 48%, transparent 72%)",
+          }}
+        />
+      }
+    >
       <SectionHead
-        accent="miel"
+        icon="capas"
         eyebrow={process.eyebrow}
         title={process.title}
         lead={process.lead}
@@ -122,26 +149,35 @@ export function Process() {
       />
 
       <div ref={scope} className="relative mx-auto mt-20 max-w-xl md:mt-24">
-        {/* Riel. El relleno va encima del carril apagado, con el mismo
-            origen, así que no hace falta medir nada: basta con estirarlo. */}
-        <div
-          aria-hidden
-          className="absolute left-1/2 top-0 h-full w-[2px] -translate-x-1/2 overflow-hidden rounded-full bg-white/10"
-        >
-          <div
-            data-progress
-            className="h-full w-full origin-top"
-            style={{ background: FILL }}
-          />
-        </div>
-
-        <ol className="relative flex flex-col gap-16 md:gap-20">
-          {process.steps.map((step) => (
+        <ol className="relative flex flex-col">
+          {process.steps.map((step, i) => (
             <li
               key={step.number}
               data-step
-              className="flex flex-col items-center text-center"
+              className={cn(
+                "relative flex flex-col items-center text-center",
+                i > 0 && "pt-20 md:pt-24",
+              )}
             >
+              {/* El riel va por tramos, uno entre cada par de etapas, en vez de
+                  una línea única detrás de todo. Con una línea entera había que
+                  taparla con bloques opacos para que no cruzara el texto, y
+                  esos bloques se recortaban como rectángulos oscuros sobre el
+                  resplandor del fondo. Partido en tramos no hay nada que tapar. */}
+              {i > 0 ? (
+                <span
+                  aria-hidden
+                  className="absolute left-1/2 top-0 h-20 w-[2px] -translate-x-1/2 overflow-hidden rounded-full bg-white/10 md:h-24"
+                >
+                  <span
+                    data-progress
+                    className="block h-full w-full origin-top"
+                    style={{
+                      background: `linear-gradient(to bottom, ${STOPS[i - 1]}, ${STOPS[i]})`,
+                    }}
+                  />
+                </span>
+              ) : null}
               {/* El marcador tapa el riel con su propio fondo: por eso el
                   círculo lleva el color de la sección y no es translúcido. */}
               <span
@@ -152,7 +188,7 @@ export function Process() {
                   aria-hidden
                   className="absolute inset-0 rounded-full p-[1.5px]"
                   style={{
-                    background: FILL,
+                    background: `linear-gradient(140deg, ${STOPS[Math.max(0, i - 1)]}, ${STOPS[i]})`,
                     WebkitMask:
                       "linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)",
                     WebkitMaskComposite: "xor",
@@ -162,18 +198,14 @@ export function Process() {
                 <span
                   aria-hidden
                   className="absolute inset-[5px] rounded-full opacity-25 blur-[6px]"
-                  style={{ background: FILL }}
+                  style={{ background: STOPS[i] }}
                 />
                 <span className="relative text-[0.95rem] font-semibold tabular-nums text-paper">
                   {step.number}
                 </span>
               </span>
 
-              {/* El bloque tapa el riel con el fondo de la sección: si no, la
-                  línea le pasa por encima al título y al texto. Así la línea
-                  solo se ve en el tramo entre una etapa y la siguiente, que es
-                  donde tiene algo que decir. */}
-              <div data-body className="relative z-10 mt-6 bg-deep px-4 py-2">
+              <div data-body className="mt-6">
                 <span className="rounded-full bg-white/10 px-2.5 py-1 text-[0.72rem] font-medium text-white/70">
                   {step.when}
                 </span>

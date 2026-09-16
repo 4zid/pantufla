@@ -33,6 +33,7 @@ export default async function NotesPage() {
   return (
     <>
       <PageHeader
+        icon="capas"
         eyebrow="Notas"
         title="Cómo pensamos los proyectos."
         lead="Decisiones, criterios y aprendizajes de los sitios que hacemos. Sin relleno."

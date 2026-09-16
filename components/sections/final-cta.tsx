@@ -19,13 +19,18 @@ import { finalCta, site } from "@/content/site";
  *
  * Sin la prop queda la versión de botón, que es la que usan las páginas
  * internas: ahí el cierre es un remate, no el lugar donde se convierte.
+ *
+ * La versión con formulario no lleva overflow-hidden. Un ancestro con overflow
+ * recortado pasa a ser el contenedor de scroll del sticky de la columna
+ * izquierda; como esa caja no scrollea, el navegador clava el elemento contra
+ * el pie de su celda y el título arrancaba 106px más abajo que el formulario.
  */
 export function FinalCta({ withForm = false }: { withForm?: boolean }) {
   if (withForm) {
     return (
-      <Section id="brief" tone="deep" className="overflow-hidden py-20 md:py-28">
+      <Section id="brief" tone="deep" className="py-20 md:py-28">
         <div className="grid gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:items-start lg:gap-16">
-          <div className="lg:sticky lg:top-28">
+          <div className="lg:sticky lg:top-28 lg:self-start">
             <SplitHeading text={finalCta.title} className="text-h2 text-paper" />
             <Reveal delay={0.15}>
               <p className="mt-5 text-lead text-white/60">{finalCta.lead}</p>

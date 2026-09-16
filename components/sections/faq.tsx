@@ -7,6 +7,7 @@ import { faq } from "@/content/site";
 import { Reveal } from "@/components/motion/reveal";
 import { SplitHeading } from "@/components/motion/split-heading";
 import { Section } from "@/components/ui/section";
+import { Tag } from "@/components/ui/tag";
 import { gsap, registerGsap } from "@/lib/motion";
 import { cn } from "@/lib/cn";
 
@@ -59,19 +60,26 @@ export function Faq() {
         const abierto = panel.dataset.open === "true";
         const inner = panel.firstElementChild;
 
+        // Abrir va más lento que cerrar. Una apertura pausada se lee como que
+        // el contenido llega; un cierre pausado se lee como que el botón no
+        // respondió. La salida de expo frena casi al final, que es lo que le
+        // saca el golpe seco al momento en que la altura queda fija.
         gsap.to(panel, {
           height: abierto ? "auto" : 0,
-          duration: reduced ? 0 : 0.5,
-          ease: "power3.inOut",
+          duration: reduced ? 0 : abierto ? 0.62 : 0.38,
+          ease: abierto ? "expo.out" : "power2.inOut",
         });
 
         if (inner) {
           gsap.to(inner, {
             opacity: abierto ? 1 : 0,
-            y: abierto ? 0 : -6,
-            duration: reduced ? 0 : 0.4,
-            delay: reduced || !abierto ? 0 : 0.12,
-            ease: "power2.out",
+            y: abierto ? 0 : 14,
+            // Al abrir, el texto entra cuando la altura ya se está frenando,
+            // no desde el arranque: si sube junto con el panel, se lee dos
+            // veces el mismo movimiento.
+            duration: reduced ? 0 : abierto ? 0.5 : 0.22,
+            delay: reduced || !abierto ? 0 : 0.16,
+            ease: abierto ? "power3.out" : "power1.in",
           });
         }
       });
@@ -88,7 +96,9 @@ export function Faq() {
     <Section id="faq" tone="alt">
       <div className="mx-auto max-w-2xl text-center">
         <Reveal>
-          <p className="text-[0.85rem] text-ink-faint">({faq.eyebrow})</p>
+          <div className="flex justify-center">
+            <Tag icon="ayuda">{faq.eyebrow}</Tag>
+          </div>
         </Reveal>
         <SplitHeading text={faq.title} className="mt-4 text-h2" />
         <Reveal delay={0.15}>
@@ -109,8 +119,10 @@ export function Faq() {
                 <div
                   key={item.q}
                   className={cn(
-                    "overflow-hidden rounded-[20px] border bg-card transition-colors duration-300",
-                    abierto ? "border-line-strong" : "border-line",
+                    "overflow-hidden rounded-[20px] border bg-card transition-[border-color,box-shadow] duration-500",
+                    abierto
+                      ? "border-line-strong shadow-[0_18px_40px_-28px_rgba(0,0,0,0.35)]"
+                      : "border-line shadow-none",
                   )}
                 >
                   <h3>
@@ -138,7 +150,9 @@ export function Faq() {
                   >
                     <p
                       className="px-6 pb-6 text-[0.95rem] leading-relaxed text-ink-soft"
-                      style={abierto ? undefined : { opacity: 0 }}
+                      style={
+                        abierto ? undefined : { opacity: 0, transform: "translateY(14px)" }
+                      }
                     >
                       {item.a}
                     </p>

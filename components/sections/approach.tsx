@@ -9,7 +9,7 @@ export function Approach() {
   return (
     <Section id="metodo" tone="alt">
       <SectionHead
-        accent="aqua"
+        icon="ruta"
         eyebrow={approach.eyebrow}
         title={approach.title}
         lead={approach.lead}

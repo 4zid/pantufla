@@ -17,6 +17,7 @@ export default function ContactPage() {
   return (
     <>
       <PageHeader
+        icon="ruta"
         eyebrow="Empezar un proyecto"
         title="Cinco minutos ahora, una propuesta cerrada mañana."
         lead="Cuanto más concreto sea el brief, más preciso es el presupuesto que te mandamos. No hace falta que tengas todo definido."
