@@ -8,7 +8,7 @@ import { ButtonLink } from "@/components/ui/button";
 import { PlusIcon } from "@/components/ui/icons";
 import { pricing } from "@/content/site";
 import { gsap, registerGsap } from "@/lib/motion";
-import { tonePill, toneTextDeep, type Tone } from "@/lib/tones";
+import { toneTextDeep } from "@/lib/tones";
 import { cn } from "@/lib/cn";
 
 const { existing } = pricing;
@@ -128,29 +128,25 @@ export function PricingExisting() {
                   key={platform.name}
                   data-row
                   style={open ? undefined : { opacity: 0 }}
-                  className="rounded-2xl bg-paper-alt p-5"
+                  className="rounded-2xl border border-line bg-card p-5"
                 >
-                  {/* Isologotipo: la marca y el nombre juntos. La marca va en
-                      tinta, igual que en el riel del stack, para que las dos
-                      plataformas se lean como un par y no como dos logos
-                      pegados de dos paletas distintas. */}
-                  <span
-                    className={cn(
-                      "inline-flex items-center gap-2 rounded-full py-1 pl-2 pr-3 text-[0.82rem] font-semibold",
-                      tonePill[platform.tone as Tone],
-                    )}
-                  >
-                    <Image
-                      src={platform.logo}
-                      alt=""
-                      aria-hidden
-                      width={16}
-                      height={16}
-                      unoptimized
-                      className="h-4 w-4 shrink-0 object-contain"
-                    />
-                    {platform.name}
-                  </span>
+                  {/*
+                    El isologotipo original de cada plataforma: la marca con su
+                    color y la tipografía en negro, que es la versión que las
+                    dos publican para fondo claro. Va suelto sobre la tarjeta,
+                    sin pastilla de color detrás: teñir un logo ajeno con la
+                    paleta de uno lo deja pareciendo una imitación.
+
+                    Sin texto al lado porque el logotipo ya trae el nombre.
+                  */}
+                  <Image
+                    src={platform.logo}
+                    alt={platform.name}
+                    width={platform.logoWidth}
+                    height={20}
+                    unoptimized
+                    className="h-5 w-auto"
+                  />
                   <p className="mt-3 text-[0.92rem] leading-relaxed text-ink-soft">
                     {platform.detail}
                   </p>

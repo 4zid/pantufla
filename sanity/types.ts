@@ -33,6 +33,7 @@ export type SanityTestimonial = {
   quote: string;
   name: string;
   role?: string;
+  company?: string;
   rating?: number;
   avatar?: Image;
 };

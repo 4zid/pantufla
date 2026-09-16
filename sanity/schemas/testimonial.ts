@@ -20,7 +20,13 @@ export const testimonial = defineType({
     }),
     defineField({
       name: "role",
-      title: "Cargo y empresa",
+      title: "Cargo",
+      type: "string",
+      description: "Por ejemplo: Socia, Fundador, Directora de marketing.",
+    }),
+    defineField({
+      name: "company",
+      title: "Empresa",
       type: "string",
     }),
     defineField({
@@ -51,6 +57,6 @@ export const testimonial = defineType({
     }),
   ],
   preview: {
-    select: { title: "name", subtitle: "role", media: "avatar" },
+    select: { title: "name", subtitle: "company", media: "avatar" },
   },
 });

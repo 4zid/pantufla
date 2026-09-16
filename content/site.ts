@@ -34,43 +34,14 @@ export const nav = [
 export const hero = {
   badge: "Diseño y desarrollo web",
   badgeNote: "Cupos de octubre abiertos",
-  title: "Tu sitio web listo en tres semanas.",
-  lead: "Un alcance cerrado, un precio cerrado y una fecha de entrega. Vos aprobás, nosotros publicamos. Sin presupuestos por hora ni proyectos que se estiran.",
+  title: "Construimos sitios web que convierten visitantes en clientes.",
+  lead: "Diseño, textos y desarrollo para que la gente que entra entienda qué hacés en diez segundos y termine escribiéndote. Con alcance cerrado, precio cerrado y fecha de entrega.",
   primary: { label: "Empezar un proyecto", href: "/contacto" },
   secondary: { label: "Ver planes y precios", href: "/#planes" },
   proof: [
     "Precio cerrado",
     "Primera versión en 5 días",
     "El sitio queda a tu nombre",
-  ],
-} as const;
-
-/* ------------------------------------------------------------------ */
-/* Problema — nombrar la frustración con las palabras del cliente      */
-/* ------------------------------------------------------------------ */
-
-export const problem = {
-  eyebrow: "El problema",
-  title:
-    "Nadie abandona un sitio web por el diseño. Lo abandona por el proceso.",
-  lead: "La mayoría de los proyectos que llegan acá vienen de una experiencia parecida. Estas cuatro, casi siempre.",
-  items: [
-    {
-      title: "El presupuesto abre y no cierra nunca",
-      body: "Se cotiza por hora, aparecen imprevistos y la cifra final no se parece a la del primer mail.",
-    },
-    {
-      title: "Dos semanas esperando una respuesta",
-      body: "El proyecto avanza cuando el otro tiene un rato libre. No hay fechas, hay buena voluntad.",
-    },
-    {
-      title: "Quedás atado a quien lo hizo",
-      body: "Cambiar un precio o subir una nota implica escribirle a alguien, esperar y pagar de nuevo.",
-    },
-    {
-      title: "Queda lindo, pero no trae nada",
-      body: "Un sitio bonito que no explica qué vendés, a quién y por qué te tendrían que elegir a vos.",
-    },
   ],
 } as const;
 
@@ -237,15 +208,15 @@ export const pricing = {
     platforms: [
       {
         name: "Webflow",
-        tone: "aqua",
-        logo: "/logos/webflow.svg",
+        logo: "/logos/webflow-wordmark.svg",
+        logoWidth: 120,
         detail:
           "Entramos al Designer y al CMS. Ordenamos las clases, arreglamos el responsive y dejamos las colecciones listas para que cargues vos.",
       },
       {
         name: "Framer",
-        tone: "rosa",
-        logo: "/logos/framer.svg",
+        logo: "/logos/framer-wordmark.svg",
+        logoWidth: 89,
         detail:
           "Trabajamos sobre tu proyecto: componentes, variantes, breakpoints y CMS. Si hace falta código, lo sumamos.",
       },

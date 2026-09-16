@@ -4,7 +4,6 @@ import { Faq } from "@/components/sections/faq";
 import { FinalCta } from "@/components/sections/final-cta";
 import { Hero } from "@/components/sections/hero";
 import { Pricing } from "@/components/sections/pricing";
-import { Problem } from "@/components/sections/problem";
 import { Process } from "@/components/sections/process";
 import { StackTicker } from "@/components/sections/stack-ticker";
 import { Testimonials } from "@/components/sections/testimonials";
@@ -44,7 +43,6 @@ export default async function HomePage() {
   return (
     <>
       <Hero />
-      <Problem />
       <Approach />
       <Process />
       <StackTicker />

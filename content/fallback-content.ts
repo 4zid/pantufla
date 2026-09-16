@@ -89,20 +89,23 @@ export const fallbackTestimonials: SanityTestimonial[] = [
     quote:
       "Lo que más valoro es que la fecha que me dieron el primer día fue la fecha real. Nunca me había pasado con un proveedor web.",
     name: "Paula Martel",
-    role: "Socia, Estudio Martel",
+    role: "Socia",
+    company: "Estudio Martel",
   },
   {
     _id: "demo-t2",
     quote:
       "Cargo las salidas nuevas yo misma en cinco minutos. Antes le escribía a alguien y esperaba una semana.",
     name: "Damián Ferreyra",
-    role: "Fundador, Ruta Norte",
+    role: "Fundador",
+    company: "Ruta Norte",
   },
   {
     _id: "demo-t3",
     quote:
       "Presupuesto cerrado, sin extras al final. Salió exactamente lo que decía la propuesta.",
     name: "Inés Cabral",
-    role: "Directora, Casa Duna",
+    role: "Directora",
+    company: "Casa Duna",
   },
 ];

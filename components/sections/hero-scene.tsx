@@ -4,10 +4,10 @@ import { useGSAP } from "@gsap/react";
 import { useRef } from "react";
 
 import {
-  PanelAnalytics,
-  PanelChat,
-  PanelSitio,
+  PanelSeo,
+  PanelTrafico,
   PanelVentas,
+  PanelVisitas,
 } from "@/components/sections/hero-panels";
 import { Draggable, ease, gsap, registerGsap } from "@/lib/motion";
 import { cn } from "@/lib/cn";
@@ -27,11 +27,21 @@ import { cn } from "@/lib/cn";
  * Abajo de lg no hay vuelo: el dashboard se muestra ya armado.
  */
 
+/**
+ * Los cuatro miden lo mismo y van en una sola fila.
+ *
+ * Antes eran de tres tamaños distintos y había que colocarlos a mano, celda
+ * por celda; alrededor del título quedaban desparejos y se leían como cuatro
+ * cosas sueltas. Iguales y simétricos se leen como un tablero.
+ */
+const PANEL_W = 280;
+const PANEL_H = 190;
+
 const panels = [
-  { id: "sitio", node: <PanelSitio />, w: 420, h: 292, rotate: 3 },
-  { id: "analytics", node: <PanelAnalytics />, w: 262, h: 137, rotate: -4 },
-  { id: "ventas", node: <PanelVentas />, w: 262, h: 137, rotate: 2.5 },
-  { id: "chat", node: <PanelChat />, w: 305, h: 292, rotate: -2 },
+  { id: "visitas", node: <PanelVisitas />, rotate: -3.5 },
+  { id: "trafico", node: <PanelTrafico />, rotate: 3 },
+  { id: "seo", node: <PanelSeo />, rotate: -3 },
+  { id: "ventas", node: <PanelVentas />, rotate: 3.5 },
 ] as const;
 
 /**
@@ -51,35 +61,31 @@ const SCATTER_SCALE = 1.7;
  * pantalla: se ven grandes y cortadas por los costados, que es lo que hace que
  * el hero se sienta ocupado en vez de decorado.
  *
- * El alto va en píxeles y no en porcentaje del viewport. El bloque de texto
- * arranca a una distancia fija del techo y mide siempre lo mismo, así que
- * termina en el mismo píxel en cualquier pantalla; un porcentaje, en cambio,
- * sube con el viewport corto y ahí los paneles se cruzaban con la línea de
- * prueba. Con píxeles el margen contra el texto es el mismo siempre.
+ * Los valores son relativos a la escena, que es el espacio que queda debajo
+ * del texto, y no al hero entero. Así el margen contra el titular no depende
+ * de cuántas líneas ocupe: si el título crece, la escena empieza más abajo y
+ * los paneles bajan con ella. Medirlo desde arriba obligaba a recalcular el
+ * número cada vez que cambiaba una palabra del encabezado.
+ *
+ * El primer par arranca en 75px porque la escala los agranda desde el centro:
+ * un panel puesto en 0 asomaría unos 66px por encima del borde de la escena,
+ * o sea, encima del texto.
  *
  * Aparecen recién a partir de 1440px: abajo de ese ancho no hay costado libre.
  */
 const scattered: Record<string, string> = {
-  // Los dos chicos, pegados a los bordes y más arriba.
-  analytics: "left-[-6%] top-[610px]",
-  ventas: "right-[-6%] top-[625px]",
-  // Los dos altos, más adentro y más abajo, sangrando por el piso. Van
-  // corridos hacia el centro y no contra el borde para no quedar tapados por
-  // los chicos: encimados apenas se leen como capas, encimados del todo se
-  // comen uno al otro.
-  chat: "left-[12%] top-[760px]",
-  sitio: "right-[9%] top-[740px]",
-};
-
-/**
- * Dónde cae cada panel dentro de la grilla. Va explícito: con colocación
- * automática los paneles que ocupan dos filas empujan a los demás de celda.
- */
-const placed: Record<string, string> = {
-  sitio: "min-[1440px]:col-start-1 min-[1440px]:row-start-1 min-[1440px]:row-span-2",
-  analytics: "min-[1440px]:col-start-2 min-[1440px]:row-start-1",
-  ventas: "min-[1440px]:col-start-2 min-[1440px]:row-start-2",
-  chat: "min-[1440px]:col-start-3 min-[1440px]:row-start-1 min-[1440px]:row-span-2",
+  // Una sola fila abanicada, en el mismo orden que el tablero: es el tablero
+  // desarmado. Repartidos de a dos por los costados quedaba un hueco en el
+  // medio y se leían como cuatro sobras apoyadas contra los bordes; en fila
+  // se leen como una cosa sola que después se acomoda.
+  //
+  // El paso entre uno y otro es menor que el ancho escalado, así que se
+  // enciman unos 70px y el abanico queda armado. El primero sangra por la
+  // izquierda; el último llega casi al borde derecho.
+  visitas: "left-[-4%] top-[80px]",
+  trafico: "left-[21%] top-[120px]",
+  seo: "left-[46%] top-[120px]",
+  ventas: "left-[71%] top-[80px]",
 };
 
 export function HeroScene() {
@@ -221,16 +227,19 @@ export function HeroScene() {
   return (
     <div
       ref={scope}
-      className="pointer-events-none min-[1440px]:flex min-[1440px]:min-h-0 min-[1440px]:flex-1 min-[1440px]:flex-col"
+      className="pointer-events-none min-[1440px]:relative min-[1440px]:flex min-[1440px]:min-h-0 min-[1440px]:flex-1 min-[1440px]:flex-col"
     >
       {/* Paneles sueltos: solo en desktop, donde hay lugar para dispersarlos.
           Van encima del dashboard para que se vean al aterrizar. */}
-      <div aria-hidden className="absolute inset-0 z-20 hidden min-[1440px]:block">
+      <div
+        aria-hidden
+        className="absolute inset-0 z-20 hidden min-[1440px]:block"
+      >
         {panels.map((panel) => (
           <div
             key={panel.id}
             data-card={panel.id}
-            style={{ width: panel.w, height: panel.h }}
+            style={{ width: PANEL_W, height: PANEL_H }}
             className={cn("absolute", scattered[panel.id])}
           >
             <div
@@ -273,16 +282,13 @@ export function HeroScene() {
               <div className="w-12" />
             </div>
 
-            <div className="grid grid-cols-1 gap-[18px] p-[18px] min-[1440px]:grid-cols-[420px_262px_305px] min-[1440px]:grid-rows-[137px_137px]">
+            <div className="grid grid-cols-1 gap-[18px] p-[18px] min-[1440px]:grid-cols-[repeat(4,280px)] min-[1440px]:grid-rows-[190px]">
               {panels.map((panel) => (
                 <div
                   key={panel.id}
                   data-slot={panel.id}
-                  style={{ height: panel.h }}
-                  className={cn(
-                    "overflow-hidden rounded-card border border-line bg-paper-alt/30 min-[1440px]:h-auto",
-                    placed[panel.id],
-                  )}
+                  style={{ height: PANEL_H }}
+                  className="overflow-hidden rounded-card border border-line bg-paper-alt/40 min-[1440px]:h-auto"
                 >
                   {/* En desktop el hueco queda vacío: lo llena la tarjeta. */}
                   <div className="h-full min-[1440px]:hidden">{panel.node}</div>

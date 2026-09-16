@@ -56,7 +56,7 @@ export function HeroIntro() {
 
   return (
     <div ref={scope} className="shell relative z-10">
-      <div className="mx-auto max-w-3xl text-center">
+      <div className="mx-auto max-w-5xl text-center">
         <SplitHeading
           as="h1"
           text={hero.title}
