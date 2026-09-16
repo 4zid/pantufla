@@ -64,7 +64,7 @@
   --radius-card: 16px;
   --radius-panel: 24px;
 
-  --text-display: clamp(2.6rem, 6.9vw, 6rem);
+  --text-display: clamp(2.4rem, 5.6vw, 4.75rem);
   --text-display--line-height: 0.9;
   --text-display--letter-spacing: -0.042em;
   --text-display--font-weight: 600;

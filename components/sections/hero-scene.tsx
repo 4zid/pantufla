@@ -35,7 +35,7 @@ import { cn } from "@/lib/cn";
  * cosas sueltas. Iguales y simétricos se leen como un tablero.
  */
 const PANEL_W = 280;
-const PANEL_H = 190;
+const PANEL_H = 160;
 
 const panels = [
   { id: "visitas", node: <PanelVisitas />, rotate: -3.5 },
@@ -52,40 +52,30 @@ const panels = [
  * calculando como una traslación pura entre dos rectángulos del mismo tamaño.
  * La escala vuelve a 1 durante el vuelo y el panel cae justo.
  */
-const SCATTER_SCALE = 1.7;
+const SCATTER_SCALE = 1.45;
 
 /**
  * Dónde arranca cada panel antes de converger.
  *
- * Las cajas se plantan pasadas del borde para que la escala las saque de
- * pantalla: se ven grandes y cortadas por los costados, que es lo que hace que
- * el hero se sienta ocupado en vez de decorado.
+ * Dos por costado, flanqueando el titular, que así queda centrado en la
+ * pantalla en vez de tener que cederles la mitad de abajo.
  *
- * Los valores son relativos a la escena, que es el espacio que queda debajo
- * del texto, y no al hero entero. Así el margen contra el titular no depende
- * de cuántas líneas ocupe: si el título crece, la escena empieza más abajo y
- * los paneles bajan con ella. Medirlo desde arriba obligaba a recalcular el
- * número cada vez que cambiaba una palabra del encabezado.
+ * El corte es moderado: entra alrededor del 75% de cada una. Se probó con más
+ * sangrado y no sirve: el contenido de las tarjetas está alineado a la
+ * izquierda, así que cortar mucho por ese lado se come justo las etiquetas y
+ * los números, que es lo único que hay para leer. El recorte tiene que dejar
+ * ver de qué habla cada tarjeta.
  *
- * El primer par arranca en 75px porque la escala los agranda desde el centro:
- * un panel puesto en 0 asomaría unos 66px por encima del borde de la escena,
- * o sea, encima del texto.
+ * El borde interno nunca llega a la columna de texto: la escala agranda desde
+ * el centro, o sea 203px hacia cada lado de la caja.
  *
  * Aparecen recién a partir de 1440px: abajo de ese ancho no hay costado libre.
  */
 const scattered: Record<string, string> = {
-  // Una sola fila abanicada, en el mismo orden que el tablero: es el tablero
-  // desarmado. Repartidos de a dos por los costados quedaba un hueco en el
-  // medio y se leían como cuatro sobras apoyadas contra los bordes; en fila
-  // se leen como una cosa sola que después se acomoda.
-  //
-  // El paso entre uno y otro es menor que el ancho escalado, así que se
-  // enciman unos 70px y el abanico queda armado. El primero sangra por la
-  // izquierda; el último llega casi al borde derecho.
-  visitas: "left-[-4%] top-[80px]",
-  trafico: "left-[21%] top-[120px]",
-  seo: "left-[46%] top-[120px]",
-  ventas: "left-[71%] top-[80px]",
+  visitas: "left-[-2%] top-[16%]",
+  trafico: "left-[-2%] top-[54%]",
+  seo: "right-[-2%] top-[56%]",
+  ventas: "right-[-2%] top-[14%]",
 };
 
 export function HeroScene() {
@@ -202,8 +192,13 @@ export function HeroScene() {
                 y: () => flight(card).y,
                 rotate: 0,
                 scale: 1,
-                ease: "power2.inOut",
-                duration: 0.55,
+                // Se pasa apenas del hueco y vuelve, como una pieza que se
+                // acomoda al encastrar. Va con back y no con un rebote aparte
+                // porque el vuelo está atado al scroll: un tween suelto al
+                // final se dispararía cada vez que el visitante cruza ese
+                // punto, para adelante y para atrás.
+                ease: "back.out(1.15)",
+                duration: 0.62,
               },
               at,
             );
@@ -225,10 +220,7 @@ export function HeroScene() {
     "overflow-hidden rounded-card border border-line bg-card shadow-[0_28px_60px_-32px_rgba(35,28,18,0.3)]";
 
   return (
-    <div
-      ref={scope}
-      className="pointer-events-none min-[1440px]:relative min-[1440px]:flex min-[1440px]:min-h-0 min-[1440px]:flex-1 min-[1440px]:flex-col"
-    >
+    <div ref={scope} className="pointer-events-none min-[1440px]:shrink-0">
       {/* Paneles sueltos: solo en desktop, donde hay lugar para dispersarlos.
           Van encima del dashboard para que se vean al aterrizar. */}
       <div
@@ -256,15 +248,17 @@ export function HeroScene() {
         Dashboard. En desktop los huecos quedan vacíos hasta que llegan los
         paneles; en mobile ya vienen adentro.
 
-        Va en el flujo con mt-auto y no anclado al pie del contenedor. Anclado
-        abajo, su borde superior dependía del alto del viewport y en pantallas
-        de menos de 1000px de alto subía hasta taparle la línea de prueba al
-        titular: en un portátil de 850px se comía los tres datos enteros. Con
-        mt-auto el orden lo garantiza el flujo —nunca puede quedar por encima
-        del texto— y si falta lugar se recorta contra el borde de abajo, que es
-        justo el gesto que el marco ya usa al no llevar borde inferior.
+        Va en el flujo y no anclado al pie del contenedor. Anclado abajo, su
+        borde superior dependía del alto del viewport y en pantallas de menos
+        de 1000px subía hasta taparle la línea de prueba al titular. En el
+        flujo, el orden lo garantiza la maquetación.
+
+        Reserva una franja más corta de lo que mide y deja que el resto sangre
+        por el piso: el marco ya está hecho para cortarse abajo —no lleva borde
+        inferior— y reservando el alto completo el titular quedaba arrinconado
+        contra la barra en pantallas bajas.
       */}
-      <div className="mt-12 min-[1440px]:z-10 min-[1440px]:mt-auto min-[1440px]:pt-10">
+      <div className="mt-12 min-[1440px]:mt-0 min-[1440px]:h-[175px] min-[1440px]:overflow-visible">
         <div className="shell">
           <div
             data-dashboard
@@ -282,7 +276,7 @@ export function HeroScene() {
               <div className="w-12" />
             </div>
 
-            <div className="grid grid-cols-1 gap-[18px] p-[18px] min-[1440px]:grid-cols-[repeat(4,280px)] min-[1440px]:grid-rows-[190px]">
+            <div className="grid grid-cols-1 gap-[18px] p-[18px] min-[1440px]:grid-cols-[repeat(4,280px)] min-[1440px]:grid-rows-[160px]">
               {panels.map((panel) => (
                 <div
                   key={panel.id}

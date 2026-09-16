@@ -35,7 +35,7 @@ export const hero = {
   badge: "Diseño y desarrollo web",
   badgeNote: "Cupos de octubre abiertos",
   title: "Construimos sitios web que convierten visitantes en clientes.",
-  lead: "Diseño, textos y desarrollo para que la gente que entra entienda qué hacés en diez segundos y termine escribiéndote. Con alcance cerrado, precio cerrado y fecha de entrega.",
+  lead: "Diseño, textos y desarrollo para que la gente que entra entienda qué hacés en diez segundos y termine escribiéndote.",
   primary: { label: "Empezar un proyecto", href: "/contacto" },
   secondary: { label: "Ver planes y precios", href: "/#planes" },
   proof: [

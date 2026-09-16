@@ -56,7 +56,7 @@ export function HeroIntro() {
 
   return (
     <div ref={scope} className="shell relative z-10">
-      <div className="mx-auto max-w-5xl text-center">
+      <div className="mx-auto max-w-3xl text-center">
         <SplitHeading
           as="h1"
           text={hero.title}
@@ -65,13 +65,13 @@ export function HeroIntro() {
           className="text-display"
         />
 
-        <p data-reveal className="mx-auto mt-6 max-w-xl text-lead text-ink-soft">
+        <p data-reveal className="mx-auto mt-5 max-w-xl text-lead text-ink-soft">
           {hero.lead}
         </p>
 
         <div
           data-reveal
-          className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row"
+          className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row"
         >
           <Magnetic className="w-full sm:w-auto">
             <ButtonLink
@@ -94,7 +94,7 @@ export function HeroIntro() {
 
         <ul
           data-reveal
-          className="mx-auto mt-7 flex max-w-3xl flex-wrap items-center justify-center gap-y-1.5 text-[0.85rem] text-ink-faint"
+          className="mx-auto mt-6 flex max-w-3xl flex-wrap items-center justify-center gap-y-1.5 text-[0.85rem] text-ink-faint"
         >
           {hero.proof.map((item, i) => (
             <li key={item} className="flex items-center">
