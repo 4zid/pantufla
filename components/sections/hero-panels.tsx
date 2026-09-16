@@ -1,16 +1,15 @@
 /**
  * Los cuatro paneles del hero.
  *
- * Miden lo que mide el cliente: visitas, de dónde llega la gente, en qué
- * puesto de Google aparece y cuánto vendió. Ninguno habla de cómo trabajamos
- * —links de prueba, aprobaciones, el sitio por dentro—: eso le importa a quien
- * hace el sitio, no a quien lo paga.
+ * Cada uno representa una cosa distinta y, sobre todo, la representa con una
+ * estructura distinta: una serie en el tiempo, un reparto, una lista de hechos
+ * y una posición en una escala. Cuatro tarjetas con el mismo esqueleto
+ * —etiqueta, número grande, porcentaje— se leen como una sola repetida cuatro
+ * veces, por más que los números cambien.
  *
- * Dos registros a propósito. Los dos primeros son tarjetas de dato limpias:
- * fondo claro, etiqueta chica, número grande y liviano, y el gráfico en una
- * sola familia de color. Los dos últimos van sobre un degradé de malla con un
- * vidrio encima. Alternarlos es lo que le saca al hero el aire de plantilla de
- * dashboard, donde las cuatro tarjetas son la misma tarjeta cuatro veces.
+ * Dos registros visuales también: los dos primeros son tarjetas de dato
+ * limpias sobre fondo claro; los dos últimos van sobre un degradé de malla con
+ * un vidrio encima.
  *
  * Cada uno es una función suelta para poder usarlo dos veces —flotando
  * alrededor del título y adentro del dashboard— sin duplicar el marcado.
@@ -18,41 +17,27 @@
  * Los números son de muestra: son la forma del resultado, no una promesa.
  */
 
-const TONES = {
-  aqua: { fill: "bg-aqua", pill: "bg-aqua-soft text-aqua-deep" },
-  rosa: { fill: "bg-rosa", pill: "bg-rosa-soft text-rosa-deep" },
-  verde: { fill: "bg-verde", pill: "bg-verde-soft text-verde-deep" },
-  miel: { fill: "bg-miel", pill: "bg-miel-soft text-miel-deep" },
-} as const;
-
 function Label({ children }: { children: React.ReactNode }) {
   return <p className="text-[0.7rem] text-ink-faint">{children}</p>;
-}
-
-/** El número grande, con su unidad al lado en gris y sin peso. */
-function Figure({ value, unit }: { value: string; unit?: string }) {
-  return (
-    <p className="mt-1 flex items-baseline gap-1.5">
-      <span className="text-[1.75rem] font-semibold leading-none tracking-[-0.04em] tabular-nums">
-        {value}
-      </span>
-      {unit ? (
-        <span className="text-[0.78rem] text-ink-faint">{unit}</span>
-      ) : null}
-    </p>
-  );
 }
 
 function Pill({
   tone,
   children,
 }: {
-  tone: keyof typeof TONES;
+  tone: "aqua" | "rosa" | "verde" | "miel";
   children: React.ReactNode;
 }) {
+  const pill = {
+    aqua: "bg-aqua-soft text-aqua-deep",
+    rosa: "bg-rosa-soft text-rosa-deep",
+    verde: "bg-verde-soft text-verde-deep",
+    miel: "bg-miel-soft text-miel-deep",
+  }[tone];
+
   return (
     <span
-      className={`shrink-0 rounded-full px-2 py-0.5 text-[0.65rem] font-semibold ${TONES[tone].pill}`}
+      className={`shrink-0 rounded-full px-2 py-0.5 text-[0.65rem] font-semibold ${pill}`}
     >
       {children}
     </span>
@@ -60,17 +45,25 @@ function Pill({
 }
 
 /* ---------------------------------------------------------------- */
-/* Dos de dato limpio                                               */
+/* 1 · Serie en el tiempo                                           */
 /* ---------------------------------------------------------------- */
 
-/** Visitas, con la serie del mes como mapa de calor. */
+/**
+ * Visitas: manda la curva, no el número.
+ *
+ * El área ocupa casi toda la tarjeta y el dato va chico arriba. Lo que tiene
+ * que quedar de un vistazo es la forma de la subida; el valor exacto es
+ * secundario y por eso no compite por el mismo tamaño.
+ */
 export function PanelVisitas() {
-  // Tres semanas de siete días. El valor es la intensidad del color.
-  const semanas = [
-    [0.25, 0.3, 0.22, 0.4, 0.35, 0.18, 0.2],
-    [0.4, 0.55, 0.45, 0.62, 0.5, 0.3, 0.35],
-    [0.7, 0.85, 0.75, 1, 0.9, 0.55, 0.6],
-  ];
+  const serie = [18, 24, 21, 30, 27, 38, 34, 46, 52, 61, 74, 88, 96];
+  const w = 240;
+  const h = 62;
+  const puntos = serie.map((v, i) => {
+    const x = (i / (serie.length - 1)) * w;
+    const y = h - (v / 100) * h;
+    return `${x.toFixed(1)},${y.toFixed(1)}`;
+  });
 
   return (
     <div className="flex h-full flex-col p-5">
@@ -78,45 +71,74 @@ export function PanelVisitas() {
         <Label>Visitas al sitio</Label>
         <Pill tone="verde">↑ 214%</Pill>
       </div>
-      <Figure value="3.482" unit="últimos 30 días" />
+      <p className="mt-1 text-[1.05rem] font-semibold tabular-nums">
+        3.482{" "}
+        <span className="font-normal text-ink-faint">en 30 días</span>
+      </p>
 
-      <div className="mt-auto flex flex-col gap-1">
-        {semanas.map((semana, i) => (
-          <div key={i} className="flex gap-1">
-            {semana.map((v, j) => (
-              <span
-                key={j}
-                className="h-[13px] flex-1 rounded-[3px] bg-aqua"
-                style={{ opacity: 0.16 + v * 0.84 }}
-              />
-            ))}
-          </div>
-        ))}
-      </div>
+      <svg
+        viewBox={`0 0 ${w} ${h}`}
+        preserveAspectRatio="none"
+        aria-hidden
+        className="mt-auto h-[62px] w-full overflow-visible"
+      >
+        <defs>
+          <linearGradient id="visitasArea" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#6fcfca" stopOpacity="0.45" />
+            <stop offset="100%" stopColor="#6fcfca" stopOpacity="0" />
+          </linearGradient>
+        </defs>
+        <polygon
+          points={`0,${h} ${puntos.join(" ")} ${w},${h}`}
+          fill="url(#visitasArea)"
+        />
+        <polyline
+          points={puntos.join(" ")}
+          fill="none"
+          stroke="#2f9d97"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          vectorEffect="non-scaling-stroke"
+        />
+        <circle
+          cx={w}
+          cy={h - (serie[serie.length - 1] / 100) * h}
+          r="3"
+          fill="#2f9d97"
+        />
+      </svg>
     </div>
   );
 }
 
-/** De dónde llega la gente, con el reparto en una sola barra. */
+/* ---------------------------------------------------------------- */
+/* 2 · Reparto                                                      */
+/* ---------------------------------------------------------------- */
+
+/** De dónde llega la gente: una sola barra partida, no tres sueltas. */
 export function PanelTrafico() {
   const canales = [
-    { name: "Google", pct: 58, tone: "rosa" as const },
-    { name: "Directo", pct: 27, tone: "aqua" as const },
-    { name: "Redes", pct: 15, tone: "miel" as const },
+    { name: "Google", pct: 58, fill: "bg-rosa", dot: "bg-rosa" },
+    { name: "Directo", pct: 27, fill: "bg-aqua", dot: "bg-aqua" },
+    { name: "Redes", pct: 15, fill: "bg-miel", dot: "bg-miel" },
   ];
 
   return (
     <div className="flex h-full flex-col p-5">
       <Label>De dónde llegan</Label>
-      <Figure value="58%" unit="desde Google" />
+      <p className="mt-1 flex items-baseline gap-1.5">
+        <span className="text-[1.75rem] font-semibold leading-none tracking-[-0.04em] tabular-nums">
+          58%
+        </span>
+        <span className="text-[0.78rem] text-ink-faint">desde Google</span>
+      </p>
 
-      {/* Una sola barra partida en tres: el reparto se lee de un vistazo,
-          cosa que tres barras sueltas no dan. */}
-      <div className="mt-4 flex h-2 gap-1 overflow-hidden rounded-full">
+      <div className="mt-4 flex h-2 gap-1">
         {canales.map((c) => (
           <span
             key={c.name}
-            className={`h-full rounded-full ${TONES[c.tone].fill}`}
+            className={`h-full rounded-full ${c.fill}`}
             style={{ width: `${c.pct}%` }}
           />
         ))}
@@ -127,9 +149,7 @@ export function PanelTrafico() {
           <div key={c.name} className="px-2 first:pl-0 last:pr-0">
             <p className="text-[0.66rem] text-ink-faint">{c.name}</p>
             <p className="mt-0.5 flex items-center gap-1.5 text-[0.85rem] font-semibold tabular-nums">
-              <span
-                className={`h-1.5 w-1.5 rounded-full ${TONES[c.tone].fill}`}
-              />
+              <span className={`h-1.5 w-1.5 rounded-full ${c.dot}`} />
               {c.pct}%
             </p>
           </div>
@@ -140,7 +160,7 @@ export function PanelTrafico() {
 }
 
 /* ---------------------------------------------------------------- */
-/* Dos de vidrio sobre degradé                                      */
+/* Vidrio sobre degradé                                             */
 /* ---------------------------------------------------------------- */
 
 /**
@@ -162,9 +182,9 @@ function Mesh({
         className="absolute inset-0"
         style={{ background: stops.join(", ") }}
       />
-      {/* El vidrio: desenfoca el degradé de atrás y lo aclara lo justo para
-          que el texto encima pase contraste sin tapar el color. */}
-      <div className="relative flex h-full flex-col p-5">
+      <div className="relative h-full p-5">
+        {/* El vidrio va con margen adentro de la tarjeta: así el degradé lo
+            enmarca en vez de quedar tapado. */}
         <div className="absolute inset-[14px] rounded-[14px] border border-white/60 bg-white/40 shadow-[0_1px_0_rgba(255,255,255,0.7)_inset] backdrop-blur-2xl" />
         <div className="relative flex h-full flex-col px-2 py-1.5">
           {children}
@@ -174,13 +194,79 @@ function Mesh({
   );
 }
 
-/** En qué puesto de Google aparece, por búsqueda. */
-export function PanelSeo() {
-  const claves = [
-    { q: "estudio de arquitectura", pos: 2, sube: 6 },
-    { q: "obra nueva córdoba", pos: 1, sube: 3 },
-    { q: "remodelación de casas", pos: 4, sube: 9 },
+/* ---------------------------------------------------------------- */
+/* 3 · Lista de hechos                                              */
+/* ---------------------------------------------------------------- */
+
+/**
+ * Consultas: qué entró y cuándo.
+ *
+ * Es una bitácora, no una métrica. Sin número grande a propósito: lo que
+ * convence acá no es cuántas fueron sino que sean recientes y concretas.
+ */
+export function PanelConsultas() {
+  const entradas = [
+    { texto: "Obra nueva · Córdoba", meta: "hace 4 min", vivo: true },
+    { texto: "Remodelación de local", meta: "hace 2 h" },
+    { texto: "Presupuesto aceptado", meta: "$ 480.000" },
   ];
+
+  return (
+    <Mesh
+      stops={[
+        "radial-gradient(70% 80% at 10% 18%, #8cc476 0%, transparent 58%)",
+        "radial-gradient(65% 75% at 90% 8%, #4fc4be 0%, transparent 60%)",
+        "radial-gradient(80% 88% at 78% 98%, #ef85a0 0%, transparent 62%)",
+        "radial-gradient(55% 65% at 35% 95%, #a6cf95 0%, transparent 58%)",
+        "linear-gradient(140deg, #e6f2df, #ddf2f0)",
+      ]}
+    >
+      <div className="flex items-start justify-between gap-2">
+        <Label>Consultas que entraron</Label>
+        <Pill tone="verde">6 esta semana</Pill>
+      </div>
+
+      <ul className="mt-auto flex flex-col gap-2.5">
+        {entradas.map((e) => (
+          <li key={e.texto} className="flex items-center gap-2.5">
+            <span className="relative flex h-2 w-2 shrink-0">
+              {e.vivo ? (
+                <span className="absolute inline-flex h-full w-full rounded-full bg-verde-deep opacity-40" />
+              ) : null}
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-verde-deep" />
+            </span>
+            <span className="min-w-0 flex-1 truncate text-[0.74rem] text-ink">
+              {e.texto}
+            </span>
+            <span className="shrink-0 text-[0.66rem] tabular-nums text-ink-soft">
+              {e.meta}
+            </span>
+          </li>
+        ))}
+      </ul>
+    </Mesh>
+  );
+}
+
+/* ---------------------------------------------------------------- */
+/* 4 · Posición en una escala                                       */
+/* ---------------------------------------------------------------- */
+
+/**
+ * Google: dónde cae en la escala de resultados.
+ *
+ * Una lista de puestos dice el número pero no dice si está bien. La escala sí:
+ * el 1 a la izquierda y el 10 a la derecha, y las tres búsquedas marcadas
+ * encima. Se ve de un saque que están todas del lado bueno.
+ */
+export function PanelGoogle() {
+  const claves = [
+    { q: "estudio de arquitectura", pos: 2 },
+    { q: "obra nueva", pos: 1 },
+    { q: "remodelación", pos: 4 },
+  ];
+  // El 1 va casi pegado al borde izquierdo y el 10 casi al derecho.
+  const x = (pos: number) => 6 + ((pos - 1) / 9) * 88;
 
   return (
     <Mesh
@@ -196,53 +282,32 @@ export function PanelSeo() {
         <Label>Posición en Google</Label>
         <Pill tone="miel">3 en el top 5</Pill>
       </div>
-      <ul className="mt-auto flex flex-col gap-1.5">
-        {claves.map((k) => (
-          <li key={k.q} className="flex items-center gap-2">
-            <span className="flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-full bg-ink text-[0.6rem] font-semibold tabular-nums text-paper">
+
+      <p className="mt-2 flex items-baseline gap-1.5">
+        <span className="text-[1.75rem] font-semibold leading-none tracking-[-0.04em] tabular-nums">
+          2.º
+        </span>
+        <span className="text-[0.74rem] text-ink-soft">promedio</span>
+      </p>
+
+      <div className="mt-auto">
+        <div className="relative h-7">
+          <div className="absolute inset-x-0 top-[18px] h-1 rounded-full bg-gradient-to-r from-ink/70 to-ink/10" />
+          {claves.map((k) => (
+            <span
+              key={k.q}
+              title={k.q}
+              style={{ left: `${x(k.pos)}%` }}
+              className="absolute top-0 flex h-[19px] w-[19px] -translate-x-1/2 items-center justify-center rounded-full border-2 border-white bg-ink text-[0.6rem] font-semibold tabular-nums text-paper shadow-sm"
+            >
               {k.pos}
             </span>
-            <span className="min-w-0 flex-1 truncate text-[0.7rem] text-ink-soft">
-              {k.q}
-            </span>
-            <span className="shrink-0 text-[0.66rem] font-semibold tabular-nums text-verde-deep">
-              ↑{k.sube}
-            </span>
-          </li>
-        ))}
-      </ul>
-    </Mesh>
-  );
-}
-
-/** Ventas cerradas y lo que entró por el sitio. */
-export function PanelVentas() {
-  const meses = [42, 58, 51, 70, 84, 100];
-
-  return (
-    <Mesh
-      stops={[
-        "radial-gradient(70% 80% at 10% 18%, #8cc476 0%, transparent 58%)",
-        "radial-gradient(65% 75% at 90% 8%, #4fc4be 0%, transparent 60%)",
-        "radial-gradient(80% 88% at 78% 98%, #ef85a0 0%, transparent 62%)",
-        "radial-gradient(55% 65% at 35% 95%, #a6cf95 0%, transparent 58%)",
-        "linear-gradient(140deg, #e6f2df, #ddf2f0)",
-      ]}
-    >
-      <div className="flex items-start justify-between gap-2">
-        <Label>Ventas del mes</Label>
-        <Pill tone="verde">↑ 9</Pill>
-      </div>
-      <Figure value="24" unit="$ 1.152.000" />
-
-      <div className="mt-auto flex h-9 items-end gap-1.5">
-        {meses.map((h, i) => (
-          <span
-            key={i}
-            className="flex-1 rounded-[4px] bg-ink"
-            style={{ height: `${h}%`, opacity: 0.18 + (i / meses.length) * 0.62 }}
-          />
-        ))}
+          ))}
+        </div>
+        <div className="mt-0.5 flex justify-between text-[0.62rem] text-ink-soft">
+          <span>1.º</span>
+          <span>10.º</span>
+        </div>
       </div>
     </Mesh>
   );

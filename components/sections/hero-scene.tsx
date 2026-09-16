@@ -4,9 +4,9 @@ import { useGSAP } from "@gsap/react";
 import { useRef } from "react";
 
 import {
-  PanelSeo,
+  PanelConsultas,
+  PanelGoogle,
   PanelTrafico,
-  PanelVentas,
   PanelVisitas,
 } from "@/components/sections/hero-panels";
 import { Draggable, ease, gsap, registerGsap } from "@/lib/motion";
@@ -39,9 +39,9 @@ const PANEL_H = 185;
 
 const panels = [
   { id: "visitas", node: <PanelVisitas />, rotate: -3.5 },
-  { id: "trafico", node: <PanelTrafico />, rotate: 3 },
-  { id: "seo", node: <PanelSeo />, rotate: -3 },
-  { id: "ventas", node: <PanelVentas />, rotate: 3.5 },
+  { id: "trafico", node: <PanelTrafico />, rotate: -2.5 },
+  { id: "consultas", node: <PanelConsultas />, rotate: -4 },
+  { id: "google", node: <PanelGoogle />, rotate: 4.5 },
 ] as const;
 
 /**
@@ -66,19 +66,23 @@ const SCATTER_SCALE = 1.45;
  * los números, que es lo único que hay para leer. El recorte tiene que dejar
  * ver de qué habla cada tarjeta.
  *
- * El borde interno nunca llega a la columna de texto: la escala agranda desde
- * el centro, o sea 203px hacia cada lado de la caja. Quien manda es 1440, que
- * es donde la columna de texto queda más cerca del borde; de 1600 para arriba
- * sobra lugar y las tarjetas se corren hacia adentro para que la etiqueta y el
- * número entren enteros.
+ * De 1600 para arriba las posiciones son las que quedaron después de
+ * acomodarlas a mano, y van en píxeles: lo que se buscaba es que apenas asomen
+ * fuera de cuadro, y un porcentaje las corre hacia adentro a medida que crece
+ * la pantalla hasta dejar de cortarlas.
+ *
+ * Abajo de 1600 mandan los porcentajes, calculados contra 1440, que es donde
+ * la columna de texto queda más cerca del borde. El borde interno nunca llega
+ * al texto: la escala agranda desde el centro, o sea 203px hacia cada lado de
+ * la caja.
  *
  * Aparecen recién a partir de 1440px: abajo de ese ancho no hay costado libre.
  */
 const scattered: Record<string, string> = {
-  visitas: "left-[-2%] top-[16%] min-[1600px]:left-[1%]",
-  trafico: "left-[-2%] top-[54%] min-[1600px]:left-[1%]",
-  seo: "right-[-2%] top-[56%] min-[1600px]:right-[1%]",
-  ventas: "right-[-2%] top-[14%] min-[1600px]:right-[1%]",
+  visitas: "left-[-2%] top-[23%] min-[1600px]:left-[48px]",
+  trafico: "left-[-2%] top-[66%] min-[1600px]:left-[48px]",
+  consultas: "right-[-2%] top-[23%] min-[1600px]:right-[-39px]",
+  google: "right-[-2%] top-[72%] min-[1600px]:right-[45px]",
 };
 
 export function HeroScene() {
