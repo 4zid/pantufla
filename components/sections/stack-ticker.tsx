@@ -1,8 +1,11 @@
+import Image from "next/image";
+
 import { Reveal } from "@/components/motion/reveal";
 import { Eyebrow } from "@/components/ui/eyebrow";
 import { SplitHeading } from "@/components/motion/split-heading";
 import { stack } from "@/content/site";
 import { toneBg, type Tone } from "@/lib/tones";
+import { cn } from "@/lib/cn";
 
 /**
  * Riel del stack.
@@ -30,7 +33,11 @@ function Row({
   reverse,
   duration,
 }: {
-  items: readonly { readonly name: string; readonly tone: string }[];
+  items: readonly {
+    readonly name: string;
+    readonly tone: string;
+    readonly logo: string | null;
+  }[];
   reverse?: boolean;
   duration: string;
 }) {
@@ -52,11 +59,32 @@ function Row({
               aria-hidden={copy > 0 || undefined}
               className="pr-3 sm:pr-4"
             >
-              <span className="flex items-center gap-2.5 whitespace-nowrap rounded-full border border-line bg-card px-5 py-2.5 text-[0.95rem] font-medium">
-                <span
-                  aria-hidden
-                  className={`h-1.5 w-1.5 shrink-0 rounded-full ${toneBg[item.tone as Tone]}`}
-                />
+              <span className="flex items-center gap-2.5 whitespace-nowrap rounded-full border border-line bg-card py-2.5 pl-4 pr-5 text-[0.95rem] font-medium">
+                {item.logo ? (
+                  <Image
+                    src={item.logo}
+                    alt=""
+                    aria-hidden
+                    width={18}
+                    height={18}
+                    unoptimized
+                    className={cn(
+                      "h-[18px] w-[18px] shrink-0 object-contain",
+                      // El PNG no se puede recolorear como el SVG: el filtro
+                      // lo lleva a negro respetando el alpha, que es lo más
+                      // cerca de la tinta sin tocar el recorte.
+                      item.logo.endsWith(".png") && "brightness-0 opacity-90",
+                    )}
+                  />
+                ) : (
+                  <span
+                    aria-hidden
+                    className={cn(
+                      "h-1.5 w-1.5 shrink-0 rounded-full",
+                      toneBg[item.tone as Tone],
+                    )}
+                  />
+                )}
                 {item.name}
               </span>
             </li>

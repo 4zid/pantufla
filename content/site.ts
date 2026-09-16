@@ -35,8 +35,7 @@ export const hero = {
   badge: "Diseño y desarrollo web",
   badgeNote: "Cupos de octubre abiertos",
   title: "Tu sitio web listo en tres semanas.",
-  lead:
-    "Un alcance cerrado, un precio cerrado y una fecha de entrega. Vos aprobás, nosotros publicamos. Sin presupuestos por hora ni proyectos que se estiran.",
+  lead: "Un alcance cerrado, un precio cerrado y una fecha de entrega. Vos aprobás, nosotros publicamos. Sin presupuestos por hora ni proyectos que se estiran.",
   primary: { label: "Empezar un proyecto", href: "/contacto" },
   secondary: { label: "Ver planes y precios", href: "/#planes" },
   proof: [
@@ -52,9 +51,9 @@ export const hero = {
 
 export const problem = {
   eyebrow: "El problema",
-  title: "Nadie abandona un sitio web por el diseño. Lo abandona por el proceso.",
-  lead:
-    "La mayoría de los proyectos que llegan acá vienen de una experiencia parecida. Estas cuatro, casi siempre.",
+  title:
+    "Nadie abandona un sitio web por el diseño. Lo abandona por el proceso.",
+  lead: "La mayoría de los proyectos que llegan acá vienen de una experiencia parecida. Estas cuatro, casi siempre.",
   items: [
     {
       title: "El presupuesto abre y no cierra nunca",
@@ -82,8 +81,7 @@ export const problem = {
 export const approach = {
   eyebrow: "Cómo lo resolvemos",
   title: "Un alcance, un precio, una fecha.",
-  lead:
-    "Pantufla es un estudio chico que trabaja con un método fijo. Eso es lo que nos permite entregar rápido sin bajar el nivel del diseño.",
+  lead: "Pantufla es un estudio chico que trabaja con un método fijo. Eso es lo que nos permite entregar rápido sin bajar el nivel del diseño.",
   pillars: [
     {
       title: "Alcance cerrado antes de empezar",
@@ -113,8 +111,7 @@ export const approach = {
 export const process = {
   eyebrow: "El proceso",
   title: "Cuatro etapas. Quince días hábiles.",
-  lead:
-    "El mismo camino para todos los proyectos. Cambia el tamaño, no el método.",
+  lead: "El mismo camino para todos los proyectos. Cambia el tamaño, no el método.",
   steps: [
     {
       number: "01",
@@ -170,8 +167,7 @@ export type BillingMode = "once" | "split";
 export const pricing = {
   eyebrow: "Planes",
   title: "Elegí cómo empezar.",
-  lead:
-    "Una página sola, el sitio completo, o contanos si necesitás otra cosa. Precios en dólares y cerrados.",
+  lead: "Una página sola, el sitio completo, o contanos si necesitás otra cosa. Precios en dólares y cerrados.",
   toggle: {
     once: { label: "Pago único", note: "−15%", noteLong: "15% menos" },
     split: { label: "En 2 pagos", note: "50/50", noteLong: "50% y 50%" },
@@ -337,10 +333,12 @@ export const faq = {
 
 export const finalCta = {
   title: "Contanos qué necesitás.",
-  lead:
-    "Cinco minutos de formulario. En 24 horas te respondemos con alcance, precio y fecha, o te decimos con franqueza que no somos los indicados.",
+  lead: "Cinco minutos de formulario. En 24 horas te respondemos con alcance, precio y fecha, o te decimos con franqueza que no somos los indicados.",
   primary: { label: "Completar el brief", href: "/contacto" },
-  secondary: { label: `Escribir a ${site.email}`, href: `mailto:${site.email}` },
+  secondary: {
+    label: `Escribir a ${site.email}`,
+    href: `mailto:${site.email}`,
+  },
 } as const;
 
 /**
@@ -378,10 +376,20 @@ export const timelineOptions = [
 /**
  * El stack, para el riel en movimiento.
  *
- * Van como texto y no como logos: no tengo los SVG de marca y dibujarlos de
- * memoria sale mal —un diseñador le ve el trazo torcido a diez metros—. Cada
- * ítem tiene su tono para el punto de color; si más adelante entran los SVG
- * reales, el punto es el único lugar que hay que cambiar.
+ * Las marcas salen de Brandfetch. Vienen en la variante para fondo oscuro —o
+ * sea, en blanco— así que se les horneó la tinta del sitio en el archivo:
+ * un SVG cargado con <img> es un documento aparte y no hereda el color del
+ * CSS, así que currentColor no serviría. Quedan todas monocromas, que es lo
+ * que evita que catorce marcas de catorce paletas distintas se peleen entre
+ * sí sobre el papel.
+ *
+ * Supabase es la excepción: Brandfetch solo tiene un PNG. Tiene alpha, así
+ * que el filtro del CSS lo lleva a tinta sin tocar el recorte.
+ *
+ * Sanity, TypeScript y GSAP van sin marca: lo único que hay de ellos es un
+ * cuadrado opaco de color, que al lado de marcas monocromas se ve como un
+ * parche. Se quedan con el punto de tono, que ya es parte del lenguaje del
+ * sitio. Si conseguís esos tres SVG, se agregan acá y listo.
  *
  * Dos filas que corren en sentidos opuestos: la de arriba es con qué se
  * diseña y dónde vive el contenido, la de abajo con qué se construye.
@@ -389,26 +397,25 @@ export const timelineOptions = [
 export const stack = {
   eyebrow: "Herramientas",
   title: "Con qué está hecho esto.",
-  lead:
-    "Nada exótico y nada casero: herramientas conocidas, que vas a poder seguir usando con cualquier otro estudio.",
+  lead: "Nada exótico y nada casero: herramientas conocidas, que vas a poder seguir usando con cualquier otro estudio.",
   rows: [
     [
-      { name: "Figma", tone: "aqua" },
-      { name: "Webflow", tone: "rosa" },
-      { name: "Framer", tone: "verde" },
-      { name: "Sanity", tone: "miel" },
-      { name: "Supabase", tone: "aqua" },
-      { name: "Resend", tone: "rosa" },
-      { name: "Vercel", tone: "verde" },
+      { name: "Figma", tone: "aqua", logo: "/logos/figma.svg" },
+      { name: "Webflow", tone: "rosa", logo: "/logos/webflow.svg" },
+      { name: "Framer", tone: "verde", logo: "/logos/framer.svg" },
+      { name: "Sanity", tone: "miel", logo: null },
+      { name: "Supabase", tone: "aqua", logo: "/logos/supabase.png" },
+      { name: "Resend", tone: "rosa", logo: "/logos/resend.svg" },
+      { name: "Vercel", tone: "verde", logo: "/logos/vercel.svg" },
     ],
     [
-      { name: "Next.js", tone: "miel" },
-      { name: "TypeScript", tone: "aqua" },
-      { name: "Tailwind", tone: "rosa" },
-      { name: "GSAP", tone: "verde" },
-      { name: "GitHub", tone: "miel" },
-      { name: "Claude", tone: "aqua" },
-      { name: "ChatGPT", tone: "rosa" },
+      { name: "Next.js", tone: "miel", logo: "/logos/nextjs.svg" },
+      { name: "TypeScript", tone: "aqua", logo: null },
+      { name: "Tailwind", tone: "rosa", logo: "/logos/tailwind.svg" },
+      { name: "GSAP", tone: "verde", logo: null },
+      { name: "GitHub", tone: "miel", logo: "/logos/github.svg" },
+      { name: "Claude", tone: "aqua", logo: "/logos/claude.svg" },
+      { name: "ChatGPT", tone: "rosa", logo: "/logos/chatgpt.svg" },
     ],
   ],
 } as const;
