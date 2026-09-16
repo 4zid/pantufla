@@ -4,7 +4,7 @@ import { Suspense } from "react";
 import { BriefForm } from "@/components/brief-form";
 import { CheckIcon } from "@/components/ui/icons";
 import { PageHeader } from "@/components/ui/page-header";
-import { process, site } from "@/content/site";
+import { finalCta, process, site } from "@/content/site";
 
 export const metadata: Metadata = {
   title: "Empezar un proyecto",
@@ -12,13 +12,6 @@ export const metadata: Metadata = {
     "Contanos qué necesitás. En 24 horas te respondemos con alcance, precio y fecha de entrega.",
   alternates: { canonical: "/contacto" },
 };
-
-const expectations = [
-  "Leemos el brief el mismo día que llega.",
-  "Te respondemos con alcance, precio y fecha en 24 horas hábiles.",
-  "Si no somos los indicados, te lo decimos y te sugerimos a quién ver.",
-  "No hay llamada de venta obligatoria: si preferís todo por escrito, va por escrito.",
-];
 
 export default function ContactPage() {
   return (
@@ -42,7 +35,7 @@ export default function ContactPage() {
           <aside className="lg:sticky lg:top-28 lg:self-start">
             <p className="eyebrow">Qué pasa después</p>
             <ul className="mt-6 space-y-4">
-              {expectations.map((item) => (
+              {finalCta.expectations.map((item) => (
                 <li key={item} className="flex gap-3 text-[0.95rem]">
                   <CheckIcon className="mt-[5px] h-4 w-4 shrink-0 text-aqua-deep" />
                   <span className="leading-relaxed text-ink-soft">{item}</span>

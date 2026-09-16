@@ -59,7 +59,7 @@ export function BriefForm() {
 
   if (status === "sent") {
     return (
-      <div className="rounded-panel border border-line bg-card p-8 md:p-10">
+      <div className="rounded-panel border border-line bg-card p-8 text-ink md:p-10">
         <span className="flex h-11 w-11 items-center justify-center rounded-full bg-aqua-soft text-aqua-deep">
           <CheckIcon className="h-5 w-5" />
         </span>
@@ -86,7 +86,7 @@ export function BriefForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="rounded-panel border border-line bg-card p-6 md:p-9"
+      className="rounded-panel border border-line bg-card p-6 text-ink md:p-9"
     >
       <div className="grid gap-5 sm:grid-cols-2">
         <div>

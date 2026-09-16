@@ -18,10 +18,11 @@ import { cn } from "@/lib/cn";
  * Arriba de lg los cuatro paneles arrancan dispersos alrededor del título y,
  * al bajar, vuelan hasta sus lugares dentro del dashboard.
  *
- * El hueco de cada panel mide exactamente lo mismo que el panel, así que el
- * vuelo es una traslación pura: no hay que escalar nada y nada se deforma.
- * Como los dos elementos viven en el mismo contenedor, la diferencia entre sus
- * rectángulos tampoco depende del scroll.
+ * La caja de maquetado de cada panel mide exactamente lo mismo que su hueco:
+ * el panel se ve más grande por una escala, no por un tamaño distinto. Así el
+ * vuelo sigue siendo la diferencia entre dos rectángulos iguales más la vuelta
+ * de la escala a 1, y nada se deforma al aterrizar. Como los dos elementos
+ * viven en el mismo contenedor, esa diferencia tampoco depende del scroll.
  *
  * Abajo de lg no hay vuelo: el dashboard se muestra ya armado.
  */
@@ -34,20 +35,40 @@ const panels = [
 ] as const;
 
 /**
+ * Cuánto más grandes se ven los paneles antes de converger.
+ *
+ * Es una escala y no un tamaño distinto a propósito: la caja de maquetado
+ * sigue midiendo lo mismo que su hueco, así que el aterrizaje se sigue
+ * calculando como una traslación pura entre dos rectángulos del mismo tamaño.
+ * La escala vuelve a 1 durante el vuelo y el panel cae justo.
+ */
+const SCATTER_SCALE = 1.7;
+
+/**
  * Dónde arranca cada panel antes de converger.
  *
- * Los cuatro viven en la mitad de abajo, que es la zona libre: arriba manda el
- * título y ahí no entra nada. Antes se cruzaban con el titular por los costados
- * y además sobresalían del borde, así que el texto quedaba cortado.
+ * Las cajas se plantan pasadas del borde para que la escala las saque de
+ * pantalla: se ven grandes y cortadas por los costados, que es lo que hace que
+ * el hero se sienta ocupado en vez de decorado.
  *
- * Por eso también aparecen recién a partir de 1440px: abajo de ese ancho no hay
- * lugar para ponerlos sin pisar algo.
+ * El alto va en píxeles y no en porcentaje del viewport. El bloque de texto
+ * arranca a una distancia fija del techo y mide siempre lo mismo, así que
+ * termina en el mismo píxel en cualquier pantalla; un porcentaje, en cambio,
+ * sube con el viewport corto y ahí los paneles se cruzaban con la línea de
+ * prueba. Con píxeles el margen contra el texto es el mismo siempre.
+ *
+ * Aparecen recién a partir de 1440px: abajo de ese ancho no hay costado libre.
  */
 const scattered: Record<string, string> = {
-  analytics: "left-[3%] top-[44%]",
-  ventas: "right-[3%] top-[45%]",
-  chat: "left-[5%] top-[66%]",
-  sitio: "right-[5%] top-[64%]",
+  // Los dos chicos, pegados a los bordes y más arriba.
+  analytics: "left-[-6%] top-[610px]",
+  ventas: "right-[-6%] top-[625px]",
+  // Los dos altos, más adentro y más abajo, sangrando por el piso. Van
+  // corridos hacia el centro y no contra el borde para no quedar tapados por
+  // los chicos: encimados apenas se leen como capas, encimados del todo se
+  // comen uno al otro.
+  chat: "left-[12%] top-[760px]",
+  sitio: "right-[9%] top-[740px]",
 };
 
 /**
@@ -85,14 +106,16 @@ export function HeroScene() {
 
           if (!desktop) return;
 
-          gsap.set(cards, { rotate: (i) => panels[i].rotate });
+          gsap.set(cards, {
+            rotate: (i) => panels[i].rotate,
+            scale: SCATTER_SCALE,
+          });
 
           // Se pueden agarrar y mover. El arrastre vive en el hijo, así que no
           // compite con el transform que usa el vuelo.
           const draggables = cards.map((card) =>
             Draggable.create(card.querySelector("[data-drag]"), {
               type: "x,y",
-              bounds: root.parentElement ?? undefined,
               inertia: false,
               cursor: "grab",
               activeCursor: "grabbing",
@@ -101,7 +124,6 @@ export function HeroScene() {
           gsap.from(cards, {
             opacity: 0,
             y: 34,
-            scale: 0.94,
             duration: 1,
             ease,
             stagger: 0.09,
@@ -119,8 +141,9 @@ export function HeroScene() {
               x: gsap.getProperty(card, "x") as number,
               y: gsap.getProperty(card, "y") as number,
               rotate: gsap.getProperty(card, "rotation") as number,
+              scale: gsap.getProperty(card, "scaleX") as number,
             };
-            gsap.set(card, { x: 0, y: 0, rotate: 0 });
+            gsap.set(card, { x: 0, y: 0, rotate: 0, scale: 1 });
             const c = card.getBoundingClientRect();
             const s = slot.getBoundingClientRect();
             gsap.set(card, saved);
@@ -139,10 +162,18 @@ export function HeroScene() {
           });
 
           if (frame) {
+            // Solo opacidad: el marco no se desplaza.
+            //
+            // Antes entraba desde y:70 y los huecos se movían con él. Cada
+            // panel mide su hueco cuando arranca su propio vuelo —GSAP resuelve
+            // los valores por función una sola vez, ahí— así que apuntaban a
+            // una posición que el marco todavía estaba dejando atrás y
+            // aterrizaban 70px más abajo, con el hueco vacío asomando arriba.
+            // Con el marco quieto, lo que se mide es lo que hay.
             tl.fromTo(
               frame,
-              { opacity: 0, y: 70 },
-              { opacity: 1, y: 0, ease: "power2.out", duration: 0.3 },
+              { opacity: 0 },
+              { opacity: 1, ease: "power2.out", duration: 0.3 },
               0.05,
             );
           }
@@ -164,6 +195,7 @@ export function HeroScene() {
                 x: () => flight(card).x,
                 y: () => flight(card).y,
                 rotate: 0,
+                scale: 1,
                 ease: "power2.inOut",
                 duration: 0.55,
               },
@@ -187,7 +219,10 @@ export function HeroScene() {
     "overflow-hidden rounded-card border border-line bg-card shadow-[0_28px_60px_-32px_rgba(35,28,18,0.3)]";
 
   return (
-    <div ref={scope} className="pointer-events-none">
+    <div
+      ref={scope}
+      className="pointer-events-none min-[1440px]:flex min-[1440px]:min-h-0 min-[1440px]:flex-1 min-[1440px]:flex-col"
+    >
       {/* Paneles sueltos: solo en desktop, donde hay lugar para dispersarlos.
           Van encima del dashboard para que se vean al aterrizar. */}
       <div aria-hidden className="absolute inset-0 z-20 hidden min-[1440px]:block">
@@ -208,9 +243,19 @@ export function HeroScene() {
         ))}
       </div>
 
-      {/* Dashboard. En desktop los huecos quedan vacíos hasta que llegan los
-          paneles; en mobile ya vienen adentro. */}
-      <div className="mt-12 min-[1440px]:absolute min-[1440px]:inset-x-0 min-[1440px]:bottom-0 min-[1440px]:z-10 min-[1440px]:mt-0">
+      {/*
+        Dashboard. En desktop los huecos quedan vacíos hasta que llegan los
+        paneles; en mobile ya vienen adentro.
+
+        Va en el flujo con mt-auto y no anclado al pie del contenedor. Anclado
+        abajo, su borde superior dependía del alto del viewport y en pantallas
+        de menos de 1000px de alto subía hasta taparle la línea de prueba al
+        titular: en un portátil de 850px se comía los tres datos enteros. Con
+        mt-auto el orden lo garantiza el flujo —nunca puede quedar por encima
+        del texto— y si falta lugar se recorta contra el borde de abajo, que es
+        justo el gesto que el marco ya usa al no llevar borde inferior.
+      */}
+      <div className="mt-12 min-[1440px]:z-10 min-[1440px]:mt-auto min-[1440px]:pt-10">
         <div className="shell">
           <div
             data-dashboard

@@ -53,7 +53,7 @@ export default async function HomePage() {
       <Testimonials items={testimonials} />
       <ClientsMap />
       <Faq />
-      <FinalCta />
+      <FinalCta withForm />
       <StructuredData />
     </>
   );

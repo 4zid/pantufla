@@ -199,7 +199,7 @@ export const pricing = {
       name: "Sitio",
       summary: "Tu sitio completo con un panel para que lo edites vos.",
       bestFor: "Estudios, agencias, clínicas, marcas y productos.",
-      price: { once: 2200, split: 1300, splitCount: 2 },
+      price: { once: 1500, split: 880, splitCount: 2 },
       delivery: "2 a 3 semanas",
       featured: true,
       badge: "El más elegido",
@@ -218,7 +218,7 @@ export const pricing = {
     summary: "Tu proyecto no entra en ninguno de los dos.",
     price: "A convenir",
     features: [
-      "Tiendas online y reservas",
+      "Sistemas de reservas y turnos",
       "Integraciones con lo que ya usás",
       "Migraciones desde otra plataforma",
       "Te decimos en 24 horas si podemos",
@@ -238,12 +238,14 @@ export const pricing = {
       {
         name: "Webflow",
         tone: "aqua",
+        logo: "/logos/webflow.svg",
         detail:
           "Entramos al Designer y al CMS. Ordenamos las clases, arreglamos el responsive y dejamos las colecciones listas para que cargues vos.",
       },
       {
         name: "Framer",
         tone: "rosa",
+        logo: "/logos/framer.svg",
         detail:
           "Trabajamos sobre tu proyecto: componentes, variantes, breakpoints y CMS. Si hace falta código, lo sumamos.",
       },
@@ -335,6 +337,14 @@ export const finalCta = {
   title: "Contanos qué necesitás.",
   lead: "Cinco minutos de formulario. En 24 horas te respondemos con alcance, precio y fecha, o te decimos con franqueza que no somos los indicados.",
   primary: { label: "Completar el brief", href: "/contacto" },
+  /** Lo que pasa después de mandar el brief. Lo usan el cierre de la home y
+      la página de contacto, así que vive acá y no duplicado en cada una. */
+  expectations: [
+    "Leemos el brief el mismo día que llega.",
+    "Te respondemos con alcance, precio y fecha en 24 horas hábiles.",
+    "Si no somos los indicados, te lo decimos y te sugerimos a quién ver.",
+    "No hay llamada de venta obligatoria: si preferís todo por escrito, va por escrito.",
+  ],
   secondary: {
     label: `Escribir a ${site.email}`,
     href: `mailto:${site.email}`,

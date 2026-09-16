@@ -1,6 +1,7 @@
 "use client";
 
 import { useGSAP } from "@gsap/react";
+import Image from "next/image";
 import { useRef, useState } from "react";
 
 import { ButtonLink } from "@/components/ui/button";
@@ -129,12 +130,25 @@ export function PricingExisting() {
                   style={open ? undefined : { opacity: 0 }}
                   className="rounded-2xl bg-paper-alt p-5"
                 >
+                  {/* Isologotipo: la marca y el nombre juntos. La marca va en
+                      tinta, igual que en el riel del stack, para que las dos
+                      plataformas se lean como un par y no como dos logos
+                      pegados de dos paletas distintas. */}
                   <span
                     className={cn(
-                      "inline-flex rounded-full px-2.5 py-1 text-[0.78rem] font-semibold",
+                      "inline-flex items-center gap-2 rounded-full py-1 pl-2 pr-3 text-[0.82rem] font-semibold",
                       tonePill[platform.tone as Tone],
                     )}
                   >
+                    <Image
+                      src={platform.logo}
+                      alt=""
+                      aria-hidden
+                      width={16}
+                      height={16}
+                      unoptimized
+                      className="h-4 w-4 shrink-0 object-contain"
+                    />
                     {platform.name}
                   </span>
                   <p className="mt-3 text-[0.92rem] leading-relaxed text-ink-soft">
