@@ -35,7 +35,7 @@ import { cn } from "@/lib/cn";
  * cosas sueltas. Iguales y simétricos se leen como un tablero.
  */
 const PANEL_W = 280;
-const PANEL_H = 160;
+const PANEL_H = 185;
 
 const panels = [
   { id: "visitas", node: <PanelVisitas />, rotate: -3.5 },
@@ -67,15 +67,18 @@ const SCATTER_SCALE = 1.45;
  * ver de qué habla cada tarjeta.
  *
  * El borde interno nunca llega a la columna de texto: la escala agranda desde
- * el centro, o sea 203px hacia cada lado de la caja.
+ * el centro, o sea 203px hacia cada lado de la caja. Quien manda es 1440, que
+ * es donde la columna de texto queda más cerca del borde; de 1600 para arriba
+ * sobra lugar y las tarjetas se corren hacia adentro para que la etiqueta y el
+ * número entren enteros.
  *
  * Aparecen recién a partir de 1440px: abajo de ese ancho no hay costado libre.
  */
 const scattered: Record<string, string> = {
-  visitas: "left-[-2%] top-[16%]",
-  trafico: "left-[-2%] top-[54%]",
-  seo: "right-[-2%] top-[56%]",
-  ventas: "right-[-2%] top-[14%]",
+  visitas: "left-[-2%] top-[16%] min-[1600px]:left-[1%]",
+  trafico: "left-[-2%] top-[54%] min-[1600px]:left-[1%]",
+  seo: "right-[-2%] top-[56%] min-[1600px]:right-[1%]",
+  ventas: "right-[-2%] top-[14%] min-[1600px]:right-[1%]",
 };
 
 export function HeroScene() {
@@ -276,7 +279,7 @@ export function HeroScene() {
               <div className="w-12" />
             </div>
 
-            <div className="grid grid-cols-1 gap-[18px] p-[18px] min-[1440px]:grid-cols-[repeat(4,280px)] min-[1440px]:grid-rows-[160px]">
+            <div className="grid grid-cols-1 gap-[18px] p-[18px] min-[1440px]:grid-cols-[repeat(4,280px)] min-[1440px]:grid-rows-[185px]">
               {panels.map((panel) => (
                 <div
                   key={panel.id}
