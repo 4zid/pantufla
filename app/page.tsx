@@ -44,7 +44,7 @@ export default async function HomePage() {
 }
 
 function StructuredData() {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://pantufla.studio";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://pantufla.design";
 
   const data = [
     {

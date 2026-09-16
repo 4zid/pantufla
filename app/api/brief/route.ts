@@ -113,7 +113,7 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         error:
-          "No pudimos registrar el mensaje. Escribinos directo a hola@pantufla.studio.",
+          "No pudimos registrar el mensaje. Escribinos directo a hola@pantufla.design.",
       },
       { status: 500 },
     );

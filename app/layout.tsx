@@ -6,7 +6,7 @@ import { site } from "@/content/site";
 
 import "./globals.css";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://pantufla.studio";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://pantufla.design";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),

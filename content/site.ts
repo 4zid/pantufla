@@ -10,12 +10,12 @@ export const site = {
   tagline: "Estudio de diseño y desarrollo web",
   description:
     "Diseñamos y desarrollamos sitios web con alcance cerrado, precio cerrado y fecha de entrega. De la primera charla al sitio publicado, en semanas.",
-  email: "hola@pantufla.studio",
+  email: "hola@pantufla.design",
   whatsapp: "https://wa.me/5491100000000",
   location: "Buenos Aires, Argentina",
   social: [
-    { label: "Instagram", href: "https://instagram.com/pantufla.studio" },
-    { label: "LinkedIn", href: "https://linkedin.com/company/pantufla-studio" },
+    { label: "Instagram", href: "https://instagram.com/pantufla.design" },
+    { label: "LinkedIn", href: "https://linkedin.com/company/pantufla-design" },
     { label: "Behance", href: "https://www.behance.net/lautarolacaze" },
   ],
 } as const;

@@ -4,7 +4,7 @@ import { demoProjects } from "@/content/demo-content";
 import { sanityFetch } from "@/sanity/client";
 import { postSlugsQuery, projectSlugsQuery } from "@/sanity/queries";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://pantufla.studio";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://pantufla.design";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [projectSlugs, postSlugs] = await Promise.all([

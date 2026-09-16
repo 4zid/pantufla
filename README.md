@@ -56,20 +56,32 @@ El panel queda en `/studio`, dentro del mismo deploy. No hay que hostearlo apart
 
 ### Resend (avisos del formulario)
 
-Verificá tu dominio en [resend.com](https://resend.com) y completá `RESEND_API_KEY`,
-`BRIEF_NOTIFICATION_TO` y `BRIEF_NOTIFICATION_FROM`.
+El dominio **pantufla.design** ya está verificado en Resend (DKIM y los dos
+CNAME de SPF, región `eu-west-1`).
+
+Hacen falta las **tres** variables, no solo la clave: sin `BRIEF_NOTIFICATION_TO`
+y `BRIEF_NOTIFICATION_FROM` el route handler no manda nada. El `FROM` tiene que
+ser una dirección del dominio verificado (`brief@pantufla.design`); el `TO` puede
+ser cualquier casilla donde quieras recibir los briefs.
 
 Los dos destinos son independientes: si falla el mail, el brief igual queda
 guardado en Sanity, y al revés. Solo devuelve error si no hay ninguno de los dos.
 
 ### Vercel
 
-El repo ya está enlazado: cada push a la branch de producción dispara un deploy.
+Variables a cargar en el panel de Vercel:
 
-Las únicas variables que hay que cargar en el panel de Vercel son los secretos:
-`SANITY_API_WRITE_TOKEN` y, si vas a usar mail, las de Resend. Sumá también
-`NEXT_PUBLIC_SITE_URL` con el dominio final para que el sitemap y los metadatos
-salgan bien.
+| Variable | Para qué |
+| --- | --- |
+| `SANITY_API_WRITE_TOKEN` | guardar los briefs en el CMS |
+| `RESEND_API_KEY` | mandar el aviso por mail |
+| `BRIEF_NOTIFICATION_TO` | a qué casilla llega el brief |
+| `BRIEF_NOTIFICATION_FROM` | `brief@pantufla.design` (dominio verificado) |
+| `NEXT_PUBLIC_SITE_URL` | el dominio principal, para sitemap y metadatos |
+
+`NEXT_PUBLIC_SITE_URL` tiene que coincidir con el dominio que marques como
+principal en Vercel: si es el apex va `https://pantufla.design`, si es el www va
+con el `www.` adelante.
 
 ---
 
