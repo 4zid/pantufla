@@ -9,6 +9,7 @@ import {
   PanelVelocidad,
   PanelVisitas,
 } from "@/components/sections/hero-panels";
+import { useCopy } from "@/components/copy-provider";
 import { Draggable, ease, gsap, registerGsap } from "@/lib/motion";
 import { cn } from "@/lib/cn";
 
@@ -142,6 +143,7 @@ const scattered: Record<string, string> = {
 };
 
 export function HeroScene() {
+  const { dashboard } = useCopy().hero;
   const scope = useRef<HTMLDivElement>(null);
 
   useGSAP(
@@ -353,15 +355,15 @@ export function HeroScene() {
             <div className="flex items-center justify-between gap-4 px-4 pb-2 pt-4 min-[1440px]:gap-6 min-[1440px]:px-6 min-[1440px]:pt-5">
               <div>
                 <p className="text-[0.95rem] font-semibold tracking-[-0.02em] min-[1440px]:text-[1.05rem]">
-                  Tu sitio, un mes después
+                  {dashboard.title}
                 </p>
                 <p className="mt-0.5 flex items-center gap-1.5 text-[0.72rem] text-ink-soft">
                   <span className="h-1.5 w-1.5 rounded-full bg-verde-deep" />
-                  Todo funcionando
+                  {dashboard.status}
                 </p>
               </div>
               <span className="shrink-0 rounded-full bg-card px-3.5 py-2 text-[0.72rem] font-medium">
-                Últimos 30 días
+                {dashboard.range}
               </span>
             </div>
 

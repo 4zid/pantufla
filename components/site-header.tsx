@@ -38,111 +38,146 @@ export function SiteHeader() {
   }, [open]);
 
   return (
-    <header className="pointer-events-none fixed inset-x-0 top-0 z-50 flex justify-center px-4 pt-3 sm:pt-4">
-      <div
+    <>
+      {/*
+        Telón. Sin él, el panel queda flotando sobre una página nítida y lo que
+        haya justo debajo se lee como parte del menú: con el CTA del hero ahí
+        abajo, el visitante veía el mismo botón dos veces, uno arriba del otro.
+        Además da la segunda forma de cerrar, que es la que todo el mundo usa:
+        tocar afuera.
+      */}
+      <button
+        type="button"
+        aria-hidden={!open}
+        tabIndex={-1}
+        onClick={() => setOpen(false)}
         className={cn(
-          "pointer-events-auto w-full rounded-full border backdrop-blur-xl transition-[max-width,padding,background-color,border-color,box-shadow] duration-500 ease-out",
-          compact || open
-            ? "max-w-3xl border-line bg-paper/80 px-3 shadow-[0_8px_30px_-12px_rgba(35,28,18,0.25)] sm:px-4"
-            : "max-w-6xl border-transparent bg-paper/40 px-4 sm:px-6",
+          "fixed inset-0 z-40 bg-ink/25 backdrop-blur-[2px] transition-opacity duration-400 md:hidden",
+          open ? "opacity-100" : "pointer-events-none opacity-0",
         )}
-      >
+      />
+
+      <header className="pointer-events-none fixed inset-x-0 top-0 z-50 flex justify-center px-4 pt-3 sm:pt-4">
         <div
           className={cn(
-            "flex items-center justify-between gap-5 transition-[height] duration-500 ease-out",
-            compact || open ? "h-12 sm:h-14" : "h-14 sm:h-16",
+            "pointer-events-auto w-full border backdrop-blur-xl transition-[max-width,padding,background-color,border-color,box-shadow,border-radius] duration-500 ease-out",
+            // Cerrada es una píldora. Abierta no puede serlo: rounded-full sobre
+            // una caja de 344px de alto no redondea las esquinas, dibuja un
+            // círculo, y con el desenfoque atrás el menú se veía como una mancha
+            // blanca gigante encima del titular.
+            open ? "rounded-[26px]" : "rounded-full",
+            compact || open
+              ? "max-w-3xl border-line px-3 shadow-[0_8px_30px_-12px_rgba(35,28,18,0.25)] sm:px-4"
+              : "max-w-6xl border-transparent px-4 sm:px-6",
+            // Cerrada es translúcida a propósito: flota sobre el contenido y deja
+            // ver que hay algo abajo. Abierta no: es un panel, y con el fondo a
+            // medias el titular del hero se leía por detrás de los enlaces como
+            // una mancha. Un menú tiene que tapar lo que hay atrás.
+            open ? "bg-paper" : compact ? "bg-paper/80" : "bg-paper/40",
           )}
         >
-          <Link
-            href={href("/")}
-            className="flex shrink-0 items-center gap-2.5"
-            onClick={() => setOpen(false)}
+          <div
+            className={cn(
+              "flex items-center justify-between gap-5 transition-[height] duration-500 ease-out",
+              compact || open ? "h-12 sm:h-14" : "h-14 sm:h-16",
+            )}
           >
-            <Logo className="h-6 w-6 text-aqua-deep" />
-            <span className="text-[1.02rem] font-semibold tracking-[-0.02em]">
-              {site.name}
-            </span>
-          </Link>
-
-          <nav className="hidden items-center gap-1 md:flex">
-            {nav.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="rounded-full px-3 py-1.5 text-[0.92rem] text-ink-soft transition-colors hover:text-ink"
-              >
-                {item.label}
-              </Link>
-            ))}
-          </nav>
-
-          <div className="hidden shrink-0 items-center gap-4 md:flex">
-            {/* El enlace secundario se retira cuando la barra se compacta. */}
             <Link
-              href={href("/#planes")}
-              className={cn(
-                "overflow-hidden whitespace-nowrap text-[0.92rem] text-ink-soft transition-all duration-400 hover:text-ink",
-                compact ? "pointer-events-none max-w-0 opacity-0" : "max-w-[8rem] opacity-100",
-              )}
+              href={href("/")}
+              className="flex shrink-0 items-center gap-2.5"
+              onClick={() => setOpen(false)}
             >
-              {header.plans}
+              <Logo className="h-6 w-6 text-aqua-deep" />
+              <span className="text-[1.02rem] font-semibold tracking-[-0.02em]">
+                {site.name}
+              </span>
             </Link>
-            <LocaleSwitcher />
-            <ButtonLink href={href("/contacto")} className={cn(compact && "h-9 px-4")}>
-              {header.cta}
-            </ButtonLink>
-          </div>
 
-          <button
-            type="button"
-            onClick={() => setOpen((v) => !v)}
-            aria-label={open ? header.closeMenu : header.openMenu}
-            aria-expanded={open}
-            className="-mr-1 flex h-10 w-10 items-center justify-center rounded-full md:hidden"
-          >
-            <span className="relative block h-3 w-5">
-              <span
-                className={cn(
-                  "absolute left-0 h-px w-full bg-ink transition-all duration-300",
-                  open ? "top-1.5 rotate-45" : "top-0",
-                )}
-              />
-              <span
-                className={cn(
-                  "absolute left-0 h-px w-full bg-ink transition-all duration-300",
-                  open ? "top-1.5 -rotate-45" : "top-3",
-                )}
-              />
-            </span>
-          </button>
-        </div>
+            <nav className="hidden items-center gap-1 md:flex">
+              {nav.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="rounded-full px-3 py-1.5 text-[0.92rem] text-ink-soft transition-colors hover:text-ink"
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </nav>
 
-        {open ? (
-          <div className="border-t border-line pb-4 pt-3 md:hidden">
-            {nav.map((item) => (
+            <div className="hidden shrink-0 items-center gap-4 md:flex">
+              {/* El enlace secundario se retira cuando la barra se compacta. */}
               <Link
-                key={item.href}
-                href={item.href}
-                onClick={() => setOpen(false)}
-                className="block border-b border-line px-2 py-3 text-[1.05rem] font-medium last:border-0"
+                href={href("/#planes")}
+                className={cn(
+                  "overflow-hidden whitespace-nowrap text-[0.92rem] text-ink-soft transition-all duration-400 hover:text-ink",
+                  compact
+                    ? "pointer-events-none max-w-0 opacity-0"
+                    : "max-w-[8rem] opacity-100",
+                )}
               >
-                {item.label}
+                {header.plans}
               </Link>
-            ))}
-            <div className="mt-4 flex items-center gap-3">
               <LocaleSwitcher />
               <ButtonLink
                 href={href("/contacto")}
-                size="lg"
-                className="w-full"
-                onClick={() => setOpen(false)}
+                className={cn(compact && "h-9 px-4")}
               >
                 {header.cta}
               </ButtonLink>
             </div>
+
+            <button
+              type="button"
+              onClick={() => setOpen((v) => !v)}
+              aria-label={open ? header.closeMenu : header.openMenu}
+              aria-expanded={open}
+              className="-mr-1 flex h-10 w-10 items-center justify-center rounded-full md:hidden"
+            >
+              <span className="relative block h-3 w-5">
+                <span
+                  className={cn(
+                    "absolute left-0 h-px w-full bg-ink transition-all duration-300",
+                    open ? "top-1.5 rotate-45" : "top-0",
+                  )}
+                />
+                <span
+                  className={cn(
+                    "absolute left-0 h-px w-full bg-ink transition-all duration-300",
+                    open ? "top-1.5 -rotate-45" : "top-3",
+                  )}
+                />
+              </span>
+            </button>
           </div>
-        ) : null}
-      </div>
-    </header>
+
+          {open ? (
+            <div className="border-t border-line pb-4 pt-3 md:hidden">
+              {nav.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setOpen(false)}
+                  className="block border-b border-line px-2 py-3 text-[1.05rem] font-medium last:border-0"
+                >
+                  {item.label}
+                </Link>
+              ))}
+              <div className="mt-4 flex items-center gap-3">
+                <LocaleSwitcher />
+                <ButtonLink
+                  href={href("/contacto")}
+                  size="lg"
+                  className="w-full"
+                  onClick={() => setOpen(false)}
+                >
+                  {header.cta}
+                </ButtonLink>
+              </div>
+            </div>
+          ) : null}
+        </div>
+      </header>
+    </>
   );
 }

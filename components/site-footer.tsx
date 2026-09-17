@@ -86,7 +86,7 @@ export function SiteFooter() {
           <p>
             © {year} {site.legalName}
           </p>
-          <p>Diseñado y desarrollado en casa, en pantuflas.</p>
+          <p>{footer.signature}</p>
         </div>
       </div>
     </footer>

@@ -13,8 +13,9 @@
    ------------------------------------------------------------------ */
 
 @theme {
-  --font-sans: "Schibsted Grotesk Variable", "Schibsted Grotesk", ui-sans-serif,
-    system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-sans:
+    "Schibsted Grotesk Variable", "Schibsted Grotesk", ui-sans-serif, system-ui,
+    -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 
   --color-paper: #ffffff;
   /* Apenas un punto por debajo del blanco: alcanza para separar una sección
@@ -69,7 +70,17 @@
   --radius-card: 16px;
   --radius-panel: 24px;
 
-  --text-display: clamp(2.3rem, 5.3vw, 4.4rem);
+  /*
+     Interpolación entre dos puntos y no un vw suelto: 32px a 390 y 70.4px a
+     1440, con una recta en el medio.
+
+     Con clamp(2.3rem, 5.3vw, 4.4rem) el piso ganaba en todo lo que fuera más
+     angosto que 700px, así que del teléfono chico al grande la letra medía
+     siempre lo mismo y lo único que cambiaba era dónde cortaban las palabras.
+     A 390 eso dejaba «convierten visitantes» a 27px de cada borde: el titular
+     tocando el margen. Ahora la letra acompaña el ancho y el corte es parejo.
+  */
+  --text-display: clamp(1.9rem, 1.11rem + 3.66vw, 4.4rem);
   --text-display--line-height: 1.02;
   --text-display--letter-spacing: -0.042em;
   --text-display--font-weight: 600;
@@ -80,7 +91,8 @@
   --text-numeral--letter-spacing: -0.05em;
   --text-numeral--font-weight: 600;
 
-  --text-h2: clamp(2rem, 4.2vw, 3.25rem);
+  /* Mismo criterio que el display: 27px a 390, 52px a 1440. */
+  --text-h2: clamp(1.6rem, 1.03rem + 2.64vw, 3.25rem);
   --text-h2--line-height: 1.02;
   --text-h2--letter-spacing: -0.03em;
   --text-h2--font-weight: 600;
@@ -133,7 +145,10 @@
     border-radius: 4px;
   }
 
-  h1, h2, h3, h4 {
+  h1,
+  h2,
+  h3,
+  h4 {
     text-wrap: balance;
   }
 
@@ -151,7 +166,9 @@
   }
 
   @media (min-width: 768px) {
-    .shell { padding-inline: 2rem; }
+    .shell {
+      padding-inline: 2rem;
+    }
   }
 
   /*
@@ -187,7 +204,6 @@
   }
 }
 
-
 /* ------------------------------------------------------------------
    Movimiento
    Los elementos animados se ocultan SOLO cuando <html> tiene .motion-ready,
@@ -215,9 +231,15 @@
 
 /* Deriva lenta de los blobs. Se apaga sola con reduced-motion (ver abajo). */
 @keyframes drift {
-  0%   { transform: translate3d(0, 0, 0) scale(1); }
-  50%  { transform: translate3d(2%, -3%, 0) scale(1.05); }
-  100% { transform: translate3d(0, 0, 0) scale(1); }
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(2%, -3%, 0) scale(1.05);
+  }
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
 }
 
 .drift {
@@ -225,8 +247,12 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
-  *, *::before, *::after {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
