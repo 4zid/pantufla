@@ -277,7 +277,7 @@ export const en: SiteCopy = {
     eyebrow: "Work",
     title: "Some of the sites that came out of here.",
     lead: "Different industries, different sizes, the same method.",
-    view: "View",
+    view: "Visit site",
     viewAll: "See all the work",
   },
 
