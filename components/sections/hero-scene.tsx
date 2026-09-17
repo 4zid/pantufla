@@ -45,6 +45,22 @@ import { cn } from "@/lib/cn";
  */
 const SLOT = { w: 400, h: 380, sw: 192, sh: 176, mw: 400, mh: 188 };
 
+/**
+ * En el teléfono el tablero se rearma, no se apila.
+ *
+ * Las medidas de escritorio puestas en una columna daban 1098px de tarjetas:
+ * dos pantallas enteras de gráficos antes de llegar a nada más. Acá las dos
+ * chicas van a la par, las dos anchas ocupan el ancho completo y cada una mide
+ * lo que necesita su contenido y ni un pixel más. El tablero pasa a ~600px:
+ * sigue siendo la prueba de lo que el sitio entrega, pero cabe de un vistazo.
+ */
+const FONO: Record<string, { h: number; area: string }> = {
+  visitas: { h: 268, area: "col-span-2" },
+  conversion: { h: 146, area: "" },
+  velocidad: { h: 146, area: "" },
+  trafico: { h: 196, area: "col-span-2" },
+};
+
 const panels = [
   {
     id: "visitas",
@@ -334,9 +350,9 @@ export function HeroScene() {
           >
             {/* Cabecera del tablero, no de un navegador: lo que se muestra es
                 el panel del sitio, no una captura de pantalla. */}
-            <div className="flex items-center justify-between gap-6 px-6 pb-2 pt-5">
+            <div className="flex items-center justify-between gap-4 px-4 pb-2 pt-4 min-[1440px]:gap-6 min-[1440px]:px-6 min-[1440px]:pt-5">
               <div>
-                <p className="text-[1.05rem] font-semibold tracking-[-0.02em]">
+                <p className="text-[0.95rem] font-semibold tracking-[-0.02em] min-[1440px]:text-[1.05rem]">
                   Tu sitio, un mes después
                 </p>
                 <p className="mt-0.5 flex items-center gap-1.5 text-[0.72rem] text-ink-soft">
@@ -349,14 +365,15 @@ export function HeroScene() {
               </span>
             </div>
 
-            <div className="grid grid-cols-1 gap-4 p-4 min-[1440px]:grid-cols-[400px_192px_192px] min-[1440px]:grid-rows-[176px_188px]">
+            <div className="grid grid-cols-2 gap-3 p-3 min-[1440px]:grid-cols-[400px_192px_192px] min-[1440px]:grid-rows-[176px_188px] min-[1440px]:gap-4 min-[1440px]:p-4">
               {panels.map((panel) => (
                 <div
                   key={panel.id}
                   data-slot={panel.id}
-                  style={{ height: panel.h }}
+                  style={{ height: FONO[panel.id].h }}
                   className={cn(
                     "overflow-hidden rounded-[20px] bg-white/45 min-[1440px]:h-auto",
+                    FONO[panel.id].area,
                     panel.area,
                   )}
                 >

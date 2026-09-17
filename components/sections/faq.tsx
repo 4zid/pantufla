@@ -28,6 +28,15 @@ import { cn } from "@/lib/cn";
  *
  * Abajo, el cierre para el que no encontró lo que buscaba: no tiene sentido
  * que la única salida de esta sección sea seguir bajando.
+ *
+ * El alto lo maneja GSAP y nadie más. Antes el estado cerrado venía en un
+ * style de React —height 0 al cerrar, sin style al abrir—, así que al hacer
+ * clic React sacaba el style y el panel saltaba a su alto natural en el mismo
+ * cuadro; para cuando GSAP arrancaba, ya no quedaba nada que animar y el tween
+ * iba de auto a auto. Eso era el golpe: no es que faltara la animación, es que
+ * llegaba tarde. Ahora el cerrado es una clase —que además sirve como estado
+ * inicial antes de que corra nada— y de ahí en adelante la altura vive en el
+ * style inline, que le gana a la clase y es de GSAP.
  */
 
 /** El signo se arma con dos barras: la vertical se encoge y queda el menos. */
@@ -51,6 +60,8 @@ function Signo({ open }: { open: boolean }) {
 export function Faq() {
   const [open, setOpen] = useState<number | null>(null);
   const scope = useRef<HTMLDivElement>(null);
+  /** La pregunta que se acaba de tocar, para dejarla quieta mientras se abre. */
+  const ancla = useRef<HTMLElement | null>(null);
   const uid = useId();
 
   useGSAP(
@@ -63,6 +74,15 @@ export function Faq() {
         "(prefers-reduced-motion: reduce)",
       ).matches;
 
+      // Abrir una pregunta cierra la anterior, y si esa estaba más arriba la
+      // página se acorta justo encima de donde el visitante está mirando: la
+      // pregunta que acaba de tocar se le escapa hacia arriba mientras la lee.
+      // Mientras dura el movimiento se mide cuánto se corrió el encabezado que
+      // tocó y se compensa con el scroll, así queda clavado en su lugar y lo
+      // único que se mueve es lo que tiene que moverse: el panel abriéndose.
+      const fijo = ancla.current;
+      const antes = fijo?.getBoundingClientRect().top ?? null;
+
       root.querySelectorAll<HTMLElement>("[data-panel]").forEach((panel) => {
         const abierto = panel.dataset.open === "true";
         const inner = panel.firstElementChild;
@@ -73,6 +93,9 @@ export function Faq() {
         // saca el golpe seco al momento en que la altura queda fija.
         gsap.to(panel, {
           height: abierto ? "auto" : 0,
+          // Un clic rápido sobre otra pregunta no espera a que termine la
+          // anterior: el tween nuevo pisa al viejo en vez de sumarse.
+          overwrite: true,
           duration: reduced ? 0 : abierto ? 0.62 : 0.38,
           ease: abierto ? "expo.out" : "power2.inOut",
         });
@@ -81,6 +104,7 @@ export function Faq() {
           gsap.to(inner, {
             opacity: abierto ? 1 : 0,
             y: abierto ? 0 : 14,
+            overwrite: true,
             // Al abrir, el texto entra cuando la altura ya se está frenando,
             // no desde el arranque: si sube junto con el panel, se lee dos
             // veces el mismo movimiento.
@@ -90,6 +114,28 @@ export function Faq() {
           });
         }
       });
+
+      if (fijo && antes !== null) {
+        // El sitio pide scroll suave para los enlaces internos, y eso también
+        // se aplica a estas correcciones: cada cuadro pedía deslizarse unos
+        // pocos píxeles, el navegador lo empezaba a animar y el cuadro
+        // siguiente lo pisaba con otro pedido. Resultado: el ajuste nunca
+        // llegaba y la pregunta se corría los 102px enteros igual. Acá el
+        // salto tiene que ser seco, así que se apaga mientras dura.
+        const raiz = document.documentElement;
+        const suave = raiz.style.scrollBehavior;
+        raiz.style.scrollBehavior = "auto";
+
+        const compensar = () => {
+          const corrimiento = fijo.getBoundingClientRect().top - antes;
+          if (Math.abs(corrimiento) > 0.5) window.scrollBy(0, corrimiento);
+        };
+        gsap.ticker.add(compensar);
+        gsap.delayedCall(reduced ? 0.05 : 0.7, () => {
+          gsap.ticker.remove(compensar);
+          raiz.style.scrollBehavior = suave;
+        });
+      }
     },
     { dependencies: [open], scope },
   );
@@ -129,7 +175,10 @@ export function Faq() {
                   <h3>
                     <button
                       type="button"
-                      onClick={() => setOpen(abierto ? null : i)}
+                      onClick={(e) => {
+                        ancla.current = e.currentTarget;
+                        setOpen(abierto ? null : i);
+                      }}
                       aria-expanded={abierto}
                       aria-controls={`${uid}-${i}`}
                       className="group flex w-full items-center justify-between gap-5 px-5 py-5 text-left md:px-7 md:py-6"
@@ -151,17 +200,9 @@ export function Faq() {
                     data-panel
                     data-open={abierto}
                     aria-hidden={!abierto}
-                    className="overflow-hidden"
-                    style={abierto ? undefined : { height: 0 }}
+                    className="h-0 overflow-hidden"
                   >
-                    <p
-                      className="px-5 pb-6 pl-[2.4rem] text-[0.95rem] leading-relaxed text-ink-soft md:px-7 md:pb-7 md:pl-[3.1rem]"
-                      style={
-                        abierto
-                          ? undefined
-                          : { opacity: 0, transform: "translateY(14px)" }
-                      }
-                    >
+                    <p className="translate-y-3.5 px-5 pb-6 pl-[2.4rem] text-[0.95rem] leading-relaxed text-ink-soft opacity-0 md:px-7 md:pb-7 md:pl-[3.1rem]">
                       {item.a}
                     </p>
                   </div>

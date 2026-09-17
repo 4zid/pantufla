@@ -39,6 +39,13 @@ const marks: Record<NonNullable<Segment["mark"]>, string> = {
  * la línea, le cortaría el fondo arriba y abajo. Esos entran con opacidad y
  * desplazamiento, que a esta velocidad se lee igual.
  *
+ * La máscara se levanta cuando la palabra llegó. Mide lo que mide la caja de
+ * línea, que con interlineado apretado es más baja que la letra: mientras
+ * recorta, se come la cola de la g, la j y la p. Recortar hace falta solo
+ * mientras la palabra viene subiendo —después no hay nada que esconder—, así
+ * que al terminar se suelta y las colas vuelven. Si el visitante pidió menos
+ * movimiento no hay entrada, y entonces no se recorta nunca.
+ *
  * Cada tramo resaltado es una sola unidad aunque tenga varias palabras: la
  * pastilla envuelve la frase entera, así que partirla por palabra daría una
  * pastilla por palabra.
@@ -73,8 +80,12 @@ export function SplitHeading({
         (context) => {
           const { reduced } = context.conditions as { reduced: boolean };
 
+          const mascaras = root.querySelectorAll<HTMLElement>("[data-mask]");
+          const soltar = () => gsap.set(mascaras, { overflow: "visible" });
+
           if (reduced) {
             gsap.set(unidades, { yPercent: 0, y: 0, opacity: 1 });
+            soltar();
             return;
           }
 
@@ -88,6 +99,7 @@ export function SplitHeading({
               ease,
               delay,
               stagger: 0.055,
+              onComplete: soltar,
               ...(immediate
                 ? {}
                 : {
@@ -134,6 +146,7 @@ export function SplitHeading({
         unidades.push(
           <span
             key={`w-${p}-${i}`}
+            data-mask
             className="inline-block overflow-hidden align-bottom"
           >
             <span data-word className="inline-block">
