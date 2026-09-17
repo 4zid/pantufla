@@ -69,7 +69,7 @@ function iniciales(nombre: string) {
 
 export function Testimonials({ items }: { items: SanityTestimonial[] }) {
   const { testimonials } = useCopy();
-  const lista = items.slice(0, 6);
+  const lista = items.slice(0, 9);
   const [activo, setActivo] = useState(0);
   const [manual, setManual] = useState(false);
   const cita = useRef<HTMLDivElement>(null);
@@ -111,6 +111,7 @@ export function Testimonials({ items }: { items: SanityTestimonial[] }) {
     <Section
       id="testimonios"
       tone="alt"
+      wide
     >
       {/* Sin título a la vista: la sección entera es una cita, y un titular
           arriba le estaría diciendo al visitante qué pensar antes de leerla.
@@ -119,7 +120,7 @@ export function Testimonials({ items }: { items: SanityTestimonial[] }) {
           queda, callado. */}
       <h2 className="sr-only">{testimonials.title}</h2>
 
-      <div className="grid gap-12 lg:grid-cols-[minmax(0,15rem)_minmax(0,1fr)] lg:gap-20">
+      <div className="grid gap-12 lg:grid-cols-[auto_minmax(0,1fr)] lg:items-center lg:gap-24">
         {/* Columna de caras */}
         <div>
           <Reveal>
@@ -127,7 +128,7 @@ export function Testimonials({ items }: { items: SanityTestimonial[] }) {
           </Reveal>
 
           <Reveal delay={0.1}>
-            <ul className="mt-7 grid w-fit grid-cols-3 gap-2.5">
+            <ul className="mt-7 grid w-fit grid-cols-3 gap-3">
               {lista.map((item, i) => {
                 const foto = urlForImage(item.avatar)
                   ?.width(160)
@@ -147,7 +148,7 @@ export function Testimonials({ items }: { items: SanityTestimonial[] }) {
                       aria-pressed={puesto}
                       aria-label={item.name}
                       className={cn(
-                        "relative block h-[60px] w-[60px] overflow-hidden rounded-[14px] transition-all duration-500 ease-out",
+                        "relative block h-[72px] w-[72px] overflow-hidden rounded-[16px] transition-all duration-500 ease-out",
                         puesto
                           ? "scale-105 opacity-100 shadow-[0_10px_24px_-10px_rgba(0,0,0,0.35)] ring-2 ring-ink/15"
                           : "opacity-45 grayscale hover:opacity-80 hover:grayscale-0",
@@ -165,14 +166,14 @@ export function Testimonials({ items }: { items: SanityTestimonial[] }) {
                           src={foto}
                           alt=""
                           aria-hidden
-                          width={60}
-                          height={60}
+                          width={72}
+                          height={72}
                           className="h-full w-full object-cover"
                         />
                       ) : (
                         <span
                           aria-hidden
-                          className="grid h-full w-full place-items-center text-[0.8rem] font-semibold text-white"
+                          className="grid h-full w-full place-items-center text-[0.86rem] font-semibold text-white"
                         >
                           {iniciales(item.name)}
                         </span>
@@ -195,11 +196,23 @@ export function Testimonials({ items }: { items: SanityTestimonial[] }) {
           </div>
 
           <figure>
+            {/*
+              Las comillas van como parte del párrafo y no como un adorno
+              pegado arriba: así abren y cierran de verdad, siguen a la última
+              línea cuando el texto cambia de largo, y el lector de pantalla
+              lee la cita sin tropezarse con ellas.
+            */}
             <blockquote
               data-fade
-              className="mt-7 text-balance text-[1.45rem] font-medium leading-[1.42] tracking-[-0.025em] text-ink md:text-[1.75rem] lg:text-[2rem]"
+              className="mt-7 text-balance text-[1.55rem] font-medium leading-[1.4] tracking-[-0.025em] text-ink md:text-[1.95rem] lg:text-[2.3rem]"
             >
+              <span aria-hidden className="mr-1 align-[-0.32em] text-[2.2em] leading-[0] text-ink/15">
+                &ldquo;
+              </span>
               {actual.quote}
+              <span aria-hidden className="ml-0.5 align-[-0.32em] text-[2.2em] leading-[0] text-ink/15">
+                &rdquo;
+              </span>
             </blockquote>
 
             <figcaption data-fade className="mt-8">

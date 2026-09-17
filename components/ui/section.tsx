@@ -11,6 +11,7 @@ export function Section({
   className,
   tone = "paper",
   overlay,
+  wide = false,
 }: {
   id?: string;
   children: ReactNode;
@@ -20,6 +21,8 @@ export function Section({
       lectura. Va acá y no dentro de los hijos porque el contenido vive en
       .shell, que tiene ancho máximo: un degradé ahí adentro se corta. */
   overlay?: ReactNode;
+  /** Usa el contenedor ancho, para secciones que no son un renglón de lectura. */
+  wide?: boolean;
 }) {
   const tones = {
     paper: "",
@@ -33,7 +36,9 @@ export function Section({
       className={cn("relative py-20 md:py-28", tones[tone], className)}
     >
       {overlay}
-      <div className="relative z-10 shell">{children}</div>
+      <div className={cn("relative z-10", wide ? "shell-wide" : "shell")}>
+        {children}
+      </div>
     </section>
   );
 }

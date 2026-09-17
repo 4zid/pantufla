@@ -53,7 +53,7 @@ export default async function HomePage({
     : fallbackProjects.slice(0, 3);
   const testimonials = cmsTestimonials.length
     ? cmsTestimonials
-    : fallbackTestimonials;
+    : (fallbackTestimonials[locale] ?? fallbackTestimonials.es);
 
   return (
     <>

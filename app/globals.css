@@ -165,8 +165,21 @@
     padding-inline: 1.25rem;
   }
 
+  /*
+     Para las secciones que viven del ancho y no del renglón de lectura.
+     El límite sigue existiendo —sin él, a 2560px el texto cruzaría medio
+     metro de pantalla— pero es mucho más alto.
+  */
+  .shell-wide {
+    width: 100%;
+    max-width: 100rem;
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+  }
+
   @media (min-width: 768px) {
-    .shell {
+    .shell,
+    .shell-wide {
       padding-inline: 2rem;
     }
   }
