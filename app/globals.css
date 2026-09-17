@@ -35,6 +35,22 @@
      superficie, no como color de marca. */
   --color-mist: #eaedf8;
 
+  /*
+     Cuánto del tablero se reserva abajo del titular en el hero.
+
+     Sale de una cuenta y no de dos escalones porque los escalones fallan
+     justo en los altos de en medio: con 220px fijos, una pantalla de 850
+     dejaba al titular pisando el tablero, y con 300 a partir de 960 pasaba lo
+     mismo en una de 1000.
+
+     El titular con su bajada, sus botones y su línea de prueba mide 458px, y
+     el aire de arriba hace de contrapeso (reserva menos 40). Despejando: la
+     reserva puede ser (alto − 450) / 2 y siempre quedan 490px para el texto,
+     en la pantalla que sea. Los topes son para que no desaparezca en una
+     pantalla muy baja ni se coma media pantalla en una muy alta.
+  */
+  --hero-reserve: clamp(170px, calc((100vh - 450px) / 2), 320px);
+
   /* Dorado de las estrellas de calificación. Es el único uso que tiene: la
      miel de la paleta queda demasiado clara sobre blanco para leerse como
      estrella llena. */

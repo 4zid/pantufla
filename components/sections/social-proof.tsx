@@ -7,9 +7,15 @@ import { useCopy } from "@/components/copy-provider";
 /**
  * Tira de prueba social, justo debajo del hero.
  *
- * Va angosta y con una regla arriba y abajo: es un apoyo, no una sección. Si
+ * Va angosta y con una sola regla abajo: es un apoyo, no una sección. Si
  * respira como las demás compite con el titular, que es lo último que
  * conviene a dos centímetros del hero.
+ *
+ * Comparte el color del hero a propósito. Con un fondo propio quedaba una
+ * banda distinta justo debajo del tablero y se leía como que el hero
+ * terminaba de golpe; con el mismo, el tablero se hunde en la tira y lo que
+ * separa las dos cosas es el aire, no una línea de color. La regla de arriba
+ * sobraba por lo mismo.
  *
  * A la izquierda va quién hace el trabajo y a la derecha para quién se hizo.
  * La frase no cuenta clientes: ver por qué en content/site.ts.
@@ -54,7 +60,7 @@ export function SocialProof() {
   return (
     <section
       aria-label={copy.socialProof.label}
-      className="border-y border-line bg-paper-alt/60"
+      className="border-b border-line/70 bg-mist"
     >
       <Reveal className="shell flex flex-col items-center gap-8 py-8 lg:flex-row lg:gap-12 lg:py-7">
         <div className="flex shrink-0 items-center gap-4">
@@ -62,7 +68,7 @@ export function SocialProof() {
             {socialProof.faces.map((face, i) => (
               <li
                 key={face.initials}
-                className="grid h-11 w-11 place-items-center rounded-full text-[0.72rem] font-semibold text-white ring-[3px] ring-paper"
+                className="grid h-11 w-11 place-items-center rounded-full text-[0.72rem] font-semibold text-white ring-[3px] ring-mist"
                 style={{
                   background: `linear-gradient(140deg, ${face.from}, ${face.to})`,
                   // Corto: acá hay iniciales, no fotos, y con más solapado el

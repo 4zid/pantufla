@@ -16,7 +16,7 @@ export function Section({
   id?: string;
   children: ReactNode;
   className?: string;
-  tone?: "paper" | "alt" | "deep";
+  tone?: "paper" | "alt" | "deep" | "deepFade";
   /** Capa decorativa a sangre, detrás del contenido y fuera del ancho de
       lectura. Va acá y no dentro de los hijos porque el contenido vive en
       .shell, que tiene ancho máximo: un degradé ahí adentro se corta. */
@@ -28,6 +28,13 @@ export function Section({
     paper: "",
     alt: "bg-paper-alt",
     deep: "bg-deep text-paper",
+    /*
+       Tinta clara, fondo por cuenta de quien llama. Es para las secciones
+       oscuras que no quieren entrar de golpe: el negro lo pinta el overlay y
+       así puede desbordar la sección y difuminarse en las puntas, cosa que un
+       background-color no sabe hacer.
+    */
+    deepFade: "text-paper",
   };
 
   return (
@@ -59,7 +66,9 @@ export function SectionHead({
   icon?: TagIconName;
 }) {
   return (
-    <div className={cn("max-w-2xl", align === "center" && "mx-auto text-center")}>
+    <div
+      className={cn("max-w-2xl", align === "center" && "mx-auto text-center")}
+    >
       {eyebrow ? (
         <Reveal>
           <div className={cn(align === "center" && "flex justify-center")}>

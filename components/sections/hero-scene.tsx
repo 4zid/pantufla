@@ -234,6 +234,9 @@ export function HeroScene() {
             },
           });
 
+          // Las tarjetas empiezan a moverse casi enseguida y cada una tarda
+          // lo suyo. Antes arrancaban recién al 18% del recorrido y se
+          // solapaban en un 5%: todo el vuelo pasaba en dos vueltas de rueda.
           if (frame) {
             // Solo opacidad: el marco no se desplaza.
             //
@@ -246,13 +249,13 @@ export function HeroScene() {
             tl.fromTo(
               frame,
               { opacity: 0 },
-              { opacity: 1, ease: "power2.out", duration: 0.3 },
-              0.05,
+              { opacity: 1, ease: "power2.out", duration: 0.25 },
+              0.02,
             );
           }
 
           cards.forEach((card, i) => {
-            const at = 0.18 + i * 0.05;
+            const at = 0.05 + i * 0.1;
 
             // Lo que el visitante haya movido a mano vuelve a cero antes de
             // volar: si no, el panel aterriza corrido respecto del hueco.
@@ -271,13 +274,14 @@ export function HeroScene() {
                 rotateX: 0,
                 rotateY: 0,
                 scale: 1,
-                // Se pasa apenas del hueco y vuelve, como una pieza que se
-                // acomoda al encastrar. Va con back y no con un rebote aparte
-                // porque el vuelo está atado al scroll: un tween suelto al
-                // final se dispararía cada vez que el visitante cruza ese
-                // punto, para adelante y para atrás.
-                ease: "back.out(1.15)",
-                duration: 0.62,
+                // Nada de back.out acá. Ese easing mete el 36% del viaje en
+                // el primer 10% del tween: atado al scroll, eso se siente como
+                // que las tarjetas se van de golpe y después el resto del
+                // recorrido no pasa nada. Lo que un scrub necesita es una
+                // curva repartida, que es lo que hace que el movimiento se
+                // sienta pegado a la rueda.
+                ease: "power2.inOut",
+                duration: 0.6,
               },
               at,
             );
@@ -339,12 +343,20 @@ export function HeroScene() {
         por el piso: el marco ya está hecho para cortarse abajo —no lleva borde
         inferior— y reservando el alto completo el titular quedaba arrinconado
         contra la barra en pantallas bajas.
+
+        Cuánto se reserva sale de --hero-reserve, que lo calcula a partir del
+        alto de la pantalla (ver globals.css): es un tira y afloja con el
+        titular, porque el aire de arriba hace de contrapeso y cada pixel que
+        gana el tablero son casi dos que pierde el texto.
+
+        Y lo que hace que se vea más no es solo la reserva: es el piso
+        difuminado (ver hero.tsx). Lo último ya no se corta, se disuelve.
       */}
       {/* relative z-10: el fondo del hero es absolute y el marco no tenía
           posición, así que el degradé que apaga la bruma contra el pie le
           pasaba por encima y se tragaba la cabecera del tablero. Se veían
           las tarjetas —van en z-20— flotando sobre nada. */}
-      <div className="relative z-10 mt-12 min-[1440px]:mt-0 min-[1440px]:h-[180px] min-[1440px]:overflow-visible [@media(min-height:960px)]:min-[1440px]:h-[280px]">
+      <div className="relative z-10 mt-12 min-[1440px]:mt-0 min-[1440px]:h-[var(--hero-reserve)] min-[1440px]:overflow-visible">
         <div className="shell">
           <div
             data-dashboard
