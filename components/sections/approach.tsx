@@ -1,4 +1,6 @@
-import { approach } from "@/content/site";
+"use client";
+
+import { useCopy } from "@/components/copy-provider";
 import { Reveal } from "@/components/motion/reveal";
 import { Section, SectionHead } from "@/components/ui/section";
 import { toneTextDeep, type Tone } from "@/lib/tones";
@@ -6,6 +8,7 @@ import { toneTextDeep, type Tone } from "@/lib/tones";
 const tones: Tone[] = ["aqua", "rosa", "verde"];
 
 export function Approach() {
+  const { approach } = useCopy();
   return (
     <Section id="metodo" tone="alt">
       <SectionHead

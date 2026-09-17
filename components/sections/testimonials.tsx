@@ -22,9 +22,11 @@ import { cn } from "@/lib/cn";
  * grande, y las demás esperan su turno como caras apagadas. Se lee una, y es
  * la que se quiere que se lea.
  *
- * Va sobre fondo oscuro porque es la única sección de la home que pide
- * silencio alrededor: no hay nada que comparar ni ningún precio que mirar de
- * reojo, solo alguien hablando.
+ * Va sobre el papel gris del sitio y no sobre negro. La referencia era oscura,
+ * pero acá el negro ya tiene dueño —la línea de tiempo del proceso— y un
+ * segundo bloque oscuro en la misma página deja de ser un acento y pasa a ser
+ * una franja. El silencio que esta sección necesita lo da el aire, no el
+ * color: una sola cita, grande, sin nada al lado.
  *
  * Las caras rotan solas cada seis segundos hasta que el visitante toca una.
  * Ahí se corta para siempre: si alguien eligió a quién quiere leer, moverle el
@@ -48,7 +50,7 @@ function Estrellas({ value = 5 }: { value?: number }) {
       {[...Array(5)].map((_, i) => (
         <StarIcon
           key={i}
-          className={cn("h-[18px] w-[18px]", i < value ? "text-star" : "text-white/20")}
+          className={cn("h-[18px] w-[18px]", i < value ? "text-star" : "text-line-strong")}
         />
       ))}
     </div>
@@ -105,17 +107,7 @@ export function Testimonials({ items }: { items: SanityTestimonial[] }) {
   return (
     <Section
       id="testimonios"
-      tone="deep"
-      overlay={
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0"
-          style={{
-            background:
-              "radial-gradient(90% 70% at 72% 45%, rgba(111,207,202,0.10) 0%, transparent 60%)",
-          }}
-        />
-      }
+      tone="alt"
     >
       {/* Sin título a la vista: la sección entera es una cita, y un titular
           arriba le estaría diciendo al visitante qué pensar antes de leerla.
@@ -128,9 +120,7 @@ export function Testimonials({ items }: { items: SanityTestimonial[] }) {
         {/* Columna de caras */}
         <div>
           <Reveal>
-            <Tag icon="cita" onDark>
-              Testimonios
-            </Tag>
+            <Tag icon="cita">Testimonios</Tag>
           </Reveal>
 
           <Reveal delay={0.1}>
@@ -156,8 +146,8 @@ export function Testimonials({ items }: { items: SanityTestimonial[] }) {
                       className={cn(
                         "relative block h-[60px] w-[60px] overflow-hidden rounded-[14px] transition-all duration-500 ease-out",
                         puesto
-                          ? "scale-105 opacity-100 ring-2 ring-white/70"
-                          : "opacity-35 grayscale hover:opacity-70 hover:grayscale-0",
+                          ? "scale-105 opacity-100 shadow-[0_10px_24px_-10px_rgba(0,0,0,0.35)] ring-2 ring-ink/15"
+                          : "opacity-45 grayscale hover:opacity-80 hover:grayscale-0",
                       )}
                       style={
                         foto
@@ -201,16 +191,16 @@ export function Testimonials({ items }: { items: SanityTestimonial[] }) {
           <figure>
             <blockquote
               data-fade
-              className="mt-7 text-balance text-[1.45rem] font-medium leading-[1.42] tracking-[-0.025em] text-paper md:text-[1.75rem] lg:text-[2rem]"
+              className="mt-7 text-balance text-[1.45rem] font-medium leading-[1.42] tracking-[-0.025em] text-ink md:text-[1.75rem] lg:text-[2rem]"
             >
               {actual.quote}
             </blockquote>
 
             <figcaption data-fade className="mt-8">
-              <span className="block text-[1.02rem] font-medium text-paper">
+              <span className="block text-[1.02rem] font-medium text-ink">
                 {actual.name}
               </span>
-              <span className="mt-1 block text-[0.92rem] text-white/50">
+              <span className="mt-1 block text-[0.92rem] text-ink-faint">
                 {[actual.role, actual.company].filter(Boolean).join(" · ")}
               </span>
             </figcaption>

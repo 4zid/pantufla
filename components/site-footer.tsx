@@ -1,9 +1,15 @@
+"use client";
+
 import Link from "next/link";
 
-import { nav, site } from "@/content/site";
+import { site } from "@/content/site";
+import { fill } from "@/content/copy";
 import { Logo } from "@/components/ui/icons";
+import { useCopy, useHref } from "@/components/copy-provider";
 
 export function SiteFooter() {
+  const { nav, footer, meta } = useCopy();
+  const href = useHref();
   const year = new Date().getFullYear();
 
   return (
@@ -11,15 +17,17 @@ export function SiteFooter() {
       <div className="shell py-14 md:py-16">
         <div className="grid gap-10 md:grid-cols-[1.4fr_1fr_1fr]">
           <div className="max-w-sm">
-            <Link href="/" className="flex items-center gap-2.5">
+            <Link href={href("/")} className="flex items-center gap-2.5">
               <Logo className="h-7 w-7 text-aqua-deep" />
               <span className="text-[1.06rem] font-semibold tracking-[-0.02em]">
                 {site.name}
               </span>
             </Link>
             <p className="mt-4 text-[0.95rem] leading-relaxed text-ink-soft">
-              {site.tagline}. Alcance cerrado, precio cerrado y fecha de entrega.
-              Trabajamos desde {site.location} para clientes de donde sea.
+              {fill(footer.blurb, {
+                tagline: meta.tagline,
+                location: site.location,
+              })}
             </p>
           </div>
 

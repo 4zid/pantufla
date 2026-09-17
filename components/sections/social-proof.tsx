@@ -1,5 +1,8 @@
+"use client";
+
 import { Reveal } from "@/components/motion/reveal";
 import { socialProof } from "@/content/site";
+import { useCopy } from "@/components/copy-provider";
 
 /**
  * Tira de prueba social, justo debajo del hero.
@@ -47,6 +50,7 @@ const marks: Record<string, React.ReactNode> = {
 };
 
 export function SocialProof() {
+  const copy = useCopy();
   return (
     <section
       aria-label="Clientes"
@@ -71,7 +75,7 @@ export function SocialProof() {
             ))}
           </ul>
           <p className="max-w-[15rem] text-[0.92rem] leading-snug text-ink-soft">
-            {socialProof.claim}
+            {copy.socialProof.claim}
           </p>
         </div>
 

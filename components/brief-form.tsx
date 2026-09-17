@@ -3,7 +3,8 @@
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 
-import { budgetRanges, pricing, site, timelineOptions } from "@/content/site";
+import { site } from "@/content/site";
+import { useCopy } from "@/components/copy-provider";
 import { Button } from "@/components/ui/button";
 import { CheckIcon } from "@/components/ui/icons";
 
@@ -12,14 +13,17 @@ const fieldClass =
 
 const labelClass = "block text-[0.88rem] font-medium";
 
-const planOptions = [
-  ...pricing.plans.map((plan) => ({ value: plan.id, label: plan.name })),
-  { value: "existente", label: "Ya tengo un sitio en Webflow o Framer" },
-  { value: "no-se", label: "Todavía no sé cuál me sirve" },
-  { value: "otra-cosa", label: "Otra cosa (contame en el mensaje)" },
-];
-
 export function BriefForm() {
+  const { form, pricing } = useCopy();
+
+  // Las opciones se arman con los planes reales más las tres salidas que no
+  // son un plan. Van adentro del componente porque ahora dependen del idioma:
+  // el que llega en inglés tiene que poder elegir en inglés, y el mail que nos
+  // llega dice lo mismo que vio la persona al elegir.
+  const planOptions = [
+    ...pricing.plans.map((plan) => ({ value: plan.id, label: plan.name })),
+    ...form.extraPlans,
+  ];
   const searchParams = useSearchParams();
   const planFromUrl = searchParams.get("plan");
   const initialPlan = planOptions.some((p) => p.value === planFromUrl)
@@ -48,12 +52,12 @@ export function BriefForm() {
       });
 
       const result = await response.json();
-      if (!response.ok) throw new Error(result?.error || "No pudimos enviarlo");
+      if (!response.ok) throw new Error(result?.error || form.genericError);
 
       setStatus("sent");
     } catch (err) {
       setStatus("error");
-      setError(err instanceof Error ? err.message : "No pudimos enviarlo");
+      setError(err instanceof Error ? err.message : form.genericError);
     }
   }
 
@@ -63,14 +67,12 @@ export function BriefForm() {
         <span className="flex h-11 w-11 items-center justify-center rounded-full bg-aqua-soft text-aqua-deep">
           <CheckIcon className="h-5 w-5" />
         </span>
-        <h2 className="mt-5 text-h3">Recibido. Gracias.</h2>
+        <h2 className="mt-5 text-h3">{form.success.title}</h2>
         <p className="mt-3 max-w-md text-[0.98rem] leading-relaxed text-ink-soft">
-          Lo leemos hoy mismo. Dentro de las próximas 24 horas hábiles te
-          respondemos con el alcance, el precio y la fecha de entrega, o te
-          decimos con franqueza si no somos los indicados para este proyecto.
+          {form.success.body}
         </p>
         <p className="mt-5 text-[0.9rem] text-ink-faint">
-          ¿Es urgente? Escribinos a{" "}
+          {form.success.urgent}{" "}
           <a
             href={`mailto:${site.email}`}
             className="text-ink underline underline-offset-4"
@@ -91,21 +93,21 @@ export function BriefForm() {
       <div className="grid gap-5 sm:grid-cols-2">
         <div>
           <label className={labelClass} htmlFor="name">
-            Nombre y apellido
+            {form.name.label}
           </label>
           <input
             id="name"
             name="name"
             required
             autoComplete="name"
-            placeholder="Ana Ríos"
+            placeholder={form.name.placeholder}
             className={`${fieldClass} mt-2`}
           />
         </div>
 
         <div>
           <label className={labelClass} htmlFor="email">
-            Email
+            {form.email.label}
           </label>
           <input
             id="email"
@@ -113,7 +115,7 @@ export function BriefForm() {
             type="email"
             required
             autoComplete="email"
-            placeholder="ana@empresa.com"
+            placeholder={form.email.placeholder}
             className={`${fieldClass} mt-2`}
           />
         </div>
@@ -121,14 +123,14 @@ export function BriefForm() {
 
       <div className="mt-5">
         <label className={labelClass} htmlFor="company">
-          Empresa o proyecto{" "}
-          <span className="font-normal text-ink-faint">(opcional)</span>
+          {form.company.label}{" "}
+          <span className="font-normal text-ink-faint">{form.company.optional}</span>
         </label>
         <input
           id="company"
           name="company"
           autoComplete="organization"
-          placeholder="Estudio Martel"
+          placeholder={form.company.placeholder}
           className={`${fieldClass} mt-2`}
         />
       </div>
@@ -136,7 +138,7 @@ export function BriefForm() {
       <div className="mt-5 grid gap-5 sm:grid-cols-3">
         <div>
           <label className={labelClass} htmlFor="plan">
-            Plan
+            {form.plan.label}
           </label>
           <select
             id="plan"
@@ -154,15 +156,16 @@ export function BriefForm() {
 
         <div>
           <label className={labelClass} htmlFor="budget">
-            Presupuesto <span className="font-normal text-ink-faint">(USD)</span>
+            {form.budget.label}{" "}
+            <span className="font-normal text-ink-faint">{form.budget.currency}</span>
           </label>
           <select
             id="budget"
             name="budget"
-            defaultValue={budgetRanges[1]}
+            defaultValue={form.budgetRanges[1]}
             className={`${fieldClass} mt-2`}
           >
-            {budgetRanges.map((range) => (
+            {form.budgetRanges.map((range) => (
               <option key={range} value={range}>
                 {range}
               </option>
@@ -172,15 +175,15 @@ export function BriefForm() {
 
         <div>
           <label className={labelClass} htmlFor="timeline">
-            Plazo
+            {form.timeline.label}
           </label>
           <select
             id="timeline"
             name="timeline"
-            defaultValue={timelineOptions[1]}
+            defaultValue={form.timelineOptions[1]}
             className={`${fieldClass} mt-2`}
           >
-            {timelineOptions.map((option) => (
+            {form.timelineOptions.map((option) => (
               <option key={option} value={option}>
                 {option}
               </option>
@@ -191,25 +194,24 @@ export function BriefForm() {
 
       <div className="mt-5">
         <label className={labelClass} htmlFor="message">
-          ¿Qué necesitás?
+          {form.message.label}
         </label>
         <p className="mt-1 text-[0.85rem] text-ink-faint">
-          Qué hacés, a quién le vendés y qué querés que el sitio consiga. Con tres
-          o cuatro líneas alcanza.
+          {form.message.hint}
         </p>
         <textarea
           id="message"
           name="message"
           required
           rows={6}
-          placeholder="Tenemos un estudio de arquitectura en Córdoba. Queremos mostrar las obras y que nos lleguen consultas de obra nueva…"
+          placeholder={form.message.placeholder}
           className={`${fieldClass} mt-2 resize-y`}
         />
       </div>
 
       {/* Trampa para bots: oculta a la vista y fuera del orden de tabulación. */}
       <div aria-hidden className="absolute left-[-9999px] h-0 w-0 overflow-hidden">
-        <label htmlFor="website">No completar</label>
+        <label htmlFor="website">{form.honeypot}</label>
         <input id="website" name="website" tabIndex={-1} autoComplete="off" />
       </div>
 
@@ -226,10 +228,10 @@ export function BriefForm() {
           disabled={status === "sending"}
           className="w-full shrink-0 sm:w-auto"
         >
-          {status === "sending" ? "Enviando…" : "Enviar el brief"}
+          {status === "sending" ? form.sending : form.submit}
         </Button>
         <p className="text-[0.85rem] leading-relaxed text-ink-faint">
-          Respondemos en 24 horas hábiles. No compartimos tus datos con nadie.
+          {form.privacy}
         </p>
       </div>
     </form>

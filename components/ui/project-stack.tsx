@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 
@@ -5,6 +7,7 @@ import { Reveal } from "@/components/motion/reveal";
 import { ArrowUpRightIcon } from "@/components/ui/icons";
 import { urlForImage } from "@/sanity/image";
 import type { SanityProject } from "@/sanity/types";
+import { useCopy, useHref } from "@/components/copy-provider";
 
 /**
  * Los proyectos, de a dos por fila.
@@ -27,6 +30,8 @@ const placeholders = [
 ];
 
 export function ProjectStack({ projects }: { projects: SanityProject[] }) {
+  const { work } = useCopy();
+  const href = useHref();
   return (
     <Reveal stagger className="grid gap-x-8 gap-y-14 lg:grid-cols-2">
       {projects.map((project, i) => {

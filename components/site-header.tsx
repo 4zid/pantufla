@@ -3,9 +3,11 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-import { nav, site } from "@/content/site";
+import { site } from "@/content/site";
+import { useCopy, useHref } from "@/components/copy-provider";
 import { ButtonLink } from "@/components/ui/button";
 import { Logo } from "@/components/ui/icons";
+import { LocaleSwitcher } from "@/components/ui/locale-switcher";
 import { cn } from "@/lib/cn";
 
 /**
@@ -16,6 +18,8 @@ import { cn } from "@/lib/cn";
  * alto, menos aire y sin el enlace secundario— pero sigue acompañando siempre.
  */
 export function SiteHeader() {
+  const { nav, header } = useCopy();
+  const href = useHref();
   const [compact, setCompact] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -50,7 +54,7 @@ export function SiteHeader() {
           )}
         >
           <Link
-            href="/"
+            href={href("/")}
             className="flex shrink-0 items-center gap-2.5"
             onClick={() => setOpen(false)}
           >
@@ -75,23 +79,24 @@ export function SiteHeader() {
           <div className="hidden shrink-0 items-center gap-4 md:flex">
             {/* El enlace secundario se retira cuando la barra se compacta. */}
             <Link
-              href="/#planes"
+              href={href("/#planes")}
               className={cn(
                 "overflow-hidden whitespace-nowrap text-[0.92rem] text-ink-soft transition-all duration-400 hover:text-ink",
                 compact ? "pointer-events-none max-w-0 opacity-0" : "max-w-[8rem] opacity-100",
               )}
             >
-              Ver planes
+              {header.plans}
             </Link>
-            <ButtonLink href="/contacto" className={cn(compact && "h-9 px-4")}>
-              Empezar un proyecto
+            <LocaleSwitcher />
+            <ButtonLink href={href("/contacto")} className={cn(compact && "h-9 px-4")}>
+              {header.cta}
             </ButtonLink>
           </div>
 
           <button
             type="button"
             onClick={() => setOpen((v) => !v)}
-            aria-label={open ? "Cerrar menú" : "Abrir menú"}
+            aria-label={open ? header.closeMenu : header.openMenu}
             aria-expanded={open}
             className="-mr-1 flex h-10 w-10 items-center justify-center rounded-full md:hidden"
           >
@@ -124,14 +129,17 @@ export function SiteHeader() {
                 {item.label}
               </Link>
             ))}
-            <ButtonLink
-              href="/contacto"
-              size="lg"
-              className="mt-3 w-full"
-              onClick={() => setOpen(false)}
-            >
-              Empezar un proyecto
-            </ButtonLink>
+            <div className="mt-4 flex items-center gap-3">
+              <LocaleSwitcher />
+              <ButtonLink
+                href={href("/contacto")}
+                size="lg"
+                className="w-full"
+                onClick={() => setOpen(false)}
+              >
+                {header.cta}
+              </ButtonLink>
+            </div>
           </div>
         ) : null}
       </div>

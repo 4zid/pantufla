@@ -57,6 +57,17 @@ export const postSlugsQuery = groq`
   *[_type == "post" && defined(slug.current)][].slug.current
 `;
 
+/**
+ * El texto del sitio, un documento por idioma.
+ *
+ * Trae el documento entero menos los campos internos de Sanity. Las secciones
+ * que todavía no se cargaron vuelven en null y las filtra getCopy(): así se
+ * puede ir pasando el contenido de a poco sin que la página quede a medias.
+ */
+export const siteCopyQuery = groq`
+  *[_type == "siteCopy" && language == $language][0]
+`;
+
 export const testimonialsQuery = groq`
   *[_type == "testimonial"] | order(order asc)[0...6] {
     _id, quote, name, role, company, rating, avatar

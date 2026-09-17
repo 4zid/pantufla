@@ -1,3 +1,5 @@
+"use client";
+
 import { Suspense } from "react";
 
 import { BriefForm } from "@/components/brief-form";
@@ -7,7 +9,9 @@ import { SplitHeading } from "@/components/motion/split-heading";
 import { ButtonLink } from "@/components/ui/button";
 import { CheckIcon } from "@/components/ui/icons";
 import { Section } from "@/components/ui/section";
-import { finalCta, site } from "@/content/site";
+import { site } from "@/content/site";
+import { useCopy } from "@/components/copy-provider";
+import { fill } from "@/content/copy";
 
 /**
  * Cierre.
@@ -26,6 +30,7 @@ import { finalCta, site } from "@/content/site";
  * el pie de su celda y el título arrancaba 106px más abajo que el formulario.
  */
 export function FinalCta({ withForm = false }: { withForm?: boolean }) {
+  const { finalCta } = useCopy();
   if (withForm) {
     return (
       <Section id="brief" tone="deep" className="py-20 md:py-28">
@@ -93,11 +98,11 @@ export function FinalCta({ withForm = false }: { withForm?: boolean }) {
             </ButtonLink>
           </Magnetic>
           <ButtonLink
-            href={finalCta.secondary.href}
+            href={`mailto:${site.email}`}
             size="lg"
             className="w-full border border-white/15 bg-transparent text-paper hover:bg-white/10 sm:w-auto"
           >
-            {finalCta.secondary.label}
+            {fill(finalCta.secondaryLabel, { email: site.email })}
           </ButtonLink>
         </div>
       </div>

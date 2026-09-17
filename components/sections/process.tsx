@@ -3,7 +3,7 @@
 import { useGSAP } from "@gsap/react";
 import { useRef } from "react";
 
-import { process } from "@/content/site";
+import { useCopy } from "@/components/copy-provider";
 import { Reveal } from "@/components/motion/reveal";
 import { Section, SectionHead } from "@/components/ui/section";
 import { gsap, registerGsap } from "@/lib/motion";
@@ -30,6 +30,7 @@ import { cn } from "@/lib/cn";
 const STOPS = ["#166b67", "#2f9d97", "#6fcfca", "#a8e3df"] as const;
 
 export function Process() {
+  const { process } = useCopy();
   const scope = useRef<HTMLDivElement>(null);
 
   useGSAP(

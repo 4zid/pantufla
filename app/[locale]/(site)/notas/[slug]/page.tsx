@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 import { FinalCta } from "@/components/sections/final-cta";
 import { ArrowIcon } from "@/components/ui/icons";
 import { Prose } from "@/components/ui/portable-text";
+import { localeHref, type Locale } from "@/lib/i18n";
 import { sanityFetch } from "@/sanity/client";
 import { urlForImage } from "@/sanity/image";
 import { postBySlugQuery, postSlugsQuery } from "@/sanity/queries";
@@ -13,7 +14,7 @@ import type { SanityPost } from "@/sanity/types";
 
 export const revalidate = 60;
 
-type Params = { params: Promise<{ slug: string }> };
+type Params = { params: Promise<{ locale: Locale; slug: string }> };
 
 export async function generateStaticParams() {
   const slugs = await sanityFetch<string[]>(postSlugsQuery, {}, []);
@@ -39,7 +40,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 }
 
 export default async function PostPage({ params }: Params) {
-  const { slug } = await params;
+  const { locale, slug } = await params;
   const post = await sanityFetch<SanityPost | null>(
     postBySlugQuery,
     { slug },
@@ -59,7 +60,7 @@ export default async function PostPage({ params }: Params) {
     <>
       <article className="shell py-12 md:py-16">
         <Link
-          href="/notas"
+          href={localeHref("/notas", locale)}
           className="group inline-flex items-center gap-2 text-[0.9rem] text-ink-soft transition-colors hover:text-ink"
         >
           <ArrowIcon className="h-4 w-4 rotate-180 transition-transform duration-200 group-hover:-translate-x-0.5" />

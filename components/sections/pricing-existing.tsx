@@ -6,12 +6,10 @@ import { useRef, useState } from "react";
 
 import { ButtonLink } from "@/components/ui/button";
 import { PlusIcon } from "@/components/ui/icons";
-import { pricing } from "@/content/site";
+import { useCopy } from "@/components/copy-provider";
 import { gsap, registerGsap } from "@/lib/motion";
 import { toneTextDeep } from "@/lib/tones";
 import { cn } from "@/lib/cn";
-
-const { existing } = pricing;
 
 /**
  * Desplegable para el que ya tiene un sitio hecho.
@@ -26,6 +24,7 @@ const { existing } = pricing;
  * escalonado: escalonar la salida se siente lento.
  */
 export function PricingExisting() {
+  const { existing } = useCopy().pricing;
   const [open, setOpen] = useState(false);
   const panel = useRef<HTMLDivElement>(null);
 

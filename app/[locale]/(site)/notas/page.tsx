@@ -5,6 +5,8 @@ import Link from "next/link";
 import { FinalCta } from "@/components/sections/final-cta";
 import { ArrowUpRightIcon } from "@/components/ui/icons";
 import { PageHeader } from "@/components/ui/page-header";
+import { getCopy } from "@/content/get-copy";
+import { localeHref, type Locale } from "@/lib/i18n";
 import { sanityFetch } from "@/sanity/client";
 import { urlForImage } from "@/sanity/image";
 import { allPostsQuery } from "@/sanity/queries";
@@ -12,31 +14,44 @@ import type { SanityPost } from "@/sanity/types";
 
 export const revalidate = 60;
 
-export const metadata: Metadata = {
-  title: "Notas",
-  description:
-    "Cómo trabajamos, qué aprendimos en cada proyecto y qué conviene decidir antes de encarar un sitio web.",
-  alternates: { canonical: "/notas" },
-};
+type Props = { params: Promise<{ locale: Locale }> };
 
-function formatDate(value: string) {
-  return new Intl.DateTimeFormat("es-AR", {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale } = await params;
+  const { pages } = await getCopy(locale);
+  return {
+    title: pages.notas.metaTitle,
+    description: pages.notas.lead,
+    alternates: {
+      canonical: localeHref("/notas", locale),
+      languages: { es: "/notas", en: "/en/notas" },
+    },
+  };
+}
+
+/** La fecha se escribe como la escribe cada idioma, no traducida a mano. */
+function formatDate(value: string, locale: Locale) {
+  return new Intl.DateTimeFormat(locale === "es" ? "es-AR" : "en-US", {
     day: "numeric",
     month: "long",
     year: "numeric",
   }).format(new Date(value));
 }
 
-export default async function NotesPage() {
-  const posts = await sanityFetch<SanityPost[]>(allPostsQuery, {}, [], ["post"]);
+export default async function NotesPage({ params }: Props) {
+  const { locale } = await params;
+  const [{ pages }, posts] = await Promise.all([
+    getCopy(locale),
+    sanityFetch<SanityPost[]>(allPostsQuery, { language: locale }, [], ["post"]),
+  ]);
 
   return (
     <>
       <PageHeader
         icon="capas"
-        eyebrow="Notas"
-        title="Cómo pensamos los proyectos."
-        lead="Decisiones, criterios y aprendizajes de los sitios que hacemos. Sin relleno."
+        eyebrow={pages.notas.eyebrow}
+        title={pages.notas.title}
+        lead={pages.notas.lead}
       />
 
       <div className="shell py-16 md:py-20">
@@ -47,7 +62,7 @@ export default async function NotesPage() {
               return (
                 <Link
                   key={post._id}
-                  href={`/notas/${post.slug}`}
+                  href={localeHref(`/notas/${post.slug}`, locale)}
                   className="group flex flex-col overflow-hidden rounded-panel border border-line bg-card transition-colors hover:border-line-strong"
                 >
                   {image ? (
@@ -70,7 +85,7 @@ export default async function NotesPage() {
                         </>
                       ) : null}
                       <time dateTime={post.publishedAt}>
-                        {formatDate(post.publishedAt)}
+                        {formatDate(post.publishedAt, locale)}
                       </time>
                     </div>
                     <h2 className="mt-3 flex items-start justify-between gap-3 text-[1.12rem] font-semibold leading-snug tracking-[-0.02em]">
@@ -89,7 +104,7 @@ export default async function NotesPage() {
           </div>
         ) : (
           <div className="rounded-panel border border-dashed border-line-strong p-12 text-center">
-            <p className="text-[1.05rem] font-medium">Todavía no hay notas.</p>
+            <p className="text-[1.05rem] font-medium">{pages.notas.empty}</p>
             <p className="mx-auto mt-2 max-w-md text-[0.95rem] text-ink-soft">
               Las notas se escriben desde el panel de contenido, en{" "}
               <Link href="/studio" className="underline underline-offset-4">

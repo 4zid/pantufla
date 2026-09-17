@@ -4,23 +4,36 @@ import { Suspense } from "react";
 import { BriefForm } from "@/components/brief-form";
 import { CheckIcon } from "@/components/ui/icons";
 import { PageHeader } from "@/components/ui/page-header";
-import { finalCta, process, site } from "@/content/site";
+import { getCopy } from "@/content/get-copy";
+import { site } from "@/content/site";
+import { localeHref, type Locale } from "@/lib/i18n";
 
-export const metadata: Metadata = {
-  title: "Empezar un proyecto",
-  description:
-    "Contanos qué necesitás. En 24 horas te respondemos con alcance, precio y fecha de entrega.",
-  alternates: { canonical: "/contacto" },
-};
+type Props = { params: Promise<{ locale: Locale }> };
 
-export default function ContactPage() {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale } = await params;
+  const { pages } = await getCopy(locale);
+  return {
+    title: pages.contacto.metaTitle,
+    description: pages.contacto.metaDescription,
+    alternates: {
+      canonical: localeHref("/contacto", locale),
+      languages: { es: "/contacto", en: "/en/contacto" },
+    },
+  };
+}
+
+export default async function ContactPage({ params }: Props) {
+  const { locale } = await params;
+  const { pages, finalCta, process } = await getCopy(locale);
+
   return (
     <>
       <PageHeader
         icon="ruta"
-        eyebrow="Empezar un proyecto"
-        title="Cinco minutos ahora, una propuesta cerrada mañana."
-        lead="Cuanto más concreto sea el brief, más preciso es el presupuesto que te mandamos. No hace falta que tengas todo definido."
+        eyebrow={pages.contacto.eyebrow}
+        title={pages.contacto.title}
+        lead={pages.contacto.lead}
       />
 
       <div className="shell py-16 md:py-20">
@@ -34,7 +47,7 @@ export default function ContactPage() {
           </Suspense>
 
           <aside className="lg:sticky lg:top-28 lg:self-start">
-            <p className="eyebrow">Qué pasa después</p>
+            <p className="eyebrow">{finalCta.expectationsTitle}</p>
             <ul className="mt-6 space-y-4">
               {finalCta.expectations.map((item) => (
                 <li key={item} className="flex gap-3 text-[0.95rem]">
@@ -46,7 +59,7 @@ export default function ContactPage() {
 
             <div className="mt-10 rounded-panel border border-line bg-card p-6">
               <p className="text-[0.95rem] font-medium">
-                ¿Preferís escribir directo?
+                {pages.contacto.directTitle}
               </p>
               <a
                 href={`mailto:${site.email}`}

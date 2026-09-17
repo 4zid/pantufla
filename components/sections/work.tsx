@@ -1,12 +1,16 @@
+"use client";
+
 import Link from "next/link";
 
 import { Reveal } from "@/components/motion/reveal";
+import { useCopy } from "@/components/copy-provider";
 import { ArrowIcon } from "@/components/ui/icons";
 import { ProjectStack } from "@/components/ui/project-stack";
 import { Section, SectionHead } from "@/components/ui/section";
 import type { SanityProject } from "@/sanity/types";
 
 export function Work({ projects }: { projects: SanityProject[] }) {
+  const { work } = useCopy();
   if (!projects.length) return null;
 
   return (

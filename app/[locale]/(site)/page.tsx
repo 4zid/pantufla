@@ -13,19 +13,33 @@ import {
   fallbackProjects,
   fallbackTestimonials,
 } from "@/content/fallback-content";
-import { faq, pricing, site } from "@/content/site";
+import { getCopy } from "@/content/get-copy";
+import { site } from "@/content/site";
+import type { ResolvedCopy } from "@/content/resolve";
+import type { Locale } from "@/lib/i18n";
 import { sanityFetch } from "@/sanity/client";
 import { featuredProjectsQuery, testimonialsQuery } from "@/sanity/queries";
 import type { SanityProject, SanityTestimonial } from "@/sanity/types";
 
 export const revalidate = 60;
 
-export default async function HomePage() {
-  const [cmsProjects, cmsTestimonials] = await Promise.all([
-    sanityFetch<SanityProject[]>(featuredProjectsQuery, {}, [], ["project"]),
+export default async function HomePage({
+  params,
+}: {
+  params: Promise<{ locale: Locale }>;
+}) {
+  const { locale } = await params;
+  const [copy, cmsProjects, cmsTestimonials] = await Promise.all([
+    getCopy(locale),
+    sanityFetch<SanityProject[]>(
+      featuredProjectsQuery,
+      { language: locale },
+      [],
+      ["project"],
+    ),
     sanityFetch<SanityTestimonial[]>(
       testimonialsQuery,
-      {},
+      { language: locale },
       [],
       ["testimonial"],
     ),
@@ -54,12 +68,12 @@ export default async function HomePage() {
       <ClientsMap />
       <Faq />
       <FinalCta withForm />
-      <StructuredData />
+      <StructuredData copy={copy} />
     </>
   );
 }
 
-function StructuredData() {
+function StructuredData({ copy }: { copy: ResolvedCopy }) {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://pantufla.design";
 
   const data = [
@@ -67,15 +81,15 @@ function StructuredData() {
       "@context": "https://schema.org",
       "@type": "ProfessionalService",
       name: site.legalName,
-      description: site.description,
+      description: copy.meta.description,
       url: siteUrl,
       email: site.email,
       areaServed: "Worldwide",
       address: { "@type": "PostalAddress", addressLocality: site.location },
       hasOfferCatalog: {
         "@type": "OfferCatalog",
-        name: "Planes de diseño y desarrollo web",
-        itemListElement: pricing.plans.map((plan) => ({
+        name: copy.pricing.offerCatalog,
+        itemListElement: copy.pricing.plans.map((plan) => ({
           "@type": "Offer",
           name: plan.name,
           description: plan.summary,
@@ -87,7 +101,7 @@ function StructuredData() {
     {
       "@context": "https://schema.org",
       "@type": "FAQPage",
-      mainEntity: faq.items.map((item) => ({
+      mainEntity: copy.faq.items.map((item) => ({
         "@type": "Question",
         name: item.q,
         acceptedAnswer: { "@type": "Answer", text: item.a },

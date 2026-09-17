@@ -3,7 +3,8 @@
 import { useGSAP } from "@gsap/react";
 import { useId, useRef, useState } from "react";
 
-import { faq, socialProof } from "@/content/site";
+import { socialProof } from "@/content/site";
+import { useCopy } from "@/components/copy-provider";
 import { Reveal } from "@/components/motion/reveal";
 import { SplitHeading } from "@/components/motion/split-heading";
 import { ButtonLink } from "@/components/ui/button";
@@ -58,6 +59,7 @@ function Signo({ open }: { open: boolean }) {
 }
 
 export function Faq() {
+  const { faq } = useCopy();
   const [open, setOpen] = useState<number | null>(null);
   const scope = useRef<HTMLDivElement>(null);
   /** La pregunta que se acaba de tocar, para dejarla quieta mientras se abre. */

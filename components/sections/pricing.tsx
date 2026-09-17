@@ -9,7 +9,8 @@ import { gsap, registerGsap } from "@/lib/motion";
 import { Counter } from "@/components/motion/counter";
 import { PricingExisting } from "@/components/sections/pricing-existing";
 import { Reveal } from "@/components/motion/reveal";
-import { pricing, type BillingMode } from "@/content/site";
+import { type BillingMode } from "@/content/site";
+import { useCopy } from "@/components/copy-provider";
 import { ButtonLink } from "@/components/ui/button";
 import { CheckIcon } from "@/components/ui/icons";
 import { Section, SectionHead } from "@/components/ui/section";
@@ -23,6 +24,7 @@ const card =
   "flex h-full flex-col rounded-panel p-7 lg:p-8";
 
 export function Pricing() {
+  const { pricing } = useCopy();
   const [mode, setMode] = useState<BillingMode>("once");
   const groupId = useId();
   const toggle = useRef<HTMLDivElement>(null);

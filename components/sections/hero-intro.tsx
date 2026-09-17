@@ -3,13 +3,14 @@
 import { useGSAP } from "@gsap/react";
 import { useRef } from "react";
 
-import { hero } from "@/content/site";
+import { useCopy } from "@/components/copy-provider";
 import { Magnetic } from "@/components/motion/magnetic";
 import { SplitHeading } from "@/components/motion/split-heading";
 import { ButtonLink } from "@/components/ui/button";
 import { ease, gsap, registerGsap } from "@/lib/motion";
 
 export function HeroIntro() {
+  const { hero } = useCopy();
   const scope = useRef<HTMLDivElement>(null);
 
   useGSAP(

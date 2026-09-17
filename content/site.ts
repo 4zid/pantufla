@@ -1,15 +1,20 @@
 /**
- * Todo el copy y los datos comerciales del sitio viven acá.
- * Cambiar precios, pasos del proceso o preguntas frecuentes no requiere
- * tocar ningún componente.
+ * Lo que no se traduce.
+ *
+ * El texto vive en Sanity y, como respaldo, en copy.es.ts y copy.en.ts. Acá
+ * queda todo lo demás: los datos de contacto, los tonos, los logos, las
+ * coordenadas. Es una separación con una regla simple detrás —Sanity guarda
+ * palabras, el código guarda estructura— y sirve para que traducir no pueda
+ * romper una paleta ni cambiar de lugar una tarjeta.
+ *
+ * El cruce entre las dos mitades es por id. Si un id no coincide, el build
+ * avisa; si estuviera todo junto en un archivo por idioma, el español y el
+ * inglés se irían separando de a poco sin que nadie lo note.
  */
 
 export const site = {
   name: "Pantufla",
   legalName: "Pantufla Studio",
-  tagline: "Estudio de diseño y desarrollo web",
-  description:
-    "Diseñamos y desarrollamos sitios web con alcance cerrado, precio cerrado y fecha de entrega. De la primera charla al sitio publicado, en semanas.",
   email: "hola@pantufla.design",
   whatsapp: "https://wa.me/5491100000000",
   location: "Buenos Aires, Argentina",
@@ -20,354 +25,54 @@ export const site = {
   ],
 } as const;
 
-export const nav = [
-  { label: "Proceso", href: "/#proceso" },
-  { label: "Planes", href: "/#planes" },
-  { label: "Proyectos", href: "/proyectos" },
-  { label: "Notas", href: "/notas" },
-] as const;
-
-/* ------------------------------------------------------------------ */
-/* Hero                                                                */
-/* ------------------------------------------------------------------ */
-
-export const hero = {
-  badge: "Diseño y desarrollo web",
-  badgeNote: "Cupos de octubre abiertos",
-  /**
-   * El titular va por tramos porque dos van resaltados en pastilla. Se resalta
-   * lo que se vende —el objeto y el resultado— y no el verbo: subrayar todo es
-   * no subrayar nada.
-   */
-  titleSegments: [
-    { text: "Construimos" },
-    { text: "sitios web", mark: "paper" },
-    { text: "que convierten visitantes en" },
-    { text: "clientes.", mark: "ink" },
-  ],
-  lead: "Diseño, textos y desarrollo para que la gente que entra entienda qué hacés en diez segundos y termine escribiéndote.",
-  primary: { label: "Empezar un proyecto", href: "/contacto" },
-  secondary: { label: "Ver planes y precios", href: "/#planes" },
-  proof: [
-    "Precio cerrado",
-    "Primera versión en 5 días",
-    "El sitio queda a tu nombre",
-  ],
-} as const;
-
-/* ------------------------------------------------------------------ */
-/* Cómo trabajamos                                                     */
-/* ------------------------------------------------------------------ */
-
-export const approach = {
-  eyebrow: "Cómo lo resolvemos",
-  title: "Un alcance, un precio, una fecha.",
-  lead: "Pantufla es un estudio chico que trabaja con un método fijo. Eso es lo que nos permite entregar rápido sin bajar el nivel del diseño.",
-  pillars: [
-    {
-      title: "Alcance cerrado antes de empezar",
-      tone: "aqua",
-      art: "precio",
-      body: "Elegís un plan y sabés exactamente qué entra, qué no y cuánto sale. Si aparece algo fuera de alcance, se cotiza aparte y lo decidís vos.",
-    },
-    {
-      title: "Ritmo corto y fechas visibles",
-      tone: "rosa",
-      art: "reloj",
-      body: "Trabajamos en bloques de días, no de meses. Cada etapa tiene una fecha y una sola ronda de cambios para que el proyecto no se enfríe.",
-    },
-    {
-      title: "Te lo entregamos andando",
-      tone: "verde",
-      art: "llaves",
-      body: "El sitio se publica en tu cuenta, con tu dominio y un panel para que edites los textos, las fotos y las notas sin depender de nosotros.",
-    },
-  ],
-} as const;
-
-/* ------------------------------------------------------------------ */
-/* Proceso                                                             */
-/* ------------------------------------------------------------------ */
-
-export const process = {
-  eyebrow: "El proceso",
-  title: "Cuatro etapas. Quince días hábiles.",
-  lead: "El mismo camino para todos los proyectos. Cambia el tamaño, no el método.",
-  steps: [
-    {
-      number: "01",
-      name: "Brief",
-      art: "brief",
-      tone: "aqua",
-      when: "Día 1",
-      body: "Completás un formulario de cinco minutos con qué hacés, a quién le vendés y qué necesitás que el sitio consiga. Si el proyecto encaja, en 24 horas tenés alcance, precio y fecha de entrega por escrito.",
-      deliverable: "Propuesta cerrada",
-      yours: "Responder el brief",
-    },
-    {
-      number: "02",
-      name: "Estructura y diseño",
-      art: "diseno",
-      tone: "rosa",
-      when: "Días 2 a 6",
-      body: "Definimos qué secciones van, en qué orden y qué dice cada una. Sobre esa base diseñamos el sitio completo en desktop y mobile. Lo revisás y anotás cambios en un solo lugar.",
-      deliverable: "Diseño final aprobado",
-      yours: "Una ronda de comentarios",
-    },
-    {
-      number: "03",
-      name: "Desarrollo",
-      art: "desarrollo",
-      tone: "verde",
-      when: "Días 7 a 13",
-      body: "Construimos el sitio, cargamos tu contenido real y lo probamos en todos los tamaños de pantalla. Configuramos el panel de edición, la analítica y el formulario de contacto.",
-      deliverable: "Sitio en un link de prueba",
-      yours: "Textos, fotos y logo",
-    },
-    {
-      number: "04",
-      name: "Publicación",
-      art: "llaves",
-      tone: "miel",
-      when: "Días 14 y 15",
-      body: "Publicamos en tu dominio, te pasamos los accesos y grabamos un video corto mostrándote cómo editar cada cosa. Después quedan quince días de ajustes finos incluidos.",
-      deliverable: "Sitio online y las llaves",
-      yours: "El dominio",
-    },
-  ],
-  payment:
-    "Se paga 50% para reservar la fecha y 50% el día que se publica. Si elegís pago único al inicio, te queda 15% menos.",
-} as const;
-
-/* ------------------------------------------------------------------ */
-/* Planes                                                              */
-/* ------------------------------------------------------------------ */
-
 export type BillingMode = "once" | "split";
 
-export const pricing = {
-  eyebrow: "Planes",
-  title: "Elegí cómo empezar.",
-  lead: "Una página sola, el sitio completo, o contanos si necesitás otra cosa. Precios en dólares y cerrados.",
-  toggle: {
-    once: { label: "Pago único", note: "−15%", noteLong: "15% menos" },
-    split: { label: "En 2 pagos", note: "50/50", noteLong: "50% y 50%" },
-  },
-  guarantee:
-    "Si la primera entrega de diseño no te convence, cortamos ahí y te devolvemos el anticipo completo. Sin discusión.",
-  plans: [
-    {
-      id: "landing",
-      tone: "aqua",
-      name: "Landing",
-      summary: "Una página que explica lo que hacés y te trae consultas.",
-      bestFor: "Lanzamientos, servicios puntuales y campañas.",
-      price: { once: 850, split: 500, splitCount: 2 },
-      delivery: "5 a 7 días",
-      featured: false,
-      cta: { label: "Empezar con Landing", href: "/contacto?plan=landing" },
-      features: [
-        "Una página, hasta 6 secciones",
-        "Escribimos los textos con vos",
-        "Formulario que te avisa por mail",
-        "Publicado en tu dominio",
-      ],
-      excluded: [],
-    },
-    {
-      id: "sitio",
-      tone: "rosa",
-      name: "Sitio",
-      summary: "Tu sitio completo con un panel para que lo edites vos.",
-      bestFor: "Estudios, agencias, clínicas, marcas y productos.",
-      price: { once: 1500, split: 880, splitCount: 2 },
-      delivery: "2 a 3 semanas",
-      featured: true,
-      badge: "El más elegido",
-      cta: { label: "Empezar con Sitio", href: "/contacto?plan=sitio" },
-      features: [
-        "Todo lo del plan Landing",
-        "Hasta 6 páginas",
-        "Panel para que lo edites vos",
-        "Blog o listado de proyectos",
-      ],
-      excluded: [],
-    },
-  ],
-  contact: {
-    name: "Contactanos",
-    summary: "Tu proyecto no entra en ninguno de los dos.",
-    price: "A convenir",
-    features: [
-      "Sistemas de reservas y turnos",
-      "Integraciones con lo que ya usás",
-      "Migraciones desde otra plataforma",
-      "Te decimos en 24 horas si podemos",
-    ],
-    cta: { label: "Contarnos el proyecto", href: "/contacto?plan=otra-cosa" },
-  },
-  /**
-   * Para el que ya tiene un sitio hecho y no necesita empezar de cero. Va
-   * plegado abajo de los planes: es una puerta distinta, no un cuarto plan, y
-   * abierta de entrada le compite a los precios.
-   */
-  existing: {
-    title: "Ya tengo un sitio en Webflow o Framer.",
-    summary:
-      "No hace falta rehacerlo todo. Entramos a lo que ya tenés, lo dejamos prolijo y te lo devolvemos andando.",
-    platforms: [
-      {
-        name: "Webflow",
-        logo: "/logos/webflow-wordmark.svg",
-        logoWidth: 120,
-        detail:
-          "Entramos al Designer y al CMS. Ordenamos las clases, arreglamos el responsive y dejamos las colecciones listas para que cargues vos.",
-      },
-      {
-        name: "Framer",
-        logo: "/logos/framer-wordmark.svg",
-        logoWidth: 89,
-        detail:
-          "Trabajamos sobre tu proyecto: componentes, variantes, breakpoints y CMS. Si hace falta código, lo sumamos.",
-      },
-    ],
-    services: [
-      {
-        title: "Administrarlo",
-        detail:
-          "Cargamos contenido y publicamos los cambios por vos. Por mes, y lo cortás cuando quieras.",
-      },
-      {
-        title: "Mejorarlo",
-        detail:
-          "Velocidad, SEO técnico, responsive y accesibilidad. Te decimos qué encontramos antes de tocar nada.",
-      },
-      {
-        title: "Rediseñarlo",
-        detail:
-          "Mismo contenido, otra cara. Se rehace el diseño sobre la plataforma que ya usás, sin migrar nada.",
-      },
-      {
-        title: "Un cambio puntual",
-        detail:
-          "Una sección nueva, un formulario que no anda, una landing para una campaña. Se presupuesta por cambio.",
-      },
-    ],
-    note: "Antes de presupuestar miramos tu sitio y te decimos qué conviene tocar y qué no.",
-    cta: { label: "Mostranos tu sitio", href: "/contacto?plan=existente" },
-  },
-
-  alwaysIncluded: [
-    "Diseño original, nada de plantillas",
-    "Responsive real en mobile, tablet y desktop",
-    "Carga rápida y buenas métricas de Core Web Vitals",
-    "SEO técnico: metadatos, sitemap y datos estructurados",
-    "El código, el dominio y las cuentas quedan a tu nombre",
-    "Una llamada de cierre para dejarte andando",
-  ],
-} as const;
-
 /* ------------------------------------------------------------------ */
-/* Preguntas frecuentes — manejo de objeciones                          */
+/* Diseño de cada bloque, cruzado por id con el texto                  */
 /* ------------------------------------------------------------------ */
 
-export const faq = {
-  eyebrow: "Preguntas",
-  title: "Acá están las respuestas.",
-  /** El cierre de abajo del acordeón, para el que no encontró su pregunta. */
-  cta: {
-    claim: "¿Te quedó alguna duda?",
-    label: "Hablemos",
-    href: "/contacto",
-  },
-  items: [
-    {
-      q: "¿Y si necesito más páginas de las que incluye el plan?",
-      a: "Se suman por separado y con precio fijo antes de empezar, así el presupuesto nunca se mueve solo. Si desde el brief se ve que necesitás bastante más, te lo decimos ahí mismo con un número aparte.",
-    },
-    {
-      q: "¿De quién es el sitio cuando termina el proyecto?",
-      a: "Tuyo. El dominio, el hosting, el panel de contenido y el repositorio quedan a tu nombre. Nosotros salimos de las cuentas cuando vos digas. No usamos plataformas que te aten a nosotros.",
-    },
-    {
-      q: "¿Puedo editar el contenido sin saber programar?",
-      a: "Sí, en el plan Sitio. Entrás a un panel, cambiás textos, subís fotos, publicás una nota nueva y el sitio se actualiza solo. Te dejamos un video corto explicando cada parte.",
-    },
-    {
-      q: "¿Cuánto sale mantenerlo por mes?",
-      a: "El sitio andando cuesta entre 0 y 20 dólares por mes según el tráfico, más el dominio (unos 15 dólares al año). Eso lo pagás vos directo al proveedor. Si querés que nos ocupemos de cambios y mejoras todos los meses, tenemos un abono aparte.",
-    },
-    {
-      q: "¿Usan inteligencia artificial para trabajar?",
-      a: "Sí, en la parte técnica y repetitiva: andamiaje de código, tareas de configuración, primeras versiones de textos. El diseño, la estructura y las decisiones las tomamos nosotros. Es la razón por la que podemos entregar en semanas y cobrar lo que cobramos.",
-    },
-    {
-      q: "¿Qué necesitan de mí para arrancar?",
-      a: "El brief completo, tu logo si tenés, las fotos que quieras usar y una idea de los textos. Si no tenés textos, los escribimos nosotros y vos los aprobás. Nada más.",
-    },
-    {
-      q: "¿Cómo se paga y en qué momento?",
-      a: "50% para reservar la fecha en el calendario y 50% el día que publicamos. Si preferís pagarlo todo al inicio, te descontamos 15%. Aceptamos transferencia, Wise, Payoneer y stablecoins. Facturamos.",
-    },
-    {
-      q: "¿Qué pasa si me atraso con el contenido?",
-      a: "Congelamos el proyecto y retomamos cuando estés listo, sin costo extra durante 30 días. Pasado ese plazo la fecha de entrega se reagenda según la disponibilidad que haya.",
-    },
-  ],
-} as const;
+export const approachDesign: Record<string, { tone: string; art: string }> = {
+  alcance: { tone: "aqua", art: "precio" },
+  ritmo: { tone: "rosa", art: "reloj" },
+  entrega: { tone: "verde", art: "llaves" },
+};
+
+export const processDesign: Record<
+  string,
+  { number: string; art: string; tone: string }
+> = {
+  brief: { number: "01", art: "brief", tone: "aqua" },
+  diseno: { number: "02", art: "diseno", tone: "rosa" },
+  desarrollo: { number: "03", art: "desarrollo", tone: "verde" },
+  publicacion: { number: "04", art: "llaves", tone: "miel" },
+};
+
+export const planDesign: Record<string, { tone: string; featured: boolean }> = {
+  landing: { tone: "aqua", featured: false },
+  sitio: { tone: "rosa", featured: true },
+};
+
+export const platformDesign: Record<
+  string,
+  { logo: string; logoWidth: number }
+> = {
+  webflow: { logo: "/logos/webflow-wordmark.svg", logoWidth: 120 },
+  framer: { logo: "/logos/framer-wordmark.svg", logoWidth: 89 },
+};
 
 /* ------------------------------------------------------------------ */
-/* CTA final                                                           */
-/* ------------------------------------------------------------------ */
-
-export const finalCta = {
-  title: "Contanos qué necesitás.",
-  lead: "Cinco minutos de formulario. En 24 horas te respondemos con alcance, precio y fecha, o te decimos con franqueza que no somos los indicados.",
-  primary: { label: "Completar el brief", href: "/contacto" },
-  /** Lo que pasa después de mandar el brief. Lo usan el cierre de la home y
-      la página de contacto, así que vive acá y no duplicado en cada una. */
-  expectations: [
-    "Leemos el brief el mismo día que llega.",
-    "Te respondemos con alcance, precio y fecha en 24 horas hábiles.",
-    "Si no somos los indicados, te lo decimos y te sugerimos a quién ver.",
-    "No hay llamada de venta obligatoria: si preferís todo por escrito, va por escrito.",
-  ],
-  secondary: {
-    label: `Escribir a ${site.email}`,
-    href: `mailto:${site.email}`,
-  },
-} as const;
-
-/**
- * ⚠️ Reemplazar por los países donde realmente hay clientes antes de publicar.
- * El pie de la sección cuenta esta lista, así que el número siempre coincide
- * con lo que se muestra: no hay una cifra escrita a mano que se desactualice.
- */
-/* ------------------------------------------------------------------ */
-/* Prueba social — la tira de abajo del hero                           */
+/* Prueba social                                                       */
 /* ------------------------------------------------------------------ */
 
 /**
- * Prueba social: la tira de abajo del hero.
- *
- * No dice cuántos clientes hay, y es a propósito. Un número ahí arriba tiene
- * que ser verdadero el día que alguien lo lea, y con un estudio que recién
- * arranca cualquier cifra queda o corta o inflada. Además no es la pelea que
- * conviene dar: contra una agencia con cien clientes, decir noventa es perder;
- * decir que se toman pocos proyectos y se hacen enteros es otra conversación,
- * y encima es cierta.
- *
- * Así que la frase habla de cómo se trabaja y las marcas hablan de con quién.
- * Eso deja la tira sin nada que envejezca: sumar un cliente es sumar un logo,
- * no reescribir el texto.
+ * La frase de esta tira no dice cuántos clientes hay, y es a propósito: ver la
+ * nota larga en copy.es.ts. Acá quedan las caras y las marcas, que son dibujo.
  *
  * Las marcas son de relleno y van dibujadas en código para que se vea la forma
  * de la tira. Las reales entran como SVG en public/logos, igual que las del
  * stack.
  */
 export const socialProof = {
-  claim: "Tomamos pocos proyectos a la vez y los hacemos enteros nosotros.",
-  /** Iniciales para los avatares, hasta tener fotos reales. */
   faces: [
     { initials: "MP", from: "#6fcfca", to: "#166b67" },
     { initials: "RL", from: "#f2a5b6", to: "#a3405a" },
@@ -376,6 +81,14 @@ export const socialProof = {
   brands: ["Aureo", "Nimbo", "Cardinal", "Vela", "Tallo"],
 } as const;
 
+/**
+ * ⚠️ Reemplazar por los países donde realmente hay clientes antes de publicar.
+ * El pie de la sección cuenta esta lista, así que el número siempre coincide
+ * con lo que se muestra: no hay una cifra escrita a mano que se desactualice.
+ *
+ * El país va en español y funciona como clave: el nombre que se muestra sale
+ * del copy del idioma que esté activo.
+ */
 export const clients = [
   { city: "Buenos Aires", country: "Argentina", lon: -58.4, lat: -34.6 },
   { city: "Córdoba", country: "Argentina", lon: -64.2, lat: -31.4 },
@@ -388,23 +101,12 @@ export const clients = [
   { city: "Berlín", country: "Alemania", lon: 13.4, lat: 52.5 },
 ] as const;
 
-export const budgetRanges = [
-  "Menos de $1.000",
-  "$1.000 – $2.500",
-  "$2.500 – $5.000",
-  "Más de $5.000",
-  "Todavía no sé",
-] as const;
-
-export const timelineOptions = [
-  "Lo antes posible",
-  "En 2 a 4 semanas",
-  "En 1 a 3 meses",
-  "Estoy explorando",
-] as const;
+/* ------------------------------------------------------------------ */
+/* Stack                                                               */
+/* ------------------------------------------------------------------ */
 
 /**
- * El stack, para el riel en movimiento.
+ * El riel de herramientas. Son nombres de marca: no se traducen.
  *
  * Las marcas salen de Brandfetch. Vienen en la variante para fondo oscuro —o
  * sea, en blanco— así que se les horneó la tinta del sitio en el archivo:
@@ -424,28 +126,23 @@ export const timelineOptions = [
  * Dos filas que corren en sentidos opuestos: la de arriba es con qué se
  * diseña y dónde vive el contenido, la de abajo con qué se construye.
  */
-export const stack = {
-  eyebrow: "Herramientas",
-  title: "Con qué está hecho esto.",
-  lead: "Nada exótico y nada casero: herramientas conocidas, que vas a poder seguir usando con cualquier otro estudio.",
-  rows: [
-    [
-      { name: "Figma", tone: "aqua", logo: "/logos/figma.svg" },
-      { name: "Webflow", tone: "rosa", logo: "/logos/webflow.svg" },
-      { name: "Framer", tone: "verde", logo: "/logos/framer.svg" },
-      { name: "Sanity", tone: "miel", logo: null },
-      { name: "Supabase", tone: "aqua", logo: "/logos/supabase.png" },
-      { name: "Resend", tone: "rosa", logo: "/logos/resend.svg" },
-      { name: "Vercel", tone: "verde", logo: "/logos/vercel.svg" },
-    ],
-    [
-      { name: "Next.js", tone: "miel", logo: "/logos/nextjs.svg" },
-      { name: "TypeScript", tone: "aqua", logo: null },
-      { name: "Tailwind", tone: "rosa", logo: "/logos/tailwind.svg" },
-      { name: "GSAP", tone: "verde", logo: null },
-      { name: "GitHub", tone: "miel", logo: "/logos/github.svg" },
-      { name: "Claude", tone: "aqua", logo: "/logos/claude.svg" },
-      { name: "ChatGPT", tone: "rosa", logo: "/logos/chatgpt.svg" },
-    ],
+export const stackRows = [
+  [
+    { name: "Figma", tone: "aqua", logo: "/logos/figma.svg" },
+    { name: "Webflow", tone: "rosa", logo: "/logos/webflow.svg" },
+    { name: "Framer", tone: "verde", logo: "/logos/framer.svg" },
+    { name: "Sanity", tone: "miel", logo: null },
+    { name: "Supabase", tone: "aqua", logo: "/logos/supabase.png" },
+    { name: "Resend", tone: "rosa", logo: "/logos/resend.svg" },
+    { name: "Vercel", tone: "verde", logo: "/logos/vercel.svg" },
   ],
-} as const;
+  [
+    { name: "Next.js", tone: "miel", logo: "/logos/nextjs.svg" },
+    { name: "TypeScript", tone: "aqua", logo: null },
+    { name: "Tailwind", tone: "rosa", logo: "/logos/tailwind.svg" },
+    { name: "GSAP", tone: "verde", logo: null },
+    { name: "GitHub", tone: "miel", logo: "/logos/github.svg" },
+    { name: "Claude", tone: "aqua", logo: "/logos/claude.svg" },
+    { name: "ChatGPT", tone: "rosa", logo: "/logos/chatgpt.svg" },
+  ],
+] as const;

@@ -1,9 +1,12 @@
+"use client";
+
 import Image from "next/image";
 
 import { Reveal } from "@/components/motion/reveal";
 import { Tag } from "@/components/ui/tag";
 import { SplitHeading } from "@/components/motion/split-heading";
-import { stack } from "@/content/site";
+import { stackRows } from "@/content/site";
+import { useCopy } from "@/components/copy-provider";
 import { toneBg, type Tone } from "@/lib/tones";
 import { cn } from "@/lib/cn";
 
@@ -96,6 +99,7 @@ function Row({
 }
 
 export function StackTicker() {
+  const { stack } = useCopy();
   return (
     <section id="stack" className="relative overflow-hidden py-20 md:py-24">
       <div className="shell">
@@ -111,8 +115,8 @@ export function StackTicker() {
       </div>
 
       <Reveal delay={0.2} className="mt-12 flex flex-col gap-3 md:mt-14">
-        <Row items={stack.rows[0]} duration="46s" />
-        <Row items={stack.rows[1]} duration="58s" reverse />
+        <Row items={stackRows[0]} duration="46s" />
+        <Row items={stackRows[1]} duration="58s" reverse />
       </Reveal>
     </section>
   );

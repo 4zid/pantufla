@@ -7,6 +7,7 @@ import { FinalCta } from "@/components/sections/final-cta";
 import { ArrowIcon, ArrowUpRightIcon } from "@/components/ui/icons";
 import { Prose } from "@/components/ui/portable-text";
 import { fallbackProjects } from "@/content/fallback-content";
+import { localeHref, type Locale } from "@/lib/i18n";
 import { sanityFetch } from "@/sanity/client";
 import { urlForImage } from "@/sanity/image";
 import { projectBySlugQuery, projectSlugsQuery } from "@/sanity/queries";
@@ -14,7 +15,7 @@ import type { SanityProject } from "@/sanity/types";
 
 export const revalidate = 60;
 
-type Params = { params: Promise<{ slug: string }> };
+type Params = { params: Promise<{ locale: Locale; slug: string }> };
 
 async function getProject(slug: string) {
   const fromCms = await sanityFetch<SanityProject | null>(
@@ -45,7 +46,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 }
 
 export default async function ProjectPage({ params }: Params) {
-  const { slug } = await params;
+  const { locale, slug } = await params;
   const project = await getProject(slug);
   if (!project) notFound();
 
@@ -56,7 +57,7 @@ export default async function ProjectPage({ params }: Params) {
       <article>
         <div className="shell pb-14 pt-12 md:pt-16">
           <Link
-            href="/proyectos"
+            href={localeHref("/proyectos", locale)}
             className="group inline-flex items-center gap-2 text-[0.9rem] text-ink-soft transition-colors hover:text-ink"
           >
             <ArrowIcon className="h-4 w-4 rotate-180 transition-transform duration-200 group-hover:-translate-x-0.5" />

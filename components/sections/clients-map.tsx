@@ -4,6 +4,8 @@ import { useGSAP } from "@gsap/react";
 import { useRef, useState } from "react";
 
 import { clients } from "@/content/site";
+import { useCopy } from "@/components/copy-provider";
+import { fill } from "@/content/copy";
 import { Reveal } from "@/components/motion/reveal";
 import { Section, SectionHead } from "@/components/ui/section";
 import { ease, gsap, registerGsap, START } from "@/lib/motion";
@@ -76,6 +78,7 @@ LAND.forEach((spans, r) => {
 const countries = [...new Set(clients.map((c) => c.country))];
 
 export function ClientsMap() {
+  const { clientsMap } = useCopy();
   const scope = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState<number | null>(null);
 
