@@ -31,7 +31,10 @@ import { HeroScene } from "@/components/sections/hero-scene";
  */
 export function Hero() {
   return (
-    <section className="relative max-[1439px]:pb-16 min-[1440px]:h-[300vh]">
+    <section
+      data-surface="mist"
+      className="relative max-[1439px]:pb-16 min-[1440px]:h-[300vh]"
+    >
       <div className="relative overflow-hidden min-[1440px]:sticky min-[1440px]:top-0 min-[1440px]:flex min-[1440px]:h-screen min-[1440px]:flex-col">
         <HeroAurora />
         <div className="max-[1439px]:pt-28 min-[1440px]:flex min-[1440px]:min-h-0 min-[1440px]:flex-1 min-[1440px]:items-center min-[1440px]:pt-[calc(var(--hero-reserve)-40px)]">

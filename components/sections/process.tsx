@@ -131,13 +131,11 @@ export function Process() {
            Centrado quedaría como una mancha; naciendo del piso se lee como si
            la línea de tiempo fuera lo que lo enciende.
 
-           Y baja 120px más que la sección. Terminando justo en el borde,
-           cortaba en seco exactamente donde arranca la transición al blanco y
-           se veía una línea; estirado, se disuelve abajo del degradé que trae
-           la sección siguiente. */
+           Ya no hace falta que se salga de la sección: el fondo entero cambia
+           de color, así que no hay borde contra el que cortar. */
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-x-0 -bottom-[120px] h-[58%]"
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-[58%]"
           style={{
             background:
               "radial-gradient(120% 100% at 50% 118%, #6fcfca 0%, rgba(111,207,202,0.42) 26%, rgba(47,157,151,0.16) 48%, transparent 72%)",
@@ -151,7 +149,6 @@ export function Process() {
         title={process.title}
         lead={process.lead}
         align="center"
-        onDark
       />
 
       <div ref={scope} className="relative mx-auto mt-20 max-w-xl md:mt-24">
@@ -173,7 +170,7 @@ export function Process() {
               {i > 0 ? (
                 <span
                   aria-hidden
-                  className="absolute left-1/2 top-0 h-20 w-[2px] -translate-x-1/2 overflow-hidden rounded-full bg-white/10 md:h-24"
+                  className="absolute left-1/2 top-0 h-20 w-[2px] -translate-x-1/2 overflow-hidden rounded-full bg-line md:h-24"
                 >
                   <span
                     data-progress
@@ -188,7 +185,7 @@ export function Process() {
                   círculo lleva el color de la sección y no es translúcido. */}
               <span
                 data-dot
-                className="relative grid h-14 w-14 place-items-center rounded-full bg-deep"
+                className="relative grid h-14 w-14 place-items-center rounded-full bg-card"
               >
                 <span
                   aria-hidden
@@ -206,36 +203,34 @@ export function Process() {
                   className="absolute inset-[5px] rounded-full opacity-25 blur-[6px]"
                   style={{ background: STOPS[i] }}
                 />
-                <span className="relative text-[0.95rem] font-semibold tabular-nums text-paper">
+                <span className="relative text-[0.95rem] font-semibold tabular-nums text-ink">
                   {step.number}
                 </span>
               </span>
 
               <div data-body className="mt-6">
-                <span className="rounded-full bg-white/10 px-2.5 py-1 text-[0.72rem] font-medium text-white/70">
+                <span className="rounded-full bg-paper-alt px-2.5 py-1 text-[0.72rem] font-medium text-ink-soft">
                   {step.when}
                 </span>
 
-                <h3 className="mt-4 text-h3 text-paper">{step.name}</h3>
+                <h3 className="mt-4 text-h3">{step.name}</h3>
 
-                <p className="mx-auto mt-3 max-w-md text-[0.98rem] leading-relaxed text-white/60">
+                <p className="mx-auto mt-3 max-w-md text-[0.98rem] leading-relaxed text-ink-soft">
                   {step.body}
                 </p>
 
-                <dl className="mx-auto mt-6 grid max-w-sm grid-cols-2 gap-x-6 gap-y-2 border-t border-white/10 pt-5 text-left text-[0.85rem]">
+                <dl className="mx-auto mt-6 grid max-w-sm grid-cols-2 gap-x-6 gap-y-2 border-t border-line pt-5 text-left text-[0.85rem]">
                   <div>
-                    <dt className="text-white/35">
+                    <dt className="text-ink-faint">
                       {process.labels.deliverable}
                     </dt>
-                    <dd className="mt-1 font-medium text-paper">
+                    <dd className="mt-1 font-medium text-ink">
                       {step.deliverable}
                     </dd>
                   </div>
                   <div>
-                    <dt className="text-white/35">{process.labels.yours}</dt>
-                    <dd className="mt-1 font-medium text-paper">
-                      {step.yours}
-                    </dd>
+                    <dt className="text-ink-faint">{process.labels.yours}</dt>
+                    <dd className="mt-1 font-medium text-ink">{step.yours}</dd>
                   </div>
                 </dl>
               </div>
@@ -245,7 +240,7 @@ export function Process() {
       </div>
 
       <Reveal>
-        <p className="mx-auto mt-16 max-w-xl text-center text-[0.92rem] leading-relaxed text-white/45">
+        <p className="mx-auto mt-16 max-w-xl text-center text-[0.92rem] leading-relaxed text-ink-faint">
           {process.payment}
         </p>
       </Reveal>

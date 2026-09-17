@@ -39,24 +39,15 @@ export type TagIconName = keyof typeof tagIcons;
 
 export function Tag({
   icon = "cubo",
-  onDark = false,
   children,
 }: {
   icon?: TagIconName;
-  onDark?: boolean;
   children: React.ReactNode;
 }) {
   const Icon = tagIcons[icon];
 
   return (
-    <span
-      className={cn(
-        "inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 text-[0.7rem] font-medium uppercase tracking-[0.12em]",
-        onDark
-          ? "border-white/12 bg-white/[0.06] text-white/70"
-          : "border-line bg-paper-alt text-ink-soft shadow-[0_1px_2px_rgba(0,0,0,0.04)]",
-      )}
-    >
+    <span className="inline-flex items-center gap-2 rounded-full border border-line bg-paper-alt px-3.5 py-1.5 text-[0.7rem] font-medium uppercase tracking-[0.12em] text-ink-soft">
       <Icon className="h-3.5 w-3.5 shrink-0" />
       {children}
     </span>

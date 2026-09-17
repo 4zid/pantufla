@@ -13,7 +13,7 @@ export function SiteFooter() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-line bg-paper">
+    <footer data-surface="paper" className="border-t border-line bg-paper">
       <div className="shell py-14 md:py-16">
         <div className="grid gap-10 md:grid-cols-[1.4fr_1fr_1fr]">
           <div className="max-w-sm">

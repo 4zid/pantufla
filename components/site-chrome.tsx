@@ -1,3 +1,4 @@
+import { ThemeScroll } from "@/components/theme-scroll";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 
@@ -12,6 +13,7 @@ import { SiteHeader } from "@/components/site-header";
 export function SiteChrome({ children }: { children: React.ReactNode }) {
   return (
     <div className="relative z-10 flex min-h-dvh flex-col">
+      <ThemeScroll />
       <a
         href="#contenido"
         className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:bg-ink focus:px-5 focus:py-2.5 focus:text-paper"

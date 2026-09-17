@@ -101,21 +101,11 @@ function Row({
 export function StackTicker() {
   const { stack } = useCopy();
   return (
-    <section id="stack" className="relative py-20 md:py-24">
-      {/* Misma mecánica que Section: el riel no puede usar el componente
-          porque necesita desbordar a sangre, pero la superficie es la misma. */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-0 -bottom-[160px]"
-        style={{
-          maskImage:
-            "linear-gradient(to bottom, transparent 0, #000 100px, #000 100%)",
-          WebkitMaskImage:
-            "linear-gradient(to bottom, transparent 0, #000 100px, #000 100%)",
-        }}
-      >
-        <div className="absolute inset-0 bg-paper" />
-      </div>
+    <section
+      id="stack"
+      data-surface="paper"
+      className="relative py-20 md:py-24"
+    >
       <div className="relative z-10 shell">
         <div className="max-w-2xl">
           <Reveal>

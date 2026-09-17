@@ -76,13 +76,6 @@ export function SocialProof() {
   const copy = useCopy();
   return (
     <section aria-label={copy.socialProof.label} className="relative">
-      {/* Sigue la bruma del hero y la estira 160px por debajo, para que el
-          blanco de la sección que viene tenga sobre qué aparecer. Sin esa cola
-          la bruma cortaba con una línea recta justo abajo de los logos. */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-0 -bottom-[160px] bg-mist"
-      />
       <Reveal className="relative z-10 shell flex flex-col items-center gap-8 py-8 lg:flex-row lg:gap-12 lg:py-7">
         <div className="flex shrink-0 items-center gap-4">
           <ul className="flex" aria-hidden>

@@ -131,7 +131,17 @@
   }
 
   body {
-    background-color: var(--color-paper);
+    /*
+       El fondo de la página es una sola superficie que cambia con el scroll,
+       no un color por sección. Lo mueve components/theme-scroll.tsx a partir
+       de lo que hay en pantalla; el valor de acá es solo el punto de partida,
+       el que se ve antes de que corra el JS y el que queda si nunca corre.
+
+       Sin transition a propósito: el motor ya recalcula en cada cuadro, así
+       que el color va pegado al scroll. Una transición encima lo dejaba
+       corriendo detrás del dedo, que es justo lo contrario de lo que se busca.
+    */
+    background-color: var(--page-bg, var(--color-mist));
     color: var(--color-ink);
     font-family: var(--font-sans);
     font-synthesis-weight: none;
