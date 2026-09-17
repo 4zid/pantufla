@@ -101,8 +101,22 @@ function Row({
 export function StackTicker() {
   const { stack } = useCopy();
   return (
-    <section id="stack" className="relative overflow-hidden py-20 md:py-24">
-      <div className="shell">
+    <section id="stack" className="relative py-20 md:py-24">
+      {/* Misma mecánica que Section: el riel no puede usar el componente
+          porque necesita desbordar a sangre, pero la superficie es la misma. */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-0 -bottom-[160px]"
+        style={{
+          maskImage:
+            "linear-gradient(to bottom, transparent 0, #000 100px, #000 100%)",
+          WebkitMaskImage:
+            "linear-gradient(to bottom, transparent 0, #000 100px, #000 100%)",
+        }}
+      >
+        <div className="absolute inset-0 bg-paper" />
+      </div>
+      <div className="relative z-10 shell">
         <div className="max-w-2xl">
           <Reveal>
             <Tag icon="cubo">{stack.eyebrow}</Tag>
@@ -114,10 +128,16 @@ export function StackTicker() {
         </div>
       </div>
 
-      <Reveal delay={0.2} className="mt-12 flex flex-col gap-3 md:mt-14">
-        <Row items={stackRows[0]} duration="46s" />
-        <Row items={stackRows[1]} duration="58s" reverse />
-      </Reveal>
+      {/* El recorte va acá y no en la sección: la pista mide más que la
+          pantalla y hay que cortarla, pero si el corte está en la sección
+          también se come la rampa del fondo, que justamente tiene que
+          salirse por arriba. */}
+      <div className="relative z-10 overflow-hidden">
+        <Reveal delay={0.2} className="mt-12 flex flex-col gap-3 md:mt-14">
+          <Row items={stackRows[0]} duration="46s" />
+          <Row items={stackRows[1]} duration="58s" reverse />
+        </Reveal>
+      </div>
     </section>
   );
 }

@@ -139,12 +139,19 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  /* Grano muy leve: le saca el plástico al fondo plano. */
+  /*
+     Grano muy leve: le saca el plástico al fondo plano.
+
+     Va en z-1 y no en 0 porque ahora el fondo de cada sección es una capa
+     posicionada, no un background-color: en 0 las secciones le pasaban por
+     encima y el grano desaparecía. El contenido va en z-10, así que sigue
+     quedando arriba del grano.
+  */
   body::before {
     content: "";
     position: fixed;
     inset: 0;
-    z-index: 0;
+    z-index: 1;
     pointer-events: none;
     opacity: 0.5;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.045'/%3E%3C/svg%3E");

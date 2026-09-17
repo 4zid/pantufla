@@ -7,15 +7,15 @@ import { useCopy } from "@/components/copy-provider";
 /**
  * Tira de prueba social, justo debajo del hero.
  *
- * Va angosta y con una sola regla abajo: es un apoyo, no una sección. Si
+ * Va angosta y sin reglas: es un apoyo, no una sección. Si
  * respira como las demás compite con el titular, que es lo último que
  * conviene a dos centímetros del hero.
  *
  * Comparte el color del hero a propósito. Con un fondo propio quedaba una
  * banda distinta justo debajo del tablero y se leía como que el hero
  * terminaba de golpe; con el mismo, el tablero se hunde en la tira y lo que
- * separa las dos cosas es el aire, no una línea de color. La regla de arriba
- * sobraba por lo mismo.
+ * separa las dos cosas es el aire, no una línea de color. Las reglas sobraban
+ * por lo mismo.
  *
  * A la izquierda va quién hace el trabajo y a la derecha para quién se hizo.
  * La frase no cuenta clientes: ver por qué en content/site.ts.
@@ -26,7 +26,15 @@ import { useCopy } from "@/components/copy-provider";
 /** Marcas inventadas: formas simples, todas del mismo peso óptico. */
 const marks: Record<string, React.ReactNode> = {
   Aureo: (
-    <circle cx="9" cy="9" r="6.5" fill="none" stroke="currentColor" strokeWidth="3" strokeDasharray="30 11" />
+    <circle
+      cx="9"
+      cy="9"
+      r="6.5"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="3"
+      strokeDasharray="30 11"
+    />
   ),
   Nimbo: (
     <g fill="currentColor">
@@ -48,9 +56,18 @@ const marks: Record<string, React.ReactNode> = {
     </g>
   ),
   Tallo: (
-    <g fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
+    <g
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.2"
+      strokeLinecap="round"
+    >
       <path d="M9 17V5" />
-      <path d="M9 9C9 6 11.5 3.5 15 3.5 15 7 12.5 9 9 9Z" fill="currentColor" stroke="none" />
+      <path
+        d="M9 9C9 6 11.5 3.5 15 3.5 15 7 12.5 9 9 9Z"
+        fill="currentColor"
+        stroke="none"
+      />
     </g>
   ),
 };
@@ -58,11 +75,15 @@ const marks: Record<string, React.ReactNode> = {
 export function SocialProof() {
   const copy = useCopy();
   return (
-    <section
-      aria-label={copy.socialProof.label}
-      className="border-b border-line/70 bg-mist"
-    >
-      <Reveal className="shell flex flex-col items-center gap-8 py-8 lg:flex-row lg:gap-12 lg:py-7">
+    <section aria-label={copy.socialProof.label} className="relative">
+      {/* Sigue la bruma del hero y la estira 160px por debajo, para que el
+          blanco de la sección que viene tenga sobre qué aparecer. Sin esa cola
+          la bruma cortaba con una línea recta justo abajo de los logos. */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-0 -bottom-[160px] bg-mist"
+      />
+      <Reveal className="relative z-10 shell flex flex-col items-center gap-8 py-8 lg:flex-row lg:gap-12 lg:py-7">
         <div className="flex shrink-0 items-center gap-4">
           <ul className="flex" aria-hidden>
             {socialProof.faces.map((face, i) => (
@@ -93,7 +114,11 @@ export function SocialProof() {
               key={brand}
               className="flex items-center gap-2 text-ink-soft transition-colors duration-200 hover:text-ink"
             >
-              <svg viewBox="0 0 18 18" aria-hidden className="h-[18px] w-[18px]">
+              <svg
+                viewBox="0 0 18 18"
+                aria-hidden
+                className="h-[18px] w-[18px]"
+              >
                 {marks[brand]}
               </svg>
               <span className="text-[1.05rem] font-semibold tracking-[-0.03em]">

@@ -10,7 +10,7 @@ const tones: Tone[] = ["aqua", "rosa", "verde"];
 export function Approach() {
   const { approach } = useCopy();
   return (
-    <Section id="metodo" tone="alt">
+    <Section id="metodo" surface="paper">
       <SectionHead
         icon="ruta"
         eyebrow={approach.eyebrow}

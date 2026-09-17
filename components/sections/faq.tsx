@@ -143,7 +143,7 @@ export function Faq() {
   );
 
   return (
-    <Section id="faq" tone="alt">
+    <Section id="faq" surface="mist">
       <div className="mx-auto max-w-2xl text-center">
         <Reveal>
           <div className="flex justify-center">

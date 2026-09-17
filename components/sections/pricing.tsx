@@ -60,7 +60,7 @@ export function Pricing() {
   );
 
   return (
-    <Section id="planes" className="py-16 md:py-20">
+    <Section id="planes" surface="mist" className="py-16 md:py-20">
       <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
         <SectionHead
           icon="etiqueta"

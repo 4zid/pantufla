@@ -33,10 +33,13 @@ export function FinalCta({ withForm = false }: { withForm?: boolean }) {
   const { finalCta } = useCopy();
   if (withForm) {
     return (
-      <Section id="brief" tone="deep" className="py-20 md:py-28">
+      <Section id="brief" surface="deep" className="py-20 md:pb-28 md:pt-40">
         <div className="grid gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:items-start lg:gap-16">
           <div className="lg:sticky lg:top-28 lg:self-start">
-            <SplitHeading text={finalCta.title} className="text-h2 text-paper" />
+            <SplitHeading
+              text={finalCta.title}
+              className="text-h2 text-paper"
+            />
             <Reveal delay={0.15}>
               <p className="mt-5 text-lead text-white/60">{finalCta.lead}</p>
             </Reveal>
@@ -46,7 +49,9 @@ export function FinalCta({ withForm = false }: { withForm?: boolean }) {
                 {finalCta.expectations.map((item) => (
                   <li key={item} className="flex gap-3 text-[0.93rem]">
                     <CheckIcon className="mt-[5px] h-3.5 w-3.5 shrink-0 text-aqua" />
-                    <span className="leading-relaxed text-white/70">{item}</span>
+                    <span className="leading-relaxed text-white/70">
+                      {item}
+                    </span>
                   </li>
                 ))}
               </ul>
@@ -78,7 +83,7 @@ export function FinalCta({ withForm = false }: { withForm?: boolean }) {
   }
 
   return (
-    <Section tone="deep" className="overflow-hidden py-24 md:py-32">
+    <Section surface="deep" className="py-24 md:pb-32 md:pt-40">
       <div className="relative mx-auto max-w-2xl text-center">
         <SplitHeading text={finalCta.title} className="text-h2 text-paper" />
         <Reveal delay={0.15}>

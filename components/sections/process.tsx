@@ -124,50 +124,25 @@ export function Process() {
   return (
     <Section
       id="proceso"
-      tone="deepFade"
-      // Sin overflow-hidden: la capa oscura tiene que poder salirse de la
-      // sección, que es justo lo que hace que el corte desaparezca.
+      surface="deep"
       className="md:py-40"
       overlay={
-        /*
-          El negro no lo pone un background: lo pinta esta capa, que se sale
-          110px por arriba y por abajo de la sección y se difumina en las
-          puntas con una máscara de 260px.
+        /* El resplandor sube desde el piso y se apaga antes de la mitad.
+           Centrado quedaría como una mancha; naciendo del piso se lee como si
+           la línea de tiempo fuera lo que lo enciende.
 
-          Un fondo de color entra y sale con una línea recta, y al bajar eso se
-          siente como un corte: pantalla clara, corte, pantalla negra. Con la
-          máscara, el oscuro sube desde el pie de la pantalla y la va ganando
-          mientras uno scrollea, y después la devuelve igual de despacio. La
-          rampa cae entera en el aire entre secciones —110px en el que deja la
-          de arriba, 150 en el propio— así que nunca pasa por encima de un
-          texto.
-        */
+           Y baja 120px más que la sección. Terminando justo en el borde,
+           cortaba en seco exactamente donde arranca la transición al blanco y
+           se veía una línea; estirado, se disuelve abajo del degradé que trae
+           la sección siguiente. */
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-x-0 -bottom-[110px] -top-[110px]"
-        >
-          <div
-            className="absolute inset-0 bg-deep"
-            style={{
-              maskImage:
-                "linear-gradient(to bottom, transparent 0, #000 260px, #000 calc(100% - 260px), transparent 100%)",
-              WebkitMaskImage:
-                "linear-gradient(to bottom, transparent 0, #000 260px, #000 calc(100% - 260px), transparent 100%)",
-            }}
-          />
-
-          {/* El resplandor sube desde el borde de abajo de la sección y se
-              apaga antes de la mitad. Centrado quedaría como una mancha;
-              naciendo del piso se lee como si la línea de tiempo fuera lo que
-              lo enciende. */}
-          <div
-            className="absolute inset-x-0 bottom-[110px] h-[60%]"
-            style={{
-              background:
-                "radial-gradient(120% 100% at 50% 118%, #6fcfca 0%, rgba(111,207,202,0.42) 26%, rgba(47,157,151,0.16) 48%, transparent 72%)",
-            }}
-          />
-        </div>
+          className="pointer-events-none absolute inset-x-0 -bottom-[120px] h-[58%]"
+          style={{
+            background:
+              "radial-gradient(120% 100% at 50% 118%, #6fcfca 0%, rgba(111,207,202,0.42) 26%, rgba(47,157,151,0.16) 48%, transparent 72%)",
+          }}
+        />
       }
     >
       <SectionHead

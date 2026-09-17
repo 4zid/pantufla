@@ -110,7 +110,7 @@ export function Testimonials({ items }: { items: SanityTestimonial[] }) {
   return (
     <Section
       id="testimonios"
-      tone="alt"
+      surface="mist"
       wide
     >
       {/* Sin título a la vista: la sección entera es una cita, y un titular
