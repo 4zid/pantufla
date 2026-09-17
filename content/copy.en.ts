@@ -86,6 +86,7 @@ export const en: SiteCopy = {
   },
 
   socialProof: {
+    label: "Clients",
     claim: "We take on few projects at a time and build each one ourselves.",
   },
 
@@ -277,6 +278,7 @@ export const en: SiteCopy = {
     title: "Some of the sites that came out of here.",
     lead: "Different industries, different sizes, the same method.",
     view: "View",
+    viewAll: "See all the work",
   },
 
   testimonials: {
@@ -289,15 +291,6 @@ export const en: SiteCopy = {
     eyebrow: "Where we work",
     title: "We work from Buenos Aires, for wherever you are.",
     note: "The whole process runs on writing and video. So far we have published sites for clients in {count} countries.",
-    countries: {
-      Argentina: "Argentina",
-      Uruguay: "Uruguay",
-      Chile: "Chile",
-      "México": "Mexico",
-      "Estados Unidos": "United States",
-      "España": "Spain",
-      Alemania: "Germany",
-    },
   },
 
   faq: {

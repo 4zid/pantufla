@@ -66,7 +66,7 @@ export function ProjectStack({ projects }: { projects: SanityProject[] }) {
 
               <Link
                 href={href}
-                aria-label={`Ver ${project.title}`}
+                aria-label={`${work.view} ${project.title}`}
                 className="group/link flex shrink-0 items-center gap-3 pt-1 text-[0.95rem] font-medium"
               >
                 Ver

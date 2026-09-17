@@ -6,6 +6,8 @@ import { useRef, useState } from "react";
 import { clients } from "@/content/site";
 import { useCopy } from "@/components/copy-provider";
 import { fill } from "@/content/copy";
+import { nombrePais } from "@/content/countries";
+import { useLocale } from "@/components/copy-provider";
 import { Reveal } from "@/components/motion/reveal";
 import { Section, SectionHead } from "@/components/ui/section";
 import { ease, gsap, registerGsap, START } from "@/lib/motion";
@@ -79,6 +81,7 @@ const countries = [...new Set(clients.map((c) => c.country))];
 
 export function ClientsMap() {
   const { clientsMap } = useCopy();
+  const locale = useLocale();
   const scope = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState<number | null>(null);
 
@@ -117,9 +120,9 @@ export function ClientsMap() {
     <Section id="clientes" tone="alt">
       <SectionHead
         icon="globo"
-        eyebrow="Dónde trabajamos"
-        title="Trabajamos desde Buenos Aires para donde haga falta."
-        lead={`Todo el proceso pasa por escrito y por video. Hasta hoy publicamos sitios para clientes en ${countries.length} países.`}
+        eyebrow={clientsMap.eyebrow}
+        title={clientsMap.title}
+        lead={fill(clientsMap.note, { count: countries.length })}
       />
 
       <Reveal>
@@ -161,7 +164,7 @@ export function ClientsMap() {
                 }}
               >
                 <span className="sr-only">
-                  {client.city}, {client.country}
+                  {client.city}, {nombrePais(client.country, locale)}
                 </span>
                 <span
                   aria-hidden

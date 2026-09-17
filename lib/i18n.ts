@@ -82,6 +82,14 @@ export function detectLocale({
   return defaultLocale;
 }
 
+/**
+ * Header con el que el middleware le pasa el idioma a la pantalla de 404.
+ *
+ * Es el único lugar del sitio que no puede deducirlo de la URL: Next renderiza
+ * el 404 sin el layout raíz, que es el que conoce el segmento de idioma.
+ */
+export const LOCALE_HEADER = "x-pantufla-idioma";
+
 /** Dónde se guarda la elección manual. Un año: es una preferencia, no una sesión. */
 export const LOCALE_COOKIE = "pantufla-idioma";
 export const LOCALE_COOKIE_MAX_AGE = 60 * 60 * 24 * 365;

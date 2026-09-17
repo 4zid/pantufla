@@ -53,7 +53,7 @@ export function SocialProof() {
   const copy = useCopy();
   return (
     <section
-      aria-label="Clientes"
+      aria-label={copy.socialProof.label}
       className="border-y border-line bg-paper-alt/60"
     >
       <Reveal className="shell flex flex-col items-center gap-8 py-8 lg:flex-row lg:gap-12 lg:py-7">

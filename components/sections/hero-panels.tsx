@@ -1,3 +1,7 @@
+"use client";
+
+import { useCopy } from "@/components/copy-provider";
+
 /**
  * Los cuatro paneles del hero: un panel de administración del sitio.
  *
@@ -71,6 +75,7 @@ function Trend() {
  * dato medido —una lectura por día— en vez de una mancha decorativa.
  */
 export function PanelVisitas() {
+  const { visits, visitsStats, visitsAxis } = useCopy().hero.dashboard;
   const serie = [
     52, 55, 54, 53, 51, 47, 44, 42, 41, 41, 43, 46, 50, 55, 58, 60, 62, 68, 76,
     84, 90, 93, 95, 96, 96, 97, 97, 98,
@@ -94,11 +99,11 @@ export function PanelVisitas() {
   return (
     <Card>
       <div className="flex items-start justify-between gap-3">
-        <Title>Visitas del sitio</Title>
-        <Badge variant="solid">+18%</Badge>
+        <Title>{visits.title}</Title>
+        <Badge variant="solid">{visits.badge}</Badge>
       </div>
       <p className="mt-1.5 text-[1.9rem] font-semibold leading-none tracking-[-0.04em] tabular-nums">
-        12.480
+        {visits.value}
       </p>
 
       <div className="relative mt-4 flex-1 overflow-hidden rounded-[14px] bg-mist/70 p-3">
@@ -139,23 +144,17 @@ export function PanelVisitas() {
       </div>
 
       <div className="mt-2.5 flex justify-between px-1 text-[0.62rem] text-ink-faint">
-        <span>1 dic</span>
-        <span>7 dic</span>
-        <span>14 dic</span>
-        <span>21 dic</span>
-        <span>28 dic</span>
+        {visitsAxis.map((fecha) => (
+          <span key={fecha}>{fecha}</span>
+        ))}
       </div>
 
       <dl className="mt-4 grid grid-cols-3 divide-x divide-line border-t border-line pt-4">
-        {[
-          { k: "Pico", v: "16:30" },
-          { k: "Rebote", v: "32%" },
-          { k: "Consultas", v: "24" },
-        ].map((s) => (
-          <div key={s.k} className="px-3 first:pl-0 last:pr-0">
-            <dt className="text-[0.68rem] text-ink-faint">{s.k}</dt>
+        {visitsStats.map((s) => (
+          <div key={s.key} className="px-3 first:pl-0 last:pr-0">
+            <dt className="text-[0.68rem] text-ink-faint">{s.key}</dt>
             <dd className="mt-1 text-[0.95rem] font-semibold tabular-nums">
-              {s.v}
+              {s.value}
             </dd>
           </div>
         ))}
@@ -170,13 +169,14 @@ export function PanelVisitas() {
 
 /** Conversión: el número que importa, grande y solo. */
 export function PanelConversion() {
+  const { conversion } = useCopy().hero.dashboard;
   return (
     <Card>
       <div className="flex items-start justify-between gap-2">
-        <Title>Conversión</Title>
-        <Badge>+12%</Badge>
+        <Title>{conversion.title}</Title>
+        <Badge>{conversion.badge}</Badge>
       </div>
-      <p className="mt-1 text-[0.7rem] text-ink-faint">Visitas que escriben</p>
+      <p className="mt-1 text-[0.7rem] text-ink-faint">{conversion.note}</p>
 
       <div className="mt-auto flex items-end justify-between">
         <p className="text-[2rem] font-semibold leading-none tracking-[-0.045em] tabular-nums">
@@ -193,16 +193,17 @@ export function PanelConversion() {
 
 /** Velocidad, con el selector de dispositivo de la referencia. */
 export function PanelVelocidad() {
+  const { speed } = useCopy().hero.dashboard;
   const donde = [
-    { label: "Móvil", activo: true },
-    { label: "Escritorio", activo: false },
+    { label: speed.mobile, activo: true },
+    { label: speed.desktop, activo: false },
   ];
 
   return (
     <Card>
       <div className="flex items-start justify-between gap-2">
-        <Title>Velocidad</Title>
-        <Badge>+6</Badge>
+        <Title>{speed.title}</Title>
+        <Badge>{speed.badge}</Badge>
       </div>
 
       <div className="mt-2.5 flex gap-1.5">
@@ -239,21 +240,22 @@ export function PanelVelocidad() {
 
 /** De dónde llega la gente: la barra partida y el detalle debajo. */
 export function PanelTrafico() {
+  const { traffic, visits } = useCopy().hero.dashboard;
   const canales = [
-    { name: "Búsqueda en Google", pct: 48, n: "5.990", fill: "bg-aqua" },
-    { name: "Directo", pct: 32, n: "3.990", fill: "bg-rosa" },
-    { name: "Redes sociales", pct: 12, n: "1.500", fill: "bg-verde" },
-    { name: "Otros", pct: 8, n: "1.000", fill: "bg-miel" },
+    { name: traffic.channels[0], pct: 48, n: "5.990", fill: "bg-aqua" },
+    { name: traffic.channels[1], pct: 32, n: "3.990", fill: "bg-rosa" },
+    { name: traffic.channels[2], pct: 12, n: "1.500", fill: "bg-verde" },
+    { name: traffic.channels[3], pct: 8, n: "1.000", fill: "bg-miel" },
   ];
 
   return (
     <Card>
       <div className="flex items-start justify-between gap-3">
         <div>
-          <Title>De dónde llegan</Title>
-          <p className="mt-0.5 text-[0.7rem] text-ink-faint">Últimos 30 días</p>
+          <Title>{traffic.title}</Title>
+          <p className="mt-0.5 text-[0.7rem] text-ink-faint">{traffic.note}</p>
         </div>
-        <Badge variant="solid">12.480</Badge>
+        <Badge variant="solid">{visits.value}</Badge>
       </div>
 
       <div className="mt-3 flex h-3 gap-1 rounded-full bg-mist p-[3px]">

@@ -72,7 +72,7 @@ export function Pricing() {
           <div
             ref={toggle}
             role="radiogroup"
-            aria-label="Forma de pago"
+            aria-label={pricing.groupLabel}
             className="relative flex w-full shrink-0 rounded-full border border-line-strong bg-card p-1 sm:w-auto"
           >
             {/* La pastilla que viaja. Va detrás de los botones y sin capturar
@@ -165,7 +165,9 @@ export function Pricing() {
                   )}
                 </div>
                 <p className={cn("mt-2 text-[0.85rem]", dark ? "text-white/45" : "text-ink-faint")}>
-                  {mode === "once" ? "Pago único" : `Total $${money.format(total)}`} · Entrega en {plan.delivery}
+                  {mode === "once"
+                    ? pricing.toggle.once.label
+                    : `${pricing.totalLabel} $${money.format(total)}`} · Entrega en {plan.delivery}
                 </p>
               </div>
 

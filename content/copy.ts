@@ -46,7 +46,7 @@ export type SiteCopy = {
       traffic: { title: string; note: string; channels: string[] };
     };
   };
-  socialProof: { claim: string };
+  socialProof: { label: string; claim: string };
   approach: {
     eyebrow: string;
     title: string;
@@ -106,14 +106,15 @@ export type SiteCopy = {
     alwaysIncluded: string[];
     offerCatalog: string;
   };
-  work: { eyebrow: string; title: string; lead: string; view: string };
-  testimonials: { eyebrow: string; title: string; rating: string };
-  clientsMap: {
+  work: {
     eyebrow: string;
     title: string;
-    note: string;
-    countries: Record<string, string>;
+    lead: string;
+    view: string;
+    viewAll: string;
   };
+  testimonials: { eyebrow: string; title: string; rating: string };
+  clientsMap: { eyebrow: string; title: string; note: string };
   faq: {
     eyebrow: string;
     title: string;

@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 
 import {
   LOCALE_COOKIE,
+  LOCALE_HEADER,
   defaultLocale,
   detectLocale,
   isLocale,
@@ -47,7 +48,7 @@ export function middleware(request: NextRequest) {
   const segmento = pathname.split("/")[1];
 
   // Inglés: la URL ya dice a dónde va.
-  if (segmento === "en") return NextResponse.next();
+  if (segmento === "en") return seguir(request, "en");
 
   // /es/... es la ruta interna, no una URL pública. Se canoniza a la raíz.
   if (segmento === defaultLocale) {
@@ -72,8 +73,31 @@ export function middleware(request: NextRequest) {
   }
 
   return NextResponse.rewrite(
-    new URL(`/${defaultLocale}${pathname === "/" ? "" : pathname}${search}`, request.url),
+    new URL(
+      `/${defaultLocale}${pathname === "/" ? "" : pathname}${search}`,
+      request.url,
+    ),
+    { request: { headers: conIdioma(request, defaultLocale) } },
   );
+}
+
+/**
+ * El idioma viaja en un header del pedido.
+ *
+ * Lo necesita la pantalla de 404: cuando una ruta no existe, Next se saltea el
+ * layout raíz —que es justo el que sabe el idioma y arma el documento— así que
+ * el 404 tiene que resolverlo por su cuenta. La URL no alcanza, porque una
+ * dirección inventada puede no tener prefijo y aun así corresponder a alguien
+ * que estaba leyendo en inglés.
+ */
+function conIdioma(request: NextRequest, idioma: string) {
+  const headers = new Headers(request.headers);
+  headers.set(LOCALE_HEADER, idioma);
+  return headers;
+}
+
+function seguir(request: NextRequest, idioma: string) {
+  return NextResponse.next({ request: { headers: conIdioma(request, idioma) } });
 }
 
 export const config = {

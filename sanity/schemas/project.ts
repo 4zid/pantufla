@@ -6,6 +6,20 @@ export const project = defineType({
   type: "document",
   fields: [
     defineField({
+      name: "language",
+      title: "Idioma",
+      type: "string",
+      description:
+        "En qué versión del sitio se muestra. Si lo dejás vacío aparece en las dos.",
+      options: {
+        list: [
+          { title: "Español", value: "es" },
+          { title: "English", value: "en" },
+        ],
+        layout: "radio",
+      },
+    }),
+    defineField({
       name: "title",
       title: "Cliente o proyecto",
       type: "string",

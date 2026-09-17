@@ -219,13 +219,13 @@ export function Process() {
 
                 <dl className="mx-auto mt-6 grid max-w-sm grid-cols-2 gap-x-6 gap-y-2 border-t border-white/10 pt-5 text-left text-[0.85rem]">
                   <div>
-                    <dt className="text-white/35">Te entregamos</dt>
+                    <dt className="text-white/35">{process.labels.deliverable}</dt>
                     <dd className="mt-1 font-medium text-paper">
                       {step.deliverable}
                     </dd>
                   </div>
                   <div>
-                    <dt className="text-white/35">Ponés vos</dt>
+                    <dt className="text-white/35">{process.labels.yours}</dt>
                     <dd className="mt-1 font-medium text-paper">{step.yours}</dd>
                   </div>
                 </dl>

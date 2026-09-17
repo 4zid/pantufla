@@ -1,5 +1,18 @@
 import { groq } from "next-sanity";
 
+/**
+ * Filtro de idioma para los documentos que se cargan a mano.
+ *
+ * Entra lo que está marcado en el idioma pedido y también lo que no está
+ * marcado en ninguno. Esa segunda mitad es la que evita que la versión en
+ * inglés arranque vacía: un proyecto cargado antes de que el sitio fuera
+ * bilingüe se sigue viendo en los dos hasta que alguien decida en cuál va.
+ *
+ * Es un default que se puede revertir: apenas se le pone idioma a un
+ * documento, desaparece del otro.
+ */
+const enIdioma = `(language == $language || !defined(language))`;
+
 const projectFields = `
   _id,
   title,
@@ -16,11 +29,11 @@ const projectFields = `
 `;
 
 export const featuredProjectsQuery = groq`
-  *[_type == "project" && featured == true] | order(order asc)[0...3] { ${projectFields} }
+  *[_type == "project" && featured == true && ${enIdioma}] | order(order asc)[0...3] { ${projectFields} }
 `;
 
 export const allProjectsQuery = groq`
-  *[_type == "project"] | order(order asc) { ${projectFields} }
+  *[_type == "project" && ${enIdioma}] | order(order asc) { ${projectFields} }
 `;
 
 export const projectBySlugQuery = groq`
@@ -46,7 +59,7 @@ const postFields = `
 `;
 
 export const allPostsQuery = groq`
-  *[_type == "post"] | order(publishedAt desc) { ${postFields} }
+  *[_type == "post" && ${enIdioma}] | order(publishedAt desc) { ${postFields} }
 `;
 
 export const postBySlugQuery = groq`
@@ -69,7 +82,7 @@ export const siteCopyQuery = groq`
 `;
 
 export const testimonialsQuery = groq`
-  *[_type == "testimonial"] | order(order asc)[0...6] {
+  *[_type == "testimonial" && ${enIdioma}] | order(order asc)[0...6] {
     _id, quote, name, role, company, rating, avatar
   }
 `;

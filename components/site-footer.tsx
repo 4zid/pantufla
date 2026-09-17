@@ -32,7 +32,7 @@ export function SiteFooter() {
           </div>
 
           <div>
-            <p className="eyebrow">Navegación</p>
+            <p className="eyebrow">{footer.navTitle}</p>
             <ul className="mt-4 space-y-2.5">
               {nav.map((item) => (
                 <li key={item.href}>
@@ -46,17 +46,17 @@ export function SiteFooter() {
               ))}
               <li>
                 <Link
-                  href="/contacto"
+                  href={footer.contactLink.href}
                   className="text-[0.95rem] text-ink-soft transition-colors hover:text-ink"
                 >
-                  Contacto
+                  {footer.contactLink.label}
                 </Link>
               </li>
             </ul>
           </div>
 
           <div>
-            <p className="eyebrow">Contacto</p>
+            <p className="eyebrow">{footer.contactTitle}</p>
             <ul className="mt-4 space-y-2.5">
               <li>
                 <a

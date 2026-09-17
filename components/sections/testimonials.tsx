@@ -5,6 +5,8 @@ import { useGSAP } from "@gsap/react";
 import { useEffect, useRef, useState } from "react";
 
 import { Reveal } from "@/components/motion/reveal";
+import { useCopy } from "@/components/copy-provider";
+import { fill } from "@/content/copy";
 import { Tag } from "@/components/ui/tag";
 import { StarIcon } from "@/components/ui/icons";
 import { Section } from "@/components/ui/section";
@@ -44,9 +46,9 @@ const tintes = [
 
 const ROTACION = 6000;
 
-function Estrellas({ value = 5 }: { value?: number }) {
+function Estrellas({ value = 5, label }: { value?: number; label: string }) {
   return (
-    <div className="flex gap-1" role="img" aria-label={`${value} de 5`}>
+    <div className="flex gap-1" role="img" aria-label={label}>
       {[...Array(5)].map((_, i) => (
         <StarIcon
           key={i}
@@ -66,6 +68,7 @@ function iniciales(nombre: string) {
 }
 
 export function Testimonials({ items }: { items: SanityTestimonial[] }) {
+  const { testimonials } = useCopy();
   const lista = items.slice(0, 6);
   const [activo, setActivo] = useState(0);
   const [manual, setManual] = useState(false);
@@ -114,13 +117,13 @@ export function Testimonials({ items }: { items: SanityTestimonial[] }) {
           El documento sí lo necesita —es la única manera de que la sección
           tenga nombre en el índice y para quien navega con lector—, así que
           queda, callado. */}
-      <h2 className="sr-only">Lo que dicen los que ya pasaron por el proceso.</h2>
+      <h2 className="sr-only">{testimonials.title}</h2>
 
       <div className="grid gap-12 lg:grid-cols-[minmax(0,15rem)_minmax(0,1fr)] lg:gap-20">
         {/* Columna de caras */}
         <div>
           <Reveal>
-            <Tag icon="cita">Testimonios</Tag>
+            <Tag icon="cita">{testimonials.eyebrow}</Tag>
           </Reveal>
 
           <Reveal delay={0.1}>
@@ -142,7 +145,7 @@ export function Testimonials({ items }: { items: SanityTestimonial[] }) {
                         setActivo(i);
                       }}
                       aria-pressed={puesto}
-                      aria-label={`Leer lo que dijo ${item.name}`}
+                      aria-label={item.name}
                       className={cn(
                         "relative block h-[60px] w-[60px] overflow-hidden rounded-[14px] transition-all duration-500 ease-out",
                         puesto
@@ -185,7 +188,10 @@ export function Testimonials({ items }: { items: SanityTestimonial[] }) {
         {/* La cita */}
         <div ref={cita} aria-live="polite" className="lg:pt-1">
           <div data-fade>
-            <Estrellas value={actual.rating ?? 5} />
+            <Estrellas
+              value={actual.rating ?? 5}
+              label={fill(testimonials.rating, { value: actual.rating ?? 5 })}
+            />
           </div>
 
           <figure>
