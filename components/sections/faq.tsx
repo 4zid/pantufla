@@ -30,6 +30,13 @@ import { cn } from "@/lib/cn";
  * Abajo, el cierre para el que no encontró lo que buscaba: no tiene sentido
  * que la única salida de esta sección sea seguir bajando.
  *
+ * Las tarjetas van apretadas. Con el aire de antes —py-6, texto de 1.08rem,
+ * 12px entre una y otra— las ocho más el titular y el cierre medían 1320px y
+ * no entraban en la pantalla de una notebook de 16": había que scrollear para
+ * ver de qué se puede preguntar. Un acordeón cerrado es un índice, y un índice
+ * que no se ve entero no sirve de índice. Cerradas miden lo que mide su
+ * renglón; el aire aparece cuando una se abre, que es cuando hace falta.
+ *
  * El alto lo maneja GSAP y nadie más. Antes el estado cerrado venía en un
  * style de React —height 0 al cerrar, sin style al abrir—, así que al hacer
  * clic React sacaba el style y el panel saltaba a su alto natural en el mismo
@@ -45,12 +52,12 @@ function Signo({ open }: { open: boolean }) {
   return (
     <span
       aria-hidden
-      className="relative grid h-8 w-8 shrink-0 place-items-center rounded-full bg-ink text-paper transition-transform duration-300 group-hover:scale-110"
+      className="relative grid h-7 w-7 shrink-0 place-items-center rounded-full bg-ink text-paper transition-transform duration-300 group-hover:scale-110"
     >
-      <span className="absolute h-[1.5px] w-3 rounded-full bg-current" />
+      <span className="absolute h-[1.5px] w-2.5 rounded-full bg-current" />
       <span
         className={cn(
-          "absolute h-3 w-[1.5px] rounded-full bg-current transition-transform duration-300 ease-[cubic-bezier(0.65,0,0.35,1)]",
+          "absolute h-2.5 w-[1.5px] rounded-full bg-current transition-transform duration-300 ease-[cubic-bezier(0.65,0,0.35,1)]",
           open ? "scale-y-0" : "scale-y-100",
         )}
       />
@@ -143,7 +150,7 @@ export function Faq() {
   );
 
   return (
-    <Section id="faq" surface="mist">
+    <Section id="faq" surface="mist" className="py-16 md:py-20">
       <div className="mx-auto max-w-2xl text-center">
         <Reveal>
           <div className="flex justify-center">
@@ -158,9 +165,9 @@ export function Faq() {
       <Reveal delay={0.1}>
         <div
           ref={scope}
-          className="mx-auto mt-12 max-w-3xl rounded-[28px] bg-line p-3 md:p-4"
+          className="mx-auto mt-9 max-w-3xl rounded-[24px] bg-line p-2.5 md:mt-10 md:p-3"
         >
-          <div className="flex flex-col gap-2.5 md:gap-3">
+          <div className="flex flex-col gap-2">
             {faq.items.map((item, i) => {
               const abierto = open === i;
 
@@ -168,7 +175,7 @@ export function Faq() {
                 <div
                   key={item.q}
                   className={cn(
-                    "overflow-hidden rounded-[18px] bg-card transition-shadow duration-500",
+                    "overflow-hidden rounded-[16px] bg-card transition-shadow duration-500",
                     abierto
                       ? "shadow-[0_14px_34px_-24px_rgba(0,0,0,0.45)]"
                       : "shadow-none",
@@ -183,9 +190,9 @@ export function Faq() {
                       }}
                       aria-expanded={abierto}
                       aria-controls={`${uid}-${i}`}
-                      className="group flex w-full items-center justify-between gap-5 px-5 py-5 text-left md:px-7 md:py-6"
+                      className="group flex w-full items-center justify-between gap-4 px-4 py-3.5 text-left md:px-6 md:py-4"
                     >
-                      <span className="flex min-w-0 items-baseline gap-2 text-[1.02rem] font-medium leading-snug tracking-[-0.015em] md:text-[1.08rem]">
+                      <span className="flex min-w-0 items-baseline gap-2 text-[0.95rem] font-medium leading-snug tracking-[-0.015em] md:text-[1rem]">
                         {/* El número va en tinta apagada: ordena la lista sin
                             competir con la pregunta, que es lo que se lee. */}
                         <span className="shrink-0 text-ink-faint">
@@ -204,7 +211,7 @@ export function Faq() {
                     aria-hidden={!abierto}
                     className="h-0 overflow-hidden"
                   >
-                    <p className="translate-y-3.5 px-5 pb-6 pl-[2.4rem] text-[0.95rem] leading-relaxed text-ink-soft opacity-0 md:px-7 md:pb-7 md:pl-[3.1rem]">
+                    <p className="translate-y-3.5 px-4 pb-4 pl-[2.1rem] text-[0.9rem] leading-relaxed text-ink-soft opacity-0 md:px-6 md:pb-5 md:pl-[2.75rem]">
                       {item.a}
                     </p>
                   </div>
@@ -218,7 +225,7 @@ export function Faq() {
       {/* Cierre: las caras primero, que es lo que hace que el «hablemos» sea
           con alguien y no con un formulario. */}
       <Reveal delay={0.15}>
-        <div className="mt-12 flex flex-col items-center text-center">
+        <div className="mt-10 flex flex-col items-center text-center">
           {/* El solapado es corto a propósito: con fotos podría ser el doble,
               pero acá hay iniciales y el borde de la de al lado les come la
               última letra. */}
@@ -227,7 +234,7 @@ export function Faq() {
               <span
                 key={face.initials}
                 aria-hidden
-                className="grid h-11 w-11 place-items-center rounded-full text-[0.7rem] font-semibold text-white ring-[3px] ring-paper-alt"
+                className="grid h-10 w-10 place-items-center rounded-full text-[0.68rem] font-semibold text-white ring-[3px] ring-paper-alt"
                 style={{
                   background: `linear-gradient(140deg, ${face.from}, ${face.to})`,
                 }}
@@ -236,10 +243,10 @@ export function Faq() {
               </span>
             ))}
           </div>
-          <p className="mt-5 text-[1.15rem] font-medium tracking-[-0.02em]">
+          <p className="mt-4 text-[1.08rem] font-medium tracking-[-0.02em]">
             {faq.cta.claim}
           </p>
-          <ButtonLink href={faq.cta.href} className="mt-4">
+          <ButtonLink href={faq.cta.href} className="mt-3.5">
             {faq.cta.label}
           </ButtonLink>
         </div>

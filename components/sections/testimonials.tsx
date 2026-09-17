@@ -30,6 +30,12 @@ import { cn } from "@/lib/cn";
  * una franja. El silencio que esta sección necesita lo da el aire, no el
  * color: una sola cita, grande, sin nada al lado.
  *
+ * Va en el ancho de lectura del sitio y no a sangre. Se probó lo segundo y el
+ * problema es que acá no hay nada que gane ancho: son una cita y nueve caras.
+ * Estirarlas hasta el borde solo deja el bloque desalineado con todo lo demás
+ * —el titular de la sección de arriba arranca 150px más adentro— y esa falta
+ * de eje se lee como un error de maquetado, no como amplitud.
+ *
  * Las caras rotan solas cada seis segundos hasta que el visitante toca una.
  * Ahí se corta para siempre: si alguien eligió a quién quiere leer, moverle el
  * texto abajo del ojo es de las peores cosas que puede hacer una interfaz.
@@ -108,11 +114,7 @@ export function Testimonials({ items }: { items: SanityTestimonial[] }) {
   const actual = lista[activo];
 
   return (
-    <Section
-      id="testimonios"
-      surface="mist"
-      wide
-    >
+    <Section id="testimonios" surface="mist">
       {/* Sin título a la vista: la sección entera es una cita, y un titular
           arriba le estaría diciendo al visitante qué pensar antes de leerla.
           El documento sí lo necesita —es la única manera de que la sección

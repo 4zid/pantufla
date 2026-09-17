@@ -18,6 +18,12 @@ import { cn } from "@/lib/cn";
  * depende de que hidrate nada, no se calcula en cada scroll y no parpadea en
  * el primer pintado—. La mecánica del empalme está explicada en globals.css.
  *
+ * Los tiempos salen de cuánto corre la pista por segundo, no de un número
+ * lindo. Media pista mide unos 2700px: a 46s eso daba 59px por segundo, que
+ * en una pantalla de 1500px es cruzarla en medio minuto y a simple vista se
+ * lee como quieto. A 32s son 84px por segundo, que se ve andar sin apurar la
+ * lectura de los nombres.
+ *
  * Los nombres van en tipografía, no en logos: ver la nota en content/site.ts.
  */
 /**
@@ -104,9 +110,9 @@ export function StackTicker() {
     <section
       id="stack"
       data-surface="paper"
-      className="relative py-20 md:py-24"
+      className="relative overflow-hidden py-20 md:py-24"
     >
-      <div className="relative z-10 shell">
+      <div className="shell">
         <div className="max-w-2xl">
           <Reveal>
             <Tag icon="cubo">{stack.eyebrow}</Tag>
@@ -118,16 +124,10 @@ export function StackTicker() {
         </div>
       </div>
 
-      {/* El recorte va acá y no en la sección: la pista mide más que la
-          pantalla y hay que cortarla, pero si el corte está en la sección
-          también se come la rampa del fondo, que justamente tiene que
-          salirse por arriba. */}
-      <div className="relative z-10 overflow-hidden">
-        <Reveal delay={0.2} className="mt-12 flex flex-col gap-3 md:mt-14">
-          <Row items={stackRows[0]} duration="46s" />
-          <Row items={stackRows[1]} duration="58s" reverse />
-        </Reveal>
-      </div>
+      <Reveal delay={0.2} className="mt-12 flex flex-col gap-3 md:mt-14">
+        <Row items={stackRows[0]} duration="32s" />
+        <Row items={stackRows[1]} duration="41s" reverse />
+      </Reveal>
     </section>
   );
 }

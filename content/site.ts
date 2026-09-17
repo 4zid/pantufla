@@ -101,6 +101,16 @@ export const clients = [
   { city: "Berlín", country: "Alemania", lon: 13.4, lat: 52.5 },
 ] as const;
 
+/**
+ * De dónde salen las líneas del mapa.
+ *
+ * El estudio es también una de las ciudades de la lista de arriba, y no está
+ * duplicado por descuido: en el mapa cumple dos papeles distintos —es el origen
+ * de todas las líneas y es un cliente más— y separarlos acá evita que el
+ * componente tenga que adivinar cuál de las nueve es la casa.
+ */
+export const studio = { city: "Buenos Aires", lon: -58.4, lat: -34.6 } as const;
+
 /* ------------------------------------------------------------------ */
 /* Stack                                                               */
 /* ------------------------------------------------------------------ */

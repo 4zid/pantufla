@@ -58,6 +58,14 @@ export const superficies = {
 
 export type NombreSuperficie = keyof typeof superficies;
 
+/**
+ * Qué tokens son tinta y cuáles son superficie.
+ *
+ * La diferencia importa porque los dos no pueden cruzar a la misma velocidad.
+ * Ver la nota larga en components/theme-scroll.tsx.
+ */
+export const esTinta = (token: string) => token.startsWith("--color-ink");
+
 export function mezclar(
   a: [number, number, number],
   b: [number, number, number],

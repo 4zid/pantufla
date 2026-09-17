@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import {
   claro,
   css,
+  esTinta,
   mezclar,
   oscuro,
   superficies,
@@ -27,33 +28,57 @@ import {
  * todos los tokens. La tinta, las líneas, las tarjetas. El sitio se vuelve
  * oscuro y vuelve, y ningún componente se entera: Tailwind resuelve cada
  * utilidad contra la variable, así que mover la variable repinta todo.
- *
- * Y eso es lo que hace que la transición sea legible. La cola de la sección
- * anterior sigue en pantalla mientras el fondo se oscurece, y su texto se
- * aclara con él: no hay ningún momento en que haya tinta negra sobre un fondo
- * a medio camino.
  */
 
 /**
- * Entre qué dos coberturas de pantalla pasa el cambio de tema.
+ * Dos ventanas, no una: las superficies cruzan lento y la tinta cruza rápido.
  *
- * La ventana es corta a propósito, y es el único punto donde hubo que ceder.
- * Un fondo es uno solo para toda la pantalla, así que mientras cambia hay un
- * momento en que la cola de la sección clara se ve sobre un fondo a medio
- * camino: gris sobre gris, con poco contraste. Eso no se puede esquivar
- * —cualquier cruce continuo entre tinta oscura sobre claro y tinta clara sobre
- * oscuro pasa por ahí—, así que lo que se puede hacer es cruzarlo rápido. Del
- * 36% al 50% de pantalla tapada son unos 126px de scroll, y la parte fea son
- * unos cincuenta: un parpadeo.
+ * El problema es viejo y no tiene una salida limpia. El fondo es uno solo para
+ * toda la pantalla, así que mientras va del claro al oscuro pasa por un gris
+ * medio, y la cola de la sección clara que todavía se ve queda con su texto
+ * encima de ese gris. Si la tinta cruza junto con el fondo, en el punto medio
+ * hay gris sobre gris y no se lee nada.
  *
- * Y la curva es una ese, que va más rápido justo en el medio, que es la parte
- * fea.
+ * Antes eso se resolvía cruzando todo junto y muy rápido, en unos 130px de
+ * scroll. Se leía, sí, pero la pantalla entera pasaba de casi blanco a negro
+ * en cuatro cuadros y eso encandila: es un flash, no una transición.
+ *
+ * Así que van separados. El fondo —que es la superficie grande, la que se ve
+ * y la que molesta si salta— cruza a lo largo de media pantalla de scroll:
+ * medio segundo largo bajando normal, y el ojo lo acompaña. La tinta, que son
+ * unas pocas palabras que además ya están saliendo por arriba, se invierte de
+ * golpe en una ventana veinte veces más corta, parada justo en el punto del
+ * recorrido donde da lo mismo tenerla oscura o clara. Ver la cuenta abajo.
  */
-const DESDE = 0.36;
-const HASTA = 0.5;
+/** Ventana de las superficies: qué parte de la pantalla tapa lo oscuro. */
+const FONDO_DESDE = 0.08;
+const FONDO_HASTA = 0.66;
+
+/**
+ * Ventana de la tinta: cortísima, y clavada en un punto que sale de una cuenta.
+ *
+ * Hay un punto exacto en el recorrido del fondo donde da lo mismo tener la
+ * tinta oscura o la clara: cuando el fondo llega a una luminancia de 0.18
+ * —rgb(118) sobre blanco— las dos dan 4.08:1. Un pelo antes conviene la
+ * oscura, un pelo después la clara. Ese es el lugar donde hay que cruzar, y
+ * con la ventana del fondo de acá arriba cae cuando lo oscuro tapa un 39.5%
+ * de la pantalla.
+ *
+ * Alrededor de ese punto la tinta sí pasa por un gris parecido al del fondo y
+ * ahí no se lee: es inevitable, cualquier cruce continuo entre negro sobre
+ * claro y blanco sobre oscuro pasa por ahí. Lo que se puede hacer es que dure
+ * poco, y por eso la ventana es de 4 centésimas de pantalla: unos 38px de
+ * scroll, de los cuales los malos son quince. El fondo, mientras tanto, se
+ * toma 500px enteros, que es lo que se mira y lo que no puede saltar.
+ */
+const TINTA_DESDE = 0.375;
+const TINTA_HASTA = 0.415;
 
 /** Una ese: lenta en las puntas, rápida en el medio. */
 const suavizar = (t: number) => t * t * (3 - 2 * t);
+
+const rampa = (v: number, desde: number, hasta: number) =>
+  suavizar(Math.min(1, Math.max(0, (v - desde) / (hasta - desde))));
 
 const TOKENS = Object.keys(claro);
 
@@ -102,9 +127,8 @@ export function ThemeScroll() {
         }
       }
 
-      const oscuridad = suavizar(
-        Math.min(1, Math.max(0, (oscuridadCruda - DESDE) / (HASTA - DESDE))),
-      );
+      const fondo = rampa(oscuridadCruda, FONDO_DESDE, FONDO_HASTA);
+      const tinta = rampa(oscuridadCruda, TINTA_DESDE, TINTA_HASTA);
 
       // El promedio de las secciones claras que hay a la vista. Si no hay
       // ninguna —la oscura tapa toda la pantalla— da igual: la mezcla de abajo
@@ -125,19 +149,21 @@ export function ThemeScroll() {
       // oscuridad, pasar de una sección blanca a una con bruma no movía nada
       // —las dos tienen oscuridad cero— y el fondo se quedaba clavado en el
       // color de la primera que se hubiera visto.
-      const paso = Math.round(oscuridad * 200) / 200;
-      const firma = `${paso}|${Math.round(fondoClaro[0])},${Math.round(
-        fondoClaro[1],
-      )},${Math.round(fondoClaro[2])}`;
+      const pasoFondo = Math.round(fondo * 250) / 250;
+      const pasoTinta = Math.round(tinta * 250) / 250;
+      const firma = `${pasoFondo}|${pasoTinta}|${Math.round(
+        fondoClaro[0],
+      )},${Math.round(fondoClaro[1])},${Math.round(fondoClaro[2])}`;
       if (firma === anterior) return;
       anterior = firma;
 
       raiz.style.setProperty(
         "--page-bg",
-        css(mezclar(fondoClaro, superficies.deep, paso)),
+        css(mezclar(fondoClaro, superficies.deep, pasoFondo)),
       );
 
       for (const token of TOKENS) {
+        const paso = esTinta(token) ? pasoTinta : pasoFondo;
         raiz.style.setProperty(
           token,
           css(mezclar(claro[token], oscuro[token], paso)),

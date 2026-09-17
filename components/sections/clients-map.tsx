@@ -1,89 +1,86 @@
 "use client";
 
 import { useGSAP } from "@gsap/react";
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 
-import { clients } from "@/content/site";
-import { useCopy } from "@/components/copy-provider";
+import { clients, studio } from "@/content/site";
+import { useCopy, useLocale } from "@/components/copy-provider";
 import { fill } from "@/content/copy";
 import { nombrePais } from "@/content/countries";
-import { useLocale } from "@/components/copy-provider";
 import { Reveal } from "@/components/motion/reveal";
 import { Section, SectionHead } from "@/components/ui/section";
+import { TIERRA, VISTA, aX, aY, porcentajeX, porcentajeY } from "@/content/world";
 import { ease, gsap, registerGsap, START } from "@/lib/motion";
 import { cn } from "@/lib/cn";
 
 /**
- * Mapa de puntos.
+ * Dónde hay clientes.
  *
- * La silueta va escrita a mano, fila por fila: cada renglón es un paralelo y
- * cada par son las columnas de tierra en ese paralelo. Antes los continentes se
- * aproximaban con elipses y el resultado era una nube de puntos en la que no se
- * reconocía ningún lugar.
+ * Una silueta del mundo y una línea desde Buenos Aires hasta cada ciudad. La
+ * silueta sale de Natural Earth —ver content/world.ts— y las líneas son el
+ * contenido: el titular dice «trabajamos desde acá para donde estés» y esto es
+ * esa frase dibujada.
  *
- * 72 columnas cubren de -180° a 180° y 34 filas de 82°N a -52°S.
+ * Antes era una grilla de puntos con un pin de color miel encima. Tenía dos
+ * problemas. A esta escala la trama no se leía como un mapa, y el miel no está
+ * en ningún otro lado del sitio: aparecía un amarillo suelto sin relación con
+ * nada. Ahora la tierra es tinta apagada —fondo, no dibujo— y todo lo que es
+ * información va en el celeste de la marca.
+ *
+ * El otro problema era la lectura. Nueve ciudades en un mapa del mundo se
+ * pisan: Madrid y Barcelona quedan a cinco pixeles, Buenos Aires y Montevideo
+ * a siete. Ningún tamaño de pin arregla eso. Así que el mapa muestra el alcance
+ * y la lista de al lado dice los nombres, que es lo que se puede leer sin
+ * entrecerrar los ojos. Pasar por una fila enciende sus ciudades en el mapa y
+ * al revés: son dos vistas de lo mismo, no un mapa con una leyenda.
  */
-const LAND: [number, number][][] = [
-  [[26, 31]],
-  [[25, 32], [50, 62]],
-  [[25, 32], [48, 66]],
-  [[4, 8], [10, 24], [26, 32], [36, 40], [42, 68]],
-  [[3, 8], [9, 24], [27, 31], [35, 40], [41, 69]],
-  [[4, 8], [9, 24], [28, 30], [35, 40], [41, 70]],
-  [[10, 24], [34, 34], [36, 40], [41, 70]],
-  [[11, 24], [33, 34], [36, 44], [45, 70]],
-  [[11, 23], [33, 33], [35, 45], [46, 70]],
-  [[11, 22], [34, 45], [46, 68]],
-  [[11, 22], [34, 35], [38, 38], [40, 45], [46, 66]],
-  [[11, 22], [34, 35], [37, 44], [45, 64]],
-  [[12, 21], [33, 46], [47, 63]],
-  [[13, 18], [33, 47], [48, 62]],
-  [[14, 19], [20, 21], [33, 48], [49, 62]],
-  [[15, 19], [33, 49], [50, 53], [55, 60]],
-  [[17, 20], [33, 50], [50, 53], [55, 60]],
-  [[18, 20], [33, 51], [56, 61]],
-  [[21, 23], [34, 51], [57, 62]],
-  [[21, 26], [35, 50], [57, 63]],
-  [[21, 28], [36, 49], [57, 64]],
-  [[21, 29], [37, 48], [58, 64]],
-  [[21, 29], [37, 47], [58, 64]],
-  [[22, 29], [37, 47], [59, 63]],
-  [[22, 29], [38, 46], [59, 66]],
-  [[22, 29], [38, 46], [58, 66]],
-  [[23, 28], [39, 45], [58, 66]],
-  [[23, 27], [40, 44], [59, 66]],
-  [[23, 27], [41, 43], [60, 65]],
-  [[23, 26], [42, 42], [61, 64]],
-  [[23, 25], [68, 69]],
-  [[23, 25], [68, 69]],
-  [[24, 25]],
-  [[24, 24]],
-];
 
-const COLS = 72;
-const ROWS = LAND.length;
-const LAT_TOP = 82;
-const LAT_BOTTOM = -52;
+/** Cuánto se arquea una línea, como fracción de su propio largo. */
+const CURVA = 0.19;
 
-const toX = (lon: number) => ((lon + 180) / 360) * 100;
-const toY = (lat: number) => ((LAT_TOP - lat) / (LAT_TOP - LAT_BOTTOM)) * 100;
+/**
+ * Una curva entre dos puntos, siempre arqueada hacia arriba.
+ *
+ * La normal de un segmento tiene dos sentidos; se elige el que sube porque una
+ * línea que se hunde por debajo de sus dos extremos se lee como una caída y no
+ * como un recorrido.
+ */
+function arco(x1: number, y1: number, x2: number, y2: number) {
+  const dx = x2 - x1;
+  const dy = y2 - y1;
+  const largo = Math.hypot(dx, dy) || 1;
+  const nx = -dy / largo;
+  const ny = dx / largo;
+  const sentido = ny > 0 ? -1 : 1;
+  const cx = (x1 + x2) / 2 + nx * largo * CURVA * sentido;
+  const cy = (y1 + y2) / 2 + ny * largo * CURVA * sentido;
+  return `M${x1.toFixed(1)} ${y1.toFixed(1)}Q${cx.toFixed(1)} ${cy.toFixed(
+    1,
+  )} ${x2.toFixed(1)} ${y2.toFixed(1)}`;
+}
 
-const dots: { x: number; y: number }[] = [];
-LAND.forEach((spans, r) => {
-  spans.forEach(([from, to]) => {
-    for (let c = from; c <= to; c++) {
-      dots.push({ x: (c / (COLS - 1)) * 100, y: (r / (ROWS - 1)) * 100 });
-    }
-  });
-});
+const casa = { x: aX(studio.lon), y: aY(studio.lat) };
 
-const countries = [...new Set(clients.map((c) => c.country))];
+const destinos = clients
+  .filter((c) => c.city !== studio.city)
+  .map((c) => ({ ...c, d: arco(casa.x, casa.y, aX(c.lon), aY(c.lat)) }));
 
 export function ClientsMap() {
   const { clientsMap } = useCopy();
   const locale = useLocale();
   const scope = useRef<HTMLDivElement>(null);
-  const [active, setActive] = useState<number | null>(null);
+  const [activo, setActivo] = useState<string | null>(null);
+
+  /** Las ciudades agrupadas por país, en el orden en que están cargadas. */
+  const paises = useMemo(() => {
+    const mapa = new Map<string, string[]>();
+    for (const c of clients) {
+      const ciudades = mapa.get(c.country) ?? [];
+      ciudades.push(c.city);
+      mapa.set(c.country, ciudades);
+    }
+    return [...mapa].map(([pais, ciudades]) => ({ pais, ciudades }));
+  }, []);
 
   useGSAP(
     () => {
@@ -93,20 +90,38 @@ export function ClientsMap() {
 
       const mm = gsap.matchMedia();
       mm.add("(prefers-reduced-motion: no-preference)", () => {
-        gsap.from(gsap.utils.toArray("[data-dot]", root), {
-          opacity: 0,
-          duration: 0.8,
-          ease,
-          stagger: { amount: 0.6, from: "start" },
+        const linea = gsap.utils.toArray<SVGPathElement>("[data-arco]", root);
+
+        // Cada línea se dibuja sola, de Buenos Aires hacia afuera. El largo lo
+        // mide el navegador y no una cuenta a mano: son curvas distintas y con
+        // un dash fijo las cortas terminarían antes de empezar.
+        linea.forEach((path) => {
+          const largo = path.getTotalLength();
+          gsap.set(path, { strokeDasharray: largo, strokeDashoffset: largo });
+        });
+
+        gsap.to(linea, {
+          strokeDashoffset: 0,
+          duration: 1.1,
+          ease: "power2.inOut",
+          stagger: 0.09,
           scrollTrigger: { trigger: root, start: START, once: true },
         });
+
         gsap.from(gsap.utils.toArray("[data-pin]", root), {
           opacity: 0,
-          scale: 0,
-          duration: 0.6,
-          ease: "back.out(2)",
-          stagger: 0.06,
-          delay: 0.35,
+          scale: 0.4,
+          duration: 0.5,
+          ease,
+          stagger: 0.09,
+          delay: 0.55,
+          scrollTrigger: { trigger: root, start: START, once: true },
+        });
+
+        gsap.from(root.querySelectorAll("[data-tierra]"), {
+          opacity: 0,
+          duration: 0.9,
+          ease,
           scrollTrigger: { trigger: root, start: START, once: true },
         });
       });
@@ -122,72 +137,150 @@ export function ClientsMap() {
         icon="globo"
         eyebrow={clientsMap.eyebrow}
         title={clientsMap.title}
-        lead={fill(clientsMap.note, { count: countries.length })}
+        lead={fill(clientsMap.note, { count: paises.length })}
       />
 
-      <Reveal>
-        <div ref={scope} className="mt-14">
+      <div
+        ref={scope}
+        className="mt-12 grid gap-10 lg:mt-14 lg:grid-cols-[minmax(0,1fr)_14rem] lg:items-center lg:gap-12"
+      >
+        <Reveal>
           <div
-            className="relative mx-auto w-full max-w-4xl"
-            style={{ aspectRatio: `${COLS} / ${ROWS}` }}
+            className="relative w-full"
+            style={{ aspectRatio: `${VISTA.ancho} / ${VISTA.alto}` }}
           >
-            {dots.map((dot, i) => (
-              <span
-                key={i}
-                data-dot
-                aria-hidden
-                className="absolute rounded-full bg-ink-faint/50"
-                style={{
-                  left: `${dot.x}%`,
-                  top: `${dot.y}%`,
-                  width: `${100 / COLS / 1.9}%`,
-                  aspectRatio: "1",
-                  transform: "translate(-50%, -50%)",
-                }}
+            <svg
+              viewBox={`${VISTA.x} ${VISTA.y} ${VISTA.ancho} ${VISTA.alto}`}
+              className="absolute inset-0 h-full w-full overflow-visible"
+              aria-hidden
+            >
+              {/* La tierra es fondo: tinta muy bajada, sin borde. Si lleva
+                  contorno compite con las líneas, que son lo que se mira. */}
+              <path
+                data-tierra
+                d={TIERRA}
+                className="fill-ink/[0.13]"
+                fillRule="evenodd"
               />
-            ))}
 
-            {clients.map((client, i) => (
-              <button
-                key={client.city}
-                type="button"
-                data-pin
-                onMouseEnter={() => setActive(i)}
-                onMouseLeave={() => setActive(null)}
-                onFocus={() => setActive(i)}
-                onBlur={() => setActive(null)}
-                className="absolute flex h-7 w-7 items-center justify-center rounded-full"
-                style={{
-                  left: `${toX(client.lon)}%`,
-                  top: `${toY(client.lat)}%`,
-                  transform: "translate(-50%, -50%)",
-                }}
-              >
-                <span className="sr-only">
-                  {client.city}, {nombrePais(client.country, locale)}
-                </span>
-                <span
-                  aria-hidden
-                  className={cn(
-                    "absolute h-7 w-7 rounded-full bg-miel transition-opacity duration-300",
-                    active === i ? "opacity-55" : "opacity-25",
-                  )}
-                />
-                <span
-                  aria-hidden
-                  className="relative h-2.5 w-2.5 rounded-full bg-miel-deep ring-2 ring-paper-alt"
-                />
+              <g fill="none" strokeLinecap="round">
+                {destinos.map((c) => (
+                  <path
+                    key={c.city}
+                    data-arco
+                    d={c.d}
+                    className={cn(
+                      "stroke-aqua-deep transition-opacity duration-300",
+                      activo && activo !== c.country
+                        ? "opacity-20"
+                        : "opacity-60",
+                    )}
+                    strokeWidth={activo === c.country ? 2.4 : 1.6}
+                  />
+                ))}
+              </g>
+            </svg>
 
-                {active === i ? (
-                  <span className="absolute bottom-full z-10 mb-2 whitespace-nowrap rounded-full border border-line bg-card px-2.5 py-1 text-[0.75rem] font-medium shadow-sm">
-                    {client.city}
+            {/* Los pines van en HTML y no en el SVG: son botones, llevan foco y
+                el rótulo tiene que usar la tipografía del sitio. */}
+            {clients.map((c) => {
+              const encendido = activo === c.country;
+              return (
+                <button
+                  key={c.city}
+                  type="button"
+                  data-pin
+                  onMouseEnter={() => setActivo(c.country)}
+                  onMouseLeave={() => setActivo(null)}
+                  onFocus={() => setActivo(c.country)}
+                  onBlur={() => setActivo(null)}
+                  className="absolute grid h-7 w-7 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full"
+                  style={{
+                    left: `${porcentajeX(c.lon)}%`,
+                    top: `${porcentajeY(c.lat)}%`,
+                  }}
+                >
+                  <span className="sr-only">
+                    {c.city}, {nombrePais(c.country, locale)}
                   </span>
-                ) : null}
-              </button>
-            ))}
+                  <span
+                    aria-hidden
+                    className={cn(
+                      "absolute rounded-full bg-aqua transition-all duration-300",
+                      encendido
+                        ? "h-[18px] w-[18px] opacity-45 md:h-6 md:w-6"
+                        : "h-3 w-3 opacity-30 md:h-[18px] md:w-[18px]",
+                    )}
+                  />
+                  <span
+                    aria-hidden
+                    className={cn(
+                      "relative rounded-full bg-aqua-deep ring-2 ring-paper transition-all duration-300",
+                      encendido
+                        ? "h-2 w-2 md:h-[9px] md:w-[9px]"
+                        : "h-1.5 w-1.5 md:h-[7px] md:w-[7px]",
+                    )}
+                  />
+                  {encendido ? (
+                    <span className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-1 -translate-x-1/2 whitespace-nowrap rounded-full border border-line bg-card px-2 py-0.5 text-[0.72rem] font-medium shadow-sm">
+                      {c.city}
+                    </span>
+                  ) : null}
+                </button>
+              );
+            })}
+
+            {/* La casa. Va marcada distinto porque no es un destino más: es de
+                donde salen todas las líneas, y el titular de la sección la
+                nombra. */}
+            <span
+              aria-hidden
+              className="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2"
+              style={{
+                left: `${porcentajeX(studio.lon)}%`,
+                top: `${porcentajeY(studio.lat)}%`,
+              }}
+            >
+              <span className="block h-2.5 w-2.5 rounded-full bg-aqua-deep ring-[3px] ring-paper md:h-3 md:w-3" />
+              <span className="absolute left-1/2 top-full mt-1.5 -translate-x-1/2 whitespace-nowrap text-[0.72rem] font-medium tracking-[-0.01em] text-ink-soft">
+                {studio.city}
+              </span>
+            </span>
           </div>
-        </div>
-      </Reveal>
+        </Reveal>
+
+        {/* La lista. Es la parte legible del dato: el mapa muestra el alcance,
+            acá están los nombres. */}
+        <Reveal delay={0.1}>
+          <ul className="grid grid-cols-2 gap-x-6 sm:grid-cols-3 lg:grid-cols-1 lg:gap-x-0">
+            {paises.map(({ pais, ciudades }) => (
+              <li
+                key={pais}
+                onMouseEnter={() => setActivo(pais)}
+                onMouseLeave={() => setActivo(null)}
+                className={cn(
+                  "border-t border-line py-2.5 transition-opacity duration-300",
+                  activo && activo !== pais ? "opacity-45" : "opacity-100",
+                )}
+              >
+                <span className="flex items-center gap-2 text-[0.95rem] font-medium tracking-[-0.015em]">
+                  <span
+                    aria-hidden
+                    className={cn(
+                      "h-1.5 w-1.5 shrink-0 rounded-full bg-aqua-deep transition-transform duration-300",
+                      activo === pais ? "scale-150" : "scale-100",
+                    )}
+                  />
+                  {nombrePais(pais, locale)}
+                </span>
+                <span className="mt-0.5 block pl-3.5 text-[0.82rem] leading-snug text-ink-faint">
+                  {ciudades.join(" · ")}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </Reveal>
+      </div>
     </Section>
   );
 }
