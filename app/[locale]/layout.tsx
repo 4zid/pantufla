@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { notFound } from "next/navigation";
 import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 import { CopyProvider } from "@/components/copy-provider";
 import { getCopy } from "@/content/get-copy";
@@ -113,6 +114,7 @@ export default async function LocaleLayout({
           {children}
         </CopyProvider>
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
