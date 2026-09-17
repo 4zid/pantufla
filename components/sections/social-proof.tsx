@@ -8,8 +8,10 @@ import { socialProof } from "@/content/site";
  * respira como las demás compite con el titular, que es lo último que
  * conviene a dos centímetros del hero.
  *
- * Las marcas son de relleno y están dibujadas en código; ver la nota en
- * content/site.ts.
+ * A la izquierda va quién hace el trabajo y a la derecha para quién se hizo.
+ * La frase no cuenta clientes: ver por qué en content/site.ts.
+ *
+ * Las marcas son de relleno y están dibujadas en código; misma nota.
  */
 
 /** Marcas inventadas: formas simples, todas del mismo peso óptico. */
@@ -59,7 +61,9 @@ export function SocialProof() {
                 className="grid h-11 w-11 place-items-center rounded-full text-[0.72rem] font-semibold text-white ring-[3px] ring-paper"
                 style={{
                   background: `linear-gradient(140deg, ${face.from}, ${face.to})`,
-                  marginLeft: i === 0 ? 0 : "-0.7rem",
+                  // Corto: acá hay iniciales, no fotos, y con más solapado el
+                  // borde de la de al lado les come la última letra.
+                  marginLeft: i === 0 ? 0 : "-0.375rem",
                 }}
               >
                 {face.initials}

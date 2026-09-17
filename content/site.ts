@@ -348,18 +348,25 @@ export const finalCta = {
 /* ------------------------------------------------------------------ */
 
 /**
- * ⚠️ TODO DE RELLENO. Los cinco nombres son inventados y la cifra también.
+ * Prueba social: la tira de abajo del hero.
  *
- * Es la afirmación más fuerte de la home —dice cuántos clientes hay y quiénes
- * son— así que no puede quedar publicada como está. Reemplazar por marcas
- * reales con permiso de uso, o borrar la sección entera de la home: no rompe
- * nada, la página sigue cerrando sin ella.
+ * No dice cuántos clientes hay, y es a propósito. Un número ahí arriba tiene
+ * que ser verdadero el día que alguien lo lea, y con un estudio que recién
+ * arranca cualquier cifra queda o corta o inflada. Además no es la pelea que
+ * conviene dar: contra una agencia con cien clientes, decir noventa es perder;
+ * decir que se toman pocos proyectos y se hacen enteros es otra conversación,
+ * y encima es cierta.
  *
- * Las marcas van dibujadas en código para que se vea la forma de la tira. Los
- * logos reales entran como SVG en public/logos, igual que los del stack.
+ * Así que la frase habla de cómo se trabaja y las marcas hablan de con quién.
+ * Eso deja la tira sin nada que envejezca: sumar un cliente es sumar un logo,
+ * no reescribir el texto.
+ *
+ * Las marcas son de relleno y van dibujadas en código para que se vea la forma
+ * de la tira. Las reales entran como SVG en public/logos, igual que las del
+ * stack.
  */
 export const socialProof = {
-  claim: "Nos eligieron 40+ estudios y marcas, de proyectos nuevos a negocios con años.",
+  claim: "Tomamos pocos proyectos a la vez y los hacemos enteros nosotros.",
   /** Iniciales para los avatares, hasta tener fotos reales. */
   faces: [
     { initials: "MP", from: "#6fcfca", to: "#166b67" },
