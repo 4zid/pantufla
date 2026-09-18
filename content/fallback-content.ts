@@ -11,10 +11,12 @@
  * home. Las fichas de /proyectos resuelven solo lo que falta: sin imagen
  * muestran un degradé de la paleta y sin resultados no dibujan el bloque.
  *
- * TESTIMONIOS: ⚠️ SIGUEN SIENDO DE RELLENO. Las personas que firman esas citas
- * no existen. Hay que reemplazarlos por citas reales o borrarlos —la sección
- * se oculta sola si la lista queda vacía— antes de seguir promocionando el
- * sitio.
+ * TESTIMONIOS: los nombres, los cargos y las empresas son de clientes reales;
+ * la redacción de cada cita es un borrador escrito acá, no algo que esa
+ * persona haya dicho con esas palabras. Antes de publicar conviene pasárselas
+ * y que las aprueben o las corrijan. Son cuatro porque la sección muestra
+ * cuatro caras en una fila; si se agrega una quinta hay que mirar cómo queda
+ * esa fila. Si la lista queda vacía, la sección se oculta sola.
  */
 
 import type { SanityProject, SanityTestimonial } from "@/sanity/types";
@@ -77,7 +79,7 @@ export const fallbackProjects: SanityProject[] = [
 
 /** ⚠️ Inventados. Ver la nota de arriba. */
 /**
- * Nueve citas, tres por fila en la grilla de caras.
+ * Cuatro citas, una por cara de la fila.
  *
  * Van por idioma y no traducidas al vuelo: una cita es algo que alguien dijo,
  * y en el idioma del visitante tiene que sonar a que lo dijo así. Cuando
@@ -88,74 +90,34 @@ const testimoniosEs: SanityTestimonial[] = [
   {
     _id: "demo-t1",
     quote:
-      "Lo que más valoro es que la fecha que me dieron el primer día fue la fecha real. Nunca me había pasado con un proveedor web.",
-    name: "Paula Martel",
-    role: "Socia",
-    company: "Estudio Martel",
+      "Cargo contenido todas las semanas y nunca se me rompió nada. Dejó el sitio armado para que lo use alguien que no es diseñador.",
+    name: "Flor",
+    role: "Content Manager",
+    company: "2MG",
   },
   {
     _id: "demo-t2",
     quote:
-      "Cargo las salidas nuevas yo misma en cinco minutos. Antes le escribía a alguien y esperaba una semana.",
-    name: "Damián Ferreyra",
-    role: "Fundador",
-    company: "Ruta Norte",
+      "Soy diseñador y aun así encargué mi propio sitio acá. Es todo lo que puedo decir sobre el criterio.",
+    name: "Damián",
+    role: "CEO",
+    company: "Lupa Studio",
   },
   {
     _id: "demo-t3",
     quote:
-      "Presupuesto cerrado, sin extras al final. Salió exactamente lo que decía la propuesta.",
-    name: "Inés Cabral",
-    role: "Directora",
-    company: "Casa Duna",
+      "Le llevé una idea que venía dando vueltas hacía meses y me la devolvió en una pantalla que se entiende en diez segundos.",
+    name: "Nico",
+    role: "CEO",
+    company: "Simplify",
   },
   {
     _id: "demo-t4",
     quote:
-      "Entendieron en la primera reunión algo que yo venía explicando mal hace dos años. El sitio quedó diciendo eso.",
-    name: "Tomás Ojeda",
-    role: "Director",
-    company: "Ojeda Arquitectura",
-  },
-  {
-    _id: "demo-t5",
-    quote:
-      "Pasamos de recibir dos consultas por mes a recibir dos por semana, y llegan sabiendo lo que cobramos.",
-    name: "Carolina Vidal",
-    role: "Socia fundadora",
-    company: "Clínica Vidal",
-  },
-  {
-    _id: "demo-t6",
-    quote:
-      "Me mostraron el diseño completo antes de escribir una línea de código. No hubo sorpresas en ningún momento.",
-    name: "Sebastián Rey",
-    role: "Gerente comercial",
-    company: "Agro Rey",
-  },
-  {
-    _id: "demo-t7",
-    quote:
-      "Tenía un sitio en Webflow hecho a medias. Lo agarraron, lo ordenaron y ahora lo puedo tocar sin miedo.",
-    name: "Lucía Brandt",
-    role: "Fundadora",
-    company: "Brandt Objetos",
-  },
-  {
-    _id: "demo-t8",
-    quote:
-      "Quince días hábiles, como dijeron. Yo esperaba que se estirara y no se estiró.",
-    name: "Martín Quiroga",
-    role: "Socio",
-    company: "Quiroga & Asociados",
-  },
-  {
-    _id: "demo-t9",
-    quote:
-      "El video de cinco minutos que grabaron al entregar vale más que cualquier manual. Nunca tuve que volver a preguntar.",
-    name: "Valeria Soto",
-    role: "Marketing",
-    company: "Nodo Salud",
+      "Dos rondas y estaba. No tuve que explicar lo mismo tres veces ni discutir un tamaño de letra.",
+    name: "Vicky",
+    role: "CEO",
+    company: "HOLD",
   },
 ];
 
@@ -163,74 +125,34 @@ const testimoniosEn: SanityTestimonial[] = [
   {
     _id: "demo-t1",
     quote:
-      "What I value most is that the date they gave me on day one was the real date. That had never happened to me with a web provider.",
-    name: "Paula Martel",
-    role: "Partner",
-    company: "Estudio Martel",
+      "I load content every week and nothing has ever broken. The site was built so that someone who is not a designer can run it.",
+    name: "Flor",
+    role: "Content Manager",
+    company: "2MG",
   },
   {
     _id: "demo-t2",
     quote:
-      "I load the new drops myself in five minutes. Before, I would email someone and wait a week.",
-    name: "Damián Ferreyra",
-    role: "Founder",
-    company: "Ruta Norte",
+      "I am a designer myself and I still had my own site made here. That is everything I can say about the eye behind it.",
+    name: "Damián",
+    role: "CEO",
+    company: "Lupa Studio",
   },
   {
     _id: "demo-t3",
     quote:
-      "Fixed budget, no extras at the end. What shipped was exactly what the proposal said.",
-    name: "Inés Cabral",
-    role: "Director",
-    company: "Casa Duna",
+      "I brought in an idea I had been circling for months and got it back as a screen you understand in ten seconds.",
+    name: "Nico",
+    role: "CEO",
+    company: "Simplify",
   },
   {
     _id: "demo-t4",
     quote:
-      "In the first meeting they understood something I had been explaining badly for two years. The site ended up saying it.",
-    name: "Tomás Ojeda",
-    role: "Director",
-    company: "Ojeda Arquitectura",
-  },
-  {
-    _id: "demo-t5",
-    quote:
-      "We went from two enquiries a month to two a week, and they arrive already knowing what we charge.",
-    name: "Carolina Vidal",
-    role: "Founding partner",
-    company: "Clínica Vidal",
-  },
-  {
-    _id: "demo-t6",
-    quote:
-      "They showed me the whole design before writing a single line of code. There were no surprises at any point.",
-    name: "Sebastián Rey",
-    role: "Commercial manager",
-    company: "Agro Rey",
-  },
-  {
-    _id: "demo-t7",
-    quote:
-      "I had a half-finished Webflow site. They picked it up, tidied it and now I can touch it without being afraid.",
-    name: "Lucía Brandt",
-    role: "Founder",
-    company: "Brandt Objetos",
-  },
-  {
-    _id: "demo-t8",
-    quote:
-      "Fifteen working days, just like they said. I expected it to stretch and it did not.",
-    name: "Martín Quiroga",
-    role: "Partner",
-    company: "Quiroga & Asociados",
-  },
-  {
-    _id: "demo-t9",
-    quote:
-      "The five-minute video they recorded at handover is worth more than any manual. I never had to ask again.",
-    name: "Valeria Soto",
-    role: "Marketing",
-    company: "Nodo Salud",
+      "Two rounds and it was done. I never had to explain the same thing three times or argue about a font size.",
+    name: "Vicky",
+    role: "CEO",
+    company: "HOLD",
   },
 ];
 

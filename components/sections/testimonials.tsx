@@ -179,7 +179,7 @@ export function Testimonials({ items }: { items: SanityTestimonial[] }) {
                     ) : (
                       <span
                         aria-hidden
-                        className="grid h-full w-full place-items-center text-[0.9rem] font-semibold text-white"
+                        className="grid h-full w-full place-items-center text-[1.15rem] font-semibold text-white"
                       >
                         {iniciales(item.name)}
                       </span>

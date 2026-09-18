@@ -134,12 +134,21 @@ const SCATTER_SCALE = 1.18;
  * aparece cuando el visitante empieza a bajar.
  *
  * Aparecen recién a partir de 1440px: abajo de ese ancho no hay costado libre.
+ *
+ * Los números de abajo no son un cálculo: son dónde quedaron las tarjetas
+ * después de arrastrarlas a mano. Se pueden mover —Draggable está montado en
+ * cada una— así que la forma de acomodarlas es esa, correrlas en el navegador
+ * y medir dónde quedaron. Respecto del reparto anterior las tres que estaban
+ * altas bajaron: visitas 6 puntos, velocidad 13 y tráfico 8.5, y las dos de
+ * abajo además entraron hacia el centro. El titular queda más arriba que el
+ * grueso de las tarjetas en vez de en medio de ellas, que era lo que hacía
+ * que la escena se leyera apretada contra la barra.
  */
 const scattered: Record<string, string> = {
-  visitas: "right-[-10%] top-[11%] min-[1600px]:right-[-5%]",
+  visitas: "right-[-10%] top-[17%] min-[1600px]:right-[-5%]",
   conversion: "left-[2%] top-[15%] min-[1600px]:left-[5%]",
-  velocidad: "left-[3%] top-[52%] min-[1600px]:left-[6%]",
-  trafico: "right-[-6%] top-[67%] min-[1600px]:right-[-2%]",
+  velocidad: "left-[6.5%] top-[65%] min-[1600px]:left-[9.5%]",
+  trafico: "right-[0.5%] top-[75.5%] min-[1600px]:right-[4.5%]",
 };
 
 export function HeroScene() {
