@@ -2,7 +2,7 @@ import { fallbackProjects } from "@/content/fallback-content";
 import { getCopy } from "@/content/get-copy";
 import { site } from "@/content/site";
 import { defaultLocale, localeHref, locales } from "@/lib/i18n";
-import { siteUrl } from "@/lib/schema";
+import { siteUrl } from "@/lib/site-url";
 
 /**
  * /llms.txt — el sitio contado en texto plano, para un motor de respuesta.

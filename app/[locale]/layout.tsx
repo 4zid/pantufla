@@ -9,10 +9,9 @@ import { getCopy } from "@/content/get-copy";
 import { site } from "@/content/site";
 import { isLocale, localeHref, locales, type Locale } from "@/lib/i18n";
 import { nodoEstudio, nodoSitio } from "@/lib/schema";
+import { siteUrl } from "@/lib/site-url";
 
 import "../globals.css";
-
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://pantufla.design";
 
 /**
  * Raíz del documento, una por idioma.

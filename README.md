@@ -81,7 +81,11 @@ Variables a cargar en el panel de Vercel:
 
 `NEXT_PUBLIC_SITE_URL` tiene que coincidir con el dominio que marques como
 principal en Vercel: si es el apex va `https://pantufla.design`, si es el www va
-con el `www.` adelante.
+con el `www.` adelante. Hoy el principal es `https://www.pantufla.design` —el
+apex está cargado como redirección 308 hacia él— y ese es el valor que usa
+`lib/site-url.ts` cuando la variable no está. De ahí salen los canonical, los
+hreflang, el sitemap y los `@id` del grafo de datos estructurados, así que
+apuntarlo a un host que no resuelve es peor que no tenerlo.
 
 ---
 

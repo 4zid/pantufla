@@ -1,6 +1,7 @@
 import { site } from "@/content/site";
 import type { ResolvedCopy } from "@/content/resolve";
 import { localeHref, locales, type Locale } from "@/lib/i18n";
+import { siteUrl } from "@/lib/site-url";
 
 /**
  * Los datos estructurados del sitio, como un grafo y no como islas.
@@ -21,9 +22,6 @@ import { localeHref, locales, type Locale } from "@/lib/i18n";
  * Todo sale del copy del idioma que se esté sirviendo: un grafo en español
  * colgado de una página en inglés es peor que no tener grafo.
  */
-
-export const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://pantufla.design";
 
 /** La URL absoluta de una ruta interna, en un idioma. */
 export function absoluta(path: string, locale: Locale) {

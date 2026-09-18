@@ -2,10 +2,9 @@ import type { MetadataRoute } from "next";
 
 import { fallbackProjects } from "@/content/fallback-content";
 import { localeHref, locales } from "@/lib/i18n";
+import { siteUrl } from "@/lib/site-url";
 import { sanityFetch } from "@/sanity/client";
 import { postSlugsQuery, projectSlugsQuery } from "@/sanity/queries";
-
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://pantufla.design";
 
 /**
  * Cada página aparece una vez por idioma, y cada entrada declara a su par.
