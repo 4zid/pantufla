@@ -1,7 +1,7 @@
 "use client";
 
 import { useGSAP } from "@gsap/react";
-import { Fragment, useRef, type ElementType } from "react";
+import { Fragment, useMemo, useRef, type ElementType } from "react";
 
 import { ease, gsap, registerGsap, START } from "@/lib/motion";
 import { cn } from "@/lib/cn";
@@ -61,7 +61,26 @@ export function SplitHeading({
   immediate = false,
 }: Props) {
   const scope = useRef<HTMLElement>(null);
-  const partes: readonly Segment[] = segments ?? [{ text: text ?? "" }];
+  const partes: readonly Segment[] = useMemo(
+    () => segments ?? [{ text: text ?? "" }],
+    [segments, text],
+  );
+
+  /**
+   * La firma del titular, para que useGSAP sepa cuándo hay algo nuevo.
+   *
+   * Antes la dependencia era el array de tramos, y sin segments ese array se
+   * armaba nuevo en cada render. Para useGSAP eso es una dependencia que
+   * cambió: revertía el contexto —o sea devolvía las palabras a opacidad cero
+   * abajo de la máscara— y volvía a animar. El efecto era que cualquier cambio
+   * de estado en la sección volvía a tirar la animación del titular: abrir una
+   * pregunta, pasar por un país del mapa, cambiar de testimonio. El titular no
+   * tenía nada que ver, pero vivía adentro del componente que se renderizaba.
+   *
+   * Con una cadena la comparación es por contenido y no por identidad, así que
+   * solo se vuelve a animar si el titular de verdad cambió.
+   */
+  const firma = partes.map((p) => `${p.mark ?? ""}\u0000${p.text}`).join("\u0001");
 
   useGSAP(
     () => {
@@ -112,7 +131,7 @@ export function SplitHeading({
 
       return () => mm.revert();
     },
-    { scope, dependencies: [partes, delay, immediate] },
+    { scope, dependencies: [firma, delay, immediate] },
   );
 
   /**

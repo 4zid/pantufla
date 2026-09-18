@@ -2,107 +2,59 @@
 
 import { useEffect } from "react";
 
-import {
-  claro,
-  css,
-  esTinta,
-  mezclar,
-  oscuro,
-  superficies,
-  type NombreSuperficie,
-} from "@/lib/theme";
-
 /**
- * El fondo de la página, movido por el scroll.
+ * Qué sección manda sobre el color de la página.
  *
- * El sitio tiene un solo fondo, no uno por sección. Cada sección dice de qué
- * color quiere que esté la página mientras se la mira —data-surface— y este
- * motor mira qué hay en pantalla en cada cuadro y mezcla.
+ * El sitio tiene un solo fondo y dos estados, claro y oscuro. Este componente
+ * no pinta nada: mira qué hay en pantalla y pone dos atributos en <html>. El
+ * color y el tiempo los pone el CSS —ver la nota larga en globals.css—, que es
+ * donde tienen que estar.
  *
- * La diferencia con pintarle un fondo a cada sección es lo que se ve al bajar.
- * Con fondos propios el cambio es una línea recta que cruza la pantalla, y con
- * una sección negra eso se lee como un corte. Acá no hay línea: la pantalla
- * entera cambia de color mientras uno scrollea, y el visitante ve cómo pasa.
+ * Antes acá adentro había un motor que interpolaba los diez tokens del tema en
+ * cada cuadro contra cuánto ocupaba la sección oscura en pantalla. El problema
+ * de atar el color al scroll es que el visitante puede frenar donde quiera, y
+ * frenar a mitad de camino entre blanco y negro deja el sitio gris, indefinido,
+ * hasta que decida seguir. Con un atributo y una transición de CSS el cambio
+ * dura lo que dura la transición y siempre termina de un lado o del otro.
  *
- * Cuando lo que entra es una sección oscura no cambia solo el fondo: cambian
- * todos los tokens. La tinta, las líneas, las tarjetas. El sitio se vuelve
- * oscuro y vuelve, y ningún componente se entera: Tailwind resuelve cada
- * utilidad contra la variable, así que mover la variable repinta todo.
+ * La cuenta de cobertura queda igual porque sirve para lo mismo: decidir cuál
+ * de las secciones a la vista tiene el mando. Lo que cambió es qué se hace con
+ * el resultado —un sí o un no en vez de un valor continuo— y cuánto cuesta:
+ * ahora casi todos los cuadros terminan sin tocar el DOM.
  */
 
 /**
- * Dos ventanas, no una: las superficies cruzan lento y la tinta cruza rápido.
+ * Cuánto tiene que tapar lo oscuro para tomar el mando, y cuánto tiene que
+ * soltar para devolverlo.
  *
- * El problema es viejo y no tiene una salida limpia. El fondo es uno solo para
- * toda la pantalla, así que mientras va del claro al oscuro pasa por un gris
- * medio, y la cola de la sección clara que todavía se ve queda con su texto
- * encima de ese gris. Si la tinta cruza junto con el fondo, en el punto medio
- * hay gris sobre gris y no se lee nada.
- *
- * Antes eso se resolvía cruzando todo junto y muy rápido, en unos 130px de
- * scroll. Se leía, sí, pero la pantalla entera pasaba de casi blanco a negro
- * en cuatro cuadros y eso encandila: es un flash, no una transición.
- *
- * Así que van separados. El fondo —que es la superficie grande, la que se ve
- * y la que molesta si salta— cruza a lo largo de media pantalla de scroll:
- * medio segundo largo bajando normal, y el ojo lo acompaña. La tinta, que son
- * unas pocas palabras que además ya están saliendo por arriba, se invierte de
- * golpe en una ventana veinte veces más corta, parada justo en el punto del
- * recorrido donde da lo mismo tenerla oscura o clara. Ver la cuenta abajo.
+ * Son dos números y no uno para que el cambio no titile. Con un solo umbral,
+ * quedarse parado justo encima —y basta el rebote de un trackpad— alcanza para
+ * cruzarlo en los dos sentidos varias veces por segundo, y cada cruce dispara
+ * una transición de 600ms. Con la ventana de por medio hay que moverse una
+ * décima de pantalla para volver atrás, que ya es una decisión y no un temblor.
  */
-/** Ventana de las superficies: qué parte de la pantalla tapa lo oscuro. */
-const FONDO_DESDE = 0.08;
-const FONDO_HASTA = 0.66;
+const PRENDE = 0.55;
+const APAGA = 0.45;
 
-/**
- * Ventana de la tinta: cortísima, y clavada en un punto que sale de una cuenta.
- *
- * Hay un punto exacto en el recorrido del fondo donde da lo mismo tener la
- * tinta oscura o la clara: cuando el fondo llega a una luminancia de 0.18
- * —rgb(118) sobre blanco— las dos dan 4.08:1. Un pelo antes conviene la
- * oscura, un pelo después la clara. Ese es el lugar donde hay que cruzar, y
- * con la ventana del fondo de acá arriba cae cuando lo oscuro tapa un 39.5%
- * de la pantalla.
- *
- * Alrededor de ese punto la tinta sí pasa por un gris parecido al del fondo y
- * ahí no se lee: es inevitable, cualquier cruce continuo entre negro sobre
- * claro y blanco sobre oscuro pasa por ahí. Lo que se puede hacer es que dure
- * poco, y por eso la ventana es de 4 centésimas de pantalla: unos 38px de
- * scroll, de los cuales los malos son quince. El fondo, mientras tanto, se
- * toma 500px enteros, que es lo que se mira y lo que no puede saltar.
- */
-const TINTA_DESDE = 0.375;
-const TINTA_HASTA = 0.415;
-
-/** Una ese: lenta en las puntas, rápida en el medio. */
-const suavizar = (t: number) => t * t * (3 - 2 * t);
-
-const rampa = (v: number, desde: number, hasta: number) =>
-  suavizar(Math.min(1, Math.max(0, (v - desde) / (hasta - desde))));
-
-const TOKENS = Object.keys(claro);
+type Superficie = "paper" | "mist" | "deep";
 
 export function ThemeScroll() {
   useEffect(() => {
     const raiz = document.documentElement;
 
-    const reducido = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches;
-
     let pedido = 0;
-    let anterior = "";
+    let oscuro = false;
+    let fondo: Superficie | null = null;
 
-    function pintar() {
+    function decidir() {
       pedido = 0;
 
       const alto = window.innerHeight;
       const secciones =
         document.querySelectorAll<HTMLElement>("[data-surface]");
 
-      let oscuridadCruda = 0;
-      let pesoClaro = 0;
-      let claroAcumulado: [number, number, number] = [0, 0, 0];
+      let tapaOscuro = 0;
+      const claros: Record<string, number> = { paper: 0, mist: 0 };
 
       for (const seccion of secciones) {
         const caja = seccion.getBoundingClientRect();
@@ -111,86 +63,49 @@ export function ThemeScroll() {
           (Math.min(caja.bottom, alto) - Math.max(caja.top, 0)) / alto;
         if (visible <= 0) continue;
 
-        const nombre = seccion.dataset.surface as NombreSuperficie;
-        const color = superficies[nombre];
-        if (!color) continue;
-
-        if (nombre === "deep") {
-          oscuridadCruda += visible;
-        } else {
-          pesoClaro += visible;
-          claroAcumulado = [
-            claroAcumulado[0] + color[0] * visible,
-            claroAcumulado[1] + color[1] * visible,
-            claroAcumulado[2] + color[2] * visible,
-          ];
-        }
+        const nombre = seccion.dataset.surface as Superficie;
+        if (nombre === "deep") tapaOscuro += visible;
+        else if (nombre in claros) claros[nombre] += visible;
       }
 
-      const fondo = rampa(oscuridadCruda, FONDO_DESDE, FONDO_HASTA);
-      const tinta = rampa(oscuridadCruda, TINTA_DESDE, TINTA_HASTA);
+      // El estado se sostiene solo: sube a oscuro al pasar PRENDE y baja al
+      // caer de APAGA; en el medio se queda donde estaba.
+      const quiereOscuro = oscuro
+        ? tapaOscuro > APAGA
+        : tapaOscuro >= PRENDE;
 
-      // El promedio de las secciones claras que hay a la vista. Si no hay
-      // ninguna —la oscura tapa toda la pantalla— da igual: la mezcla de abajo
-      // se queda con el oscuro entero.
-      const fondoClaro: [number, number, number] =
-        pesoClaro > 0
-          ? [
-              claroAcumulado[0] / pesoClaro,
-              claroAcumulado[1] / pesoClaro,
-              claroAcumulado[2] / pesoClaro,
-            ]
-          : superficies.mist;
+      if (quiereOscuro !== oscuro) {
+        oscuro = quiereOscuro;
+        if (oscuro) raiz.setAttribute("data-tema", "oscuro");
+        else raiz.removeAttribute("data-tema");
+      }
 
-      // Redondear antes de comparar: sin esto, un scroll de un pixel dispara
-      // una repintada de toda la hoja de estilos por un cambio invisible.
-      //
-      // La firma lleva el color claro y no solo la oscuridad. Mirando solo la
-      // oscuridad, pasar de una sección blanca a una con bruma no movía nada
-      // —las dos tienen oscuridad cero— y el fondo se quedaba clavado en el
-      // color de la primera que se hubiera visto.
-      const pasoFondo = Math.round(fondo * 250) / 250;
-      const pasoTinta = Math.round(tinta * 250) / 250;
-      const firma = `${pasoFondo}|${pasoTinta}|${Math.round(
-        fondoClaro[0],
-      )},${Math.round(fondoClaro[1])},${Math.round(fondoClaro[2])}`;
-      if (firma === anterior) return;
-      anterior = firma;
-
-      raiz.style.setProperty(
-        "--page-bg",
-        css(mezclar(fondoClaro, superficies.deep, pasoFondo)),
-      );
-
-      for (const token of TOKENS) {
-        const paso = esTinta(token) ? pasoTinta : pasoFondo;
-        raiz.style.setProperty(
-          token,
-          css(mezclar(claro[token], oscuro[token], paso)),
-        );
+      // Cuál de los dos claros gana. Solo importa mientras el tema es claro,
+      // pero se sigue midiendo igual para que al volver de una sección oscura
+      // el fondo ya esté en el que corresponde.
+      const claro: Superficie = claros.paper > claros.mist ? "paper" : "mist";
+      if (claro !== fondo) {
+        fondo = claro;
+        if (claro === "paper") raiz.setAttribute("data-fondo", "paper");
+        else raiz.removeAttribute("data-fondo");
       }
     }
 
     function alScrollear() {
       if (pedido) return;
-      pedido = requestAnimationFrame(pintar);
+      pedido = requestAnimationFrame(decidir);
     }
 
-    pintar();
+    decidir();
     window.addEventListener("scroll", alScrollear, { passive: true });
     window.addEventListener("resize", alScrollear);
-
-    // Con menos movimiento el cambio igual tiene que pasar —si no, la sección
-    // oscura queda con tinta clara sobre fondo claro— pero sin el suavizado de
-    // la transición del body.
-    if (reducido) raiz.style.setProperty("--page-bg-transition", "0ms");
 
     return () => {
       window.removeEventListener("scroll", alScrollear);
       window.removeEventListener("resize", alScrollear);
       if (pedido) cancelAnimationFrame(pedido);
-      raiz.style.removeProperty("--page-bg");
-      for (const token of TOKENS) raiz.style.removeProperty(token);
+      raiz.removeAttribute("data-tema");
+      raiz.removeAttribute("data-fondo");
     };
   }, []);
 

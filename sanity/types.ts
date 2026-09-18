@@ -14,6 +14,14 @@ export type SanityProject = {
   services?: string[];
   results?: { value: string; label: string }[];
   url?: string;
+  /**
+   * Fondo de la tarjeta, como ruta de /public.
+   *
+   * Solo lo usa el contenido de respaldo: desde Sanity el fondo entra por
+   * cover, que es un asset de verdad. Están los dos porque son dos orígenes
+   * distintos para lo mismo y el componente prueba cover primero.
+   */
+  art?: string;
   body?: PortableTextBlock[];
 };
 

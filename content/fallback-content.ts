@@ -6,7 +6,12 @@
  * clonado, en un deploy de preview o si Sanity no responde.
  *
  * PROYECTOS: son reales y cada uno lleva la URL del sitio publicado, que es a
- * donde va la tarjeta. No llevan métricas ni fecha de entrega porque no las
+ * donde va la tarjeta, y el fondo de esa tarjeta.
+ *
+ * ⚠️ Los cinco fondos de /public/proyectos son de relleno: manchas difusas
+ * generadas en código para que la tarjeta tenga su forma definitiva. Para
+ * poner los de verdad alcanza con pisar el archivo con el mismo nombre; no hay
+ * que tocar código. Desde Sanity el fondo entra por cover y le gana a este. No llevan métricas ni fecha de entrega porque no las
  * tengo; poner números inventados sobre clientes reales sería mentir en la
  * home. Las fichas de /proyectos resuelven solo lo que falta: sin imagen
  * muestran un degradé de la paleta y sin resultados no dibujan el bloque.
@@ -26,6 +31,7 @@ export const fallbackProjects: SanityProject[] = [
     _id: "work-lupa",
     title: "Lupa Studio",
     slug: "lupa-studio",
+    art: "/proyectos/lupa-studio.jpg",
     url: "https://www.lupastudio.co/",
     tagline:
       "Sitio de portfolio para una agencia de soluciones creativas, con una estética limpia y actual.",
@@ -37,6 +43,7 @@ export const fallbackProjects: SanityProject[] = [
     _id: "work-remmy",
     title: "Remmy",
     slug: "remmy",
+    art: "/proyectos/remmy.jpg",
     url: "https://remmy.la",
     tagline:
       "Landing para una startup de contratación: mensaje directo y una sola línea de lectura.",
@@ -48,6 +55,7 @@ export const fallbackProjects: SanityProject[] = [
     _id: "work-acacia",
     title: "Acacia",
     slug: "acacia",
+    art: "/proyectos/acacia.jpg",
     url: "https://acaciaestetica.com/",
     tagline:
       "Sitio para un salón de belleza, con una estética suave y sin adornos de más.",
@@ -59,6 +67,7 @@ export const fallbackProjects: SanityProject[] = [
     _id: "work-rostar",
     title: "Rostar",
     slug: "rostar",
+    art: "/proyectos/rostar.jpg",
     url: "https://rostaremix.framer.website/",
     tagline:
       "Diseño de interfaz y desarrollo para una plataforma que centraliza rosters de youtubers de Estados Unidos.",
@@ -73,6 +82,7 @@ export const fallbackProjects: SanityProject[] = [
     _id: "work-2mg",
     title: "2MG",
     slug: "2mg",
+    art: "/proyectos/2mg.jpg",
     url: "https://2-mg.vercel.app/",
   },
 ];
