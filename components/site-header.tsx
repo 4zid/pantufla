@@ -48,11 +48,12 @@ export function SiteHeader() {
       */}
       <button
         type="button"
+        aria-label={header.closeMenu}
         aria-hidden={!open}
         tabIndex={-1}
         onClick={() => setOpen(false)}
         className={cn(
-          "fixed inset-0 z-40 bg-ink/25 backdrop-blur-[2px] transition-opacity duration-400 md:hidden",
+          "fixed inset-0 z-40 bg-ink/45 backdrop-blur-[3px] transition-opacity duration-400 md:hidden",
           open ? "opacity-100" : "pointer-events-none opacity-0",
         )}
       />
@@ -60,11 +61,19 @@ export function SiteHeader() {
       <header className="pointer-events-none fixed inset-x-0 top-0 z-50 flex justify-center px-4 pt-3 sm:pt-4">
         <div
           className={cn(
-            "pointer-events-auto w-full border backdrop-blur-xl transition-[max-width,padding,background-color,border-color,box-shadow,border-radius] duration-500 ease-out",
+            "pointer-events-auto w-full border backdrop-blur-xl transition-[max-width,padding,background-color,border-color,box-shadow] duration-500 ease-out",
             // Cerrada es una píldora. Abierta no puede serlo: rounded-full sobre
             // una caja de 344px de alto no redondea las esquinas, dibuja un
             // círculo, y con el desenfoque atrás el menú se veía como una mancha
             // blanca gigante encima del titular.
+            //
+            // Y el radio NO va en la lista de arriba: es la única propiedad que
+            // no se puede transicionar acá. El navegador recorta el radio a la
+            // mitad del lado más corto, así que mientras baja de 9999 a 26 la
+            // caja —que ya creció a 344px de alto— se dibuja como un óvalo que
+            // se va enderezando. Medio segundo de globo blanco cada vez que se
+            // abre el menú. Cambiándolo de golpe no se nota: abajo el alto se
+            // anima, y el ojo mira eso.
             open ? "rounded-[26px]" : "rounded-full",
             compact || open
               ? "max-w-3xl border-line px-3 shadow-[0_8px_30px_-12px_rgba(35,28,18,0.25)] sm:px-4"
@@ -151,31 +160,50 @@ export function SiteHeader() {
             </button>
           </div>
 
-          {open ? (
-            <div className="border-t border-line pb-4 pt-3 md:hidden">
-              {nav.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={() => setOpen(false)}
-                  className="block border-b border-line px-2 py-3 text-[1.05rem] font-medium last:border-0"
-                >
-                  {item.label}
-                </Link>
-              ))}
-              <div className="mt-4 flex items-center gap-3">
-                <LocaleSwitcher />
-                <ButtonLink
-                  href={href("/contacto")}
-                  size="lg"
-                  className="w-full"
-                  onClick={() => setOpen(false)}
-                >
-                  {header.cta}
-                </ButtonLink>
+          {/*
+            El panel está siempre en el árbol y lo que se anima es el alto, con
+            el truco de la grilla: una fila que va de 0fr a 1fr sí transiciona,
+            a diferencia de height auto. Montarlo y desmontarlo hacía que el
+            menú apareciera entero en un cuadro.
+
+            Cerrado va inert: como el contenido sigue en el DOM, sin esto los
+            cuatro enlaces y el botón se pueden tabular detrás de un panel que
+            no se ve. inert los saca del foco y del árbol de accesibilidad de
+            una sola vez.
+          */}
+          <div
+            inert={!open}
+            className={cn(
+              "grid overflow-hidden transition-[grid-template-rows] duration-400 ease-out md:hidden",
+              open ? "grid-rows-[1fr]" : "grid-rows-[0fr]",
+            )}
+          >
+            <div className="min-h-0">
+              <div className="border-t border-line pb-4 pt-3">
+                {nav.map((item) => (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={() => setOpen(false)}
+                    className="block border-b border-line px-2 py-3 text-[1.05rem] font-medium last:border-0"
+                  >
+                    {item.label}
+                  </Link>
+                ))}
+                <div className="mt-4 flex items-center gap-3">
+                  <LocaleSwitcher />
+                  <ButtonLink
+                    href={href("/contacto")}
+                    size="lg"
+                    className="w-full"
+                    onClick={() => setOpen(false)}
+                  >
+                    {header.cta}
+                  </ButtonLink>
+                </div>
               </div>
             </div>
-          ) : null}
+          </div>
         </div>
       </header>
     </>

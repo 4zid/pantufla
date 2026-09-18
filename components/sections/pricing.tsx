@@ -96,7 +96,7 @@ export function Pricing() {
                   onClick={() => setMode(value)}
                   className={cn(
                     "relative z-10 flex flex-1 items-center justify-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-2 text-[0.8rem] font-medium transition-colors duration-300 sm:flex-none sm:gap-2 sm:px-4 sm:text-[0.88rem]",
-                    active ? "text-paper" : "text-ink-soft hover:text-ink",
+                    active ? "text-white" : "text-ink-soft hover:text-ink",
                   )}
                 >
                   {option.label}
@@ -104,7 +104,7 @@ export function Pricing() {
                     className={cn(
                       "rounded-full px-2 py-0.5 text-[0.7rem] font-semibold tabular-nums",
                       "transition-colors duration-300",
-                      active ? "bg-white/15 text-paper" : "bg-verde-soft text-verde-deep",
+                      active ? "bg-white/15 text-white" : "bg-verde-soft text-verde-deep",
                     )}
                   >
                     <span className="sm:hidden">{option.note}</span>
@@ -128,16 +128,16 @@ export function Pricing() {
               className={cn(
                 card,
                 dark
-                  ? "bg-deep text-paper shadow-[0_30px_70px_-40px_rgba(35,28,18,0.6)]"
+                  ? "bg-deep text-white shadow-[0_30px_70px_-40px_rgba(35,28,18,0.6)]"
                   : "border border-line bg-card",
               )}
             >
               <div className="flex items-center justify-between gap-3">
-                <h3 className={cn("text-[1.3rem] font-semibold tracking-[-0.03em]", dark && "text-paper")}>
+                <h3 className={cn("text-[1.3rem] font-semibold tracking-[-0.03em]", dark && "text-white")}>
                   {plan.name}
                 </h3>
                 {dark && "badge" in plan && plan.badge ? (
-                  <span className="rounded-full bg-white/12 px-2.5 py-1 text-[0.72rem] font-medium text-paper">
+                  <span className="rounded-full bg-white/15 px-2.5 py-1 text-[0.72rem] font-medium text-white">
                     {plan.badge}
                   </span>
                 ) : null}
@@ -155,7 +155,7 @@ export function Pricing() {
                     className="text-[2.8rem] font-semibold leading-none tracking-[-0.045em]"
                   />
                   {mode === "once" ? (
-                    <span className={cn("text-[0.95rem] line-through", dark ? "text-white/35" : "text-ink-faint")}>
+                    <span className={cn("text-[0.95rem] line-through", dark ? "text-white/50" : "text-ink-faint")}>
                       ${money.format(total)}
                     </span>
                   ) : (
@@ -164,7 +164,7 @@ export function Pricing() {
                     </span>
                   )}
                 </div>
-                <p className={cn("mt-2 text-[0.85rem]", dark ? "text-white/45" : "text-ink-faint")}>
+                <p className={cn("mt-2 text-[0.85rem]", dark ? "text-white/55" : "text-ink-faint")}>
                   {mode === "once"
                     ? pricing.toggle.once.label
                     : `${pricing.totalLabel} $${money.format(total)}`} · Entrega en {plan.delivery}

@@ -36,6 +36,7 @@ export const en: SiteCopy = {
     plans: "See pricing",
     cta: "Start a project",
     openMenu: "Open menu",
+    skip: "Skip to content",
     closeMenu: "Close menu",
     language: "Language",
   },

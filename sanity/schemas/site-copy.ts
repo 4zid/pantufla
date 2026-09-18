@@ -106,6 +106,11 @@ export const siteCopy = defineType({
         defineField({ name: "plans", title: "Enlace secundario", type: "string" }),
         defineField({ name: "cta", title: "Botón", type: "string" }),
         defineField({ name: "openMenu", title: "Abrir menú", type: "string" }),
+        defineField({
+          name: "skip",
+          title: "Saltar al contenido",
+          type: "string",
+        }),
         defineField({ name: "closeMenu", title: "Cerrar menú", type: "string" }),
         defineField({ name: "language", title: "Idioma", type: "string" }),
       ],

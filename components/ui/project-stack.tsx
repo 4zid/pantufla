@@ -43,7 +43,19 @@ const rellenos = [
   "linear-gradient(150deg, #fdeed4 0%, #f4c87d 100%)",
 ];
 
-export function ProjectStack({ projects }: { projects: SanityProject[] }) {
+export function ProjectStack({
+  projects,
+  /*
+     Qué nivel de titular le toca a cada proyecto. No es decorativo: en la home
+     la sección trae su propio h2 y los proyectos cuelgan de ahí, pero en
+     /proyectos lo único que hay arriba es el h1 de la página, así que un h3
+     saltea un nivel y deja el índice del documento con un agujero.
+  */
+  heading: Titulo = "h3",
+}: {
+  projects: SanityProject[];
+  heading?: "h2" | "h3";
+}) {
   const { work } = useCopy();
   const href = useHref();
 
@@ -64,7 +76,7 @@ export function ProjectStack({ projects }: { projects: SanityProject[] }) {
         return (
           <article key={project._id} className="group/card relative">
             <div className="flex items-start justify-between gap-6">
-              <h3 className="text-[1.45rem] font-semibold leading-tight tracking-[-0.03em] md:text-[1.6rem]">
+              <Titulo className="text-[1.45rem] font-semibold leading-tight tracking-[-0.03em] md:text-[1.6rem]">
                 <Link
                   href={destino}
                   target={externo ? "_blank" : undefined}
@@ -81,7 +93,7 @@ export function ProjectStack({ projects }: { projects: SanityProject[] }) {
                 >
                   {project.title}
                 </Link>
-              </h3>
+              </Titulo>
 
               <span
                 aria-hidden

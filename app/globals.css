@@ -24,7 +24,14 @@
   --color-card: #ffffff;
   --color-ink: #121212;
   --color-ink-soft: #565656;
-  --color-ink-faint: #767676;
+  /*
+     Sobre blanco #767676 daba 4.6:1 y pasaba, pero la mitad de las secciones
+     van sobre bruma (#eaedf8), que es más oscura, y ahí caía a 3.9:1. Como es
+     la tinta de los pies de tabla y los cargos —texto chico— tiene que pasar
+     4.5:1 en las dos superficies: con #666 da 5.7:1 sobre papel y 4.9:1 sobre
+     bruma.
+  */
+  --color-ink-faint: #666666;
   --color-line: #e7e7e7;
   --color-line-strong: #d6d6d6;
   --color-deep: #0e0e0e;
@@ -188,7 +195,7 @@
 @property --color-ink-faint {
   syntax: "<color>";
   inherits: true;
-  initial-value: #767676;
+  initial-value: #666666;
 }
 @property --color-line {
   syntax: "<color>";
@@ -267,7 +274,7 @@
   --color-card: #1b1b1b;
   --color-ink: #f4f4f2;
   --color-ink-soft: #a6a6a2;
-  --color-ink-faint: #7a7a76;
+  --color-ink-faint: #90908b;
   --color-line: #2a2a2a;
   --color-line-strong: #3c3c3c;
   --color-mist: #14161f;

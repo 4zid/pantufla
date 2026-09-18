@@ -207,7 +207,11 @@ export function Faq() {
                     id={`${uid}-${i}`}
                     data-panel
                     data-open={abierto}
-                    aria-hidden={!abierto}
+                    /* Mismo criterio que el panel de planes: inert y no
+                       aria-hidden. Hoy adentro hay un párrafo y nada más, pero
+                       basta que una respuesta lleve un enlace para que se
+                       pueda tabular con la pregunta cerrada. */
+                    inert={!abierto}
                     className="h-0 overflow-hidden"
                   >
                     <p className="translate-y-3.5 px-4 pb-4 pl-[2.1rem] text-[0.9rem] leading-relaxed text-ink-soft opacity-0 md:px-6 md:pb-5 md:pl-[2.75rem]">

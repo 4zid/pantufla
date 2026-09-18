@@ -50,7 +50,7 @@ export default async function ProjectsPage({ params }: Props) {
       />
 
       <div className="shell py-16 md:py-20">
-        <ProjectStack projects={projects} />
+        <ProjectStack projects={projects} heading="h2" />
       </div>
 
       <FinalCta />

@@ -1,3 +1,6 @@
+"use client";
+
+import { useCopy } from "@/components/copy-provider";
 import { ThemeScroll } from "@/components/theme-scroll";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
@@ -11,6 +14,7 @@ import { SiteHeader } from "@/components/site-header";
  * única ruta con marco que no puede entrar al grupo.
  */
 export function SiteChrome({ children }: { children: React.ReactNode }) {
+  const { header } = useCopy();
   return (
     <div className="relative z-10 flex min-h-dvh flex-col">
       <ThemeScroll />
@@ -18,7 +22,7 @@ export function SiteChrome({ children }: { children: React.ReactNode }) {
         href="#contenido"
         className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:bg-ink focus:px-5 focus:py-2.5 focus:text-paper"
       >
-        Ir al contenido
+        {header.skip}
       </a>
       <SiteHeader />
       <main id="contenido" className="flex-1">

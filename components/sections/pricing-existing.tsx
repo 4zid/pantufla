@@ -108,10 +108,17 @@ export function PricingExisting() {
         </span>
       </button>
 
+      {/*
+        Cerrado va inert y no aria-hidden. Los dos lo sacan del lector, pero
+        aria-hidden solo lo esconde: el CTA de adentro se seguía pudiendo
+        tabular, y el foco se iba a un botón invisible detrás de un panel de
+        alto cero. inert hace las dos cosas —lo saca del foco y del árbol— y es
+        lo que pedía la auditoría de accesibilidad para agentes.
+      */}
       <div
         id="planes-sitio-existente"
         ref={panel}
-        aria-hidden={!open}
+        inert={!open}
         className="overflow-hidden"
         style={open ? undefined : { height: 0 }}
       >

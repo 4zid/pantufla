@@ -25,6 +25,7 @@ export type SiteCopy = {
     plans: string;
     cta: string;
     openMenu: string;
+    skip: string;
     closeMenu: string;
     language: string;
   };

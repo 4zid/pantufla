@@ -43,6 +43,7 @@ export const es: SiteCopy = {
     plans: "Ver planes",
     cta: "Empezar un proyecto",
     openMenu: "Abrir menú",
+    skip: "Ir al contenido",
     closeMenu: "Cerrar menú",
     language: "Idioma",
   },
