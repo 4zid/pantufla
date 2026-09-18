@@ -16,10 +16,14 @@ import { cn } from "@/lib/cn";
 /**
  * Preguntas frecuentes.
  *
- * Una sola columna dentro de una bandeja gris, con cada pregunta en una
- * tarjeta blanca numerada. La bandeja es la que hace el trabajo: agrupa las
- * ocho tarjetas en un solo bloque, así el acordeón se lee como una pieza y no
- * como ocho cajas sueltas flotando sobre el fondo.
+ * Una sola columna de tarjetas blancas numeradas, sobre el fondo de la página.
+ *
+ * Tuvieron una bandeja gris alrededor que las agrupaba en un solo bloque. La
+ * idea era que el acordeón se leyera como una pieza y no como ocho cajas
+ * sueltas, pero el gris no existe en ninguna otra parte del sitio: aparecía un
+ * rectángulo de un color que no es de acá, justo en la sección más larga. Lo
+ * que agrupa ahora es que las ocho tarjetas midan lo mismo, estén a la misma
+ * distancia y compartan el ancho: alcanza, y no hace falta meter un color.
  *
  * Antes eran dos columnas. Con una sola, abrir una pregunta empuja a las de
  * abajo y nada más —en dos columnas había que armarlas como dos listas
@@ -160,14 +164,9 @@ export function Faq() {
         <SplitHeading text={faq.title} className="mt-4 text-h2" />
       </div>
 
-      {/* La bandeja. El aire de adentro es más chico que el de afuera para que
-          se lea como un contenedor y no como otra tarjeta más. */}
       <Reveal delay={0.1}>
-        <div
-          ref={scope}
-          className="mx-auto mt-9 max-w-3xl rounded-[24px] bg-line p-2.5 md:mt-10 md:p-3"
-        >
-          <div className="flex flex-col gap-2">
+        <div ref={scope} className="mx-auto mt-9 max-w-3xl md:mt-10">
+          <div className="flex flex-col gap-2.5">
             {faq.items.map((item, i) => {
               const abierto = open === i;
 

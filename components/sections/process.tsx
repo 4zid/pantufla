@@ -240,7 +240,11 @@ export function Process() {
       </div>
 
       <Reveal>
-        <p className="mx-auto mt-16 max-w-xl text-center text-[0.92rem] leading-relaxed text-ink-faint">
+        {/* En tinta plena y no apagada: esta línea cae justo encima del
+            resplandor celeste del pie de la sección, que aclara el fondo
+            bastante más que el negro de arriba. La tinta apagada alcanza
+            sobre el negro, pero sobre el resplandor se despinta. */}
+        <p className="mx-auto mt-16 max-w-xl text-center text-[0.92rem] leading-relaxed text-ink">
           {process.payment}
         </p>
       </Reveal>

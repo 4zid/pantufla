@@ -5,117 +5,114 @@ import Link from "next/link";
 
 import { Reveal } from "@/components/motion/reveal";
 import { ArrowUpRightIcon } from "@/components/ui/icons";
+import { arteDeProyecto } from "@/content/fallback-content";
 import { urlForImage } from "@/sanity/image";
 import type { SanityProject } from "@/sanity/types";
 import { useCopy, useHref } from "@/components/copy-provider";
 import { cn } from "@/lib/cn";
 
 /**
- * Los proyectos: el nombre del cliente sobre el fondo del proyecto.
+ * Los proyectos, de a dos por fila.
  *
- * Antes cada tarjeta traía captura, bajada, rubro, plan y una lista de
- * servicios. Eran seis datos por proyecto y ninguno era el que importa: en un
- * portfolio lo que convence no es leer que un sitio es «limpio y actual», es
- * abrirlo. Todo eso competía con el nombre y empujaba el enlace hacia abajo.
+ * Cada uno es el nombre del cliente y su imagen, grande. Nada más: la bajada,
+ * el rubro, el plan y la lista de servicios estuvieron y se fueron, porque en
+ * un portfolio lo que convence no es leer que un sitio es «limpio y actual»,
+ * es abrirlo. Todo eso competía con el nombre y empujaba el enlace hacia
+ * abajo.
  *
- * Así que la tarjeta quedó en el nombre y el enlace lleva al sitio publicado,
- * no a una ficha interna que cuenta el sitio en vez de mostrarlo. Lo que pone
- * el fondo es una pieza abstracta por proyecto: le da identidad a cada tarjeta
- * sin prometer nada, que es lo que sí hace una captura —una captura promete
- * que el sitio se ve así hoy, y los sitios cambian—.
+ * La imagen va limpia, sin desenfoque ni velo encima. Tuvo los dos cuando el
+ * nombre iba adentro de la tarjeta: ahí hacían falta para que el blanco se
+ * leyera sobre cualquier fondo. Con el nombre afuera no hay nada que rescatar,
+ * así que la imagen se ve como la hizo quien la hizo.
  *
- * El nombre va en blanco, y para que se lea sobre cualquier fondo hay dos
- * capas. Primero un desenfoque sobre la imagen: las manchas grandes siguen
- * leyéndose, pero desaparece el detalle fino, que es lo que le come el borde a
- * una letra. Encima, un velo de tinta parejo.
- *
- * El velo está en 58% por el peor caso y no por estas imágenes. Sobre las que
- * hay ahora, que son oscuras, el blanco no baja de 9.4:1 en ningún pixel; pero
- * el fondo lo pone quien sube el archivo, y sobre un blanco puro —el peor
- * fondo posible— ese mismo velo deja 4.75:1, que sigue pasando AA. Así el
- * contraste no depende de qué imagen entre. Al pasar el cursor el velo afloja
- * y el desenfoque cede: el fondo se despeja justo en la tarjeta que se mira,
- * y ahí el peor caso queda en 3.6:1, que es el mínimo para texto grande.
- *
- * Toda la tarjeta es el enlace y el «ver sitio» es un span con forma de botón:
- * un botón de verdad adentro de un ancla es HTML inválido, y dos áreas
- * clicables anidadas hacen que el foco pase dos veces por el mismo destino.
+ * Toda la tarjeta lleva al sitio publicado —no a una ficha interna que cuenta
+ * el sitio en vez de mostrarlo— y el área clicable la da el enlace del título
+ * estirado sobre la tarjeta entera. Es un solo enlace: con uno en el título,
+ * otro en la imagen y otro en el botón, el foco pasaba tres veces por el mismo
+ * destino antes de llegar al proyecto siguiente.
  *
  * Las fichas de /proyectos/[slug] siguen existiendo y siguen usando la bajada
  * y el resto de los campos. Lo que cambió es por dónde se entra.
  */
+
+/** Para un proyecto sin imagen: un degradé de la paleta en vez de un hueco. */
+const rellenos = [
+  "linear-gradient(150deg, #ddf2f0 0%, #6fcfca 100%)",
+  "linear-gradient(150deg, #fbe4e9 0%, #f2a5b6 100%)",
+  "linear-gradient(150deg, #e6f2df 0%, #a6cf95 100%)",
+  "linear-gradient(150deg, #fdeed4 0%, #f4c87d 100%)",
+];
 
 export function ProjectStack({ projects }: { projects: SanityProject[] }) {
   const { work } = useCopy();
   const href = useHref();
 
   return (
-    <Reveal stagger className="flex flex-wrap justify-center gap-4">
-      {projects.map((project) => {
+    <Reveal stagger className="grid gap-x-8 gap-y-12 lg:grid-cols-2">
+      {projects.map((project, i) => {
         // Sin URL cargada, la tarjeta cae en la ficha interna en vez de
         // quedar muerta. Es el único caso en que el enlace no sale del sitio.
         const externo = Boolean(project.url);
         const destino = project.url ?? href(`/proyectos/${project.slug}`);
-        // Sanity primero: si el proyecto tiene imagen cargada, manda esa.
-        const fondo =
-          urlForImage(project.cover)?.width(900).height(760).url() ??
-          project.art;
+        // Sanity primero: si el proyecto tiene imagen cargada, manda esa. Si
+        // no, la que está en /public para ese slug.
+        const imagen =
+          urlForImage(project.cover)?.width(1200).height(900).url() ??
+          project.art ??
+          arteDeProyecto[project.slug];
 
         return (
-          <Link
-            key={project._id}
-            href={destino}
-            target={externo ? "_blank" : undefined}
-            rel={externo ? "noreferrer" : undefined}
-            className={cn(
-              // Cuatro por fila, pero con flex y no con grid: en /proyectos
-              // hay cinco y con grid la última fila queda pegada a la
-              // izquierda con un hueco a la derecha que se lee como un error.
-              // Así el sobrante se centra solo, y donde la fila está completa
-              // —la home, que muestra cuatro— se comporta igual que una
-              // grilla.
-              "w-full sm:w-[calc(50%-0.5rem)] lg:w-[calc(25%-0.75rem)]",
-              "group/card relative isolate flex min-h-[240px] flex-col items-center justify-center gap-5 overflow-hidden rounded-panel px-5 py-12 text-center md:min-h-[280px]",
-              // Sin fondo cargado la tarjeta vuelve a ser la de papel, para
-              // que un proyecto sin imagen no quede como un agujero negro.
-              fondo ? "text-white" : "border border-line bg-card",
-            )}
-          >
-            {fondo ? (
-              <>
-                {/* El fondo, apenas más grande que la tarjeta: el desenfoque
-                    aclara los bordes de la imagen y se vería el recorte. */}
-                <Image
-                  src={fondo}
-                  alt=""
-                  aria-hidden
-                  fill
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                  className="-z-10 scale-110 object-cover blur-[10px] transition-[filter,transform] duration-500 group-hover/card:scale-[1.16] group-hover/card:blur-[6px]"
-                />
-                <span
-                  aria-hidden
-                  className="absolute inset-0 -z-10 bg-[#0e0e0e]/58 transition-colors duration-500 group-hover/card:bg-[#0e0e0e]/50"
-                />
-              </>
-            ) : null}
+          <article key={project._id} className="group/card relative">
+            <div className="flex items-start justify-between gap-6">
+              <h3 className="text-[1.45rem] font-semibold leading-tight tracking-[-0.03em] md:text-[1.6rem]">
+                <Link
+                  href={destino}
+                  target={externo ? "_blank" : undefined}
+                  rel={externo ? "noreferrer" : undefined}
+                  /* Estirado sobre toda la tarjeta: se puede tocar en
+                     cualquier parte y sigue habiendo un solo enlace.
 
-            <h3 className="text-balance text-[1.4rem] font-semibold leading-tight tracking-[-0.035em] md:text-[1.6rem]">
-              {project.title}
-            </h3>
+                     Con z-10 y no a secas: la caja de la imagen lleva position
+                     relative para recortar, y entre dos elementos posicionados
+                     sin z-index gana el que está después en el árbol. O sea
+                     que la imagen quedaba encima del área clicable y la
+                     tarjeta solo respondía en el título. */
+                  className="after:absolute after:inset-0 after:z-10 after:content-['']"
+                >
+                  {project.title}
+                </Link>
+              </h3>
 
-            <span
-              className={cn(
-                "inline-flex items-center gap-2 rounded-full border px-4 py-2 text-[0.88rem] font-medium transition-colors duration-300",
-                fondo
-                  ? "border-white/45 text-white group-hover/card:border-white group-hover/card:bg-white group-hover/card:text-[#0e0e0e]"
-                  : "border-line-strong text-ink-soft group-hover/card:border-ink group-hover/card:bg-ink group-hover/card:text-paper",
-              )}
-            >
-              {work.view}
-              <ArrowUpRightIcon className="h-[0.85rem] w-[0.85rem]" />
-            </span>
-          </Link>
+              <span
+                aria-hidden
+                className="flex shrink-0 items-center gap-3 pt-1 text-[0.95rem] font-medium text-ink-soft transition-colors duration-200 group-hover/card:text-ink"
+              >
+                {work.view}
+                <span className="grid h-10 w-10 place-items-center rounded-full border border-line-strong transition-colors duration-200 group-hover/card:border-ink group-hover/card:bg-ink group-hover/card:text-paper">
+                  <ArrowUpRightIcon className="h-4 w-4" />
+                </span>
+              </span>
+            </div>
+
+            <div className="mt-6 overflow-hidden rounded-panel border border-line bg-card p-2">
+              <div className="relative aspect-[4/3] overflow-hidden rounded-[18px]">
+                {imagen ? (
+                  <Image
+                    src={imagen}
+                    alt={project.cover?.alt || project.title}
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                    className="object-cover transition-transform duration-700 ease-out group-hover/card:scale-[1.03]"
+                  />
+                ) : (
+                  <div
+                    className="h-full w-full"
+                    style={{ background: rellenos[i % rellenos.length] }}
+                  />
+                )}
+              </div>
+            </div>
+          </article>
         );
       })}
     </Reveal>

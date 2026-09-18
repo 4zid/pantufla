@@ -87,6 +87,17 @@ export const fallbackProjects: SanityProject[] = [
   },
 ];
 
+/**
+ * Qué imagen le toca a cada slug, para los proyectos que vengan del CMS.
+ *
+ * Un proyecto cargado en Sanity no tiene el campo art —eso es del respaldo—,
+ * así que sin esta tabla los cinco que ya existen perderían la imagen apenas
+ * se carguen en el CMS. Va por slug y no por posición, y un proyecto nuevo que
+ * no esté acá simplemente no tiene imagen local: la suya la sube por Sanity.
+ */
+export const arteDeProyecto: Record<string, string | undefined> =
+  Object.fromEntries(fallbackProjects.map((p) => [p.slug, p.art]));
+
 /** ⚠️ Inventados. Ver la nota de arriba. */
 /**
  * Cuatro citas, una por cara de la fila.
