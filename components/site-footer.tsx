@@ -31,14 +31,19 @@ export function SiteFooter() {
             </p>
           </div>
 
+          {/* Los enlaces llevan py-1 y la lista compensa con menos space-y.
+              Medidos en un teléfono daban 19px de alto: pasan el mínimo de WCAG
+              2.2 por separación —29px de centro a centro contra los 24 que
+              pide— pero 19px es un renglón de texto, no un objetivo, y el pie
+              es donde alguien busca el mail con el pulgar. */}
           <div>
             <p className="eyebrow">{footer.navTitle}</p>
-            <ul className="mt-4 space-y-2.5">
+            <ul className="mt-4 space-y-1.5">
               {nav.map((item) => (
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    className="text-[0.95rem] text-ink-soft transition-colors hover:text-ink"
+                    className="inline-block py-1 text-[0.95rem] text-ink-soft transition-colors hover:text-ink"
                   >
                     {item.label}
                   </Link>
@@ -47,7 +52,7 @@ export function SiteFooter() {
               <li>
                 <Link
                   href={footer.contactLink.href}
-                  className="text-[0.95rem] text-ink-soft transition-colors hover:text-ink"
+                  className="inline-block py-1 text-[0.95rem] text-ink-soft transition-colors hover:text-ink"
                 >
                   {footer.contactLink.label}
                 </Link>
@@ -57,11 +62,11 @@ export function SiteFooter() {
 
           <div>
             <p className="eyebrow">{footer.contactTitle}</p>
-            <ul className="mt-4 space-y-2.5">
+            <ul className="mt-4 space-y-1.5">
               <li>
                 <a
                   href={`mailto:${site.email}`}
-                  className="text-[0.95rem] text-ink-soft transition-colors hover:text-ink"
+                  className="inline-block py-1 text-[0.95rem] text-ink-soft transition-colors hover:text-ink"
                 >
                   {site.email}
                 </a>
@@ -72,7 +77,7 @@ export function SiteFooter() {
                     href={item.href}
                     target="_blank"
                     rel="noreferrer"
-                    className="text-[0.95rem] text-ink-soft transition-colors hover:text-ink"
+                    className="inline-block py-1 text-[0.95rem] text-ink-soft transition-colors hover:text-ink"
                   >
                     {item.label}
                   </a>

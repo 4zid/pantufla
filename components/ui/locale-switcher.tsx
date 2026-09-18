@@ -81,8 +81,16 @@ export function LocaleSwitcher({ className }: { className?: string }) {
           onClick={() => cambiar(locale)}
           aria-current={locale === actual}
           lang={locale}
+          /* El after estira el area tocable a 44px de alto sin agrandar la
+             pastilla. Medido en un telefono, el boton daba 32x26: pasa el
+             minimo de WCAG 2.2 pero esta lejos de lo comodo, y es el primer
+             control del header. Crecer de verdad obligaria a engordar el
+             header entero, asi que crece el objetivo y no el dibujo. Solo a lo
+             alto: los dos botones estan pegados, y estirarlos a lo ancho
+             haria que cada uno invada al otro. */
           className={cn(
-            "relative z-10 w-8 rounded-full py-1 text-[0.76rem] font-semibold uppercase tracking-[0.04em] transition-colors duration-300",
+            "relative z-10 w-9 rounded-full py-1.5 text-[0.76rem] font-semibold uppercase tracking-[0.04em] transition-colors duration-300",
+            "after:absolute after:inset-x-0 after:top-1/2 after:h-11 after:-translate-y-1/2 after:content-['']",
             locale === actual ? "text-ink" : "text-ink-faint hover:text-ink-soft",
           )}
         >

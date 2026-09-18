@@ -26,7 +26,9 @@ export function Work({ projects }: { projects: SanityProject[] }) {
         <Reveal delay={0.2}>
           <Link
             href={href("/proyectos")}
-            className="group inline-flex shrink-0 items-center gap-2 text-[0.95rem] font-medium"
+            /* py-2 con -my-2: el enlace medía 23px de alto y ahora da 39,
+               sin mover nada de lo que tiene alrededor. */
+            className="group -my-2 inline-flex shrink-0 items-center gap-2 py-2 text-[0.95rem] font-medium"
           >
             {work.viewAll}
             <ArrowIcon className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />

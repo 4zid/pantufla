@@ -93,16 +93,26 @@ export function HeroIntro() {
           </ButtonLink>
         </div>
 
+        {/*
+          En una sola fila con wrap, el separador viaja pegado al item que lo
+          sigue: cuando el tercero no entra y baja, la barra baja con el y el
+          renglon nuevo arranca con un palito colgado de la nada. En un telefono
+          pasaba siempre.
+
+          Abajo de sm van apilados y sin separadores —tres lineas cortas
+          centradas no necesitan que nadie las separe— y de sm para arriba
+          vuelve la fila con las barras, donde los tres entran de una.
+        */}
         <ul
           data-reveal
-          className="mx-auto mt-6 flex max-w-3xl flex-wrap items-center justify-center gap-y-1.5 text-[0.85rem] text-ink-faint"
+          className="mx-auto mt-6 flex max-w-3xl flex-col items-center gap-y-1.5 text-[0.85rem] text-ink-faint sm:flex-row sm:flex-wrap sm:justify-center"
         >
           {hero.proof.map((item, i) => (
             <li key={item} className="flex items-center">
               {i > 0 ? (
                 <span
                   aria-hidden
-                  className="mx-3 h-3 w-px bg-line-strong sm:mx-4"
+                  className="mx-3 hidden h-3 w-px bg-line-strong sm:mx-4 sm:block"
                 />
               ) : null}
               {item}

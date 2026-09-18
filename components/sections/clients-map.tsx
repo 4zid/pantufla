@@ -181,28 +181,34 @@ export function ClientsMap() {
               </g>
             </svg>
 
-            {/* Los pines van en HTML y no en el SVG: son botones, llevan foco y
-                el rótulo tiene que usar la tipografía del sitio. */}
+            {/* Los pines van en HTML y no en el SVG para poder usar la
+                tipografía y las transiciones del sitio.
+
+                Son decorativos, y no por comodidad: eran botones y no se podían
+                tocar. En un teléfono el mapa entero mide 350px, así que Buenos
+                Aires y Montevideo quedan con los centros a 2px, Madrid y
+                Barcelona a 6. Diez pares por debajo de los 44px. Con botones de
+                28px encimados, tocar uno es tocar el de al lado —medido: el
+                navegador ni siquiera deja llegar al primero, otro pin le come el
+                evento— y en desktop pasa igual, porque las distancias escalan
+                junto con el mapa.
+
+                Así que el control es la lista de abajo, que tiene una fila por
+                país, no se pisa con nada y se puede tocar. El mapa muestra el
+                alcance; los nombres los pone la lista. */}
             {clients.map((c) => {
               const encendido = activo === c.country;
               return (
-                <button
+                <span
                   key={c.city}
-                  type="button"
                   data-pin
-                  onMouseEnter={() => setActivo(c.country)}
-                  onMouseLeave={() => setActivo(null)}
-                  onFocus={() => setActivo(c.country)}
-                  onBlur={() => setActivo(null)}
-                  className="absolute grid h-7 w-7 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full"
+                  aria-hidden
+                  className="pointer-events-none absolute grid h-7 w-7 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full"
                   style={{
                     left: `${porcentajeX(c.lon)}%`,
                     top: `${porcentajeY(c.lat)}%`,
                   }}
                 >
-                  <span className="sr-only">
-                    {c.city}, {nombrePais(c.country, locale)}
-                  </span>
                   <span
                     aria-hidden
                     className={cn(
@@ -221,12 +227,7 @@ export function ClientsMap() {
                         : "h-1.5 w-1.5 md:h-[7px] md:w-[7px]",
                     )}
                   />
-                  {encendido ? (
-                    <span className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-1 -translate-x-1/2 whitespace-nowrap rounded-full border border-line bg-card px-2 py-0.5 text-[0.72rem] font-medium shadow-sm">
-                      {c.city}
-                    </span>
-                  ) : null}
-                </button>
+                </span>
               );
             })}
 
@@ -249,33 +250,64 @@ export function ClientsMap() {
           </div>
         </Reveal>
 
-        {/* La lista. Es la parte legible del dato: el mapa muestra el alcance,
-            acá están los nombres. */}
+        {/* La lista. Es la parte legible del dato —el mapa muestra el alcance,
+            acá están los nombres— y también es el control: encender un país en
+            el mapa se hace desde acá y no desde el mapa, por lo que explica la
+            nota de los pines.
+
+            Cada fila es un botón y no un li con hover. El hover no existe en un
+            teléfono, así que la sección entera no respondía a nada: ni el mapa,
+            que estaba encimado, ni la lista, que esperaba un mouse. Con un
+            botón se toca; el hover se sigue atendiendo aparte para que en
+            escritorio pasar por encima siga alcanzando, sin obligar a hacer
+            clic. */}
         <Reveal delay={0.1}>
           <ul className="grid grid-cols-2 gap-x-6 sm:grid-cols-3 lg:grid-cols-1 lg:gap-x-0">
             {paises.map(({ pais, ciudades }) => (
-              <li
-                key={pais}
-                onMouseEnter={() => setActivo(pais)}
-                onMouseLeave={() => setActivo(null)}
-                className={cn(
-                  "border-t border-line py-2.5 transition-opacity duration-300",
-                  activo && activo !== pais ? "opacity-45" : "opacity-100",
-                )}
-              >
-                <span className="flex items-center gap-2 text-[0.95rem] font-medium tracking-[-0.015em]">
-                  <span
-                    aria-hidden
-                    className={cn(
-                      "h-1.5 w-1.5 shrink-0 rounded-full bg-aqua-deep transition-transform duration-300",
-                      activo === pais ? "scale-150" : "scale-100",
-                    )}
-                  />
-                  {nombrePais(pais, locale)}
-                </span>
-                <span className="mt-0.5 block pl-3.5 text-[0.82rem] leading-snug text-ink-faint">
-                  {ciudades.join(" · ")}
-                </span>
+              <li key={pais} className="border-t border-line">
+                <button
+                  type="button"
+                  /* El pointerType distingue el dedo del mouse: sin eso, en un
+                     teléfono el toque dispara también el enter y el leave, y el
+                     país se enciende y se apaga en el mismo gesto. */
+                  onPointerEnter={(e) => {
+                    if (e.pointerType !== "touch") setActivo(pais);
+                  }}
+                  onPointerLeave={(e) => {
+                    if (e.pointerType !== "touch") setActivo(null);
+                  }}
+                  onFocus={() => setActivo(pais)}
+                  onBlur={() => setActivo(null)}
+                  /* Enciende, no alterna. Alternaba, y con el dedo no servía:
+                     el toque da el foco antes del click, así que onFocus
+                     prendía el país y el click —viendo que ya estaba
+                     prendido— lo apagaba. Un gesto, cero cambios. Medido:
+                     aria-pressed quedaba en false después de tocar.
+
+                     Apagar tampoco hace falta. Esto resalta un país, no es
+                     una casilla: se toca otro y listo, y al salir del botón
+                     el blur limpia. */
+                  onClick={() => setActivo(pais)}
+                  aria-pressed={activo === pais}
+                  className={cn(
+                    "block w-full py-3 text-left transition-opacity duration-300",
+                    activo && activo !== pais ? "opacity-45" : "opacity-100",
+                  )}
+                >
+                  <span className="flex items-center gap-2 text-[0.95rem] font-medium tracking-[-0.015em]">
+                    <span
+                      aria-hidden
+                      className={cn(
+                        "h-1.5 w-1.5 shrink-0 rounded-full bg-aqua-deep transition-transform duration-300",
+                        activo === pais ? "scale-150" : "scale-100",
+                      )}
+                    />
+                    {nombrePais(pais, locale)}
+                  </span>
+                  <span className="mt-0.5 block pl-3.5 text-[0.82rem] leading-snug text-ink-faint">
+                    {ciudades.join(" · ")}
+                  </span>
+                </button>
               </li>
             ))}
           </ul>
