@@ -14,20 +14,89 @@ import { cn } from "@/lib/cn";
  * Barra flotante.
  *
  * No va pegada al borde: es una píldora despegada, con margen y desenfoque
- * detrás. Arriba de todo se muestra expandida y, al bajar, se compacta —menos
- * alto, menos aire y sin el enlace secundario— pero sigue acompañando siempre.
+ * detrás. Arriba de todo se muestra expandida y, al bajar, se compacta: menos
+ * alto, menos aire y sin el enlace secundario.
+ *
+ * Y se esconde al bajar, vuelve al subir. Bajando, el visitante está leyendo y
+ * la barra es lo único que le tapa la página —justo la primera línea de cada
+ * título, que es lo que peor cae—. Subiendo está buscando algo, y lo que busca
+ * casi siempre es el menú. Aparece sola antes de que llegue arriba de todo.
  */
+/**
+ * Cuánto hay que scrollear en un sentido para que la barra haga caso, y a
+ * partir de qué altura se permite esconderla.
+ *
+ * El umbral no es un lujo: sin él alcanza el rebote de un trackpad o el temblor
+ * de un pulgar para cruzar el cero varias veces por segundo, y la barra entra y
+ * sale sola. Con 64px de por medio hay que haber decidido moverse.
+ *
+ * Y arriba de los 96 primeros píxeles no se esconde nunca. Ahí todavía se está
+ * en el hero, la barra es parte de la composición y hacerla desaparecer a los
+ * dos dedos de scroll se lee como un error.
+ */
+const UMBRAL = 64;
+const LIBRE = 96;
+
 export function SiteHeader() {
   const { nav, header } = useCopy();
   const href = useHref();
   const [compact, setCompact] = useState(false);
+  const [oculto, setOculto] = useState(false);
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setCompact(window.scrollY > 40);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    /*
+       El ancla no es «la posición del cuadro anterior»: es desde dónde se está
+       midiendo el recorrido en el sentido actual. La diferencia importa. Contra
+       la posición anterior, cualquier píxel hacia arriba ya es «subir» y el
+       umbral no llega a acumularse nunca; contra un ancla que solo se mueve
+       cuando se cambia de sentido o cuando se actúa, el umbral mide lo que
+       tiene que medir: cuánto se recorrió seguido para el mismo lado.
+    */
+    let ancla = window.scrollY;
+    let sentido = 0;
+    let pedido = 0;
+
+    function decidir() {
+      pedido = 0;
+      // El rebote de iOS devuelve negativos arriba y de más abajo; sin el clamp
+      // el sentido se invierte solo al final de la página.
+      const y = Math.max(0, window.scrollY);
+      setCompact(y > 40);
+
+      if (y <= LIBRE) {
+        setOculto(false);
+        ancla = y;
+        sentido = 0;
+        return;
+      }
+
+      const s = Math.sign(y - ancla);
+      if (s === 0) return;
+      if (s !== sentido) {
+        // Cambió de sentido: se vuelve a anclar y hay que recorrer el umbral
+        // otra vez. Es lo que evita el temblor alrededor del punto de corte.
+        sentido = s;
+        ancla = y;
+        return;
+      }
+      if (Math.abs(y - ancla) < UMBRAL) return;
+
+      setOculto(s > 0);
+      ancla = y;
+    }
+
+    function alScrollear() {
+      if (pedido) return;
+      pedido = requestAnimationFrame(decidir);
+    }
+
+    decidir();
+    window.addEventListener("scroll", alScrollear, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", alScrollear);
+      if (pedido) cancelAnimationFrame(pedido);
+    };
   }, []);
 
   useEffect(() => {
@@ -58,7 +127,25 @@ export function SiteHeader() {
         )}
       />
 
-      <header className="pointer-events-none fixed inset-x-0 top-0 z-50 flex justify-center px-4 pt-3 sm:pt-4">
+      <header
+        /* El menú abierto manda sobre todo: esconder la barra con el panel
+           desplegado se llevaría el panel con ella. */
+        data-oculto={oculto && !open ? "" : undefined}
+        /* Si alguien llega con el tabulador, la barra tiene que estar. Sin
+           esto, el primer Tab después de bajar mueve el foco a un enlace que
+           está fuera de la pantalla: se ve el anillo de foco en ningún lado y
+           no hay forma de saber dónde se está parado. */
+        onFocusCapture={() => setOculto(false)}
+        className={cn(
+          "pointer-events-none fixed inset-x-0 top-0 z-50 flex justify-center px-4 pt-3 transition-transform duration-300 ease-out sm:pt-4",
+          /* -120% y no -100%: el 100% es el alto de la barra y deja asomando
+             la sombra, que sobresale de la caja. */
+          oculto && !open && "-translate-y-[120%]",
+          /* Para quien pidió menos movimiento, la barra igual se esconde —no es
+             un adorno, es lo que despeja la lectura— pero sin el deslizamiento. */
+          "motion-reduce:transition-none",
+        )}
+      >
         <div
           className={cn(
             "pointer-events-auto w-full border backdrop-blur-xl transition-[max-width,padding,background-color,border-color,box-shadow] duration-500 ease-out",
