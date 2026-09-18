@@ -250,22 +250,15 @@
 }
 
 /*
-   Cuál de los dos claros está abajo. Las secciones claras alternan entre papel
-   y bruma, y esa alternancia también cambia por sección en vez de mezclarse.
-*/
-:root[data-fondo="paper"] {
-  --page-bg: #ffffff;
-}
-
-/*
    El oscuro no es el claro invertido. La tinta baja apenas del blanco puro
    —sobre negro, el blanco puro vibra— y las superficies se separan de a poco:
    el papel es el fondo, la tarjeta sube un escalón y la línea otro. Con un
    solo gris para todo, las tarjetas desaparecen.
 
-   Va después de la regla del fondo claro a propósito: tienen la misma
-   especificidad y gana la última, que es lo que se quiere cuando el tema es
-   oscuro y la sección de abajo pedía papel.
+   Es el único estado que mueve el fondo. Hubo un segundo, un blanco para las
+   secciones que pedían papel, y se fue: ver la nota en components/ui/section.tsx.
+   --color-paper sigue siendo blanco y sigue haciendo falta —las tarjetas, la
+   píldora del menú, los botones sobre oscuro— pero ya no es el fondo de nada.
 */
 :root[data-tema="oscuro"] {
   --page-bg: #0e0e0e;

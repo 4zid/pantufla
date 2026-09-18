@@ -120,7 +120,7 @@ export function Testimonials({ items }: { items: SanityTestimonial[] }) {
   const actual = lista[activo];
 
   return (
-    <Section id="testimonios" surface="mist">
+    <Section id="testimonios">
       {/* Sin título a la vista: la sección entera es una cita, y un titular
           arriba le estaría diciendo al visitante qué pensar antes de leerla.
           El documento sí lo necesita —es la única manera de que la sección

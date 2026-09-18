@@ -132,7 +132,7 @@ export function ClientsMap() {
   );
 
   return (
-    <Section id="clientes" surface="paper">
+    <Section id="clientes">
       <SectionHead
         icon="globo"
         eyebrow={clientsMap.eyebrow}

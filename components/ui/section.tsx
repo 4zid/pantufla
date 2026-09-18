@@ -20,15 +20,24 @@ import { cn } from "@/lib/cn";
  *
  * Las secciones oscuras tampoco llevan tinta clara propia: el tema entero se
  * da vuelta —tinta, líneas, tarjetas— así que alcanza con decir deep.
+ *
+ * Hay dos superficies y no tres. Antes las claras alternaban entre papel
+ * blanco y bruma, y esa alternancia era un tercer cambio de fondo que no
+ * significaba nada: el visitante veía la página pasar de lila a blanco y
+ * buscaba el motivo, que no existía. El encendido y apagado tiene que ser la
+ * única cosa que mueva el fondo, porque es la única que quiere decir algo.
+ * Lo blanco sigue estando donde corresponde —las tarjetas, la píldora del
+ * menú, los botones sobre oscuro—, que es justamente lo que se destaca ahora
+ * que el fondo dejó de ser blanco también.
  */
 
-export type Surface = "paper" | "mist" | "deep";
+export type Surface = "mist" | "deep";
 
 export function Section({
   id,
   children,
   className,
-  surface = "paper",
+  surface = "mist",
   overlay,
   wide = false,
 }: {

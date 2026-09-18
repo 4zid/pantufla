@@ -109,7 +109,7 @@ export function StackTicker() {
   return (
     <section
       id="stack"
-      data-surface="paper"
+      data-surface="mist"
       className="relative overflow-hidden py-20 md:py-24"
     >
       <div className="shell">

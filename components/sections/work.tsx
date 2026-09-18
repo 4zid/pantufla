@@ -15,7 +15,7 @@ export function Work({ projects }: { projects: SanityProject[] }) {
   if (!projects.length) return null;
 
   return (
-    <Section id="proyectos" surface="paper">
+    <Section id="proyectos">
       <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
         <SectionHead
           icon="grilla"

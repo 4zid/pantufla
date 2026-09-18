@@ -154,7 +154,7 @@ export function Faq() {
   );
 
   return (
-    <Section id="faq" surface="mist" className="py-16 md:py-20">
+    <Section id="faq" className="py-16 md:py-20">
       <div className="mx-auto max-w-2xl text-center">
         <Reveal>
           <div className="flex justify-center">

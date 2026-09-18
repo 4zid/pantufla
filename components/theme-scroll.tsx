@@ -6,7 +6,7 @@ import { useEffect } from "react";
  * Qué sección manda sobre el color de la página.
  *
  * El sitio tiene un solo fondo y dos estados, claro y oscuro. Este componente
- * no pinta nada: mira qué hay en pantalla y pone dos atributos en <html>. El
+ * no pinta nada: mira qué hay en pantalla y pone un atributo en <html>. El
  * color y el tiempo los pone el CSS —ver la nota larga en globals.css—, que es
  * donde tienen que estar.
  *
@@ -21,6 +21,10 @@ import { useEffect } from "react";
  * de las secciones a la vista tiene el mando. Lo que cambió es qué se hace con
  * el resultado —un sí o un no en vez de un valor continuo— y cuánto cuesta:
  * ahora casi todos los cuadros terminan sin tocar el DOM.
+ *
+ * Hubo un segundo atributo, para elegir entre dos fondos claros. Se fue con
+ * ellos: ahora lo claro es uno solo, así que lo único que hay que preguntarse
+ * en cada cuadro es si lo oscuro tapa la pantalla.
  */
 
 /**
@@ -36,59 +40,39 @@ import { useEffect } from "react";
 const PRENDE = 0.55;
 const APAGA = 0.45;
 
-type Superficie = "paper" | "mist" | "deep";
-
 export function ThemeScroll() {
   useEffect(() => {
     const raiz = document.documentElement;
 
     let pedido = 0;
     let oscuro = false;
-    let fondo: Superficie | null = null;
 
     function decidir() {
       pedido = 0;
 
       const alto = window.innerHeight;
-      const secciones =
-        document.querySelectorAll<HTMLElement>("[data-surface]");
+      const secciones = document.querySelectorAll<HTMLElement>(
+        '[data-surface="deep"]',
+      );
 
       let tapaOscuro = 0;
-      const claros: Record<string, number> = { paper: 0, mist: 0 };
 
       for (const seccion of secciones) {
         const caja = seccion.getBoundingClientRect();
         // Qué parte de la pantalla ocupa esta sección, de 0 a 1.
         const visible =
           (Math.min(caja.bottom, alto) - Math.max(caja.top, 0)) / alto;
-        if (visible <= 0) continue;
-
-        const nombre = seccion.dataset.surface as Superficie;
-        if (nombre === "deep") tapaOscuro += visible;
-        else if (nombre in claros) claros[nombre] += visible;
+        if (visible > 0) tapaOscuro += visible;
       }
 
       // El estado se sostiene solo: sube a oscuro al pasar PRENDE y baja al
       // caer de APAGA; en el medio se queda donde estaba.
-      const quiereOscuro = oscuro
-        ? tapaOscuro > APAGA
-        : tapaOscuro >= PRENDE;
+      const quiereOscuro = oscuro ? tapaOscuro > APAGA : tapaOscuro >= PRENDE;
+      if (quiereOscuro === oscuro) return;
 
-      if (quiereOscuro !== oscuro) {
-        oscuro = quiereOscuro;
-        if (oscuro) raiz.setAttribute("data-tema", "oscuro");
-        else raiz.removeAttribute("data-tema");
-      }
-
-      // Cuál de los dos claros gana. Solo importa mientras el tema es claro,
-      // pero se sigue midiendo igual para que al volver de una sección oscura
-      // el fondo ya esté en el que corresponde.
-      const claro: Superficie = claros.paper > claros.mist ? "paper" : "mist";
-      if (claro !== fondo) {
-        fondo = claro;
-        if (claro === "paper") raiz.setAttribute("data-fondo", "paper");
-        else raiz.removeAttribute("data-fondo");
-      }
+      oscuro = quiereOscuro;
+      if (oscuro) raiz.setAttribute("data-tema", "oscuro");
+      else raiz.removeAttribute("data-tema");
     }
 
     function alScrollear() {
@@ -105,7 +89,6 @@ export function ThemeScroll() {
       window.removeEventListener("resize", alScrollear);
       if (pedido) cancelAnimationFrame(pedido);
       raiz.removeAttribute("data-tema");
-      raiz.removeAttribute("data-fondo");
     };
   }, []);
 
