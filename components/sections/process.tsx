@@ -5,6 +5,8 @@ import { useRef } from "react";
 
 import { useCopy } from "@/components/copy-provider";
 import { Reveal } from "@/components/motion/reveal";
+import { SplitHeading } from "@/components/motion/split-heading";
+import { ButtonLink } from "@/components/ui/button";
 import { Section, SectionHead } from "@/components/ui/section";
 import { gsap, registerGsap } from "@/lib/motion";
 import { cn } from "@/lib/cn";
@@ -239,15 +241,41 @@ export function Process() {
         </ol>
       </div>
 
-      <Reveal>
-        {/* En tinta plena y no apagada: esta línea cae justo encima del
-            resplandor celeste del pie de la sección, que aclara el fondo
-            bastante más que el negro de arriba. La tinta apagada alcanza
-            sobre el negro, pero sobre el resplandor se despinta. */}
-        <p className="mx-auto mt-16 max-w-xl text-center text-[0.92rem] leading-relaxed text-ink">
-          {process.payment}
-        </p>
-      </Reveal>
+      {/*
+        El cierre, con el mismo formato que el titular de la portada: tramos
+        que suben uno detrás de otro y el descuento en pastilla. Era un párrafo
+        chico en tinta apagada y ahí el 15% no se veía —era una frase más
+        adentro de otra—, justo en el punto de la página donde alguien terminó
+        de leer cómo se trabaja y está decidiendo.
+
+        En tinta plena y no apagada: esta zona cae encima del resplandor
+        celeste del pie de la sección, que aclara el fondo bastante más que el
+        negro de arriba. La tinta apagada alcanza sobre el negro, pero sobre el
+        resplandor se despinta.
+
+        La pastilla es aqua y no blanca como en la portada. Acá el fondo es
+        oscuro: la blanca funciona igual, pero el celeste es el color con el
+        que la sección ya viene hablando —el riel, los números, el resplandor—
+        y sobre negro levanta más que el blanco, que compite con la tinta.
+      */}
+      <div className="mx-auto mt-20 max-w-2xl text-center md:mt-24">
+        <SplitHeading
+          as="p"
+          segments={process.payment.segments}
+          className="text-[1.45rem] font-semibold leading-[1.35] tracking-[-0.025em] text-ink md:text-[1.8rem]"
+        />
+
+        {/* Sin label no se dibuja. Pasa con la nota de pago vieja que todavía
+            puede venir de Sanity: ahí no hay botón que poner, y uno vacío es
+            peor que ninguno. */}
+        {process.payment.cta.label ? (
+          <Reveal delay={0.3}>
+            <ButtonLink href={process.payment.cta.href} size="lg" className="mt-9">
+              {process.payment.cta.label}
+            </ButtonLink>
+          </Reveal>
+        ) : null}
+      </div>
     </Section>
   );
 }

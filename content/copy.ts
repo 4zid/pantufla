@@ -67,7 +67,12 @@ export type SiteCopy = {
       deliverable: string;
       yours: string;
     }[];
-    payment: string;
+    /**
+     * El cierre de la sección. Va en tramos como el titular de la portada
+     * porque el descuento tiene que verse, no leerse: en un párrafo corrido,
+     * «15% menos» es una frase más entre otras quince.
+     */
+    payment: { segments: Segment[]; cta: Link };
   };
   stack: { eyebrow: string; title: string; lead: string };
   pricing: {

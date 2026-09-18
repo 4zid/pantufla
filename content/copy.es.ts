@@ -165,8 +165,14 @@ export const es: SiteCopy = {
         yours: "El dominio",
       },
     ],
-    payment:
-      "Se paga 50% para reservar la fecha y 50% el día que se publica. Si elegís pago único al inicio, te queda 15% menos.",
+    payment: {
+      segments: [
+        { text: "Mitad al reservar la fecha, mitad el día que se publica." },
+        { text: "O todo al inicio, con" },
+        { text: "15% menos.", mark: "aqua" },
+      ],
+      cta: { label: "Empezar un proyecto", href: "/contacto" },
+    },
   },
 
   stack: {

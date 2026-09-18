@@ -69,8 +69,11 @@ export default async function ContactPage({ params }: Props) {
               >
                 {site.email}
               </a>
+              {/* Los mismos tramos que el cierre del proceso, acá en corrido:
+                  en una ficha al costado del formulario no hay nada que
+                  resaltar, solo un dato que hay que tener a mano. */}
               <p className="mt-5 border-t border-line pt-5 text-[0.88rem] leading-relaxed text-ink-faint">
-                {process.payment}
+                {process.payment.segments.map((t) => t.text).join(" ")}
               </p>
             </div>
           </aside>

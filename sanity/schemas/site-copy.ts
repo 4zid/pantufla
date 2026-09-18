@@ -336,7 +336,45 @@ export const siteCopy = defineType({
             },
           ],
         }),
-        texto("payment", "Nota de pago"),
+        defineField({
+          name: "payment",
+          title: "Cierre de la sección",
+          description:
+            "La forma de pago, en tramos como el titular de la portada, y el botón de abajo.",
+          type: "object",
+          fields: [
+            defineField({
+              name: "segments",
+              title: "Texto por tramos",
+              description:
+                "Los que llevan resaltado salen en pastilla. Sobre el fondo oscuro de esta sección, la celeste es la que más levanta.",
+              type: "array",
+              of: [
+                {
+                  type: "object",
+                  fields: [
+                    { name: "text", title: "Texto", type: "string" },
+                    {
+                      name: "mark",
+                      title: "Resaltado",
+                      type: "string",
+                      options: {
+                        list: [
+                          { title: "Sin resaltar", value: "" },
+                          { title: "Pastilla celeste", value: "aqua" },
+                          { title: "Pastilla blanca", value: "paper" },
+                          { title: "Pastilla rosa", value: "rosa" },
+                        ],
+                      },
+                    },
+                  ],
+                  preview: { select: { title: "text", subtitle: "mark" } },
+                },
+              ],
+            }),
+            link("cta", "Botón"),
+          ],
+        }),
       ],
     }),
 

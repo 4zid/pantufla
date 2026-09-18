@@ -153,8 +153,14 @@ export const en: SiteCopy = {
         yours: "The domain",
       },
     ],
-    payment:
-      "You pay 50% to hold the date and 50% the day it goes live. Pay it all up front and you get 15% off.",
+    payment: {
+      segments: [
+        { text: "Half to book the date, half the day it goes live." },
+        { text: "Or all of it upfront, for" },
+        { text: "15% off.", mark: "aqua" },
+      ],
+      cta: { label: "Start a project", href: "/contacto" },
+    },
   },
 
   stack: {

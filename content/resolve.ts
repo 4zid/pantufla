@@ -49,6 +49,20 @@ export type ResolvedCopy = Omit<SiteCopy, "approach" | "process" | "pricing"> & 
   };
 };
 
+/**
+ * Acepta la nota de pago vieja —un párrafo suelto— y la deja en la forma
+ * nueva. El botón no se puede inventar, así que sale del texto de respaldo:
+ * el del idioma ya está resuelto cuando esto corre.
+ */
+function normalizarPago(
+  valor: SiteCopy["process"]["payment"] | string,
+): SiteCopy["process"]["payment"] {
+  if (typeof valor === "string") {
+    return { segments: [{ text: valor }], cta: { label: "", href: "/contacto" } };
+  }
+  return valor;
+}
+
 export function resolveCopy(copy: SiteCopy, locale: Locale): ResolvedCopy {
   const c = localizeHrefs(copy, locale);
 
@@ -64,6 +78,15 @@ export function resolveCopy(copy: SiteCopy, locale: Locale): ResolvedCopy {
     },
     process: {
       ...c.process,
+      /*
+         La nota de pago era un string y ahora son tramos con un botón. El
+         documento que ya está cargado en Sanity sigue teniendo el string, y
+         Sanity manda la sección entera —el merge es por sección, no por
+         campo—, así que hasta que alguien vuelva a guardarla desde el Studio
+         llega la forma vieja. Sin esto la página se cae en producción y anda
+         en local, que es la peor de las combinaciones.
+      */
+      payment: normalizarPago(c.process.payment),
       steps: c.process.steps.map((s, i) => ({
         ...s,
         number: processDesign[s.id]?.number ?? String(i + 1).padStart(2, "0"),
