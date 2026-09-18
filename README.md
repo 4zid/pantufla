@@ -78,6 +78,7 @@ Variables a cargar en el panel de Vercel:
 | `BRIEF_NOTIFICATION_TO` | a qué casilla llega el brief |
 | `BRIEF_NOTIFICATION_FROM` | `brief@pantufla.design` (dominio verificado) |
 | `NEXT_PUBLIC_SITE_URL` | el dominio principal, para sitemap y metadatos |
+| `SANITY_REVALIDATE_SECRET` | que publicar en el Studio se vea sin redesplegar |
 
 `NEXT_PUBLIC_SITE_URL` tiene que coincidir con el dominio que marques como
 principal en Vercel: si es el apex va `https://pantufla.design`, si es el www va
@@ -86,6 +87,41 @@ apex está cargado como redirección 308 hacia él— y ese es el valor que usa
 `lib/site-url.ts` cuando la variable no está. De ahí salen los canonical, los
 hreflang, el sitemap y los `@id` del grafo de datos estructurados, así que
 apuntarlo a un host que no resuelve es peor que no tenerlo.
+
+### Que publicar en Sanity se vea
+
+Cada consulta a Sanity sale etiquetada por tipo —`project`, `post`,
+`testimonial`, `siteCopy`— pero una etiqueta sola no se vence: hace falta que
+alguien avise. Ese alguien es `/api/revalidate`, y sin el webhook configurado un
+cambio publicado en el Studio tarda en aparecer o no aparece hasta el próximo
+deploy.
+
+Se arma una vez, en dos lados, con **el mismo string**:
+
+1. Generá el secreto: `openssl rand -base64 32`.
+2. En Vercel → Settings → Environment Variables, cargalo como
+   `SANITY_REVALIDATE_SECRET` en los tres entornos y redesplegá (las variables
+   se leen en el arranque, no en caliente).
+3. En [sanity.io/manage](https://www.sanity.io/manage) → API → Webhooks → *Create
+   webhook*:
+
+   | Campo | Valor |
+   | --- | --- |
+   | URL | `https://www.pantufla.design/api/revalidate` |
+   | Dataset | `production` |
+   | Trigger on | Create, Update, Delete |
+   | Filter | `_type in ["project","post","testimonial","siteCopy"]` |
+   | Projection | dejalo vacío |
+   | HTTP method | `POST` |
+   | Secret | el mismo del paso 1 |
+
+Para comprobar que quedó: `GET https://www.pantufla.design/api/revalidate`
+contesta `{"listo":true,...}` cuando la variable está cargada. Si dice
+`"listo":false`, falta el secreto en Vercel o falta redesplegar.
+
+El secreto no es opcional. El endpoint es público —tiene que serlo, lo llama
+Sanity desde afuera— así que sin firma cualquiera puede tirarle el caché al
+sitio todo el día.
 
 ---
 
