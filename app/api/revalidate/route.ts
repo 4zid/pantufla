@@ -55,9 +55,29 @@ export async function POST(request: Request) {
     return Response.json({ error: "cuerpo ilegible" }, { status: 400 });
   }
 
-  if (typeof tipo !== "string" || !TIPOS.has(tipo)) {
-    // No es un error: el webhook puede estar mandando más de lo que el sitio
-    // consulta. Se contesta 200 para que Sanity no lo marque como caído.
+  /*
+     Sin _type no se sabe qué cambió, y pasa de verdad: alcanza con que el
+     webhook lleve una proyección propia que no lo incluya, o que el evento sea
+     un borrado, para que el cuerpo llegue con poco más que el id. Ignorarlo
+     sería el peor final posible para un webhook —contesta 200, Sanity lo da
+     por entregado, y el cambio no aparece nunca—, así que se vencen las cuatro
+     etiquetas. Cuesta cuatro consultas de más en la próxima visita; a cambio
+     no hay forma de que un cambio se pierda por cómo quedó configurado el
+     webhook del otro lado.
+  */
+  if (typeof tipo !== "string") {
+    for (const cada of TIPOS) revalidateTag(cada, { expire: 0 });
+    return Response.json({
+      revalidado: true,
+      tipos: [...TIPOS],
+      cuando: Date.now(),
+    });
+  }
+
+  if (!TIPOS.has(tipo)) {
+    // Un tipo que el sitio no consulta: un brief, por ejemplo. No es un error
+    // —el webhook puede estar mandando más de lo que hace falta— y se contesta
+    // 200 para que Sanity no lo marque como caído.
     return Response.json({ revalidado: false, tipo });
   }
 

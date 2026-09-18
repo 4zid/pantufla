@@ -15,9 +15,13 @@ import { postSlugsQuery, projectSlugsQuery } from "@/sanity/queries";
  * que le toca.
  */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  // Con etiqueta, como el resto: publicar un proyecto o una nota en el Studio
+  // tiene que meterla en el sitemap en el momento. Sin etiqueta el webhook de
+  // /api/revalidate no la alcanza y la página nueva queda fuera del sitemap
+  // hasta que venza sola.
   const [projectSlugs, postSlugs] = await Promise.all([
-    sanityFetch<string[]>(projectSlugsQuery, {}, []),
-    sanityFetch<string[]>(postSlugsQuery, {}, []),
+    sanityFetch<string[]>(projectSlugsQuery, {}, [], ["project"]),
+    sanityFetch<string[]>(postSlugsQuery, {}, [], ["post"]),
   ]);
 
   const projects = projectSlugs.length
