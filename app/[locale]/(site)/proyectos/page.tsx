@@ -4,7 +4,10 @@ import { FinalCta } from "@/components/sections/final-cta";
 import { PageHeader } from "@/components/ui/page-header";
 import { ProjectStack } from "@/components/ui/project-stack";
 import { fallbackProjects } from "@/content/fallback-content";
+import { JsonLd } from "@/components/json-ld";
+import { site } from "@/content/site";
 import { getCopy } from "@/content/get-copy";
+import { migas, nodoPagina } from "@/lib/schema";
 import { localeHref, type Locale } from "@/lib/i18n";
 import { sanityFetch } from "@/sanity/client";
 import { allProjectsQuery } from "@/sanity/queries";
@@ -51,6 +54,21 @@ export default async function ProjectsPage({ params }: Props) {
       </div>
 
       <FinalCta />
-    </>
+          <JsonLd
+        nodos={[
+          nodoPagina({
+            locale,
+            path: "/proyectos",
+            title: pages.proyectos.title,
+            description: pages.proyectos.lead,
+            tipo: "CollectionPage",
+          }),
+          migas(locale, [
+            { name: site.name, path: "/" },
+            { name: pages.proyectos.eyebrow, path: "/proyectos" },
+          ]),
+        ]}
+      />
+</>
   );
 }

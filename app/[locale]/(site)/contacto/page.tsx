@@ -4,8 +4,10 @@ import { Suspense } from "react";
 import { BriefForm } from "@/components/brief-form";
 import { CheckIcon } from "@/components/ui/icons";
 import { PageHeader } from "@/components/ui/page-header";
-import { getCopy } from "@/content/get-copy";
+import { JsonLd } from "@/components/json-ld";
 import { site } from "@/content/site";
+import { getCopy } from "@/content/get-copy";
+import { migas, nodoPagina } from "@/lib/schema";
 import { localeHref, type Locale } from "@/lib/i18n";
 
 type Props = { params: Promise<{ locale: Locale }> };
@@ -74,6 +76,21 @@ export default async function ContactPage({ params }: Props) {
           </aside>
         </div>
       </div>
-    </>
+          <JsonLd
+        nodos={[
+          nodoPagina({
+            locale,
+            path: "/contacto",
+            title: pages.contacto.title,
+            description: pages.contacto.lead,
+            tipo: "ContactPage",
+          }),
+          migas(locale, [
+            { name: site.name, path: "/" },
+            { name: pages.contacto.eyebrow, path: "/contacto" },
+          ]),
+        ]}
+      />
+</>
   );
 }

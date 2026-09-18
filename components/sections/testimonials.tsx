@@ -16,7 +16,7 @@ import { gsap, registerGsap } from "@/lib/motion";
 import { cn } from "@/lib/cn";
 
 /**
- * Testimonios: una sola cita grande y las caras al costado.
+ * Testimonios: las caras arriba y una sola cita grande abajo, todo centrado.
  *
  * Antes eran tres tarjetas iguales en fila. El problema de esa forma es que
  * pone tres citas a competir entre sí: el ojo saltea, lee media frase de cada
@@ -24,17 +24,19 @@ import { cn } from "@/lib/cn";
  * grande, y las demás esperan su turno como caras apagadas. Se lee una, y es
  * la que se quiere que se lea.
  *
+ * Las caras van en una fila de cuatro y no en una grilla al costado. Con la
+ * grilla de nueve, el bloque tenía dos ejes —las caras a la izquierda, el
+ * texto a la derecha— y ninguno de los dos coincidía con el centro de la
+ * página, así que la sección se leía descolgada de todo lo demás. En un solo
+ * eje, la fila de caras es el índice y la cita es el contenido: se lee de
+ * arriba abajo sin saltar de lado. Cuatro porque es lo que entra en una fila
+ * en un teléfono sin achicar el cuadrado.
+ *
  * Va sobre el papel gris del sitio y no sobre negro. La referencia era oscura,
  * pero acá el negro ya tiene dueño —la línea de tiempo del proceso— y un
  * segundo bloque oscuro en la misma página deja de ser un acento y pasa a ser
  * una franja. El silencio que esta sección necesita lo da el aire, no el
  * color: una sola cita, grande, sin nada al lado.
- *
- * Va en el ancho de lectura del sitio y no a sangre. Se probó lo segundo y el
- * problema es que acá no hay nada que gane ancho: son una cita y nueve caras.
- * Estirarlas hasta el borde solo deja el bloque desalineado con todo lo demás
- * —el titular de la sección de arriba arranca 150px más adentro— y esa falta
- * de eje se lee como un error de maquetado, no como amplitud.
  *
  * Las caras rotan solas cada seis segundos hasta que el visitante toca una.
  * Ahí se corta para siempre: si alguien eligió a quién quiere leer, moverle el
@@ -46,19 +48,23 @@ const tintes = [
   { from: "#f2a5b6", to: "#a3405a" },
   { from: "#f4c87d", to: "#8a5a12" },
   { from: "#a6cf95", to: "#456f35" },
-  { from: "#8fbce6", to: "#1f4d78" },
-  { from: "#d5b4ef", to: "#5b3b7a" },
 ];
+
+/** Cuántas caras entran en la fila. */
+const CARAS = 4;
 
 const ROTACION = 6000;
 
 function Estrellas({ value = 5, label }: { value?: number; label: string }) {
   return (
-    <div className="flex gap-1" role="img" aria-label={label}>
+    <div className="flex justify-center gap-1" role="img" aria-label={label}>
       {[...Array(5)].map((_, i) => (
         <StarIcon
           key={i}
-          className={cn("h-[18px] w-[18px]", i < value ? "text-star" : "text-line-strong")}
+          className={cn(
+            "h-[18px] w-[18px]",
+            i < value ? "text-star" : "text-line-strong",
+          )}
         />
       ))}
     </div>
@@ -75,7 +81,7 @@ function iniciales(nombre: string) {
 
 export function Testimonials({ items }: { items: SanityTestimonial[] }) {
   const { testimonials } = useCopy();
-  const lista = items.slice(0, 9);
+  const lista = items.slice(0, CARAS);
   const [activo, setActivo] = useState(0);
   const [manual, setManual] = useState(false);
   const cita = useRef<HTMLDivElement>(null);
@@ -122,74 +128,77 @@ export function Testimonials({ items }: { items: SanityTestimonial[] }) {
           queda, callado. */}
       <h2 className="sr-only">{testimonials.title}</h2>
 
-      <div className="grid gap-12 lg:grid-cols-[auto_minmax(0,1fr)] lg:items-center lg:gap-24">
-        {/* Columna de caras */}
-        <div>
-          <Reveal>
-            <Tag icon="cita">{testimonials.eyebrow}</Tag>
-          </Reveal>
+      <div className="flex flex-col items-center text-center">
+        <Reveal>
+          <Tag icon="cita">{testimonials.eyebrow}</Tag>
+        </Reveal>
 
-          <Reveal delay={0.1}>
-            <ul className="mt-7 grid w-fit grid-cols-3 gap-3">
-              {lista.map((item, i) => {
-                const foto = urlForImage(item.avatar)
-                  ?.width(160)
-                  .height(160)
-                  .url();
-                const tinte = tintes[i % tintes.length];
-                const puesto = i === activo;
+        <Reveal delay={0.1}>
+          <ul className="mt-8 flex justify-center gap-3 md:gap-4">
+            {lista.map((item, i) => {
+              const foto = urlForImage(item.avatar)
+                ?.width(180)
+                .height(180)
+                .url();
+              const tinte = tintes[i % tintes.length];
+              const puesto = i === activo;
 
-                return (
-                  <li key={item._id}>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setManual(true);
-                        setActivo(i);
-                      }}
-                      aria-pressed={puesto}
-                      aria-label={item.name}
-                      className={cn(
-                        "relative block h-[72px] w-[72px] overflow-hidden rounded-[16px] transition-all duration-500 ease-out",
-                        puesto
-                          ? "scale-105 opacity-100 shadow-[0_10px_24px_-10px_rgba(0,0,0,0.35)] ring-2 ring-ink/15"
-                          : "opacity-45 grayscale hover:opacity-80 hover:grayscale-0",
-                      )}
-                      style={
-                        foto
-                          ? undefined
-                          : {
-                              background: `linear-gradient(145deg, ${tinte.from}, ${tinte.to})`,
-                            }
-                      }
-                    >
-                      {foto ? (
-                        <Image
-                          src={foto}
-                          alt=""
-                          aria-hidden
-                          width={72}
-                          height={72}
-                          className="h-full w-full object-cover"
-                        />
-                      ) : (
-                        <span
-                          aria-hidden
-                          className="grid h-full w-full place-items-center text-[0.86rem] font-semibold text-white"
-                        >
-                          {iniciales(item.name)}
-                        </span>
-                      )}
-                    </button>
-                  </li>
-                );
-              })}
-            </ul>
-          </Reveal>
-        </div>
+              return (
+                <li key={item._id}>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setManual(true);
+                      setActivo(i);
+                    }}
+                    aria-pressed={puesto}
+                    aria-label={item.name}
+                    className={cn(
+                      "relative block h-[68px] w-[68px] overflow-hidden rounded-[18px] transition-all duration-500 ease-out md:h-[82px] md:w-[82px]",
+                      puesto
+                        ? "scale-105 opacity-100 shadow-[0_12px_28px_-12px_rgba(0,0,0,0.35)] ring-2 ring-ink/15"
+                        : "opacity-45 grayscale hover:opacity-80 hover:grayscale-0",
+                    )}
+                    style={
+                      foto
+                        ? undefined
+                        : {
+                            background: `linear-gradient(145deg, ${tinte.from}, ${tinte.to})`,
+                          }
+                    }
+                  >
+                    {foto ? (
+                      <Image
+                        src={foto}
+                        alt=""
+                        aria-hidden
+                        width={82}
+                        height={82}
+                        className="h-full w-full object-cover"
+                      />
+                    ) : (
+                      <span
+                        aria-hidden
+                        className="grid h-full w-full place-items-center text-[0.9rem] font-semibold text-white"
+                      >
+                        {iniciales(item.name)}
+                      </span>
+                    )}
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+        </Reveal>
 
-        {/* La cita */}
-        <div ref={cita} aria-live="polite" className="lg:pt-1">
+        {/* La cita. El ancho está atado al renglón y no al contenedor: una
+            cita de treinta palabras a 1200px de ancho es una sola línea que
+            hay que recorrer con la cabeza. */}
+        <div
+          ref={cita}
+          aria-live="polite"
+          className="mt-10 flex w-full max-w-3xl flex-col items-center"
+        >
           <div data-fade>
             <Estrellas
               value={actual.rating ?? 5}
@@ -197,7 +206,7 @@ export function Testimonials({ items }: { items: SanityTestimonial[] }) {
             />
           </div>
 
-          <figure>
+          <figure className="w-full">
             {/*
               Las comillas van como parte del párrafo y no como un adorno
               pegado arriba: así abren y cierran de verdad, siguen a la última
@@ -206,18 +215,24 @@ export function Testimonials({ items }: { items: SanityTestimonial[] }) {
             */}
             <blockquote
               data-fade
-              className="mt-7 text-balance text-[1.55rem] font-medium leading-[1.4] tracking-[-0.025em] text-ink md:text-[1.95rem] lg:text-[2.3rem]"
+              className="mt-6 text-balance text-[1.5rem] font-medium leading-[1.35] tracking-[-0.025em] text-ink md:text-[1.9rem] lg:text-[2.15rem]"
             >
-              <span aria-hidden className="mr-1 align-[-0.32em] text-[2.2em] leading-[0] text-ink/15">
+              <span
+                aria-hidden
+                className="mr-1 align-[-0.32em] text-[2.2em] leading-[0] text-ink/15"
+              >
                 &ldquo;
               </span>
               {actual.quote}
-              <span aria-hidden className="ml-0.5 align-[-0.32em] text-[2.2em] leading-[0] text-ink/15">
+              <span
+                aria-hidden
+                className="ml-0.5 align-[-0.32em] text-[2.2em] leading-[0] text-ink/15"
+              >
                 &rdquo;
               </span>
             </blockquote>
 
-            <figcaption data-fade className="mt-8">
+            <figcaption data-fade className="mt-7">
               <span className="block text-[1.02rem] font-medium text-ink">
                 {actual.name}
               </span>
@@ -228,7 +243,6 @@ export function Testimonials({ items }: { items: SanityTestimonial[] }) {
           </figure>
         </div>
       </div>
-
     </Section>
   );
 }

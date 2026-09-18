@@ -66,11 +66,15 @@ export const platformDesign: Record<
 
 /**
  * La frase de esta tira no dice cuántos clientes hay, y es a propósito: ver la
- * nota larga en copy.es.ts. Acá quedan las caras y las marcas, que son dibujo.
+ * nota larga en copy.es.ts.
  *
- * Las marcas son de relleno y van dibujadas en código para que se vea la forma
- * de la tira. Las reales entran como SVG en public/logos, igual que las del
- * stack.
+ * Las marcas son los clientes reales, escritos en tipografía y no en logos:
+ * mismo criterio que el riel del stack. Dibujarles un símbolo a mano sería
+ * inventarles una identidad que no tienen, que es peor que no poner ninguna.
+ *
+ * Es la misma lista que fallbackProjects, a mano y no importada: aquello es el
+ * respaldo del CMS y esto es el contenido de la tira. Si se suma un cliente,
+ * va en los dos lados.
  */
 export const socialProof = {
   faces: [
@@ -78,7 +82,7 @@ export const socialProof = {
     { initials: "RL", from: "#f2a5b6", to: "#a3405a" },
     { initials: "DF", from: "#f4c87d", to: "#8a5a12" },
   ],
-  brands: ["Aureo", "Nimbo", "Cardinal", "Vela", "Tallo"],
+  brands: ["Lupa Studio", "Remmy", "Acacia", "Rostar", "2MG"],
 } as const;
 
 /**

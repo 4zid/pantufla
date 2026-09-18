@@ -5,7 +5,10 @@ import Link from "next/link";
 import { FinalCta } from "@/components/sections/final-cta";
 import { ArrowUpRightIcon } from "@/components/ui/icons";
 import { PageHeader } from "@/components/ui/page-header";
+import { JsonLd } from "@/components/json-ld";
+import { site } from "@/content/site";
 import { getCopy } from "@/content/get-copy";
+import { migas, nodoPagina } from "@/lib/schema";
 import { localeHref, type Locale } from "@/lib/i18n";
 import { sanityFetch } from "@/sanity/client";
 import { urlForImage } from "@/sanity/image";
@@ -117,6 +120,21 @@ export default async function NotesPage({ params }: Props) {
       </div>
 
       <FinalCta />
-    </>
+          <JsonLd
+        nodos={[
+          nodoPagina({
+            locale,
+            path: "/notas",
+            title: pages.notas.title,
+            description: pages.notas.lead,
+            tipo: "CollectionPage",
+          }),
+          migas(locale, [
+            { name: site.name, path: "/" },
+            { name: pages.notas.eyebrow, path: "/notas" },
+          ]),
+        ]}
+      />
+</>
   );
 }

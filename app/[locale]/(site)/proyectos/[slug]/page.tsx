@@ -6,8 +6,12 @@ import { notFound } from "next/navigation";
 import { FinalCta } from "@/components/sections/final-cta";
 import { ArrowIcon, ArrowUpRightIcon } from "@/components/ui/icons";
 import { Prose } from "@/components/ui/portable-text";
+import { JsonLd } from "@/components/json-ld";
 import { fallbackProjects } from "@/content/fallback-content";
-import { localeHref, type Locale } from "@/lib/i18n";
+import { site } from "@/content/site";
+import { getCopy } from "@/content/get-copy";
+import { localeHref, locales, type Locale } from "@/lib/i18n";
+import { ID_ESTUDIO, absoluta, migas, nodoPagina } from "@/lib/schema";
 import { sanityFetch } from "@/sanity/client";
 import { urlForImage } from "@/sanity/image";
 import { projectBySlugQuery, projectSlugsQuery } from "@/sanity/queries";
@@ -34,20 +38,32 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
-  const { slug } = await params;
+  const { locale, slug } = await params;
   const project = await getProject(slug);
-  if (!project) return { title: "Proyecto no encontrado" };
+  if (!project) return { title: "404" };
 
+  // El canónico tiene que llevar el prefijo del idioma. Sin él, la ficha en
+  // inglés declaraba como canónica la dirección en español: le estaba diciendo
+  // al buscador que la versión inglesa es una copia y que no la indexe.
+  const ruta = `/proyectos/${project.slug}`;
   return {
     title: project.title,
     description: project.tagline,
-    alternates: { canonical: `/proyectos/${project.slug}` },
+    alternates: {
+      canonical: localeHref(ruta, locale),
+      languages: Object.fromEntries(
+        locales.map((otro) => [otro, localeHref(ruta, otro)]),
+      ),
+    },
   };
 }
 
 export default async function ProjectPage({ params }: Params) {
   const { locale, slug } = await params;
-  const project = await getProject(slug);
+  const [project, { pages }] = await Promise.all([
+    getProject(slug),
+    getCopy(locale),
+  ]);
   if (!project) notFound();
 
   const cover = urlForImage(project.cover)?.width(1600).height(1000).url();
@@ -61,7 +77,7 @@ export default async function ProjectPage({ params }: Params) {
             className="group inline-flex items-center gap-2 text-[0.9rem] text-ink-soft transition-colors hover:text-ink"
           >
             <ArrowIcon className="h-4 w-4 rotate-180 transition-transform duration-200 group-hover:-translate-x-0.5" />
-            Todos los proyectos
+            {pages.proyectos.eyebrow}
           </Link>
 
           <div className="mt-10 grid gap-10 lg:grid-cols-[1.3fr_1fr] lg:items-end">
@@ -206,6 +222,32 @@ export default async function ProjectPage({ params }: Params) {
       </article>
 
       <FinalCta />
+      <JsonLd
+        nodos={[
+          nodoPagina({
+            locale,
+            path: `/proyectos/${project.slug}`,
+            title: project.title,
+            description: project.tagline,
+          }),
+          migas(locale, [
+            { name: site.name, path: "/" },
+            { name: pages.proyectos.eyebrow, path: "/proyectos" },
+            { name: project.title, path: `/proyectos/${project.slug}` },
+          ]),
+          {
+            // El trabajo, no la ficha: lo que identifica al proyecto es el
+            // sitio publicado. Así un motor puede atar esa dirección con este
+            // estudio.
+            "@type": "WebSite",
+            ...(project.url ? { "@id": project.url, url: project.url } : {}),
+            name: project.title,
+            ...(project.tagline ? { description: project.tagline } : {}),
+            creator: { "@id": ID_ESTUDIO },
+            mainEntityOfPage: absoluta(`/proyectos/${project.slug}`, locale),
+          },
+        ]}
+      />
     </>
   );
 }

@@ -7,76 +7,42 @@ import { useCopy } from "@/components/copy-provider";
 /**
  * Tira de prueba social, justo debajo del hero.
  *
- * Va angosta y sin reglas: es un apoyo, no una sección. Si
- * respira como las demás compite con el titular, que es lo último que
- * conviene a dos centímetros del hero.
+ * Va angosta y sin reglas: es un apoyo, no una sección. Si respira como las
+ * demás compite con el titular, que es lo último que conviene a dos
+ * centímetros del hero.
  *
  * Comparte el color del hero a propósito. Con un fondo propio quedaba una
- * banda distinta justo debajo del tablero y se leía como que el hero
- * terminaba de golpe; con el mismo, el tablero se hunde en la tira y lo que
- * separa las dos cosas es el aire, no una línea de color. Las reglas sobraban
- * por lo mismo.
+ * banda distinta justo debajo del tablero y se leía como que el hero terminaba
+ * de golpe; con el mismo, el tablero se hunde en la tira y lo que separa las
+ * dos cosas es el aire, no una línea de color. Las reglas sobraban por lo
+ * mismo.
  *
  * A la izquierda va quién hace el trabajo y a la derecha para quién se hizo.
  * La frase no cuenta clientes: ver por qué en content/site.ts.
  *
- * Las marcas son de relleno y están dibujadas en código; misma nota.
+ * Los nombres corren en un riel y no quietos en fila. Son cinco: quietos
+ * ocupaban media tira y dejaban un hueco al final que pedía un sexto cliente
+ * que no existe. Moviéndose, la tira no tiene largo fijo —siempre está llena—
+ * y además se lee como una lista que sigue, que es exactamente lo que se
+ * quiere decir. La mecánica del empalme está explicada en globals.css.
  */
 
-/** Marcas inventadas: formas simples, todas del mismo peso óptico. */
-const marks: Record<string, React.ReactNode> = {
-  Aureo: (
-    <circle
-      cx="9"
-      cy="9"
-      r="6.5"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="3"
-      strokeDasharray="30 11"
-    />
-  ),
-  Nimbo: (
-    <g fill="currentColor">
-      <rect x="2" y="4" width="14" height="3" rx="1.5" />
-      <rect x="4.5" y="9" width="11.5" height="3" rx="1.5" />
-      <rect x="7" y="14" width="9" height="3" rx="1.5" />
-    </g>
-  ),
-  Cardinal: (
-    <path
-      d="M9 1c.6 4.2 3.2 6.8 7.4 7.4-4.2.6-6.8 3.2-7.4 7.4-.6-4.2-3.2-6.8-7.4-7.4C5.8 7.8 8.4 5.2 9 1Z"
-      fill="currentColor"
-    />
-  ),
-  Vela: (
-    <g fill="currentColor">
-      <path d="M9 1.5 16 15H9V1.5Z" />
-      <path d="M7 6.5V15H1.5L7 6.5Z" opacity="0.45" />
-    </g>
-  ),
-  Tallo: (
-    <g
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2.2"
-      strokeLinecap="round"
-    >
-      <path d="M9 17V5" />
-      <path
-        d="M9 9C9 6 11.5 3.5 15 3.5 15 7 12.5 9 9 9Z"
-        fill="currentColor"
-        stroke="none"
-      />
-    </g>
-  ),
-};
+/**
+ * Cuántas veces se repite la lista en cada mitad de la pista.
+ *
+ * Cinco nombres miden unos 700px. Con una sola pasada por mitad, a mitad de la
+ * animación el final de la pista entra en pantalla y queda un hueco. Tres
+ * pasadas dan 2100px por mitad, que tapa el hueco hasta en pantallas de 2560.
+ */
+const REPES = 3;
 
 export function SocialProof() {
   const copy = useCopy();
+  const marcas = socialProof.brands;
+
   return (
     <section aria-label={copy.socialProof.label} className="relative">
-      <Reveal className="relative z-10 shell flex flex-col items-center gap-8 py-8 lg:flex-row lg:gap-12 lg:py-7">
+      <Reveal className="relative z-10 shell flex flex-col items-center gap-6 py-8 lg:flex-row lg:gap-10 lg:py-7">
         <div className="flex shrink-0 items-center gap-4">
           <ul className="flex" aria-hidden>
             {socialProof.faces.map((face, i) => (
@@ -101,25 +67,32 @@ export function SocialProof() {
 
         <span aria-hidden className="hidden h-12 w-px bg-line lg:block" />
 
-        <ul className="flex flex-1 flex-wrap items-center justify-center gap-x-9 gap-y-5 lg:justify-between">
-          {socialProof.brands.map((brand) => (
-            <li
-              key={brand}
-              className="flex items-center gap-2 text-ink-soft transition-colors duration-200 hover:text-ink"
-            >
-              <svg
-                viewBox="0 0 18 18"
-                aria-hidden
-                className="h-[18px] w-[18px]"
-              >
-                {marks[brand]}
-              </svg>
-              <span className="text-[1.05rem] font-semibold tracking-[-0.03em]">
-                {brand}
-              </span>
-            </li>
-          ))}
-        </ul>
+        {/*
+          El riel. La lista real la anuncia el lector de pantalla una sola vez;
+          las copias de más existen para que el empalme no se vea y van
+          escondidas.
+        */}
+        <div
+          className="ticker w-full min-w-0 flex-1 overflow-hidden"
+          style={{ "--ticker-fade": "3rem" } as React.CSSProperties}
+        >
+          <ul
+            className="ticker-track"
+            style={{ "--ticker-duration": "34s" } as React.CSSProperties}
+          >
+            {Array.from({ length: REPES * 2 }).map((_, copia) =>
+              marcas.map((marca) => (
+                <li
+                  key={`${copia}-${marca}`}
+                  aria-hidden={copia > 0 || undefined}
+                  className="whitespace-nowrap pr-10 text-[1.05rem] font-semibold tracking-[-0.03em] text-ink-soft"
+                >
+                  {marca}
+                </li>
+              )),
+            )}
+          </ul>
+        </div>
       </Reveal>
     </section>
   );

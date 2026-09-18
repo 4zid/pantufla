@@ -29,7 +29,7 @@ const projectFields = `
 `;
 
 export const featuredProjectsQuery = groq`
-  *[_type == "project" && featured == true && ${enIdioma}] | order(order asc)[0...3] { ${projectFields} }
+  *[_type == "project" && featured == true && ${enIdioma}] | order(order asc)[0...4] { ${projectFields} }
 `;
 
 export const allProjectsQuery = groq`

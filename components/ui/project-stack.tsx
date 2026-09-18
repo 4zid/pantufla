@@ -48,16 +48,17 @@ export function ProjectStack({ projects }: { projects: SanityProject[] }) {
             target={externo ? "_blank" : undefined}
             rel={externo ? "noreferrer" : undefined}
             className={cn(
-              // Tres por fila, pero con flex y no con grid: en /proyectos hay
-              // cinco y con grid la última fila queda pegada a la izquierda
-              // con un hueco a la derecha que se lee como un error. Así el
-              // sobrante se centra solo, y donde la fila está completa
-              // —la home, que muestra tres— se comporta igual que una grilla.
-              "w-full sm:w-[calc(50%-0.5rem)] lg:w-[calc(33.333%-0.667rem)]",
-              "group/card flex min-h-[220px] flex-col items-center justify-center gap-6 rounded-panel border border-line bg-card px-6 py-14 text-center transition-colors duration-300 hover:border-line-strong md:min-h-[280px]",
+              // Cuatro por fila, pero con flex y no con grid: en /proyectos
+              // hay cinco y con grid la última fila queda pegada a la
+              // izquierda con un hueco a la derecha que se lee como un error.
+              // Así el sobrante se centra solo, y donde la fila está completa
+              // —la home, que muestra cuatro— se comporta igual que una
+              // grilla.
+              "w-full sm:w-[calc(50%-0.5rem)] lg:w-[calc(25%-0.75rem)]",
+              "group/card flex min-h-[220px] flex-col items-center justify-center gap-5 rounded-panel border border-line bg-card px-5 py-12 text-center transition-colors duration-300 hover:border-line-strong md:min-h-[260px]",
             )}
           >
-            <h3 className="text-[1.5rem] font-semibold tracking-[-0.035em] md:text-[1.85rem]">
+            <h3 className="text-balance text-[1.4rem] font-semibold leading-tight tracking-[-0.035em] md:text-[1.6rem]">
               {project.title}
             </h3>
 

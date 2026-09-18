@@ -6,7 +6,11 @@ import { notFound } from "next/navigation";
 import { FinalCta } from "@/components/sections/final-cta";
 import { ArrowIcon } from "@/components/ui/icons";
 import { Prose } from "@/components/ui/portable-text";
-import { localeHref, type Locale } from "@/lib/i18n";
+import { JsonLd } from "@/components/json-ld";
+import { getCopy } from "@/content/get-copy";
+import { site } from "@/content/site";
+import { localeHref, locales, type Locale } from "@/lib/i18n";
+import { ID_ESTUDIO, absoluta, migas } from "@/lib/schema";
 import { sanityFetch } from "@/sanity/client";
 import { urlForImage } from "@/sanity/image";
 import { postBySlugQuery, postSlugsQuery } from "@/sanity/queries";
@@ -22,19 +26,26 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
-  const { slug } = await params;
+  const { locale, slug } = await params;
   const post = await sanityFetch<SanityPost | null>(
     postBySlugQuery,
     { slug },
     null,
     ["post"],
   );
-  if (!post) return { title: "Nota no encontrada" };
+  if (!post) return { title: "404" };
 
+  // Con el prefijo del idioma: ver la nota en la ficha de proyecto.
+  const ruta = `/notas/${post.slug}`;
   return {
     title: post.title,
     description: post.excerpt,
-    alternates: { canonical: `/notas/${post.slug}` },
+    alternates: {
+      canonical: localeHref(ruta, locale),
+      languages: Object.fromEntries(
+        locales.map((otro) => [otro, localeHref(ruta, otro)]),
+      ),
+    },
     openGraph: { type: "article", publishedTime: post.publishedAt },
   };
 }
@@ -48,9 +59,12 @@ export default async function PostPage({ params }: Params) {
     ["post"],
   );
   if (!post) notFound();
+  const { pages } = await getCopy(locale);
 
   const cover = urlForImage(post.cover)?.width(1600).height(900).url();
-  const date = new Intl.DateTimeFormat("es-AR", {
+  // La fecha en el idioma de la página: «12 de marzo de 2026» abajo de un
+  // título en inglés se lee como un descuido.
+  const date = new Intl.DateTimeFormat(locale === "en" ? "en-US" : "es-AR", {
     day: "numeric",
     month: "long",
     year: "numeric",
@@ -64,7 +78,7 @@ export default async function PostPage({ params }: Params) {
           className="group inline-flex items-center gap-2 text-[0.9rem] text-ink-soft transition-colors hover:text-ink"
         >
           <ArrowIcon className="h-4 w-4 rotate-180 transition-transform duration-200 group-hover:-translate-x-0.5" />
-          Todas las notas
+          {pages.notas.eyebrow}
         </Link>
 
         <header className="mt-10 max-w-[68ch]">
@@ -101,6 +115,28 @@ export default async function PostPage({ params }: Params) {
       </article>
 
       <FinalCta />
+      <JsonLd
+        nodos={[
+          {
+            "@type": "Article",
+            "@id": `${absoluta(`/notas/${post.slug}`, locale)}#pagina`,
+            headline: post.title,
+            ...(post.excerpt ? { description: post.excerpt } : {}),
+            ...(cover ? { image: cover } : {}),
+            datePublished: post.publishedAt,
+            dateModified: post.publishedAt,
+            inLanguage: locale,
+            author: { "@id": ID_ESTUDIO },
+            publisher: { "@id": ID_ESTUDIO },
+            mainEntityOfPage: absoluta(`/notas/${post.slug}`, locale),
+          },
+          migas(locale, [
+            { name: site.name, path: "/" },
+            { name: pages.notas.eyebrow, path: "/notas" },
+            { name: post.title, path: `/notas/${post.slug}` },
+          ]),
+        ]}
+      />
     </>
   );
 }

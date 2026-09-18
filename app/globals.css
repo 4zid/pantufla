@@ -318,19 +318,25 @@
      hueco menos, así que la mitad ya no cae en el borde de la copia y el
      empalme pega un tirón.
   */
+  /*
+     El desvanecido de los bordes va como variable porque depende del ancho de
+     la pista, no del riel. El del stack cruza la pantalla entera y aguanta
+     7rem de fundido; la tira de clientes mide la mitad y con ese mismo valor
+     el primer nombre siempre se lee a medias.
+  */
   .ticker {
     -webkit-mask-image: linear-gradient(
       to right,
       transparent,
-      #000 7rem,
-      #000 calc(100% - 7rem),
+      #000 var(--ticker-fade, 7rem),
+      #000 calc(100% - var(--ticker-fade, 7rem)),
       transparent
     );
     mask-image: linear-gradient(
       to right,
       transparent,
-      #000 7rem,
-      #000 calc(100% - 7rem),
+      #000 var(--ticker-fade, 7rem),
+      #000 calc(100% - var(--ticker-fade, 7rem)),
       transparent
     );
   }
