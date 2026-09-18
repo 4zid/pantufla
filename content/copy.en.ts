@@ -297,7 +297,11 @@ export const en: SiteCopy = {
   faq: {
     eyebrow: "Questions",
     title: "Here are the answers.",
-    cta: { claim: "Still not sure about something?", label: "Let's talk", href: "/contacto" },
+    cta: {
+      claim: "Still not sure about something?",
+      label: "Book 20 minutes",
+      href: "/reunion",
+    },
     items: [
       {
         q: "What if I need more pages than the plan includes?",
@@ -332,6 +336,38 @@ export const en: SiteCopy = {
         a: "We freeze the project and pick it up when you are ready, at no extra cost, for 30 days. After that the delivery date is rescheduled based on what is available.",
       },
     ],
+  },
+
+  meeting: {
+    metaTitle: "Book a call",
+    metaDescription:
+      "Twenty minutes to clear up your questions and see whether the project fits. Pick a day and the invite lands in your inbox.",
+    eyebrow: "Book",
+    title: "Twenty minutes and you leave knowing.",
+    lead: "Pick whichever day suits you. The invite arrives by email with the link, and if something comes up you can reschedule from there.",
+    expectTitle: "What happens in those twenty minutes",
+    expect: [
+      {
+        title: "You tell us what you need",
+        detail:
+          "What you do, who you sell to and what you want the site to achieve. Three or four minutes is enough.",
+      },
+      {
+        title: "We tell you which plan fits",
+        detail:
+          "What it costs and how long it takes. If none of them fit we say so on the call, instead of costing you a week.",
+      },
+      {
+        title: "You leave with the numbers",
+        detail:
+          "Scope, price and delivery date in writing the next day. There is no second call for that.",
+      },
+    ],
+    loading: "Opening the calendar…",
+    fallback:
+      "The calendar is not connected yet. Write to us and we will book it by hand:",
+    preferWrite: "Would you rather write it out and get an answer by email?",
+    write: { label: "Fill in the brief", href: "/contacto" },
   },
 
   finalCta: {

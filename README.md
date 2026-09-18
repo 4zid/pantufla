@@ -79,6 +79,8 @@ Variables a cargar en el panel de Vercel:
 | `BRIEF_NOTIFICATION_FROM` | `brief@pantufla.design` (dominio verificado) |
 | `NEXT_PUBLIC_SITE_URL` | el dominio principal, para sitemap y metadatos |
 | `SANITY_REVALIDATE_SECRET` | que publicar en el Studio se vea sin redesplegar |
+| `NEXT_PUBLIC_CAL_LINK` | el evento de Cal.com que se embebe en `/reunion` |
+| `CAL_WEBHOOK_SECRET` | que las reservas aparezcan en el Studio |
 
 `NEXT_PUBLIC_SITE_URL` tiene que coincidir con el dominio que marques como
 principal en Vercel: si es el apex va `https://pantufla.design`, si es el www va
@@ -122,6 +124,45 @@ contesta `{"listo":true,...}` cuando la variable está cargada. Si dice
 El secreto no es opcional. El endpoint es público —tiene que serlo, lo llama
 Sanity desde afuera— así que sin firma cualquiera puede tirarle el caché al
 sitio todo el día.
+
+### Las reservas de reunión
+
+`/reunion` embebe un calendario de Cal.com. El motor es de ellos a propósito: lo
+difícil de una reserva no es la pantalla sino saber cuándo está ocupada la
+persona que atiende, impedir que dos visitantes tomen el mismo turno, traducir
+la hora a la zona de cada uno —hay clientes en siete países— y mandar
+recordatorios, el link de video y los avisos de cancelación.
+
+Lo arma **quien atiende las reuniones**, con su cuenta y su calendario. Así no
+hay que pedirle nada a nadie para reprogramar:
+
+1. Crear la cuenta en [cal.com](https://cal.com) (el plan gratis alcanza) y
+   conectar ahí su Google Calendar. Desde ese momento no se puede reservar
+   encima de algo que ya tenga.
+2. Crear un tipo de evento de **20 minutos**.
+3. En **Limits & buffers** de ese evento, en *booking frequency*, poner `1` y
+   elegir `day`. Eso es lo que hace que entre una sola reunión por día: cuando
+   alguien reserva, el día queda cerrado para el resto.
+4. Copiar el identificador del link. De `https://cal.com/pantufla/20min` va
+   `pantufla/20min`, y se carga en Vercel como `NEXT_PUBLIC_CAL_LINK`.
+5. En **Settings → Developer → Webhooks**, crear uno que apunte a
+   `https://www.pantufla.design/api/reunion`, con los eventos *Booking created*,
+   *rescheduled* y *cancelled*, y un secreto generado con
+   `openssl rand -base64 32`. Ese mismo string va en Vercel como
+   `CAL_WEBHOOK_SECRET`.
+
+Para comprobar que quedó: `GET https://www.pantufla.design/api/reunion` contesta
+`{"listo":true,"escribe":true,...}` cuando las dos variables están cargadas.
+
+Hasta que exista la cuenta, `/reunion` no se rompe: muestra una tarjeta con el
+mail para agendar a mano. Y las reuniones que entran quedan en el Studio como
+*Reunión agendada*, al lado de los briefs, de solo lectura —el calendario de
+verdad es el de Cal, y editar acá una fecha solo lograría que los dos digan
+cosas distintas.
+
+**El brief y la reunión no se cruzan**: quien completa el formulario no ve una
+reunión en ningún lado. La reserva se ofrece desde el cierre de las preguntas
+frecuentes, que es donde alguien llega con una duda sin resolver.
 
 ---
 

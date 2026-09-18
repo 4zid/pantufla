@@ -309,7 +309,11 @@ export const es: SiteCopy = {
   faq: {
     eyebrow: "Preguntas",
     title: "Acá están las respuestas.",
-    cta: { claim: "¿Te quedó alguna duda?", label: "Hablemos", href: "/contacto" },
+    cta: {
+      claim: "¿Te quedó alguna duda?",
+      label: "Agendar 20 minutos",
+      href: "/reunion",
+    },
     items: [
       {
         q: "¿Y si necesito más páginas de las que incluye el plan?",
@@ -344,6 +348,38 @@ export const es: SiteCopy = {
         a: "Congelamos el proyecto y retomamos cuando estés listo, sin costo extra durante 30 días. Pasado ese plazo la fecha de entrega se reagenda según la disponibilidad que haya.",
       },
     ],
+  },
+
+  meeting: {
+    metaTitle: "Agendar una llamada",
+    metaDescription:
+      "Veinte minutos para sacarte las dudas y ver si el proyecto encaja. Elegís el día y te llega la invitación por mail.",
+    eyebrow: "Agendar",
+    title: "Veinte minutos y salís sabiendo si te sirve.",
+    lead: "Elegí el día que te venga bien. Te llega la invitación con el link por mail, y si después no podés, se reprograma desde ahí mismo.",
+    expectTitle: "Qué pasa en esos veinte minutos",
+    expect: [
+      {
+        title: "Contás qué necesitás",
+        detail:
+          "Qué hacés, a quién le vendés y qué querés que el sitio consiga. Con tres o cuatro minutos alcanza.",
+      },
+      {
+        title: "Te decimos qué plan encaja",
+        detail:
+          "Cuánto sale y en cuánto tiempo. Si no encaja ninguno te lo decimos ahí, en la llamada, y no te hacemos perder la semana.",
+      },
+      {
+        title: "Salís con los números",
+        detail:
+          "Alcance, precio y fecha por escrito al día siguiente. No hay una segunda llamada para eso.",
+      },
+    ],
+    loading: "Abriendo el calendario…",
+    fallback:
+      "El calendario todavía no está conectado. Escribinos y lo agendamos a mano:",
+    preferWrite: "¿Preferís escribirlo y que te respondamos por mail?",
+    write: { label: "Completar el brief", href: "/contacto" },
   },
 
   finalCta: {

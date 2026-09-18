@@ -122,6 +122,25 @@ export type SiteCopy = {
     cta: { claim: string; label: string; href: string };
     items: { q: string; a: string }[];
   };
+  /**
+   * La reserva de llamada. Es el otro camino de entrada y no se cruza con el
+   * brief: quien completa el formulario no ve una reunión en ningún lado.
+   */
+  meeting: {
+    metaTitle: string;
+    metaDescription: string;
+    eyebrow: string;
+    title: string;
+    lead: string;
+    expectTitle: string;
+    expect: { title: string; detail: string }[];
+    /** Mientras el calendario monta. */
+    loading: string;
+    /** Si no hay calendario conectado o no cargó. */
+    fallback: string;
+    preferWrite: string;
+    write: Link;
+  };
   finalCta: {
     title: string;
     lead: string;
