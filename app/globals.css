@@ -32,6 +32,21 @@
      bruma.
   */
   --color-ink-faint: #666666;
+  /*
+     El fondo del botón primario cuando se lo pasa por encima.
+
+     Era un hexadecimal escrito a mano en la clase del botón, y resultó ser el
+     único color de todo el sitio que no salía de un token. Por eso fue el
+     único que no se dio vuelta con el tema: sobre fondo oscuro el botón queda
+     casi blanco con texto casi negro, y al pasar el mouse el fondo saltaba a
+     este marrón oscuro con el texto todavía negro. 1.32:1. El texto
+     desaparecía.
+
+     Siendo token se da vuelta como el resto: sobre claro aclara apenas la
+     tinta, sobre oscuro la baja apenas. En los dos casos el texto queda arriba
+     de 14:1.
+  */
+  --color-ink-hover: #2c2820;
   --color-line: #e7e7e7;
   --color-line-strong: #d6d6d6;
   --color-deep: #0e0e0e;
@@ -197,6 +212,11 @@
   inherits: true;
   initial-value: #666666;
 }
+@property --color-ink-hover {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #2c2820;
+}
 @property --color-line {
   syntax: "<color>";
   inherits: true;
@@ -246,7 +266,8 @@
     */
     --color-ink 160ms ease-in-out 220ms,
     --color-ink-soft 160ms ease-in-out 220ms,
-    --color-ink-faint 160ms ease-in-out 220ms;
+    --color-ink-faint 160ms ease-in-out 220ms,
+    --color-ink-hover 160ms ease-in-out 220ms;
 }
 
 /*
@@ -268,6 +289,7 @@
   --color-ink: #f4f4f2;
   --color-ink-soft: #a6a6a2;
   --color-ink-faint: #90908b;
+  --color-ink-hover: #dcdcd6;
   --color-line: #2a2a2a;
   --color-line-strong: #3c3c3c;
   --color-mist: #14161f;

@@ -10,7 +10,7 @@ const base =
   "inline-flex items-center justify-center gap-2 rounded-full font-medium transition-[background-color,color,border-color,transform] duration-200 active:translate-y-px disabled:pointer-events-none disabled:opacity-50";
 
 const variants: Record<Variant, string> = {
-  primary: "bg-ink text-paper hover:bg-[#2c2820]",
+  primary: "bg-ink text-paper hover:bg-ink-hover",
   secondary:
     "border border-line-strong bg-card text-ink hover:border-ink hover:bg-paper-alt",
   ghost: "text-ink hover:bg-paper-alt",
