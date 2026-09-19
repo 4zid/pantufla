@@ -112,10 +112,18 @@ Se arma una vez, en dos lados, con **el mismo string**:
    | URL | `https://www.pantufla.design/api/revalidate` |
    | Dataset | `production` |
    | Trigger on | Create, Update, Delete |
-   | Filter | `_type in ["project","post","testimonial","siteCopy"]` |
+   | Filter | `!(_id in path("drafts.**")) && _type in ["project","post","testimonial","siteCopy"]` |
    | Projection | dejalo vacío |
    | HTTP method | `POST` |
    | Secret | el mismo del paso 1 |
+
+La exclusión de borradores no es un detalle: Sanity guarda el draft mientras se
+escribe, así que sin ella el webhook dispara con cada tecla que se toca en el
+Studio. Con ella dispara solo al publicar.
+
+La proyección va vacía a propósito. Así Sanity manda el documento entero y el
+endpoint lee el `_type` para saber qué etiqueta vencer; con una proyección que
+no lo incluya se queda sin saber qué cambió.
 
 Para comprobar que quedó: `GET https://www.pantufla.design/api/revalidate`
 contesta `{"listo":true,...}` cuando la variable está cargada. Si dice
