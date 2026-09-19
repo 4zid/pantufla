@@ -660,6 +660,50 @@ export const siteCopy = defineType({
       ],
     }),
 
+    /* --- Reserva de reunión --- */
+    defineField({
+      name: "meeting",
+      title: "Reserva de reunión",
+      type: "object",
+      options: { collapsible: true, collapsed: true },
+      fields: [
+        defineField({ name: "metaTitle", title: "Título de la pestaña", type: "string" }),
+        texto("metaDescription", "Descripción para buscadores", 2),
+        defineField({ name: "eyebrow", title: "Volanta", type: "string" }),
+        defineField({ name: "title", title: "Titular", type: "string" }),
+        texto("lead", "Bajada"),
+        defineField({ name: "expectTitle", title: "Título de los pasos", type: "string" }),
+        defineField({
+          name: "expect",
+          title: "Qué pasa en la llamada",
+          description: "Van arriba del calendario: nadie reserva sin saber qué va a pasar.",
+          type: "array",
+          of: [
+            {
+              type: "object",
+              fields: [
+                { name: "title", title: "Título", type: "string" },
+                { name: "detail", title: "Detalle", type: "text", rows: 3 },
+              ],
+              preview: { select: { title: "title", subtitle: "detail" } },
+            },
+          ],
+        }),
+        defineField({
+          name: "loading",
+          title: "Mientras carga el calendario",
+          type: "string",
+        }),
+        texto(
+          "fallback",
+          "Si no hay calendario conectado",
+          2,
+        ),
+        defineField({ name: "preferWrite", title: "Salida hacia el brief", type: "string" }),
+        link("write", "Botón hacia el brief"),
+      ],
+    }),
+
     /* --- Cierre --- */
     defineField({
       name: "finalCta",
