@@ -4,7 +4,7 @@ import { fallbackProjects } from "@/content/fallback-content";
 import { localeHref, locales } from "@/lib/i18n";
 import { siteUrl } from "@/lib/site-url";
 import { sanityFetch } from "@/sanity/client";
-import { postSlugsQuery, projectSlugsQuery } from "@/sanity/queries";
+import { projectSlugsQuery } from "@/sanity/queries";
 
 /**
  * Cada página aparece una vez por idioma, y cada entrada declara a su par.
@@ -15,14 +15,16 @@ import { postSlugsQuery, projectSlugsQuery } from "@/sanity/queries";
  * que le toca.
  */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  // Con etiqueta, como el resto: publicar un proyecto o una nota en el Studio
-  // tiene que meterla en el sitemap en el momento. Sin etiqueta el webhook de
-  // /api/revalidate no la alcanza y la página nueva queda fuera del sitemap
-  // hasta que venza sola.
-  const [projectSlugs, postSlugs] = await Promise.all([
-    sanityFetch<string[]>(projectSlugsQuery, {}, [], ["project"]),
-    sanityFetch<string[]>(postSlugsQuery, {}, [], ["post"]),
-  ]);
+  // Con etiqueta, como el resto: publicar un proyecto en el Studio tiene que
+  // meterlo en el sitemap en el momento. Sin etiqueta el webhook de
+  // /api/revalidate no lo alcanza y la ficha nueva queda fuera hasta que venza
+  // sola.
+  const projectSlugs = await sanityFetch<string[]>(
+    projectSlugsQuery,
+    {},
+    [],
+    ["project"],
+  );
 
   const projects = projectSlugs.length
     ? projectSlugs
@@ -30,14 +32,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const now = new Date();
 
+  /*
+     Tres cosas nada más, porque el sitio ya no es más que eso: la página, la
+     reserva y una ficha por proyecto. Los anclas de la home —#proceso,
+     #planes, #proyectos— no van: para un buscador son la misma URL, y
+     repetirla con distinto fragmento no suma, confunde.
+  */
   const rutas: { path: string; priority: number }[] = [
     { path: "/", priority: 1 },
-    { path: "/contacto", priority: 0.9 },
     { path: "/reunion", priority: 0.9 },
-    { path: "/proyectos", priority: 0.8 },
-    { path: "/notas", priority: 0.6 },
     ...projects.map((slug) => ({ path: `/proyectos/${slug}`, priority: 0.7 })),
-    ...postSlugs.map((slug) => ({ path: `/notas/${slug}`, priority: 0.5 })),
   ];
 
   const absoluta = (path: string) =>

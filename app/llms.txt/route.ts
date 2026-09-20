@@ -78,10 +78,12 @@ ${preguntas.join("\n\n")}
 ## Páginas
 
 - [Inicio](${absoluta("/")}): ${copy.meta.tagline}
-- [Proyectos](${absoluta("/proyectos")}): ${copy.pages.proyectos.lead}
-- [Notas](${absoluta("/notas")}): ${copy.pages.notas.lead}
-- [Contacto](${absoluta("/contacto")}): ${copy.pages.contacto.lead}
+- [Agendar una llamada](${absoluta("/reunion")}): ${copy.meeting.metaDescription}
 - [Versión en inglés](${siteUrl}/en)
+
+El sitio es una sola página: el proceso, los planes, los proyectos, los
+testimonios y el formulario viven todos en el inicio. Cada proyecto tiene
+además su ficha en /proyectos/<slug>.
 `;
 
   return new Response(texto, {

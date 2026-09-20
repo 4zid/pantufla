@@ -221,7 +221,7 @@ export function SiteHeader() {
                 {header.plans}
               </Link>
               <LocaleSwitcher />
-              <ButtonLink href={href("/contacto")} size={compact ? "sm" : "md"}>
+              <ButtonLink href={href("/#brief")} size={compact ? "sm" : "md"}>
                 {header.cta}
               </ButtonLink>
             </div>
@@ -283,7 +283,7 @@ export function SiteHeader() {
                 <div className="mt-4 flex items-center gap-3">
                   <LocaleSwitcher />
                   <ButtonLink
-                    href={href("/contacto")}
+                    href={href("/#brief")}
                     size="lg"
                     className="w-full"
                     onClick={() => setOpen(false)}

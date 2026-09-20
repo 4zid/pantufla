@@ -586,7 +586,13 @@ export const siteCopy = defineType({
         defineField({ name: "title", title: "Título", type: "string" }),
         texto("lead", "Bajada", 2),
         defineField({ name: "view", title: "Palabra «ver»", type: "string" }),
-        defineField({ name: "viewAll", title: "Enlace a todos", type: "string" }),
+        defineField({ name: "loadMore", title: "Botón de cargar más", type: "string" }),
+        defineField({
+          name: "counter",
+          title: "Contador",
+          type: "string",
+          description: "Lleva {shown} y {total}. Por ejemplo: «{shown} de {total}».",
+        }),
       ],
     }),
     defineField({
@@ -837,19 +843,6 @@ export const siteCopy = defineType({
       options: { collapsible: true, collapsed: true },
       fields: [
         defineField({
-          name: "contacto",
-          title: "Contacto",
-          type: "object",
-          fields: [
-            { name: "metaTitle", title: "Título de pestaña", type: "string" },
-            { name: "metaDescription", title: "Descripción", type: "text", rows: 2 },
-            { name: "eyebrow", title: "Etiqueta", type: "string" },
-            { name: "title", title: "Título", type: "string" },
-            { name: "lead", title: "Bajada", type: "text", rows: 3 },
-            { name: "directTitle", title: "Escribir directo", type: "string" },
-          ],
-        }),
-        defineField({
           name: "proyectos",
           title: "Proyectos",
           type: "object",
@@ -859,18 +852,6 @@ export const siteCopy = defineType({
             { name: "eyebrow", title: "Etiqueta", type: "string" },
             { name: "title", title: "Título", type: "string" },
             { name: "lead", title: "Bajada", type: "text", rows: 2 },
-          ],
-        }),
-        defineField({
-          name: "notas",
-          title: "Notas",
-          type: "object",
-          fields: [
-            { name: "metaTitle", title: "Título de pestaña", type: "string" },
-            { name: "eyebrow", title: "Etiqueta", type: "string" },
-            { name: "title", title: "Título", type: "string" },
-            { name: "lead", title: "Bajada", type: "text", rows: 2 },
-            { name: "empty", title: "Cuando no hay notas", type: "string" },
           ],
         }),
       ],

@@ -117,7 +117,10 @@ export type SiteCopy = {
     title: string;
     lead: string;
     view: string;
-    viewAll: string;
+    /** El botón que suma dos proyectos más a los cuatro de la home. */
+    loadMore: string;
+    /** «4 de 6», para que se sepa cuánto falta antes de tocar. */
+    counter: string;
   };
   testimonials: { eyebrow: string; title: string; rating: string };
   clientsMap: { eyebrow: string; title: string; note: string };
@@ -173,27 +176,12 @@ export type SiteCopy = {
     success: { title: string; body: string; urgent: string };
   };
   pages: {
-    contacto: {
-      metaTitle: string;
-      metaDescription: string;
-      eyebrow: string;
-      title: string;
-      lead: string;
-      directTitle: string;
-    };
     proyectos: {
       metaTitle: string;
       metaDescription: string;
       eyebrow: string;
       title: string;
       lead: string;
-    };
-    notas: {
-      metaTitle: string;
-      eyebrow: string;
-      title: string;
-      lead: string;
-      empty: string;
     };
   };
   notFound: {

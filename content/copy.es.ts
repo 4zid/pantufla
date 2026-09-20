@@ -35,8 +35,7 @@ export const es: SiteCopy = {
   nav: [
     { label: "Proceso", href: "/#proceso" },
     { label: "Planes", href: "/#planes" },
-    { label: "Proyectos", href: "/proyectos" },
-    { label: "Notas", href: "/notas" },
+    { label: "Proyectos", href: "/#proyectos" },
   ],
 
   header: {
@@ -56,7 +55,7 @@ export const es: SiteCopy = {
       { text: "clientes.", mark: "ink" },
     ],
     lead: "Diseño, textos y desarrollo para que la gente que entra entienda qué hacés en diez segundos y termine escribiéndote.",
-    primary: { label: "Empezar un proyecto", href: "/contacto" },
+    primary: { label: "Empezar un proyecto", href: "/#brief" },
     secondary: { label: "Ver planes y precios", href: "/#planes" },
     proof: [
       "Precio cerrado",
@@ -171,7 +170,7 @@ export const es: SiteCopy = {
         { text: "O todo al inicio, con" },
         { text: "15% menos.", mark: "aqua" },
       ],
-      cta: { label: "Empezar un proyecto", href: "/contacto" },
+      cta: { label: "Empezar un proyecto", href: "/#brief" },
     },
   },
 
@@ -201,7 +200,7 @@ export const es: SiteCopy = {
         bestFor: "Lanzamientos, servicios puntuales y campañas.",
         price: { once: 850, split: 500, splitCount: 2 },
         delivery: "5 a 7 días",
-        cta: { label: "Empezar con Landing", href: "/contacto?plan=landing" },
+        cta: { label: "Empezar con Landing", href: "/?plan=landing#brief" },
         features: [
           "Una página, hasta 6 secciones",
           "Escribimos los textos con vos",
@@ -217,7 +216,7 @@ export const es: SiteCopy = {
         price: { once: 1500, split: 880, splitCount: 2 },
         delivery: "2 a 3 semanas",
         badge: "El más elegido",
-        cta: { label: "Empezar con Sitio", href: "/contacto?plan=sitio" },
+        cta: { label: "Empezar con Sitio", href: "/?plan=sitio#brief" },
         features: [
           "Todo lo del plan Landing",
           "Hasta 6 páginas",
@@ -236,7 +235,7 @@ export const es: SiteCopy = {
         "Migraciones desde otra plataforma",
         "Te decimos en 24 horas si podemos",
       ],
-      cta: { label: "Contarnos el proyecto", href: "/contacto?plan=otra-cosa" },
+      cta: { label: "Contarnos el proyecto", href: "/?plan=otra-cosa#brief" },
     },
     existing: {
       title: "Ya tengo un sitio en Webflow o Framer.",
@@ -279,7 +278,7 @@ export const es: SiteCopy = {
         },
       ],
       note: "Antes de presupuestar miramos tu sitio y te decimos qué conviene tocar y qué no.",
-      cta: { label: "Mostranos tu sitio", href: "/contacto?plan=existente" },
+      cta: { label: "Mostranos tu sitio", href: "/?plan=existente#brief" },
     },
     alwaysIncluded: [
       "Diseño original, nada de plantillas",
@@ -297,7 +296,8 @@ export const es: SiteCopy = {
     title: "Algunos sitios que salieron de acá.",
     lead: "Distintos rubros, distintos tamaños, el mismo método.",
     view: "Ver sitio",
-    viewAll: "Ver todos los proyectos",
+    loadMore: "Ver más proyectos",
+    counter: "{shown} de {total}",
   },
 
   testimonials: {
@@ -385,13 +385,13 @@ export const es: SiteCopy = {
     fallback:
       "El calendario todavía no está conectado. Escribinos y lo agendamos a mano:",
     preferWrite: "¿Preferís escribirlo y que te respondamos por mail?",
-    write: { label: "Completar el brief", href: "/contacto" },
+    write: { label: "Completar el brief", href: "/#brief" },
   },
 
   finalCta: {
     title: "Contanos qué necesitás.",
     lead: "Cinco minutos de formulario. En 24 horas te respondemos con alcance, precio y fecha, o te decimos con franqueza que no somos los indicados.",
-    primary: { label: "Completar el brief", href: "/contacto" },
+    primary: { label: "Completar el brief", href: "/#brief" },
     expectationsTitle: "Qué pasa después",
     expectations: [
       "Leemos el brief el mismo día que llega.",
@@ -451,15 +451,6 @@ export const es: SiteCopy = {
   },
 
   pages: {
-    contacto: {
-      metaTitle: "Empezar un proyecto",
-      metaDescription:
-        "Contanos qué necesitás. En 24 horas te respondemos con alcance, precio y fecha de entrega.",
-      eyebrow: "Empezar un proyecto",
-      title: "Cinco minutos ahora, una propuesta cerrada mañana.",
-      lead: "Cuanto más concreto sea el brief, más preciso es el presupuesto que te mandamos. No hace falta que tengas todo definido.",
-      directTitle: "¿Preferís escribir directo?",
-    },
     proyectos: {
       metaTitle: "Proyectos",
       metaDescription:
@@ -468,13 +459,6 @@ export const es: SiteCopy = {
       title: "Sitios que salieron de acá.",
       lead: "Entre landings de una sola página y sitios completos con panel de carga.",
     },
-    notas: {
-      metaTitle: "Notas",
-      eyebrow: "Notas",
-      title: "Cómo pensamos los proyectos.",
-      lead: "Decisiones, criterios y aprendizajes de los sitios que hacemos. Sin relleno.",
-      empty: "Todavía no hay notas.",
-    },
   },
 
   notFound: {
@@ -482,7 +466,7 @@ export const es: SiteCopy = {
     title: "Esta página no existe.",
     lead: "Puede que la hayamos movido o que el link esté mal escrito.",
     home: { label: "Volver al inicio", href: "/" },
-    work: { label: "Ver proyectos", href: "/proyectos" },
+    work: { label: "Ver proyectos", href: "/#proyectos" },
   },
 
   footer: {
@@ -490,7 +474,7 @@ export const es: SiteCopy = {
       "{tagline}. Alcance cerrado, precio cerrado y fecha de entrega. Trabajamos desde {location} para clientes de donde sea.",
     navTitle: "Navegación",
     contactTitle: "Contacto",
-    contactLink: { label: "Contacto", href: "/contacto" },
+    contactLink: { label: "Contacto", href: "/#brief" },
     signature: "Diseñado y desarrollado en casa, en pantuflas.",
   },
 };

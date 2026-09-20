@@ -20,7 +20,7 @@ import type { ResolvedCopy } from "@/content/resolve";
 import type { Locale } from "@/lib/i18n";
 import { nodoFaq, nodoPagina, nodoProyectos } from "@/lib/schema";
 import { sanityFetch } from "@/sanity/client";
-import { featuredProjectsQuery, testimonialsQuery } from "@/sanity/queries";
+import { allProjectsQuery, testimonialsQuery } from "@/sanity/queries";
 import type { SanityProject, SanityTestimonial } from "@/sanity/types";
 
 export const revalidate = 60;
@@ -34,7 +34,7 @@ export default async function HomePage({
   const [copy, cmsProjects, cmsTestimonials] = await Promise.all([
     getCopy(locale),
     sanityFetch<SanityProject[]>(
-      featuredProjectsQuery,
+      allProjectsQuery,
       { language: locale },
       [],
       ["project"],
@@ -47,13 +47,15 @@ export default async function HomePage({
     ),
   ]);
 
-  // Mientras el CMS esté vacío se muestra el contenido de respaldo. La home
-  // corta en cuatro porque es lo que devuelve la query de destacados: así el
-  // bloque mide igual con CMS o sin CMS, y cuatro es justo una fila entera de
-  // tarjetas. Todos están en /proyectos.
-  const projects = cmsProjects.length
-    ? cmsProjects
-    : fallbackProjects.slice(0, 4);
+  /*
+     Todos y no los cuatro destacados: el corte lo hace la sección, que muestra
+     cuatro y suma de a dos cuando se lo piden. Traer solo cuatro dejaría el
+     botón sin nada que cargar.
+
+     Ya no hay un /proyectos donde ver el resto, así que esta es la única
+     puerta al catálogo entero.
+  */
+  const projects = cmsProjects.length ? cmsProjects : fallbackProjects;
   const testimonials = cmsTestimonials.length
     ? cmsTestimonials
     : (fallbackTestimonials[locale] ?? fallbackTestimonials.es);

@@ -28,8 +28,7 @@ export const en: SiteCopy = {
   nav: [
     { label: "Process", href: "/#proceso" },
     { label: "Pricing", href: "/#planes" },
-    { label: "Work", href: "/proyectos" },
-    { label: "Notes", href: "/notas" },
+    { label: "Work", href: "/#proyectos" },
   ],
 
   header: {
@@ -49,7 +48,7 @@ export const en: SiteCopy = {
       { text: "clients.", mark: "ink" },
     ],
     lead: "Design, copy and development, so that whoever lands on your site knows what you do in ten seconds and ends up writing to you.",
-    primary: { label: "Start a project", href: "/contacto" },
+    primary: { label: "Start a project", href: "/#brief" },
     secondary: { label: "See plans and pricing", href: "/#planes" },
     proof: [
       "Fixed price",
@@ -159,7 +158,7 @@ export const en: SiteCopy = {
         { text: "Or all of it upfront, for" },
         { text: "15% off.", mark: "aqua" },
       ],
-      cta: { label: "Start a project", href: "/contacto" },
+      cta: { label: "Start a project", href: "/#brief" },
     },
   },
 
@@ -189,7 +188,7 @@ export const en: SiteCopy = {
         bestFor: "Launches, single services and campaigns.",
         price: { once: 850, split: 500, splitCount: 2 },
         delivery: "5 to 7 days",
-        cta: { label: "Start with Landing", href: "/contacto?plan=landing" },
+        cta: { label: "Start with Landing", href: "/?plan=landing#brief" },
         features: [
           "One page, up to 6 sections",
           "We write the copy with you",
@@ -205,7 +204,7 @@ export const en: SiteCopy = {
         price: { once: 1500, split: 880, splitCount: 2 },
         delivery: "2 to 3 weeks",
         badge: "Most chosen",
-        cta: { label: "Start with Site", href: "/contacto?plan=sitio" },
+        cta: { label: "Start with Site", href: "/?plan=sitio#brief" },
         features: [
           "Everything in Landing",
           "Up to 6 pages",
@@ -224,7 +223,7 @@ export const en: SiteCopy = {
         "Migrations from another platform",
         "We tell you in 24 hours if we can",
       ],
-      cta: { label: "Tell us about it", href: "/contacto?plan=otra-cosa" },
+      cta: { label: "Tell us about it", href: "/?plan=otra-cosa#brief" },
     },
     existing: {
       title: "I already have a site on Webflow or Framer.",
@@ -267,7 +266,7 @@ export const en: SiteCopy = {
         },
       ],
       note: "Before quoting we look at your site and tell you what is worth touching and what is not.",
-      cta: { label: "Show us your site", href: "/contacto?plan=existente" },
+      cta: { label: "Show us your site", href: "/?plan=existente#brief" },
     },
     alwaysIncluded: [
       "Original design, no templates",
@@ -285,7 +284,8 @@ export const en: SiteCopy = {
     title: "Some of the sites that came out of here.",
     lead: "Different industries, different sizes, the same method.",
     view: "Visit site",
-    viewAll: "See all the work",
+    loadMore: "See more work",
+    counter: "{shown} of {total}",
   },
 
   testimonials: {
@@ -373,13 +373,13 @@ export const en: SiteCopy = {
     fallback:
       "The calendar is not connected yet. Write to us and we will book it by hand:",
     preferWrite: "Would you rather write it out and get an answer by email?",
-    write: { label: "Fill in the brief", href: "/contacto" },
+    write: { label: "Fill in the brief", href: "/#brief" },
   },
 
   finalCta: {
     title: "Tell us what you need.",
     lead: "Five minutes of form. Within 24 hours we come back with scope, price and date, or we tell you straight that we are not the right people.",
-    primary: { label: "Fill in the brief", href: "/contacto" },
+    primary: { label: "Fill in the brief", href: "/#brief" },
     expectationsTitle: "What happens next",
     expectations: [
       "We read the brief the same day it arrives.",
@@ -439,15 +439,6 @@ export const en: SiteCopy = {
   },
 
   pages: {
-    contacto: {
-      metaTitle: "Start a project",
-      metaDescription:
-        "Tell us what you need. Within 24 hours we come back with scope, price and delivery date.",
-      eyebrow: "Start a project",
-      title: "Five minutes now, a closed proposal tomorrow.",
-      lead: "The more concrete the brief, the more precise the quote we send back. You do not need to have everything figured out.",
-      directTitle: "Would you rather just write?",
-    },
     proyectos: {
       metaTitle: "Work",
       metaDescription:
@@ -456,13 +447,6 @@ export const en: SiteCopy = {
       title: "Sites that came out of here.",
       lead: "From single-page landings to full sites with a content panel.",
     },
-    notas: {
-      metaTitle: "Notes",
-      eyebrow: "Notes",
-      title: "How we think about projects.",
-      lead: "Decisions, criteria and lessons from the sites we build. No filler.",
-      empty: "No notes yet.",
-    },
   },
 
   notFound: {
@@ -470,7 +454,7 @@ export const en: SiteCopy = {
     title: "This page does not exist.",
     lead: "We may have moved it, or the link may be misspelled.",
     home: { label: "Back home", href: "/" },
-    work: { label: "See the work", href: "/proyectos" },
+    work: { label: "See the work", href: "/#proyectos" },
   },
 
   footer: {
@@ -478,7 +462,7 @@ export const en: SiteCopy = {
       "{tagline}. Fixed scope, fixed price and a delivery date. We work from {location} for clients anywhere.",
     navTitle: "Navigation",
     contactTitle: "Contact",
-    contactLink: { label: "Contact", href: "/contacto" },
+    contactLink: { label: "Contact", href: "/#brief" },
     signature: "Designed and built at home, in slippers.",
   },
 };
