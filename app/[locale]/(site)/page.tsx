@@ -1,4 +1,5 @@
 import { Approach } from "@/components/sections/approach";
+import { Bento } from "@/components/sections/bento";
 import { ClientsMap } from "@/components/sections/clients-map";
 import { Faq } from "@/components/sections/faq";
 import { FinalCta } from "@/components/sections/final-cta";
@@ -65,6 +66,7 @@ export default async function HomePage({
       <Hero />
       <SocialProof />
       <Approach />
+      <Bento />
       <Process />
       <StackTicker />
       <Pricing />

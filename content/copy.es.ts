@@ -291,6 +291,34 @@ export const es: SiteCopy = {
     offerCatalog: "Planes de diseño y desarrollo web",
   },
 
+  bento: {
+    eyebrow: "Qué se lleva el sitio",
+    title: "Que se vea bien es la mitad.",
+    lead: "La otra mitad no se mira: se mide. Estas cuatro van en todos los proyectos, sin importar el plan.",
+    cards: [
+      {
+        id: "velocidad",
+        title: "Carga antes de que decidan irse",
+        body: "La mitad de la gente abandona un sitio que tarda más de tres segundos. El tuyo no llega ni a uno: se entrega con las imágenes optimizadas y el contenido servido desde el servidor más cercano a quien entra.",
+      },
+      {
+        id: "seo",
+        title: "Te encuentran, y no solo en Google",
+        body: "Metadatos, sitemap y datos estructurados desde el primer día. Y un archivo que le explica a ChatGPT y a Perplexity qué hacés, porque cada vez más gente pregunta ahí antes de buscar.",
+      },
+      {
+        id: "pantallas",
+        title: "Igual de prolijo en el teléfono",
+        body: "No es el mismo diseño apretado: cada sección se rearma para la pantalla en la que está. Probamos en teléfono, tablet y escritorio antes de publicar, porque ahí entra la mayoría.",
+      },
+      {
+        id: "resultados",
+        title: "Hecho para que te escriban",
+        body: "Un sitio lindo que no convierte es un folleto caro. Cada decisión —qué va primero, qué dice el botón, cuántos campos tiene el formulario— sale de la misma pregunta: qué hace que alguien del otro lado se decida.",
+      },
+    ],
+  },
+
   work: {
     eyebrow: "Proyectos",
     title: "Algunos sitios que salieron de acá.",

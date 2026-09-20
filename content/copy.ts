@@ -112,6 +112,19 @@ export type SiteCopy = {
     alwaysIncluded: string[];
     offerCatalog: string;
   };
+  /**
+   * Las cuatro capacidades, en grilla bento.
+   *
+   * El texto va acá y la forma —qué tono lleva y qué celda ocupa— en
+   * site.ts, cruzado por id como el resto. Cambiar un título no puede mover
+   * una tarjeta de lugar.
+   */
+  bento: {
+    eyebrow: string;
+    title: string;
+    lead: string;
+    cards: { id: string; title: string; body: string }[];
+  };
   work: {
     eyebrow: string;
     title: string;

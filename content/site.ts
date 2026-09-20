@@ -47,6 +47,36 @@ export const processDesign: Record<
   publicacion: { number: "04", art: "llaves", tone: "miel" },
 };
 
+/**
+ * Dónde cae cada capacidad en la grilla y de qué color habla.
+ *
+ * El bento no es una grilla de cuatro iguales: dos chicas arriba, una
+ * vertical a la derecha y una ancha abajo. Esa forma no es decorativa, le toca
+ * a cada tarjeta por lo que tiene adentro —la vertical lleva un teléfono y la
+ * ancha un gráfico, y ninguna de las dos entra en la otra— así que la celda es
+ * parte del diseño de la tarjeta y vive acá, no en el texto.
+ *
+ * Abajo de md es una sola columna y todo esto no aplica: cuatro tarjetas
+ * apiladas en el orden en que están escritas.
+ */
+export const bentoDesign: Record<
+  string,
+  { tone: "aqua" | "rosa" | "verde" | "miel"; area: string; art: string }
+> = {
+  velocidad: { tone: "aqua", area: "md:col-start-1 md:row-start-1", art: "medidor" },
+  seo: { tone: "rosa", area: "md:col-start-2 md:row-start-1", art: "resultado" },
+  pantallas: {
+    tone: "verde",
+    area: "md:col-start-3 md:row-start-1 md:row-span-2",
+    art: "telefono",
+  },
+  resultados: {
+    tone: "miel",
+    area: "md:col-start-1 md:col-span-2 md:row-start-2",
+    art: "grafico",
+  },
+};
+
 export const planDesign: Record<string, { tone: string; featured: boolean }> = {
   landing: { tone: "aqua", featured: false },
   sitio: { tone: "rosa", featured: true },
