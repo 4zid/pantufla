@@ -292,6 +292,43 @@ export const siteCopy = defineType({
       ],
     }),
 
+    /* --- Capacidades (bento) --- */
+    defineField({
+      name: "bento",
+      title: "Capacidades",
+      type: "object",
+      options: { collapsible: true, collapsed: true },
+      fields: [
+        defineField({ name: "eyebrow", title: "Etiqueta", type: "string" }),
+        defineField({ name: "title", title: "Título", type: "string" }),
+        texto("lead", "Bajada"),
+        defineField({
+          name: "cards",
+          title: "Tarjetas",
+          type: "array",
+          description:
+            "Son cuatro y el orden manda: cada una entra en una celda distinta de la grilla.",
+          of: [
+            {
+              type: "object",
+              fields: [
+                {
+                  name: "id",
+                  title: "Id",
+                  type: "string",
+                  description:
+                    "velocidad, seo, pantallas o resultados. Define el color, la celda y el dibujo del lienzo.",
+                },
+                { name: "title", title: "Título", type: "string" },
+                { name: "body", title: "Texto", type: "text", rows: 4 },
+              ],
+              preview: { select: { title: "title", subtitle: "id" } },
+            },
+          ],
+        }),
+      ],
+    }),
+
     /* --- Proceso --- */
     defineField({
       name: "process",
