@@ -162,8 +162,14 @@ export function SiteHeader() {
             // abre el menú. Cambiándolo de golpe no se nota: abajo el alto se
             // anima, y el ojo mira eso.
             open ? "rounded-[26px]" : "rounded-full",
+            /* 4xl y no 3xl: con 3xl la fila no entraba y el grupo de la
+               derecha, que es shrink-0, se comía el padding en vez de
+               achicarse. Medido: el botón quedaba a 12px del borde teniendo 16
+               declarados, contra 17 del lado del logo. Esa asimetría es lo que
+               se lee como «pegado». Sigue siendo un achique claro contra los
+               6xl de la barra expandida. */
             compact || open
-              ? "max-w-3xl border-line px-3 shadow-[0_8px_30px_-12px_rgba(35,28,18,0.25)] sm:px-4"
+              ? "max-w-4xl border-line px-3 shadow-[0_8px_30px_-12px_rgba(35,28,18,0.25)] sm:px-4"
               : "max-w-6xl border-transparent px-4 sm:px-6",
             // Cerrada es translúcida a propósito: flota sobre el contenido y deja
             // ver que hay algo abajo. Abierta no: es un panel, y con el fondo a
@@ -215,10 +221,7 @@ export function SiteHeader() {
                 {header.plans}
               </Link>
               <LocaleSwitcher />
-              <ButtonLink
-                href={href("/contacto")}
-                className={cn(compact && "h-9 px-4")}
-              >
+              <ButtonLink href={href("/contacto")} size={compact ? "sm" : "md"}>
                 {header.cta}
               </ButtonLink>
             </div>

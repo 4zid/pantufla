@@ -4,8 +4,16 @@ import type { ComponentProps, ReactNode } from "react";
 import { cn } from "@/lib/cn";
 
 type Variant = "primary" | "secondary" | "ghost" | "onDark";
-type Size = "md" | "lg";
+type Size = "sm" | "md" | "lg";
 
+/*
+   Los tamaños son un prop y no clases sueltas por una razón concreta: cn() es
+   un join, no un merge. Pasarle "h-9 px-4" por className a un botón que ya
+   trae "h-10 px-5" no pisa nada —quedan las cuatro clases y gana la que
+   Tailwind emita última—, así que el header pedía un botón chico y seguía
+   dibujando el grande. Con un tamaño más en la tabla no hay conflicto que
+   resolver.
+*/
 const base =
   "inline-flex items-center justify-center gap-2 rounded-full font-medium transition-[background-color,color,border-color,transform] duration-200 active:translate-y-px disabled:pointer-events-none disabled:opacity-50";
 
@@ -18,6 +26,7 @@ const variants: Record<Variant, string> = {
 };
 
 const sizes: Record<Size, string> = {
+  sm: "h-9 px-4 text-[0.9rem]",
   md: "h-10 px-5 text-[0.94rem]",
   lg: "h-12 px-7 text-[1rem]",
 };
