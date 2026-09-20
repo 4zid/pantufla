@@ -296,59 +296,76 @@ export function Bento() {
       />
 
       {/*
+        Un tablero y no cuatro tarjetas sueltas.
+
+        Las cuatro viven adentro de un mismo contenedor, separadas por una
+        junta de diez píxeles. Esa junta es todo el dibujo: donde se cruzan
+        dos juntas, las cuatro esquinas redondeadas que se encuentran dejan
+        una muesca en forma de estrella, y donde una junta muere contra el
+        borde de la tarjeta vertical queda una te. No hay que dibujar nada de
+        eso, sale solo de redondear las tarjetas y dejarlas respirar.
+
+        El relleno del tablero es el color de la página y no un gris propio.
+        Se probó con papel apagado, que es el gris de más abajo del blanco, y
+        la junta no se veía: cuatro por ciento de diferencia contra el blanco
+        de la tarjeta es menos de lo que separa a dos blancos, y las muescas
+        —que son el motivo de armar el tablero— no aparecían. Con el color de
+        la página la junta se lee como un hueco por donde se ve el fondo, que
+        es exactamente lo que es.
+
+        Y por eso las tarjetas ya no llevan borde propio: con la junta
+        marcando la división, un borde encima es una segunda línea diciendo lo
+        mismo. El que queda es el del tablero, que es el que dice que las
+        cuatro son una cosa sola.
+
         Tres columnas y dos filas en md: las dos chicas arriba a la izquierda,
         la vertical ocupando la columna de la derecha entera y la ancha abajo
         cruzando las dos primeras. Abajo de md se cae sola a una columna, que
         es lo único que entra en un teléfono.
-
-        Las filas miden lo que mide su contenido. Con auto-rows-fr quedaban las
-        dos iguales, y como la fila de abajo la marca la tarjeta ancha, las dos
-        de arriba se estiraban a medio millar de píxeles para textos de cinco
-        renglones: el lienzo crecía con ellas y quedaban dos planchas de color
-        con un dibujito al pie. Las tarjetas de una misma fila igual se
-        emparejan entre sí, que es lo único que hacía falta.
       */}
-      <Reveal stagger className="mt-14 grid gap-4 md:grid-cols-3 md:gap-5">
-        {bento.cards.map((card) => {
-          const diseño = bentoDesign[card.id] ?? {
-            tone: "aqua" as const,
-            area: "",
-            art: "medidor",
-          };
-          const t = tonos[diseño.tone];
-          const Lienzo = lienzos[diseño.art as keyof typeof lienzos] ?? Medidor;
+      <div className="mt-14 rounded-[var(--radius-tablero)] border border-line bg-mist p-2.5 shadow-[0_24px_60px_-40px_rgba(35,28,18,0.35)]">
+        <Reveal stagger className="grid gap-2.5 md:grid-cols-3">
+          {bento.cards.map((card) => {
+            const diseño = bentoDesign[card.id] ?? {
+              tone: "aqua" as const,
+              area: "",
+              art: "medidor",
+            };
+            const t = tonos[diseño.tone];
+            const Lienzo = lienzos[diseño.art as keyof typeof lienzos] ?? Medidor;
 
-          return (
-            <article
-              key={card.id}
-              className={cn(
-                "flex flex-col overflow-hidden rounded-panel border border-line bg-card",
-                diseño.area,
-              )}
-            >
-              <div className="p-6 md:p-7">
-                <span
-                  aria-hidden
-                  className={cn("block h-2 w-2 rounded-full", t.relleno.replace("fill-", "bg-"))}
-                />
-                <h3 className="mt-4 text-[1.2rem] font-semibold leading-tight tracking-[-0.025em] md:text-[1.3rem]">
-                  {card.title}
-                </h3>
-                <p className="mt-3 text-[0.94rem] leading-relaxed text-ink-soft">
-                  {card.body}
-                </p>
-              </div>
-
-              <div
-                data-lienzo
-                className={cn("mt-auto border-t border-line", t.fondo, ALTO[diseño.art] ?? ALTO.medidor)}
+            return (
+              <article
+                key={card.id}
+                className={cn(
+                  "flex flex-col overflow-hidden rounded-[var(--radius-celda)] bg-card",
+                  diseño.area,
+                )}
               >
-                <Lienzo tono={diseño.tone} />
-              </div>
-            </article>
-          );
-        })}
-      </Reveal>
+                <div className="p-6 md:p-7">
+                  <span
+                    aria-hidden
+                    className={cn("block h-2 w-2 rounded-full", t.relleno.replace("fill-", "bg-"))}
+                  />
+                  <h3 className="mt-4 text-[1.2rem] font-semibold leading-tight tracking-[-0.025em] md:text-[1.3rem]">
+                    {card.title}
+                  </h3>
+                  <p className="mt-3 text-[0.94rem] leading-relaxed text-ink-soft">
+                    {card.body}
+                  </p>
+                </div>
+
+                <div
+                  data-lienzo
+                  className={cn("mt-auto", t.fondo, ALTO[diseño.art] ?? ALTO.medidor)}
+                >
+                  <Lienzo tono={diseño.tone} />
+                </div>
+              </article>
+            );
+          })}
+        </Reveal>
+      </div>
     </Section>
   );
 }
