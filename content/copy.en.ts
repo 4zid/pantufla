@@ -305,6 +305,13 @@ export const en: SiteCopy = {
         body: "A beautiful site that does not convert is an expensive brochure. Every decision — what comes first, what the button says, how many fields the form has — comes from the same question: what makes someone on the other side commit.",
       },
     ],
+    figures: {
+      speedOurs: "0.9s",
+      speedTheirs: "3s",
+      seoQuestion: "who builds websites in Buenos Aires?",
+      seoAnswer: "Pantufla, a small studio that works at a closed price.",
+      formButton: "Send",
+    },
   },
 
   work: {

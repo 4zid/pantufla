@@ -14,11 +14,6 @@ import { resolveCopy, type ResolvedCopy } from "./resolve";
  * vacío— entran los archivos locales, que tienen exactamente la misma forma.
  * No es un modo degradado: es el mismo sitio con el texto de ayer, y es lo que
  * hace que un CMS caído no sea una página en blanco.
- *
- * El merge es por sección y no campo por campo. Una sección cargada en Sanity
- * reemplaza entera a la local; una que todavía no se cargó usa la local. Así
- * se puede ir pasando el contenido de a poco sin quedar a mitad de camino con
- * media sección en cada idioma.
  */
 
 const respaldo: Record<Locale, SiteCopy> = { es, en };
@@ -33,27 +28,60 @@ export async function getCopy(locale: Locale): Promise<ResolvedCopy> {
     ["siteCopy"],
   );
 
-  const copy: SiteCopy = remoto
-    ? ({ ...local, ...limpiar(remoto) } as SiteCopy)
-    : local;
+  const copy = (remoto ? fundir(local, remoto) : local) as SiteCopy;
 
   return resolveCopy(copy, locale);
 }
 
 /**
- * Saca las secciones que Sanity devuelve vacías.
+ * Mezcla el texto remoto sobre el local, entrando en los objetos.
  *
- * GROQ trae la clave con null cuando el campo no está cargado, y un null pisa
- * al respaldo y deja la sección sin texto. Filtrarlas es la diferencia entre
- * "todavía no lo cargué" y "lo borré".
+ * El merge era por sección: una sección cargada en Sanity reemplazaba entera a
+ * la local. Suena prolijo y tiene una trampa que nos mordió cuatro veces. El
+ * documento de Sanity es una foto de la forma que tenía el copy el día que se
+ * cargó; cuando después se le agrega un campo nuevo al código, la sección
+ * remota —que no lo tiene— igual gana, y el campo nuevo llega undefined.
+ * Mientras el campo era un título suelto el resultado era un texto que faltaba
+ * y nadie notaba. Con un objeto adentro, el componente que lo lee revienta y
+ * se cae la página entera. Y el sandbox no lo muestra porque acá Sanity está
+ * bloqueado y siempre contesta el respaldo: se rompe recién en producción.
+ *
+ * Entrando en los objetos, el campo nuevo cae al respaldo y lo cargado en
+ * Sanity sigue ganando en todo lo demás. Se puede agregar un campo al código y
+ * publicar sin tener que cargarlo primero en el CMS.
+ *
+ * Los arreglos no se funden: se reemplazan enteros. Es lo que hay que hacer.
+ * Fundirlos por posición significaría que borrar el cuarto plan en Sanity lo
+ * devuelve del respaldo, y que reordenarlos mezcla el texto de uno con el de
+ * otro. Un arreglo cargado es la lista completa, con el largo que tenga.
  */
-function limpiar(remoto: Partial<SiteCopy>): Partial<SiteCopy> {
-  const salida: Record<string, unknown> = {};
+function fundir<T>(local: T, remoto: unknown): T {
+  if (!esObjeto(remoto)) return local;
+
+  const salida: Record<string, unknown> = { ...(local as Record<string, unknown>) };
+
   for (const [clave, valor] of Object.entries(remoto)) {
+    // Los internos de Sanity —_id, _type, _rev, _key— no son contenido.
+    if (clave.startsWith("_")) continue;
+
+    /*
+       GROQ trae la clave con null cuando el campo no está cargado, y un null
+       pisa al respaldo y deja la sección sin texto. Saltearlos es la
+       diferencia entre «todavía no lo cargué» y «lo borré». Un arreglo vacío
+       cuenta como lo mismo: nadie carga una lista para dejarla en cero.
+    */
     if (valor === null || valor === undefined) continue;
     if (Array.isArray(valor) && valor.length === 0) continue;
-    if (clave.startsWith("_")) continue;
-    salida[clave] = valor;
+
+    const base = (local as Record<string, unknown> | undefined)?.[clave];
+    salida[clave] =
+      esObjeto(valor) && esObjeto(base) ? fundir(base, valor) : valor;
   }
-  return salida as Partial<SiteCopy>;
+
+  return salida as T;
+}
+
+/** Objeto plano: ni null, ni arreglo, ni fecha. */
+function esObjeto(v: unknown): v is Record<string, unknown> {
+  return typeof v === "object" && v !== null && !Array.isArray(v);
 }

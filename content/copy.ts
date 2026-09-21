@@ -124,6 +124,28 @@ export type SiteCopy = {
     title: string;
     lead: string;
     cards: { id: string; title: string; body: string }[];
+    /**
+     * Los pocos textos que van adentro de los dibujos.
+     *
+     * Van acá y no en site.ts porque se traducen: el separador decimal cambia
+     * de idioma, y la pregunta del buscador tiene que estar en la lengua de
+     * quien la leería. Son cortos a propósito —un dibujo con un párrafo
+     * adentro deja de ser un dibujo— pero son texto de verdad y no barras
+     * grises, que es lo que hace que la figura se lea como una pantalla y no
+     * como un relleno.
+     */
+    figures: {
+      /** Cuánto tarda un sitio nuestro. */
+      speedOurs: string;
+      /** El número contra el que se compara. */
+      speedTheirs: string;
+      /** Lo que alguien le escribe a un buscador o a un modelo. */
+      seoQuestion: string;
+      /** Lo que le contesta. */
+      seoAnswer: string;
+      /** El botón del formulario dibujado. */
+      formButton: string;
+    };
   };
   work: {
     eyebrow: string;

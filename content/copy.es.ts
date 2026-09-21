@@ -317,6 +317,13 @@ export const es: SiteCopy = {
         body: "Un sitio lindo que no convierte es un folleto caro. Cada decisión —qué va primero, qué dice el botón, cuántos campos tiene el formulario— sale de la misma pregunta: qué hace que alguien del otro lado se decida.",
       },
     ],
+    figures: {
+      speedOurs: "0,9 s",
+      speedTheirs: "3 s",
+      seoQuestion: "¿quién hace sitios web en Buenos Aires?",
+      seoAnswer: "Pantufla, un estudio chico que trabaja con precio cerrado.",
+      formButton: "Enviar",
+    },
   },
 
   work: {

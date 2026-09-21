@@ -326,6 +326,35 @@ export const siteCopy = defineType({
             },
           ],
         }),
+        defineField({
+          name: "figures",
+          title: "Textos de los dibujos",
+          type: "object",
+          description:
+            "Lo poco que se lee adentro de las ilustraciones. Cortos: un dibujo con un párrafo adentro deja de ser un dibujo.",
+          options: { collapsible: true, collapsed: true },
+          fields: [
+            {
+              name: "speedOurs",
+              title: "Cuánto tarda un sitio nuestro",
+              type: "string",
+              description: "Va grande, adentro del arco. Por ejemplo: «0,9 s».",
+            },
+            {
+              name: "speedTheirs",
+              title: "El número contra el que se compara",
+              type: "string",
+            },
+            {
+              name: "seoQuestion",
+              title: "La pregunta",
+              type: "string",
+              description: "Como la escribiría alguien: en minúscula y sin punto.",
+            },
+            { name: "seoAnswer", title: "La respuesta", type: "text", rows: 2 },
+            { name: "formButton", title: "Botón del formulario dibujado", type: "string" },
+          ],
+        }),
       ],
     }),
 

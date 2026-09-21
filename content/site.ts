@@ -61,19 +61,45 @@ export const processDesign: Record<
  */
 export const bentoDesign: Record<
   string,
-  { tone: "aqua" | "rosa" | "verde" | "miel"; area: string; art: string }
+  {
+    tone: "aqua" | "rosa" | "verde" | "miel";
+    area: string;
+    art: string;
+    /**
+     * Cómo se reparten el texto y el dibujo adentro de la tarjeta.
+     *
+     * «apilada» pone el texto arriba y el dibujo abajo a todo el ancho.
+     * «lado» los pone uno al lado del otro, que solo entra en la tarjeta
+     * ancha. Tener las cuatro apiladas era la mitad del problema: por más
+     * distinto que fuera cada dibujo, cuatro tarjetas con el texto arriba y
+     * una banda de color abajo se leen como la misma tarjeta repetida.
+     */
+    composicion: "apilada" | "lado";
+  }
 > = {
-  velocidad: { tone: "aqua", area: "md:col-start-1 md:row-start-1", art: "medidor" },
-  seo: { tone: "rosa", area: "md:col-start-2 md:row-start-1", art: "resultado" },
+  velocidad: {
+    tone: "aqua",
+    area: "md:col-start-1 md:row-start-1",
+    art: "cronometro",
+    composicion: "apilada",
+  },
+  seo: {
+    tone: "rosa",
+    area: "md:col-start-2 md:row-start-1",
+    art: "respuesta",
+    composicion: "apilada",
+  },
   pantallas: {
     tone: "verde",
     area: "md:col-start-3 md:row-start-1 md:row-span-2",
-    art: "telefono",
+    art: "pantallas",
+    composicion: "apilada",
   },
   resultados: {
     tone: "miel",
     area: "md:col-start-1 md:col-span-2 md:row-start-2",
-    art: "grafico",
+    art: "formulario",
+    composicion: "lado",
   },
 };
 
