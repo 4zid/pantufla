@@ -5,7 +5,6 @@ import Link from "next/link";
 import { site } from "@/content/site";
 import { fill } from "@/content/copy";
 import { Logo } from "@/components/ui/icons";
-import { Wordmark } from "@/components/ui/wordmark";
 import { useCopy, useHref } from "@/components/copy-provider";
 
 export function SiteFooter() {
@@ -20,7 +19,9 @@ export function SiteFooter() {
           <div className="max-w-sm">
             <Link href={href("/")} className="flex items-center gap-2.5">
               <Logo className="h-7 w-7 text-aqua-deep" />
-              <Wordmark className="h-[1.3rem] text-ink" />
+              <span className="text-[1.06rem] font-semibold tracking-[-0.02em]">
+                {site.name}
+              </span>
             </Link>
             <p className="mt-4 text-[0.95rem] leading-relaxed text-ink-soft">
               {fill(footer.blurb, {
