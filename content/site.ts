@@ -61,47 +61,19 @@ export const processDesign: Record<
  */
 export const bentoDesign: Record<
   string,
-  {
-    tone: "aqua" | "rosa" | "verde" | "miel";
-    area: string;
-    art: string;
-    /**
-     * Dónde va el dibujo respecto del texto.
-     *
-     * Cada tarjeta lleva el suyo, y es a propósito: cuatro tarjetas con el
-     * texto arriba y una banda abajo se leen como la misma tarjeta repetida
-     * por más distinto que sea cada dibujo. «arriba» pone el dibujo sobre el
-     * texto, sangrando por el borde de arriba. «abajo» lo pone debajo,
-     * cortado por el borde de abajo. «fondo» lo pone detrás, ocupando la
-     * tarjeta entera, con el texto encima. «lado» lo pone a la derecha del
-     * texto, que solo entra en la ancha.
-     */
-    layout: "arriba" | "abajo" | "fondo" | "lado";
-  }
+  { tone: "aqua" | "rosa" | "verde" | "miel"; area: string; art: string }
 > = {
-  velocidad: {
-    tone: "aqua",
-    area: "md:col-start-1 md:row-start-1",
-    art: "cifra",
-    layout: "arriba",
-  },
-  seo: {
-    tone: "rosa",
-    area: "md:col-start-2 md:row-start-1",
-    art: "consulta",
-    layout: "abajo",
-  },
+  velocidad: { tone: "aqua", area: "md:col-start-1 md:row-start-1", art: "velocidad" },
+  seo: { tone: "rosa", area: "md:col-start-2 md:row-start-1", art: "seo" },
   pantallas: {
     tone: "verde",
     area: "md:col-start-3 md:row-start-1 md:row-span-2",
-    art: "celdas",
-    layout: "fondo",
+    art: "pantallas",
   },
   resultados: {
     tone: "miel",
     area: "md:col-start-1 md:col-span-2 md:row-start-2",
-    art: "deslizador",
-    layout: "lado",
+    art: "resultados",
   },
 };
 

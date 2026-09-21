@@ -8,38 +8,30 @@ import { useCopy } from "@/components/copy-provider";
 import { bentoDesign } from "@/content/site";
 import { Section, SectionHead } from "@/components/ui/section";
 import { ArrowUpRightIcon } from "@/components/ui/icons";
-import { Sphere } from "@/components/ui/sphere";
 import { gsap, registerGsap, START } from "@/lib/motion";
 import { cn } from "@/lib/cn";
 
 /**
  * Las cuatro capacidades, en tablero.
  *
- * Cuatro tarjetas iguales en fila se leen como una lista y se saltean como una
- * lista. Con tamaños distintos el ojo entra por la más grande y recorre el
- * resto.
+ * Cada tarjeta es una sola pieza: el texto y el gesto conviven en el mismo
+ * espacio, sin una banda de ilustración debajo de una línea. La versión
+ * anterior tenía eso —texto arriba, borde, lienzo abajo— y por más distinto
+ * que fuera cada dibujo, la estructura se leía cuadrada y repetida. Ahora el
+ * termómetro está al lado del título, el chat es el cuerpo de la tarjeta, la
+ * pantalla que se achica ocupa lo que el texto deja, y el color difuso está
+ * detrás de todo, no detrás de una parte.
  *
- * Los dibujos son abstractos a propósito. La versión anterior tenía cuatro
- * maquetas de interfaz —un formulario, tres pantallas, una respuesta— y se
- * leían como capturas de otro sitio: literales, y todas con el mismo peso.
- * Ahora cada tarjeta tiene una atmósfera y un solo gesto encima: un color
- * difuso detrás, vidrio esmerilado delante, y una cosa que se mueve. La
- * velocidad es un número que sube. Que te encuentren es una pregunta que se
- * escribe sola y una respuesta que llega. Las pantallas son celdas que se
- * llenan en ola, con una esfera parada encima. Los resultados son una
- * pastilla que recorre su riel.
- *
- * Y cada una tiene el dibujo en un lugar distinto: arriba, abajo, de fondo,
- * al lado. Cuatro tarjetas con el texto arriba y una banda abajo se leen como
- * la misma tarjeta repetida, por más distinto que sea el dibujo.
+ * Poco texto: dos o tres renglones por tarjeta. Lo que la tarjeta tiene que
+ * decir lo dice el gesto; el texto le pone nombre.
  */
 
 /** Las clases de cada tono, escritas enteras porque Tailwind no arma nombres al vuelo. */
 const tonos = {
-  aqua: { texto: "text-aqua-deep", suave: "bg-aqua-soft", solido: "bg-aqua", profundo: "bg-aqua-deep" },
-  rosa: { texto: "text-rosa-deep", suave: "bg-rosa-soft", solido: "bg-rosa", profundo: "bg-rosa-deep" },
-  verde: { texto: "text-verde-deep", suave: "bg-verde-soft", solido: "bg-verde", profundo: "bg-verde-deep" },
-  miel: { texto: "text-miel-deep", suave: "bg-miel-soft", solido: "bg-miel", profundo: "bg-miel-deep" },
+  aqua: { texto: "text-aqua-deep", solido: "bg-aqua", profundo: "bg-aqua-deep" },
+  rosa: { texto: "text-rosa-deep", solido: "bg-rosa", profundo: "bg-rosa-deep" },
+  verde: { texto: "text-verde-deep", solido: "bg-verde", profundo: "bg-verde-deep" },
+  miel: { texto: "text-miel-deep", solido: "bg-miel", profundo: "bg-miel-deep" },
 } as const;
 
 type Tono = keyof typeof tonos;
@@ -48,20 +40,16 @@ type Tono = keyof typeof tonos;
  * La tinta de lo que va sobre vidrio o sobre color no es la del tema, y es a
  * propósito. Los pastel de la paleta y el vidrio blanco son fijos —no se dan
  * vuelta con el modo oscuro— así que la tinta de encima tampoco puede darse
- * vuelta: en oscuro pasaría a casi blanca sobre un vidrio casi blanco y el
- * texto desaparecería.
+ * vuelta: en oscuro pasaría a casi blanca sobre un vidrio casi blanco.
  */
 const TINTA = "#121212";
 const tinta = (alfa: number) => `color-mix(in srgb, ${TINTA} ${alfa}%, transparent)`;
 
-/**
- * Vidrio esmerilado. Blanco a medias con desenfoque de lo que hay detrás:
- * es lo que hace que los blobs de color se vean A TRAVÉS de la pieza, y no
- * que la pieza esté pegada encima.
- */
+/** Vidrio esmerilado: blanco a medias con desenfoque de lo que hay detrás. */
 const VIDRIO =
   "border border-white/70 bg-white/55 shadow-[0_12px_32px_-18px_rgba(18,18,18,0.45)] backdrop-blur-md";
 
+type Card = { id: string; title: string; body: string };
 type Figuras = {
   speedOurs: string;
   speedTheirs: string;
@@ -69,24 +57,19 @@ type Figuras = {
   seoAnswer: string;
   formButton: string;
 };
+type Props = { card: Card; tono: Tono; figuras: Figuras };
 
 /* ------------------------------------------------------------------ */
 /* Piezas comunes                                                      */
 /* ------------------------------------------------------------------ */
 
 /**
- * Un blob de color difuso.
- *
- * Es un radial con el borde en rampa más un desenfoque encima. El radial ya
- * es blando; el filter es lo que le da el aspecto de mancha de luz que tiene
- * la inspiración, en vez de círculo degradado. Son pocos —dos por tarjeta— y
- * no se animan por scroll, así que el costo del filter no se nota.
+ * Un blob de color difuso: un radial con el borde en rampa más un desenfoque.
  *
  * Se apaga del todo al 72% de su radio, a propósito. Los blobs sangran por
- * los bordes de la tarjeta, y la tarjeta los recorta con overflow-hidden; el
- * desenfoque no puede suavizar un corte, porque el corte pasa después. Con el
- * cuarto exterior ya transparente, el recorte cae donde no hay nada que
- * cortar. Antes el blob aqua terminaba en un rectángulo teal en la esquina.
+ * los bordes de la tarjeta y la tarjeta los recorta con overflow-hidden; el
+ * desenfoque no suaviza un corte porque el corte pasa después. Con el cuarto
+ * exterior ya transparente, el recorte cae donde no hay nada que cortar.
  */
 function Blob({
   tono,
@@ -109,49 +92,166 @@ function Blob({
   );
 }
 
+function Titulo({ children, className }: { children: string; className?: string }) {
+  return (
+    <h3
+      className={cn(
+        "text-[1.2rem] font-semibold leading-tight tracking-[-0.025em] md:text-[1.3rem]",
+        className,
+      )}
+    >
+      {children}
+    </h3>
+  );
+}
+
+function Cuerpo({ children, className }: { children: string; className?: string }) {
+  return (
+    <p className={cn("text-[0.94rem] leading-relaxed text-ink-soft", className)}>
+      {children}
+    </p>
+  );
+}
+
+/** El orbe de la inspiración: una esferita de dos tonos, la paleta en miniatura. */
+function Orbe({ className }: { className?: string }) {
+  return (
+    <span
+      aria-hidden
+      className={cn(
+        "block shrink-0 rounded-full shadow-[inset_0_-2px_4px_rgba(0,0,0,0.12),0_1px_2px_rgba(0,0,0,0.15)]",
+        className,
+      )}
+      style={{
+        background:
+          "radial-gradient(circle at 35% 30%, #ffffff 0%, var(--color-rosa) 30%, var(--color-aqua) 75%, var(--color-verde) 100%)",
+      }}
+    />
+  );
+}
+
 /* ------------------------------------------------------------------ */
-/* 1. Velocidad — la cifra                                             */
+/* 1. Velocidad — el termómetro                                        */
 /* ------------------------------------------------------------------ */
 
 /**
- * El número, grande, sobre vidrio, sobre un blob que sangra por el borde.
+ * El termómetro va al lado del título, no debajo de una línea.
  *
- * El número es el dibujo: sube de cero al valor cuando la tarjeta entra, y
- * debajo un riel se llena hasta donde el número marca contra la referencia.
- * No hay velocímetro ni reloj: en un sitio donde la tipografía ya es imagen,
- * «0,9 s» en cuerpo grande dice más que cualquier ícono.
+ * Un tubo vertical con el bulbo abajo, que se llena hasta donde el número
+ * marca contra el máximo escrito en la boca. El número sube de cero cuando la
+ * tarjeta entra, y el tubo se llena a la par. Es la única pieza vertical del
+ * tablero, y va a la derecha del título para que el título y el gesto se
+ * lean como una sola cosa.
  */
-function Cifra({ tono, figuras }: { tono: Tono; figuras: Figuras }) {
+function Velocidad({ card, tono, figuras }: Props) {
   const t = tonos[tono];
   return (
-    <div className="relative h-full overflow-hidden">
-      <Blob tono={tono} className="-right-20 -top-28 h-96 w-96" intensidad={80} />
-      <Blob tono="miel" className="-left-14 top-6 h-56 w-56" intensidad={55} />
+    <div className="relative flex h-full min-h-[21rem] flex-col overflow-hidden p-6 md:p-7">
+      <Blob tono={tono} className="-right-28 -top-32 h-[26rem] w-[26rem]" intensidad={72} />
+      <Blob tono="miel" className="-bottom-24 -left-24 h-72 w-72" intensidad={40} />
 
-      <div
-        data-cifra-chip
-        className={cn("absolute bottom-5 left-5 rounded-2xl px-5 py-4", VIDRIO)}
-      >
-        <div className="flex items-baseline gap-3">
+      <div className="relative z-10 flex items-start justify-between gap-5">
+        <Titulo className="max-w-[10rem] pt-1">{card.title}</Titulo>
+
+        <div className="flex shrink-0 items-end gap-3">
           <p
             data-cifra
             className={cn(
-              "text-[2.7rem] font-semibold leading-none tracking-[-0.045em] tabular-nums",
+              "pb-1 text-[1.85rem] font-semibold leading-none tracking-[-0.045em] tabular-nums",
               t.texto,
             )}
           >
             {figuras.speedOurs}
           </p>
-          <p className="text-[0.78rem] font-medium tabular-nums" style={{ color: tinta(42) }}>
-            {figuras.speedTheirs}
+
+          {/* El tubo. El máximo en la boca, el bulbo en el pie. */}
+          <div className="relative mb-2.5 mt-5 h-[5.5rem] w-3">
+            <span
+              className="absolute -top-5 left-1/2 -translate-x-1/2 whitespace-nowrap text-[0.62rem] font-medium tabular-nums"
+              style={{ color: tinta(42) }}
+            >
+              {figuras.speedTheirs}
+            </span>
+            <span className="absolute inset-0 rounded-full" style={{ background: tinta(9) }} />
+            <span
+              data-termo
+              className={cn("absolute inset-x-0 bottom-0 h-full origin-bottom rounded-full", t.profundo)}
+              style={{ transform: "scaleY(0.3)" }}
+            />
+            <span
+              className={cn(
+                "absolute -bottom-2.5 left-1/2 h-6 w-6 -translate-x-1/2 rounded-full",
+                t.profundo,
+              )}
+              style={{ boxShadow: `0 0 0 5px color-mix(in srgb, var(--color-${tono}) 35%, transparent)` }}
+            />
+          </div>
+        </div>
+      </div>
+
+      <Cuerpo className="relative z-10 mt-auto pt-8">{card.body}</Cuerpo>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* 2. SEO — el chat                                                    */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Un chat con un modelo, que es la tarjeta entera y no una ilustración al
+ * pie. La pregunta se escribe sola en la burbuja de la derecha; el modelo
+ * contesta desde la izquierda, con los tres puntos de «está escribiendo»
+ * antes del texto. Una pregunta es algo que alguien escribe; una ya escrita
+ * es un cartel.
+ */
+function Seo({ card, tono, figuras }: Props) {
+  return (
+    <div className="relative flex h-full min-h-[21rem] flex-col overflow-hidden p-6 md:p-7">
+      <Blob tono={tono} className="-bottom-32 -left-28 h-[26rem] w-[26rem]" intensidad={80} />
+      <Blob tono="miel" className="-right-20 top-6 h-64 w-64" intensidad={45} />
+
+      <div className="relative z-10">
+        <Titulo>{card.title}</Titulo>
+        <Cuerpo className="mt-3">{card.body}</Cuerpo>
+      </div>
+
+      <div className="relative z-10 mt-auto space-y-2.5 pt-7">
+        {/* La pregunta, a la derecha, como en cualquier chat. */}
+        <div className={cn("ml-auto w-fit max-w-[90%] rounded-2xl rounded-br-md px-4 py-2.5", VIDRIO)}>
+          <p className="text-[0.86rem] leading-snug" style={{ color: tinta(80) }}>
+            <span data-tipeo />
+            <span
+              data-caret
+              aria-hidden
+              className="ml-px inline-block h-[1em] w-px translate-y-[0.15em] animate-[parpadeo_1s_steps(2)_infinite]"
+              style={{ background: tinta(70) }}
+            />
           </p>
         </div>
-        <div className="mt-3 h-1 w-40 overflow-hidden rounded-full" style={{ background: tinta(9) }}>
-          <span
-            data-cifra-barra
-            className={cn("block h-full w-full origin-left rounded-full", t.profundo)}
-            style={{ transform: "scaleX(0.3)" }}
-          />
+
+        {/* La respuesta, a la izquierda, con el orbe. Primero los puntos,
+            después el texto. */}
+        <div data-respuesta className="flex max-w-[92%] items-end gap-2" style={{ opacity: 0 }}>
+          <Orbe className="mb-1 h-5 w-5" />
+          <div className={cn("rounded-2xl rounded-bl-md px-4 py-2.5", VIDRIO)}>
+            <span data-puntos aria-hidden className="flex h-[1.3em] items-center gap-1">
+              {[0, 1, 2].map((i) => (
+                <span
+                  key={i}
+                  className="block h-1.5 w-1.5 rounded-full animate-[puntitos_1.1s_ease-in-out_infinite]"
+                  style={{ background: tinta(45), animationDelay: `${i * 0.16}s` }}
+                />
+              ))}
+            </span>
+            <p
+              data-texto-respuesta
+              className="hidden text-[0.86rem] leading-snug"
+              style={{ color: tinta(84) }}
+            >
+              {figuras.seoAnswer}
+            </p>
+          </div>
         </div>
       </div>
     </div>
@@ -159,123 +259,53 @@ function Cifra({ tono, figuras }: { tono: Tono; figuras: Figuras }) {
 }
 
 /* ------------------------------------------------------------------ */
-/* 2. SEO — la consulta                                                */
+/* 3. Pantallas — la ventana que se achica                             */
 /* ------------------------------------------------------------------ */
 
 /**
- * Una barra de vidrio donde la pregunta se escribe sola, y la respuesta que
- * aparece debajo cuando termina.
+ * Una ventana de vidrio que se angosta hasta ser un teléfono y vuelve, y
+ * adentro un layout que se reacomoda solo: tres columnas, dos, una.
  *
- * La tarjeta habla de que te encuentren y no solo en Google: lo que hay que
- * mostrar no es un resultado de búsqueda sino una pregunta escrita como se
- * escribe hoy —a un modelo, en minúscula, sin punto— y lo que contesta. La
- * pregunta se tipea porque una pregunta es algo que alguien escribe; una ya
- * escrita es un cartel.
+ * El reacomodo no está animado a mano: las columnas son un grid con
+ * auto-fit, así que a medida que el ancho baja, el navegador las va
+ * plegando, que es exactamente lo que pasa con un sitio de verdad. Lo único
+ * que se anima es el ancho. Va y vuelve en bucle, con una pausa en cada
+ * punta, porque es una demostración y no un adorno: hay que verlo achicarse
+ * para entender qué muestra.
  */
-function Consulta({ tono, figuras }: { tono: Tono; figuras: Figuras }) {
-  return (
-    <div className="relative h-full overflow-hidden">
-      <Blob tono={tono} className="-bottom-28 -left-24 h-96 w-96" intensidad={85} />
-      <Blob tono="miel" className="-right-16 -bottom-8 h-64 w-64" intensidad={60} />
-
-      {/* La barra. El punto de la izquierda es el orbe de la inspiración:
-          una esferita de dos tonos, que acá es la paleta entera en miniatura. */}
-      <div
-        className={cn(
-          "absolute inset-x-5 top-5 flex h-11 items-center gap-3 rounded-full pl-2.5 pr-4",
-          VIDRIO,
-        )}
-      >
-        <span
-          aria-hidden
-          className="h-6 w-6 shrink-0 rounded-full shadow-[inset_0_-2px_4px_rgba(0,0,0,0.12),0_1px_2px_rgba(0,0,0,0.15)]"
-          style={{
-            background:
-              "radial-gradient(circle at 35% 30%, #ffffff 0%, var(--color-rosa) 30%, var(--color-aqua) 75%, var(--color-verde) 100%)",
-          }}
-        />
-        <p className="truncate text-[0.88rem]" style={{ color: tinta(78) }}>
-          <span data-tipeo />
-          <span
-            data-caret
-            aria-hidden
-            className="ml-px inline-block h-[1em] w-px translate-y-[0.15em] animate-[parpadeo_1s_steps(2)_infinite]"
-            style={{ background: tinta(70) }}
-          />
-        </p>
-      </div>
-
-      {/* La respuesta, que llega después y se sale por abajo: es un pedazo de
-          algo más largo, no una tarjeta entera. */}
-      <div
-        data-respuesta
-        className={cn("absolute inset-x-5 top-[5.1rem] rounded-2xl px-4 pb-6 pt-3.5", VIDRIO)}
-        style={{ opacity: 0 }}
-      >
-        <p className="text-[0.86rem] leading-[1.5]" style={{ color: tinta(84) }}>
-          {figuras.seoAnswer}
-        </p>
-      </div>
-    </div>
-  );
-}
-
-/* ------------------------------------------------------------------ */
-/* 3. Pantallas — las celdas                                           */
-/* ------------------------------------------------------------------ */
-
-/**
- * Una grilla de celdas redondeadas que se llena en ola, y una esfera parada
- * encima.
- *
- * Es lo más abstracto de las cuatro: no hay pantalla ni teléfono. Las celdas
- * son el layout —lo que se rearma— y los tres estados, lleno, a medias y
- * vacío, son cómo cada bloque cae en cada ancho. La ola de entrada, de arriba
- * a la izquierda hacia abajo a la derecha, es lo que hace que se lea como
- * algo que se acomoda y no como un patrón impreso.
- *
- * La esfera es la misma de los proyectos, chica. Es lo que ata este tablero
- * al resto del sitio.
- */
-const ESTADOS = [
-  2, 1, 0, 2,
-  1, 2, 2, 0,
-  0, 2, 1, 2,
-  2, 0, 2, 1,
-  1, 2, 0, 2,
-  2, 2, 1, 0,
-  0, 1, 2, 2,
-];
-
-function Celdas({ tono }: { tono: Tono }) {
+function Pantallas({ card, tono }: Props) {
   const t = tonos[tono];
   return (
-    <div className="relative h-full overflow-hidden">
-      <Blob tono={tono} className="-bottom-32 -right-28 h-[26rem] w-[26rem]" intensidad={70} />
+    <div className="relative flex h-full min-h-[30rem] flex-col overflow-hidden p-6 md:p-7">
+      <Blob tono={tono} className="-bottom-36 -right-32 h-[28rem] w-[28rem]" intensidad={70} />
+      <Blob tono="aqua" className="-left-28 top-1/3 h-72 w-72" intensidad={32} />
 
-      <div
-        data-celdas
-        className="absolute inset-x-5 bottom-6 top-4 grid grid-cols-4 grid-rows-7 gap-2"
-      >
-        {ESTADOS.map((estado, i) => (
-          <span
-            key={i}
-            data-celda
-            className={cn(
-              "rounded-[0.9rem]",
-              estado === 2 && cn(t.suave, "border border-transparent"),
-              estado === 1 && "border border-dashed",
-            )}
-            style={{
-              borderColor: estado === 1 ? `color-mix(in srgb, var(--color-${tono}-deep) 45%, transparent)` : undefined,
-              background: estado === 0 ? tinta(5) : undefined,
-            }}
-          />
-        ))}
+      <div className="relative z-10">
+        <Titulo>{card.title}</Titulo>
+        <Cuerpo className="mt-3">{card.body}</Cuerpo>
       </div>
 
-      <div data-esfera-chica className="absolute bottom-5 right-5 w-24">
-        <Sphere tone={tono} className="w-full drop-shadow-[0_18px_28px_rgba(0,0,0,0.35)]" />
+      <div className="relative z-10 mt-8 flex flex-1 items-start justify-center">
+        <div data-ventana className={cn("w-full overflow-hidden rounded-xl", VIDRIO)}>
+          <div className="flex gap-1.5 px-3 py-2.5" style={{ borderBottom: `1px solid ${tinta(7)}` }}>
+            {[0, 1, 2].map((i) => (
+              <span key={i} className="block h-1.5 w-1.5 rounded-full" style={{ background: tinta(16) }} />
+            ))}
+          </div>
+          <div className="p-3">
+            <span className={cn("mb-2 block h-2 w-1/2 rounded-full", t.solido)} />
+            <span className="mb-3 block h-1.5 w-full rounded-full" style={{ background: tinta(11) }} />
+            <div
+              className="grid gap-2"
+              style={{ gridTemplateColumns: "repeat(auto-fit, minmax(5.2rem, 1fr))" }}
+            >
+              {[0, 1, 2].map((i) => (
+                <span key={i} className="block h-14 rounded-lg" style={{ background: tinta(9) }} />
+              ))}
+            </div>
+            <span className={cn("mt-3 block h-6 w-full rounded-md", t.solido)} />
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -286,55 +316,51 @@ function Celdas({ tono }: { tono: Tono }) {
 /* ------------------------------------------------------------------ */
 
 /**
- * Un riel y una pastilla que lo recorre.
- *
- * Es el gesto de la inspiración —la lectura de pulso con la pastilla
- * brillante— vuelto sobre lo que dice la tarjeta: un sitio hecho para que te
- * escriban es un sitio donde la aguja va para el lado correcto. La pastilla
- * arranca del principio y llega casi al final cuando la tarjeta entra, y el
- * riel se va llenando detrás.
- *
- * Sin números en las puntas. La inspiración los tiene y quedan bien, pero
- * acá serían inventados, y un número inventado en una tarjeta que habla de
- * resultados es exactamente lo que no.
+ * Un riel y una pastilla que lo recorre, a la derecha del texto, sobre un
+ * color que cruza la tarjeta entera. Sin números en las puntas: la
+ * inspiración los tiene, pero acá serían inventados, y un número inventado
+ * en una tarjeta que habla de resultados es exactamente lo que no.
  */
-function Deslizador({ tono }: { tono: Tono }) {
+function Resultados({ card, tono }: Props) {
   const t = tonos[tono];
   return (
-    <div className="relative h-full min-h-[17rem] overflow-hidden">
-      <Blob tono={tono} className="-right-28 -top-28 h-[26rem] w-[26rem]" intensidad={85} />
-      <Blob tono="rosa" className="-bottom-32 left-4 h-72 w-72" intensidad={45} />
+    <div className="relative grid min-h-[17rem] overflow-hidden md:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
+      <Blob tono={tono} className="-right-32 -top-36 h-[30rem] w-[30rem]" intensidad={85} />
+      <Blob tono="rosa" className="-bottom-36 left-1/3 h-80 w-80" intensidad={40} />
 
-      <div className="absolute inset-x-8 top-1/2 -translate-y-1/2 sm:inset-x-10">
-        {/* El riel. */}
-        <div className="relative h-1.5 rounded-full" style={{ background: tinta(10) }}>
-          <span
-            data-lleno
-            className={cn("absolute inset-y-0 left-0 w-full origin-left rounded-full", t.solido)}
-            style={{ transform: "scaleX(0.14)" }}
-          />
-          {/* Las puntas. */}
-          <span className={cn("absolute -left-1 top-1/2 h-3 w-3 -translate-y-1/2 rounded-full", t.solido)} />
-          <span
-            className="absolute -right-1 top-1/2 h-3 w-3 -translate-y-1/2 rounded-full"
-            style={{ background: tinta(14) }}
-          />
+      <div className="relative z-10 flex flex-col justify-center p-6 md:p-7">
+        <Titulo>{card.title}</Titulo>
+        <Cuerpo className="mt-3">{card.body}</Cuerpo>
+      </div>
 
-          {/* La pastilla. */}
-          <span
-            data-pastilla
-            className={cn(
-              "absolute top-1/2 flex h-11 min-w-[4.4rem] -translate-x-1/2 -translate-y-1/2 items-center justify-center gap-1.5 rounded-full px-4",
-              t.solido,
-            )}
-            style={{
-              left: "14%",
-              color: TINTA,
-              boxShadow: `0 0 0 6px color-mix(in srgb, var(--color-${tono}) 28%, transparent), 0 10px 26px -8px color-mix(in srgb, var(--color-${tono}-deep) 70%, transparent)`,
-            }}
-          >
-            <ArrowUpRightIcon className="h-4 w-4" />
-          </span>
+      <div className="relative z-10 min-h-[9rem] md:min-h-0">
+        <div className="absolute inset-x-8 top-1/2 -translate-y-1/2 sm:inset-x-12">
+          <div className="relative h-1.5 rounded-full" style={{ background: tinta(10) }}>
+            <span
+              data-lleno
+              className={cn("absolute inset-y-0 left-0 w-full origin-left rounded-full", t.solido)}
+              style={{ transform: "scaleX(0.14)" }}
+            />
+            <span className={cn("absolute -left-1 top-1/2 h-3 w-3 -translate-y-1/2 rounded-full", t.solido)} />
+            <span
+              className="absolute -right-1 top-1/2 h-3 w-3 -translate-y-1/2 rounded-full"
+              style={{ background: tinta(14) }}
+            />
+            <span
+              data-pastilla
+              className={cn(
+                "absolute top-1/2 flex h-11 min-w-[4.4rem] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full px-4",
+                t.solido,
+              )}
+              style={{
+                left: "14%",
+                color: TINTA,
+                boxShadow: `0 0 0 6px color-mix(in srgb, var(--color-${tono}) 28%, transparent), 0 10px 26px -8px color-mix(in srgb, var(--color-${tono}-deep) 70%, transparent)`,
+              }}
+            >
+              <ArrowUpRightIcon className="h-4 w-4" />
+            </span>
+          </div>
         </div>
       </div>
     </div>
@@ -343,7 +369,7 @@ function Deslizador({ tono }: { tono: Tono }) {
 
 /* ------------------------------------------------------------------ */
 
-const lienzos = { cifra: Cifra, consulta: Consulta, celdas: Celdas, deslizador: Deslizador };
+const tarjetas = { velocidad: Velocidad, seo: Seo, pantallas: Pantallas, resultados: Resultados };
 
 export function Bento() {
   const { bento } = useCopy();
@@ -365,16 +391,12 @@ export function Bento() {
         (context) => {
           const { reduced } = context.conditions as { reduced: boolean };
 
-          /* ---- 1. La cifra: sube de cero, y el riel se llena. ---- */
+          /* ---- 1. El termómetro: el número sube, el tubo se llena. ---- */
           const cifra = q("[data-cifra]")[0];
           if (cifra) {
             const texto = cifra.textContent ?? "";
-            /*
-               «0,9 s» o «0.9s»: el separador y el sufijo salen del copy, que
-               cambia con el idioma. Se anima el número y se vuelve a armar
-               con lo que había alrededor, así el resultado es exactamente el
-               texto original y no una versión con el punto de otro idioma.
-            */
+            // «0,9 s» o «0.9s»: separador y sufijo salen del copy y se vuelven
+            // a armar, así el resultado es el texto original de cada idioma.
             const m = texto.match(/^(\D*)(\d+)([.,])(\d+)(.*)$/);
             if (m && !reduced) {
               const [, antes, entero, sep, dec, despues] = m;
@@ -391,78 +413,68 @@ export function Bento() {
               });
             }
             gsap.fromTo(
-              q("[data-cifra-chip]"),
-              { opacity: 0, y: 14 },
-              { opacity: 1, y: 0, duration: reduced ? 0 : 0.7, ease: "power3.out",
-                scrollTrigger: { trigger: cifra, start: START, once: true } },
-            );
-            gsap.fromTo(
-              q("[data-cifra-barra]"),
-              { scaleX: 0 },
-              { scaleX: 0.3, duration: reduced ? 0 : 1.3, ease: "power3.out", delay: 0.2,
-                scrollTrigger: { trigger: cifra, start: START, once: true } },
+              q("[data-termo]"),
+              { scaleY: 0 },
+              {
+                scaleY: 0.3,
+                duration: reduced ? 0 : 1.3,
+                ease: "power3.out",
+                scrollTrigger: { trigger: cifra, start: START, once: true },
+              },
             );
           }
 
-          /* ---- 2. La consulta: se tipea, y después llega la respuesta. ---- */
+          /* ---- 2. El chat: se tipea, llegan los puntos, llega el texto. ---- */
           const tipeo = q("[data-tipeo]")[0];
           const respuesta = q("[data-respuesta]")[0];
           if (tipeo && respuesta) {
             const pregunta = bento.figures.seoQuestion;
+            const puntos = q("[data-puntos]");
+            const textoRespuesta = q("[data-texto-respuesta]");
             if (reduced) {
               tipeo.textContent = pregunta;
               gsap.set(respuesta, { opacity: 1 });
+              gsap.set(puntos, { display: "none" });
+              gsap.set(textoRespuesta, { display: "block" });
             } else {
               const proxy = { n: 0 };
-              const tl = gsap.timeline({
-                scrollTrigger: { trigger: tipeo, start: START, once: true },
-              });
-              tl.to(proxy, {
-                n: pregunta.length,
-                duration: Math.min(2.2, 0.05 * pregunta.length + 0.4),
-                ease: "none",
-                snap: "n",
-                onUpdate: () => {
-                  tipeo.textContent = pregunta.slice(0, proxy.n);
-                },
-              })
-                .to(q("[data-caret]"), { opacity: 0, duration: 0.2 }, "+=0.35")
-                .fromTo(
-                  respuesta,
-                  { opacity: 0, y: 10 },
-                  { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" },
-                  "<",
-                );
+              gsap
+                .timeline({ scrollTrigger: { trigger: tipeo, start: START, once: true } })
+                .to(proxy, {
+                  n: pregunta.length,
+                  duration: Math.min(2.2, 0.05 * pregunta.length + 0.4),
+                  ease: "none",
+                  snap: "n",
+                  onUpdate: () => {
+                    tipeo.textContent = pregunta.slice(0, proxy.n);
+                  },
+                })
+                .to(q("[data-caret]"), { opacity: 0, duration: 0.2 }, "+=0.3")
+                .fromTo(respuesta, { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, "<")
+                .set(puntos, { display: "none" }, "+=1.0")
+                .set(textoRespuesta, { display: "block" })
+                .fromTo(textoRespuesta, { opacity: 0 }, { opacity: 1, duration: 0.45 });
             }
           }
 
-          /* ---- 3. Las celdas: ola de entrada, y la esfera cae encima. ---- */
-          const celdas = q("[data-celda]");
-          if (celdas.length) {
-            if (reduced) {
-              gsap.set(celdas, { opacity: 1, scale: 1 });
-              gsap.set(q("[data-esfera-chica]"), { opacity: 1, scale: 1 });
-            } else {
-              const tl = gsap.timeline({
-                scrollTrigger: { trigger: q("[data-celdas]")[0], start: START, once: true },
-              });
-              tl.fromTo(
-                celdas,
-                { opacity: 0, scale: 0.55 },
-                {
-                  opacity: 1,
-                  scale: 1,
-                  duration: 0.55,
-                  ease: "back.out(1.6)",
-                  stagger: { grid: [7, 4], from: "start", amount: 0.9 },
-                },
-              ).fromTo(
-                q("[data-esfera-chica]"),
-                { opacity: 0, scale: 0.5, y: 24 },
-                { opacity: 1, scale: 1, y: 0, duration: 0.7, ease: "back.out(1.8)" },
-                "-=0.35",
-              );
-            }
+          /* ---- 3. La ventana: se angosta hasta teléfono y vuelve, en bucle. ---- */
+          const ventana = q("[data-ventana]")[0];
+          if (ventana && !reduced) {
+            gsap.to(ventana, {
+              width: "46%",
+              duration: 2.4,
+              ease: "power2.inOut",
+              repeat: -1,
+              yoyo: true,
+              repeatDelay: 1.3,
+              scrollTrigger: {
+                trigger: ventana,
+                start: START,
+                // Se pausa fuera de pantalla: un bucle que corre donde nadie lo
+                // ve es trabajo tirado.
+                toggleActions: "play pause resume pause",
+              },
+            });
           }
 
           /* ---- 4. El deslizador: la pastilla recorre el riel. ---- */
@@ -472,14 +484,10 @@ export function Bento() {
               gsap.set(pastilla, { left: "82%" });
               gsap.set(q("[data-lleno]"), { scaleX: 0.82 });
             } else {
-              const tl = gsap.timeline({
-                scrollTrigger: { trigger: pastilla, start: START, once: true },
-              });
-              tl.to(pastilla, { left: "82%", duration: 1.5, ease: "power3.inOut", delay: 0.15 }).to(
-                q("[data-lleno]"),
-                { scaleX: 0.82, duration: 1.5, ease: "power3.inOut" },
-                "<",
-              );
+              gsap
+                .timeline({ scrollTrigger: { trigger: pastilla, start: START, once: true } })
+                .to(pastilla, { left: "82%", duration: 1.5, ease: "power3.inOut", delay: 0.15 })
+                .to(q("[data-lleno]"), { scaleX: 0.82, duration: 1.5, ease: "power3.inOut" }, "<");
             }
           }
         },
@@ -498,16 +506,11 @@ export function Bento() {
       />
 
       {/*
-        Un tablero y no cuatro tarjetas sueltas.
-
-        Las cuatro viven adentro de un mismo contenedor, separadas por una
-        junta de diez píxeles del color de la página. Donde se cruzan dos
-        juntas, las cuatro esquinas redondeadas que se encuentran dejan una
-        muesca en forma de estrella; donde una junta muere contra el borde de
-        la tarjeta vertical queda una te. No hay que dibujar nada de eso: sale
-        de redondear las tarjetas y dejarlas respirar. Los radios de celda y
-        tablero se llevan exactamente el padding, o las curvas no son
-        paralelas.
+        Un tablero y no cuatro tarjetas sueltas: las cuatro viven adentro de
+        un mismo contenedor, separadas por una junta de diez píxeles del color
+        de la página. Donde se cruzan dos juntas, las esquinas redondeadas
+        dejan una muesca en forma de estrella. Los radios de celda y tablero se
+        llevan exactamente el padding, o las curvas no son paralelas.
 
         Tres columnas y dos filas en md: las dos chicas arriba a la izquierda,
         la vertical ocupando la columna de la derecha entera y la ancha abajo
@@ -519,61 +522,14 @@ export function Bento() {
       >
         <Reveal stagger className="grid gap-2.5 md:grid-cols-3">
           {bento.cards.map((card) => {
-            const diseño = bentoDesign[card.id] ?? {
-              tone: "aqua" as const,
-              area: "",
-              art: "cifra",
-              layout: "arriba" as const,
-            };
-            const t = tonos[diseño.tone];
-            const Lienzo = lienzos[diseño.art as keyof typeof lienzos] ?? Cifra;
-
-            const texto = (
-              <div className={cn("relative z-10 p-6 md:p-7", diseño.layout === "lado" && "md:flex md:flex-col md:justify-center")}>
-                <span aria-hidden className={cn("block h-2 w-2 rounded-full", t.solido)} />
-                <h3 className="mt-4 text-[1.2rem] font-semibold leading-tight tracking-[-0.025em] md:text-[1.3rem]">
-                  {card.title}
-                </h3>
-                <p className="mt-3 text-[0.94rem] leading-relaxed text-ink-soft">{card.body}</p>
-              </div>
-            );
-
-            const dibujo = (
-              <div
-                data-lienzo
-                className={cn(
-                  diseño.layout === "arriba" && "h-[11.5rem] shrink-0",
-                  diseño.layout === "abajo" && "mt-auto h-[11.5rem] shrink-0",
-                  diseño.layout === "fondo" && "min-h-[22rem] flex-1",
-                  diseño.layout === "lado" && "min-h-[17rem]",
-                )}
-              >
-                <Lienzo tono={diseño.tone} figuras={bento.figures} />
-              </div>
-            );
-
+            const diseño = bentoDesign[card.id] ?? { tone: "aqua" as const, area: "", art: "velocidad" };
+            const Tarjeta = tarjetas[diseño.art as keyof typeof tarjetas] ?? Velocidad;
             return (
               <article
                 key={card.id}
-                className={cn(
-                  "overflow-hidden rounded-[var(--radius-celda)] bg-card",
-                  diseño.layout === "lado"
-                    ? "grid md:grid-cols-[minmax(0,0.95fr)_minmax(0,1.15fr)] md:items-stretch"
-                    : "flex flex-col",
-                  diseño.area,
-                )}
+                className={cn("overflow-hidden rounded-[var(--radius-celda)] bg-card", diseño.area)}
               >
-                {diseño.layout === "arriba" ? (
-                  <>
-                    {dibujo}
-                    {texto}
-                  </>
-                ) : (
-                  <>
-                    {texto}
-                    {dibujo}
-                  </>
-                )}
+                <Tarjeta card={card} tono={diseño.tone} figuras={bento.figures} />
               </article>
             );
           })}

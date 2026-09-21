@@ -579,3 +579,17 @@
     opacity: 0;
   }
 }
+
+/* Los tres puntos de «está escribiendo» del chat del tablero. */
+@keyframes puntitos {
+  0%,
+  60%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.45;
+  }
+  30% {
+    transform: translateY(-3px);
+    opacity: 1;
+  }
+}

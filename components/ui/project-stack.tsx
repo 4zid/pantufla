@@ -11,7 +11,6 @@ import type { SanityProject } from "@/sanity/types";
 import type { Tone } from "@/lib/tones";
 import { useCopy, useHref } from "@/components/copy-provider";
 import { gsap, registerGsap } from "@/lib/motion";
-import { cn } from "@/lib/cn";
 
 /**
  * Los proyectos, de a cuatro por fila.
@@ -22,10 +21,10 @@ import { cn } from "@/lib/cn";
  * es abrirlo. Todo eso competía con el nombre y empujaba el enlace hacia
  * abajo.
  *
- * Dos por fila, y en escritorio la esfera a la izquierda con el nombre al
- * lado, no debajo: así cada fila mide lo que mide la esfera y las dos filas
- * entran en una pantalla. Con el nombre debajo, las dos filas sumaban los
- * epígrafes y la sección se pasaba de largo.
+ * Dos por fila y nada más: ni título al lado ni botón. El nombre va adentro
+ * de la esfera, en la mitad oscura, y al pasar el mouse se cambia por «ver
+ * sitio» con la flecha. Cuatro esferas solas se leen como cuatro objetos;
+ * con un epígrafe cada una se leían como cuatro fichas.
  *
  * Las capturas de los sitios ya no están acá. Un portfolio de capturas es un
  * portfolio de rectángulos con texto chiquito adentro: no se lee ninguno,
@@ -131,7 +130,7 @@ export function ProjectStack({
     <div ref={scope}>
       <Reveal
         stagger
-        className="grid grid-cols-2 gap-x-5 gap-y-8 lg:gap-x-10 lg:gap-y-10"
+        className="grid grid-cols-2 gap-x-5 gap-y-6 lg:gap-x-8 lg:gap-y-8"
       >
         {projects.map((project, i) => {
           // Sin URL cargada, la tarjeta cae en la ficha interna en vez de
@@ -140,57 +139,59 @@ export function ProjectStack({
           const destino = project.url ?? href(`/proyectos/${project.slug}`);
 
           return (
-            <article
-              key={project._id}
-              className="group/card relative lg:flex lg:items-center lg:gap-7"
-            >
+            <article key={project._id} className="group/card relative mx-auto w-full max-w-[17rem]">
               {/*
-                La esfera suelta: sin tarjeta, sin plato, sin borde.
+                La esfera suelta y sola: sin tarjeta, sin epígrafe al lado.
 
-                No hay nada que la contenga a propósito. Una esfera adentro de
-                un rectángulo con borde es una ilustración pegada en una ficha;
-                sola sobre la página es un objeto, y la página se vuelve el
-                aire que la rodea.
+                El nombre va ADENTRO, en la mitad oscura, donde el blanco se
+                lee sin esfuerzo. Al pasar el mouse —o al llegar con el
+                teclado— el nombre se retira y en su lugar aparece «ver sitio»
+                con la flecha: es lo que dice que la esfera se puede tocar, sin
+                un botón al costado estorbando.
 
-                El giro va en el envoltorio y el zoom del hover en la esfera:
-                GSAP escribe el transform en línea, y si estuvieran en el
-                mismo elemento pisaría la clase del hover y el zoom dejaría
-                de andar.
+                El giro va en el envoltorio de la esfera y el nombre en una
+                capa aparte, así el nombre se queda derecho mientras la
+                esfera se inclina con el scroll. Y el zoom del hover va en la
+                esfera: GSAP escribe el transform en línea, y en el mismo
+                elemento que el giro pisaría la clase.
               */}
-              <div data-esfera className="will-change-transform lg:w-[46%] lg:shrink-0">
+              <div data-esfera className="will-change-transform">
                 <Sphere
                   tone={tonos[i % tonos.length]}
-                  className="w-full transition-transform duration-700 ease-out group-hover/card:scale-[1.03]"
+                  className="w-full transition-transform duration-700 ease-out group-hover/card:scale-[1.04]"
                 />
               </div>
 
-              {/* El epígrafe: debajo en teléfono, al lado en escritorio. */}
-              <div className="mt-4 lg:mt-0">
-                <Titulo className="text-[1.05rem] font-semibold leading-tight tracking-[-0.025em] md:text-[1.35rem]">
-                  <Link
-                    href={destino}
-                    target={externo ? "_blank" : undefined}
-                    rel={externo ? "noreferrer" : undefined}
-                    /* Estirado sobre toda la tarjeta: se puede tocar en
-                       cualquier parte —esfera incluida— y sigue habiendo un
-                       solo enlace. */
-                    className="after:absolute after:inset-0 after:z-10 after:content-['']"
+              {/*
+                El enlace ES el círculo: una capa absoluta redonda sobre la
+                esfera, con el nombre adentro. Así el área clicable es
+                exactamente la esfera —ni una esquina más— y no hay nada que
+                se salga de la pantalla en teléfono. La primera versión
+                estiraba un pseudo-elemento con inset negativo y desbordaba
+                96 píxeles por la derecha a 390.
+              */}
+              <Titulo className="absolute inset-0 text-[1.15rem] font-semibold leading-tight tracking-[-0.025em] text-white md:text-[1.3rem]">
+                <Link
+                  href={destino}
+                  target={externo ? "_blank" : undefined}
+                  rel={externo ? "noreferrer" : undefined}
+                  className="relative flex h-full w-full items-center justify-center rounded-full px-8 pt-[32%] text-center outline-none"
+                >
+                  <span
+                    data-nombre
+                    className="block transition-all duration-300 ease-out group-hover/card:-translate-y-1 group-hover/card:opacity-0 group-focus-within/card:-translate-y-1 group-focus-within/card:opacity-0"
                   >
                     {project.title}
-                  </Link>
-                </Titulo>
-
-                <span
-                  aria-hidden
-                  className={cn(
-                    "mt-1.5 inline-flex items-center gap-1.5 text-[0.85rem] text-ink-soft",
-                    "transition-colors duration-200 group-hover/card:text-ink",
-                  )}
-                >
-                  {work.view}
-                  <ArrowUpRightIcon className="h-3.5 w-3.5 transition-transform duration-200 group-hover/card:-translate-y-0.5 group-hover/card:translate-x-0.5" />
-                </span>
-              </div>
+                  </span>
+                  <span
+                    aria-hidden
+                    className="absolute inset-0 flex translate-y-1 items-center justify-center gap-1.5 pt-[32%] opacity-0 transition-all duration-300 ease-out group-hover/card:translate-y-0 group-hover/card:opacity-100 group-focus-within/card:translate-y-0 group-focus-within/card:opacity-100"
+                  >
+                    {work.view}
+                    <ArrowUpRightIcon className="h-[0.9em] w-[0.9em]" />
+                  </span>
+                </Link>
+              </Titulo>
             </article>
           );
         })}

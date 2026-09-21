@@ -289,22 +289,22 @@ export const en: SiteCopy = {
       {
         id: "velocidad",
         title: "Loads before they decide to leave",
-        body: "Half of all visitors abandon a site that takes more than three seconds. Yours does not even take one: images come optimised and the content is served from whichever server sits closest to the person opening it.",
+        body: "Half of all visitors leave if a site takes over three seconds. Yours loads in under one.",
       },
       {
         id: "seo",
         title: "People find you, and not only on Google",
-        body: "Metadata, sitemap and structured data from day one. Plus a file that explains to ChatGPT and Perplexity what you do, because more and more people ask there before they search.",
+        body: "Metadata, sitemap, and a file that tells ChatGPT what you do. More and more people ask there first.",
       },
       {
         id: "pantallas",
         title: "Just as tidy on a phone",
-        body: "Not the same layout squeezed down: every section is rebuilt for the screen it is on. We test on phone, tablet and desktop before publishing, because that is where most people arrive.",
+        body: "Every section is rebuilt for the screen it is on. We test on all three before publishing.",
       },
       {
         id: "resultados",
         title: "Built so they write to you",
-        body: "A beautiful site that does not convert is an expensive brochure. Every decision — what comes first, what the button says, how many fields the form has — comes from the same question: what makes someone on the other side commit.",
+        body: "A beautiful site that does not convert is an expensive brochure. Every decision comes from one question: what makes someone commit.",
       },
     ],
     figures: {

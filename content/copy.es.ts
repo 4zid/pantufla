@@ -301,22 +301,22 @@ export const es: SiteCopy = {
       {
         id: "velocidad",
         title: "Carga antes de que decidan irse",
-        body: "La mitad de la gente abandona un sitio que tarda más de tres segundos. El tuyo no llega ni a uno: se entrega con las imágenes optimizadas y el contenido servido desde el servidor más cercano a quien entra.",
+        body: "La mitad se va si un sitio tarda más de tres segundos. El tuyo carga en menos de uno.",
       },
       {
         id: "seo",
         title: "Te encuentran, y no solo en Google",
-        body: "Metadatos, sitemap y datos estructurados desde el primer día. Y un archivo que le explica a ChatGPT y a Perplexity qué hacés, porque cada vez más gente pregunta ahí antes de buscar.",
+        body: "Metadatos, sitemap y un archivo que le explica a ChatGPT qué hacés. Cada vez más gente pregunta ahí.",
       },
       {
         id: "pantallas",
         title: "Igual de prolijo en el teléfono",
-        body: "No es el mismo diseño apretado: cada sección se rearma para la pantalla en la que está. Probamos en teléfono, tablet y escritorio antes de publicar, porque ahí entra la mayoría.",
+        body: "Cada sección se rearma para la pantalla en la que está. Probamos en las tres antes de publicar.",
       },
       {
         id: "resultados",
         title: "Hecho para que te escriban",
-        body: "Un sitio lindo que no convierte es un folleto caro. Cada decisión —qué va primero, qué dice el botón, cuántos campos tiene el formulario— sale de la misma pregunta: qué hace que alguien del otro lado se decida.",
+        body: "Un sitio lindo que no convierte es un folleto caro. Cada decisión sale de una pregunta: qué hace que alguien se decida.",
       },
     ],
     figures: {
