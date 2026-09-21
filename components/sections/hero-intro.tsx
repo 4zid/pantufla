@@ -1,5 +1,7 @@
 "use client";
 
+import { HeroChip } from "@/components/ui/hero-chip";
+import type { Tone } from "@/lib/tones";
 import { useGSAP } from "@gsap/react";
 import { useRef } from "react";
 
@@ -8,6 +10,9 @@ import { Magnetic } from "@/components/motion/magnetic";
 import { SplitHeading } from "@/components/motion/split-heading";
 import { ButtonLink } from "@/components/ui/button";
 import { ease, gsap, registerGsap } from "@/lib/motion";
+
+/** Los mismos tres tonos que llevan las pastillas flotantes del escenario. */
+const CHIP_TONOS: Tone[] = ["aqua", "rosa", "verde"];
 
 export function HeroIntro() {
   const { hero } = useCopy();
@@ -105,17 +110,11 @@ export function HeroIntro() {
         */}
         <ul
           data-reveal
-          className="mx-auto mt-6 flex max-w-3xl flex-col items-center gap-y-1.5 text-[0.85rem] text-ink-faint sm:flex-row sm:flex-wrap sm:justify-center"
+          className="mx-auto mt-7 flex max-w-3xl flex-wrap justify-center gap-2.5 min-[1440px]:sr-only"
         >
           {hero.proof.map((item, i) => (
-            <li key={item} className="flex items-center">
-              {i > 0 ? (
-                <span
-                  aria-hidden
-                  className="mx-3 hidden h-3 w-px bg-line-strong sm:mx-4 sm:block"
-                />
-              ) : null}
-              {item}
+            <li key={item}>
+              <HeroChip tone={CHIP_TONOS[i % CHIP_TONOS.length]}>{item}</HeroChip>
             </li>
           ))}
         </ul>

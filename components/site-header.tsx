@@ -208,18 +208,6 @@ export function SiteHeader() {
             </nav>
 
             <div className="hidden shrink-0 items-center gap-4 md:flex">
-              {/* El enlace secundario se retira cuando la barra se compacta. */}
-              <Link
-                href={header.plansHref}
-                className={cn(
-                  "overflow-hidden whitespace-nowrap text-[0.92rem] text-ink-soft transition-all duration-400 hover:text-ink",
-                  compact
-                    ? "pointer-events-none max-w-0 opacity-0"
-                    : "max-w-[8rem] opacity-100",
-                )}
-              >
-                {header.plans}
-              </Link>
               <LocaleSwitcher />
               <ButtonLink href={header.ctaHref} size={compact ? "sm" : "md"}>
                 {header.cta}

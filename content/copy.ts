@@ -24,18 +24,16 @@ export type SiteCopy = {
   };
   nav: Link[];
   header: {
-    plans: string;
     cta: string;
     /**
-     * Adónde van los dos enlaces de la barra.
+     * Adónde va el botón de la barra.
      *
-     * Estaban escritos a mano en el componente y era el único lugar del sitio
+     * Estaba escrito a mano en el componente y era el único lugar del sitio
      * donde un destino no salía del copy. Con los interruptores eso pasó de
      * ser un detalle a ser un error: la poda recorre el copy, así que apagar
-     * los planes o el formulario limpiaba todos los enlaces del sitio menos
-     * justo los dos que están arriba de todo y en todas las páginas.
+     * el formulario limpiaba todos los enlaces del sitio menos justo el que
+     * está arriba de todo y en todas las páginas.
      */
-    plansHref: string;
     ctaHref: string;
     openMenu: string;
     skip: string;
@@ -165,10 +163,9 @@ export type SiteCopy = {
     title: string;
     lead: string;
     view: string;
-    /** El botón que suma dos proyectos más a los cuatro de la home. */
-    loadMore: string;
-    /** «4 de 6», para que se sepa cuánto falta antes de tocar. */
-    counter: string;
+    /** Los botones de la fila deslizable, para lectores de pantalla. */
+    prev: string;
+    next: string;
   };
   testimonials: { eyebrow: string; title: string; rating: string };
   clientsMap: { eyebrow: string; title: string; note: string };
@@ -308,10 +305,9 @@ function apagadas(secciones: Record<string, boolean>): Set<string> {
  *
  * «href» a secas y cualquiera que termine en Href, como ctaHref. La segunda
  * forma existe para los destinos sueltos, los que no vienen acompañados de su
- * etiqueta en un objeto {label, href}: el enlace secundario de la barra, por
- * ejemplo, tiene el texto en header.plans desde siempre y meterlo adentro de
- * un objeto habría cambiado la forma de un campo que ya está cargado en
- * Sanity como texto suelto.
+ * etiqueta en un objeto {label, href}: el botón de la barra tiene el texto en
+ * header.cta desde siempre y meterlo adentro de un objeto habría cambiado la
+ * forma de un campo que ya está cargado en Sanity como texto suelto.
  */
 function esClaveDeEnlace(clave: string) {
   return clave === "href" || clave.endsWith("Href");

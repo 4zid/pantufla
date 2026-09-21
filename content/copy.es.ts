@@ -39,9 +39,7 @@ export const es: SiteCopy = {
   ],
 
   header: {
-    plans: "Ver planes",
     cta: "Empezar un proyecto",
-    plansHref: "/#planes",
     ctaHref: "/#brief",
     openMenu: "Abrir menú",
     skip: "Ir al contenido",
@@ -333,8 +331,8 @@ export const es: SiteCopy = {
     title: "Algunos sitios que salieron de acá.",
     lead: "Distintos rubros, distintos tamaños, el mismo método.",
     view: "Ver sitio",
-    loadMore: "Ver más proyectos",
-    counter: "{shown} de {total}",
+    prev: "Proyectos anteriores",
+    next: "Proyectos siguientes",
   },
 
   testimonials: {

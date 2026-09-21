@@ -10,6 +10,7 @@ import {
   PanelVisitas,
 } from "@/components/sections/hero-panels";
 import { useCopy } from "@/components/copy-provider";
+import { HeroChips } from "@/components/sections/hero-chips";
 import { Draggable, ease, gsap, registerGsap } from "@/lib/motion";
 import { cn } from "@/lib/cn";
 
@@ -338,6 +339,8 @@ export function HeroScene() {
           </div>
         ))}
       </div>
+
+      <HeroChips />
 
       {/*
         Dashboard. En desktop los huecos quedan vacíos hasta que llegan los

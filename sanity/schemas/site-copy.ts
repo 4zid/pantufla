@@ -103,12 +103,6 @@ export const siteCopy = defineType({
       type: "object",
       options: { collapsible: true, collapsed: true },
       fields: [
-        defineField({ name: "plans", title: "Enlace secundario", type: "string" }),
-        defineField({
-          name: "plansHref",
-          title: "Destino del enlace secundario",
-          type: "string",
-        }),
         defineField({ name: "cta", title: "Botón", type: "string" }),
         defineField({ name: "ctaHref", title: "Destino del botón", type: "string" }),
         defineField({ name: "openMenu", title: "Abrir menú", type: "string" }),
@@ -658,13 +652,8 @@ export const siteCopy = defineType({
         defineField({ name: "title", title: "Título", type: "string" }),
         texto("lead", "Bajada", 2),
         defineField({ name: "view", title: "Palabra «ver»", type: "string" }),
-        defineField({ name: "loadMore", title: "Botón de cargar más", type: "string" }),
-        defineField({
-          name: "counter",
-          title: "Contador",
-          type: "string",
-          description: "Lleva {shown} y {total}. Por ejemplo: «{shown} de {total}».",
-        }),
+        defineField({ name: "prev", title: "Botón «anteriores» (lectores de pantalla)", type: "string" }),
+        defineField({ name: "next", title: "Botón «siguientes» (lectores de pantalla)", type: "string" }),
       ],
     }),
     defineField({
