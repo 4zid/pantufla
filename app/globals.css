@@ -107,24 +107,6 @@
 
   --radius-card: 16px;
   --radius-panel: 24px;
-  /*
-     Los dos radios del tablero: el contenedor grande y las tarjetas de
-     adentro.
-
-     No son números elegidos a ojo. Cuando una caja redondeada vive adentro de
-     otra, los dos radios tienen que estar separados exactamente por el padding
-     que hay entre ellas, o las curvas no son paralelas: la de adentro se abre
-     más rápido que la de afuera y queda una medialuna de fondo en cada esquina
-     que se ve como un error de alineación. Acá el padding es 10, así que
-     30 + 10 = 40.
-
-     Y la celda es más redonda que radius-panel a propósito. El dibujo del
-     tablero son las muescas que quedan donde se juntan cuatro esquinas, y el
-     tamaño de esa muesca lo decide el radio: con los 24 del panel quedaban
-     unas estrellitas que había que buscar.
-  */
-  --radius-celda: 30px;
-  --radius-tablero: 40px;
 
   /*
      Interpolación entre dos puntos y no un vw suelto: 32px a 390 y 70.4px a
@@ -563,33 +545,5 @@
       animation: none;
       transform: none;
     }
-  }
-}
-
-/*
-   El cursor de la barra de consulta del tablero de capacidades. Dos pasos y
-   no una transición: un cursor parpadea, no se desvanece.
-*/
-@keyframes parpadeo {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0;
-  }
-}
-
-/* Los tres puntos de «está escribiendo» del chat del tablero. */
-@keyframes puntitos {
-  0%,
-  60%,
-  100% {
-    transform: translateY(0);
-    opacity: 0.45;
-  }
-  30% {
-    transform: translateY(-3px);
-    opacity: 1;
   }
 }

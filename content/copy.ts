@@ -92,7 +92,10 @@ export type SiteCopy = {
     lead: string;
     groupLabel: string;
     totalLabel: string;
-    toggle: Record<"once" | "split", { label: string; note: string; noteLong: string }>;
+    toggle: Record<
+      "once" | "split",
+      { label: string; note: string; noteLong: string }
+    >;
     guarantee: string;
     plans: {
       id: string;
@@ -146,16 +149,29 @@ export type SiteCopy = {
      * como un relleno.
      */
     figures: {
+      /** El epígrafe del vidrio de velocidad. */
+      speedCaption: string;
       /** Cuánto tarda un sitio nuestro. */
       speedOurs: string;
       /** El número contra el que se compara. */
       speedTheirs: string;
+      /** Las etiquetas de las dos barras de la comparación. */
+      speedLabelOurs: string;
+      speedLabelTheirs: string;
+      /** El epígrafe del vidrio del chat. */
+      seoCaption: string;
       /** Lo que alguien le escribe a un buscador o a un modelo. */
       seoQuestion: string;
       /** Lo que le contesta. */
       seoAnswer: string;
+      /** El epígrafe del vidrio de las pantallas. */
+      screensCaption: string;
+      /** El epígrafe del vidrio del formulario. */
+      formCaption: string;
       /** El botón del formulario dibujado. */
       formButton: string;
+      /** El aviso que flota sobre el formulario: llegó una consulta. */
+      formNotice: string;
     };
   };
   work: {
@@ -328,8 +344,7 @@ function podar<T>(valor: T, muertas: Set<string>): T {
     for (const [clave, v] of Object.entries(valor)) {
       if (esClaveDeEnlace(clave) && typeof v === "string") {
         const ancla = anclaDe(v);
-        salida[clave] =
-          ancla && muertas.has(ancla) ? DESTINO_DE_RESCATE : v;
+        salida[clave] = ancla && muertas.has(ancla) ? DESTINO_DE_RESCATE : v;
       } else {
         salida[clave] = podar(v, muertas);
       }
@@ -359,7 +374,10 @@ export function pruneHrefs(
 }
 
 /** Reemplaza {marcadores} en un texto. Para las frases que llevan un dato. */
-export function fill(plantilla: string, valores: Record<string, string | number>) {
+export function fill(
+  plantilla: string,
+  valores: Record<string, string | number>,
+) {
   return plantilla.replace(/\{(\w+)\}/g, (_, clave) =>
     String(valores[clave] ?? `{${clave}}`),
   );

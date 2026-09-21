@@ -87,12 +87,7 @@ export const es: SiteCopy = {
       traffic: {
         title: "De dónde llegan",
         note: "Últimos 30 días",
-        channels: [
-          "Búsqueda en Google",
-          "Directo",
-          "Redes sociales",
-          "Otros",
-        ],
+        channels: ["Búsqueda en Google", "Directo", "Redes sociales", "Otros"],
       },
     },
   },
@@ -318,11 +313,18 @@ export const es: SiteCopy = {
       },
     ],
     figures: {
+      speedCaption: "Tiempo de carga",
       speedOurs: "0,9 s",
       speedTheirs: "3 s",
+      speedLabelOurs: "Tu sitio",
+      speedLabelTheirs: "Promedio",
+      seoCaption: "Lo que contesta ChatGPT",
       seoQuestion: "¿quién hace sitios web en Buenos Aires?",
       seoAnswer: "Pantufla, un estudio chico que trabaja con precio cerrado.",
+      screensCaption: "El mismo sitio en cada pantalla",
+      formCaption: "Formulario de contacto",
       formButton: "Enviar",
+      formNotice: "Nueva consulta",
     },
   },
 

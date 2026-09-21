@@ -306,11 +306,18 @@ export const en: SiteCopy = {
       },
     ],
     figures: {
+      speedCaption: "Load time",
       speedOurs: "0.9s",
       speedTheirs: "3s",
+      speedLabelOurs: "Your site",
+      speedLabelTheirs: "Average",
+      seoCaption: "What ChatGPT answers",
       seoQuestion: "who builds websites in Buenos Aires?",
       seoAnswer: "Pantufla, a small studio that works at a closed price.",
+      screensCaption: "The same site on every screen",
+      formCaption: "Contact form",
       formButton: "Send",
+      formNotice: "New inquiry",
     },
   },
 
@@ -449,7 +456,10 @@ export const en: SiteCopy = {
       "We reply within 24 working hours. We do not share your details with anyone.",
     genericError: "We could not send it",
     extraPlans: [
-      { value: "existente", label: "I already have a site on Webflow or Framer" },
+      {
+        value: "existente",
+        label: "I already have a site on Webflow or Framer",
+      },
       { value: "no-se", label: "I am not sure which one fits" },
       { value: "otra-cosa", label: "Something else (tell us in the message)" },
     ],

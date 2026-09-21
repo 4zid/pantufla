@@ -61,20 +61,12 @@ export const processDesign: Record<
  */
 export const bentoDesign: Record<
   string,
-  { tone: "aqua" | "rosa" | "verde" | "miel"; area: string; art: string }
+  { tone: "aqua" | "rosa" | "verde" | "miel" }
 > = {
-  velocidad: { tone: "aqua", area: "md:col-start-1 md:row-start-1", art: "velocidad" },
-  seo: { tone: "rosa", area: "md:col-start-2 md:row-start-1", art: "seo" },
-  pantallas: {
-    tone: "verde",
-    area: "md:col-start-3 md:row-start-1 md:row-span-2",
-    art: "pantallas",
-  },
-  resultados: {
-    tone: "miel",
-    area: "md:col-start-1 md:col-span-2 md:row-start-2",
-    art: "resultados",
-  },
+  velocidad: { tone: "aqua" },
+  seo: { tone: "rosa" },
+  pantallas: { tone: "verde" },
+  resultados: { tone: "miel" },
 };
 
 export const planDesign: Record<string, { tone: string; featured: boolean }> = {

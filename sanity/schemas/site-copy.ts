@@ -104,14 +104,22 @@ export const siteCopy = defineType({
       options: { collapsible: true, collapsed: true },
       fields: [
         defineField({ name: "cta", title: "Botón", type: "string" }),
-        defineField({ name: "ctaHref", title: "Destino del botón", type: "string" }),
+        defineField({
+          name: "ctaHref",
+          title: "Destino del botón",
+          type: "string",
+        }),
         defineField({ name: "openMenu", title: "Abrir menú", type: "string" }),
         defineField({
           name: "skip",
           title: "Saltar al contenido",
           type: "string",
         }),
-        defineField({ name: "closeMenu", title: "Cerrar menú", type: "string" }),
+        defineField({
+          name: "closeMenu",
+          title: "Cerrar menú",
+          type: "string",
+        }),
         defineField({ name: "language", title: "Idioma", type: "string" }),
       ],
     }),
@@ -280,7 +288,8 @@ export const siteCopy = defineType({
                   name: "id",
                   title: "Id",
                   type: "string",
-                  description: "alcance, ritmo o entrega. Define el color y el dibujo.",
+                  description:
+                    "alcance, ritmo o entrega. Define el color y el dibujo.",
                 },
                 { name: "title", title: "Título", type: "string" },
                 { name: "body", title: "Texto", type: "text", rows: 3 },
@@ -335,10 +344,15 @@ export const siteCopy = defineType({
           options: { collapsible: true, collapsed: true },
           fields: [
             {
+              name: "speedCaption",
+              title: "Epígrafe de velocidad",
+              type: "string",
+            },
+            {
               name: "speedOurs",
               title: "Cuánto tarda un sitio nuestro",
               type: "string",
-              description: "Va grande, adentro del arco. Por ejemplo: «0,9 s».",
+              description: "Va grande. Por ejemplo: «0,9 s».",
             },
             {
               name: "speedTheirs",
@@ -346,13 +360,45 @@ export const siteCopy = defineType({
               type: "string",
             },
             {
+              name: "speedLabelOurs",
+              title: "Etiqueta de la barra nuestra",
+              type: "string",
+            },
+            {
+              name: "speedLabelTheirs",
+              title: "Etiqueta de la barra de comparación",
+              type: "string",
+            },
+            { name: "seoCaption", title: "Epígrafe del chat", type: "string" },
+            {
               name: "seoQuestion",
               title: "La pregunta",
               type: "string",
-              description: "Como la escribiría alguien: en minúscula y sin punto.",
+              description:
+                "Como la escribiría alguien: en minúscula y sin punto.",
             },
             { name: "seoAnswer", title: "La respuesta", type: "text", rows: 2 },
-            { name: "formButton", title: "Botón del formulario dibujado", type: "string" },
+            {
+              name: "screensCaption",
+              title: "Epígrafe de las pantallas",
+              type: "string",
+            },
+            {
+              name: "formCaption",
+              title: "Epígrafe del formulario",
+              type: "string",
+            },
+            {
+              name: "formButton",
+              title: "Botón del formulario dibujado",
+              type: "string",
+            },
+            {
+              name: "formNotice",
+              title: "Aviso sobre el formulario",
+              type: "string",
+              description: "Por ejemplo: «Nueva consulta».",
+            },
           ],
         }),
       ],
@@ -396,7 +442,11 @@ export const siteCopy = defineType({
                 { name: "when", title: "Cuándo", type: "string" },
                 { name: "body", title: "Texto", type: "text", rows: 4 },
                 { name: "deliverable", title: "Entregable", type: "string" },
-                { name: "yours", title: "Lo que pone el cliente", type: "string" },
+                {
+                  name: "yours",
+                  title: "Lo que pone el cliente",
+                  type: "string",
+                },
               ],
               preview: { select: { title: "name", subtitle: "when" } },
             },
@@ -467,8 +517,16 @@ export const siteCopy = defineType({
         defineField({ name: "eyebrow", title: "Etiqueta", type: "string" }),
         defineField({ name: "title", title: "Título", type: "string" }),
         texto("lead", "Bajada"),
-        defineField({ name: "groupLabel", title: "Rótulo del selector", type: "string" }),
-        defineField({ name: "totalLabel", title: "Palabra «total»", type: "string" }),
+        defineField({
+          name: "groupLabel",
+          title: "Rótulo del selector",
+          type: "string",
+        }),
+        defineField({
+          name: "totalLabel",
+          title: "Palabra «total»",
+          type: "string",
+        }),
         defineField({
           name: "toggle",
           title: "Formas de pago",
@@ -509,7 +567,8 @@ export const siteCopy = defineType({
                   name: "id",
                   title: "Id",
                   type: "string",
-                  description: "landing o sitio. Define el color y cuál va destacado.",
+                  description:
+                    "landing o sitio. Define el color y cuál va destacado.",
                 },
                 { name: "name", title: "Nombre", type: "string" },
                 { name: "summary", title: "Resumen", type: "string" },
@@ -520,8 +579,16 @@ export const siteCopy = defineType({
                   type: "object",
                   fields: [
                     { name: "once", title: "Pago único (USD)", type: "number" },
-                    { name: "split", title: "Cada cuota (USD)", type: "number" },
-                    { name: "splitCount", title: "Cantidad de cuotas", type: "number" },
+                    {
+                      name: "split",
+                      title: "Cada cuota (USD)",
+                      type: "number",
+                    },
+                    {
+                      name: "splitCount",
+                      title: "Cantidad de cuotas",
+                      type: "number",
+                    },
                   ],
                 },
                 { name: "delivery", title: "Plazo", type: "string" },
@@ -591,7 +658,8 @@ export const siteCopy = defineType({
                       name: "id",
                       title: "Id",
                       type: "string",
-                      description: "webflow o framer. Define qué logo se muestra.",
+                      description:
+                        "webflow o framer. Define qué logo se muestra.",
                     },
                     { name: "name", title: "Nombre", type: "string" },
                     { name: "detail", title: "Texto", type: "text", rows: 3 },
@@ -652,8 +720,16 @@ export const siteCopy = defineType({
         defineField({ name: "title", title: "Título", type: "string" }),
         texto("lead", "Bajada", 2),
         defineField({ name: "view", title: "Palabra «ver»", type: "string" }),
-        defineField({ name: "prev", title: "Botón «anteriores» (lectores de pantalla)", type: "string" }),
-        defineField({ name: "next", title: "Botón «siguientes» (lectores de pantalla)", type: "string" }),
+        defineField({
+          name: "prev",
+          title: "Botón «anteriores» (lectores de pantalla)",
+          type: "string",
+        }),
+        defineField({
+          name: "next",
+          title: "Botón «siguientes» (lectores de pantalla)",
+          type: "string",
+        }),
       ],
     }),
     defineField({
@@ -734,16 +810,25 @@ export const siteCopy = defineType({
       type: "object",
       options: { collapsible: true, collapsed: true },
       fields: [
-        defineField({ name: "metaTitle", title: "Título de la pestaña", type: "string" }),
+        defineField({
+          name: "metaTitle",
+          title: "Título de la pestaña",
+          type: "string",
+        }),
         texto("metaDescription", "Descripción para buscadores", 2),
         defineField({ name: "eyebrow", title: "Volanta", type: "string" }),
         defineField({ name: "title", title: "Titular", type: "string" }),
         texto("lead", "Bajada"),
-        defineField({ name: "expectTitle", title: "Título de los pasos", type: "string" }),
+        defineField({
+          name: "expectTitle",
+          title: "Título de los pasos",
+          type: "string",
+        }),
         defineField({
           name: "expect",
           title: "Qué pasa en la llamada",
-          description: "Van arriba del calendario: nadie reserva sin saber qué va a pasar.",
+          description:
+            "Van arriba del calendario: nadie reserva sin saber qué va a pasar.",
           type: "array",
           of: [
             {
@@ -761,12 +846,12 @@ export const siteCopy = defineType({
           title: "Mientras carga el calendario",
           type: "string",
         }),
-        texto(
-          "fallback",
-          "Si no hay calendario conectado",
-          2,
-        ),
-        defineField({ name: "preferWrite", title: "Salida hacia el brief", type: "string" }),
+        texto("fallback", "Si no hay calendario conectado", 2),
+        defineField({
+          name: "preferWrite",
+          title: "Salida hacia el brief",
+          type: "string",
+        }),
         link("write", "Botón hacia el brief"),
       ],
     }),
@@ -851,11 +936,19 @@ export const siteCopy = defineType({
             { name: "placeholder", title: "Ejemplo", type: "text", rows: 3 },
           ],
         }),
-        defineField({ name: "honeypot", title: "Trampa para bots", type: "string" }),
+        defineField({
+          name: "honeypot",
+          title: "Trampa para bots",
+          type: "string",
+        }),
         defineField({ name: "submit", title: "Botón", type: "string" }),
         defineField({ name: "sending", title: "Enviando", type: "string" }),
         texto("privacy", "Nota de privacidad", 2),
-        defineField({ name: "genericError", title: "Error genérico", type: "string" }),
+        defineField({
+          name: "genericError",
+          title: "Error genérico",
+          type: "string",
+        }),
         defineField({
           name: "extraPlans",
           title: "Opciones de plan que no son un plan",
@@ -909,7 +1002,12 @@ export const siteCopy = defineType({
           type: "object",
           fields: [
             { name: "metaTitle", title: "Título de pestaña", type: "string" },
-            { name: "metaDescription", title: "Descripción", type: "text", rows: 2 },
+            {
+              name: "metaDescription",
+              title: "Descripción",
+              type: "text",
+              rows: 2,
+            },
             { name: "eyebrow", title: "Etiqueta", type: "string" },
             { name: "title", title: "Título", type: "string" },
             { name: "lead", title: "Bajada", type: "text", rows: 2 },
@@ -945,8 +1043,16 @@ export const siteCopy = defineType({
           rows: 3,
           description: "Usá {tagline} y {location} donde van esos datos.",
         }),
-        defineField({ name: "navTitle", title: "Título de navegación", type: "string" }),
-        defineField({ name: "contactTitle", title: "Título de contacto", type: "string" }),
+        defineField({
+          name: "navTitle",
+          title: "Título de navegación",
+          type: "string",
+        }),
+        defineField({
+          name: "contactTitle",
+          title: "Título de contacto",
+          type: "string",
+        }),
         link("contactLink", "Enlace a contacto"),
         defineField({ name: "signature", title: "Firma", type: "string" }),
       ],
@@ -956,7 +1062,10 @@ export const siteCopy = defineType({
   preview: {
     select: { language: "language", tagline: "meta.tagline" },
     prepare: ({ language, tagline }) => ({
-      title: language === "en" ? "Texto del sitio — English" : "Texto del sitio — Español",
+      title:
+        language === "en"
+          ? "Texto del sitio — English"
+          : "Texto del sitio — Español",
       subtitle: tagline,
     }),
   },

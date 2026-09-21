@@ -29,6 +29,14 @@ export const tonePill: Record<Tone, string> = {
   miel: "bg-miel-soft text-miel-deep",
 };
 
+/** El pastel claro solo, sin texto: para los bloques de las viñetas dibujadas. */
+export const toneSoftBg: Record<Tone, string> = {
+  aqua: "bg-aqua-soft",
+  rosa: "bg-rosa-soft",
+  verde: "bg-verde-soft",
+  miel: "bg-miel-soft",
+};
+
 export const toneBg: Record<Tone, string> = {
   aqua: "bg-aqua",
   rosa: "bg-rosa",
