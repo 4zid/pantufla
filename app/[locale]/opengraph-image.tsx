@@ -2,7 +2,7 @@ import { ImageResponse } from "next/og";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 
-import { isologoSvg } from "@/components/ui/brand";
+import { CAJA_ISO, ISO } from "@/components/ui/brand";
 import { getCopy } from "@/content/get-copy";
 import { site } from "@/content/site";
 import { isLocale, locales } from "@/lib/i18n";
@@ -58,18 +58,20 @@ export default async function Image({
         color: "#121212",
       }}
     >
-      {/*
-          El isologotipo como imagen y no como <svg> en línea: Satori no aplica
-          el transform de un path, y el iso del isologotipo se ubica con uno.
-          Una <img> con el SVG entero la rasteriza resvg, que sí lo entiende.
-          332 × 56 es la caja del dibujo (296.5 × 50) a 56 de alto.
-        */}
-      <img
-        src={`data:image/svg+xml,${encodeURIComponent(isologoSvg("#121212"))}`}
-        width={332}
-        height={56}
-        alt=""
-      />
+      <div style={{ display: "flex", alignItems: "center", gap: 22 }}>
+        <svg width="64" height="32" viewBox={CAJA_ISO}>
+          <path d={ISO} fill="#121212" />
+        </svg>
+        <div
+          style={{
+            fontSize: 34,
+            letterSpacing: "0.08em",
+            textTransform: "uppercase",
+          }}
+        >
+          {site.name}
+        </div>
+      </div>
 
       <div
         style={{

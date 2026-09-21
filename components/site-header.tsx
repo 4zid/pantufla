@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { site } from "@/content/site";
 import { useCopy, useHref } from "@/components/copy-provider";
 import { ButtonLink } from "@/components/ui/button";
-import { Iso, Isologo } from "@/components/ui/brand";
+import { Iso } from "@/components/ui/brand";
 import { LocaleSwitcher } from "@/components/ui/locale-switcher";
 import { cn } from "@/lib/cn";
 
@@ -46,8 +46,8 @@ export function SiteHeader() {
 
   /*
      Compacta, la marca es el iso solo; expandida, o con el menú abierto, el
-     isologotipo entero. Con el menú abierto la barra también está compacta,
-     pero es un panel con lugar de sobra y el nombre completo le viene bien.
+     iso con el nombre. Con el menú abierto la barra también está compacta,
+     pero es un panel con lugar de sobra y el nombre le viene bien.
   */
   const soloIso = compact && !open;
 
@@ -192,38 +192,29 @@ export function SiteHeader() {
             )}
           >
             {/*
-              La marca. Expandida es el isologotipo horizontal a 28 de alto,
-              que es lo que pide el kit para el header; compacta es el iso
-              solo, en el corte pesado porque a 16 de alto la suela normal se
-              afina. Son dos dibujos distintos y no uno que se recorta —el iso
-              del isologotipo mide 12 de alto, y solo en una barra de 48 se
-              perdía—, así que se cruzan en fundido mientras el ancho del
-              enlace se anima, que es lo que hace correr el menú del medio sin
-              saltos. El nombre en texto queda solo para lectores de pantalla:
-              el logotipo es un dibujo, no se lee.
+              La marca: el iso y el nombre en mayúsculas. Al compactarse el
+              nombre se pliega —ancho a cero y se apaga— y queda el iso solo,
+              que no se mueve ni cambia de tamaño; es el mismo pliegue que
+              hacía el enlace secundario cuando la barra tenía uno, y es lo que
+              hace correr el menú del medio sin saltos. El iso va en el corte
+              pesado porque a 14 de alto la suela normal se afina.
             */}
             <Link
               href={href("/")}
               onClick={() => setOpen(false)}
-              className={cn(
-                "relative flex h-7 shrink-0 items-center overflow-hidden text-ink transition-[width] duration-500 ease-out",
-                soloIso ? "w-[30px]" : "w-[166px]",
-              )}
+              className="flex shrink-0 items-center text-ink"
             >
-              <span className="sr-only">{site.name}</span>
-              <Isologo
+              <Iso weight="heavy" className="h-[14px] w-auto shrink-0" />
+              <span
                 className={cn(
-                  "absolute left-0 top-0 h-7 w-auto transition-opacity duration-300 ease-out",
-                  soloIso ? "opacity-0" : "opacity-100",
+                  "overflow-hidden whitespace-nowrap text-[0.92rem] font-semibold uppercase tracking-[0.08em] transition-[max-width,opacity,margin] duration-500 ease-out",
+                  soloIso
+                    ? "ml-0 max-w-0 opacity-0"
+                    : "ml-2.5 max-w-[8rem] opacity-100",
                 )}
-              />
-              <Iso
-                weight="heavy"
-                className={cn(
-                  "absolute left-0 top-1/2 h-4 w-auto -translate-y-1/2 transition-opacity duration-300 ease-out",
-                  soloIso ? "opacity-100" : "opacity-0",
-                )}
-              />
+              >
+                {site.name}
+              </span>
             </Link>
 
             <nav className="hidden items-center gap-1 md:flex">

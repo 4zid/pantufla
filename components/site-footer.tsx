@@ -4,7 +4,7 @@ import Link from "next/link";
 
 import { site } from "@/content/site";
 import { fill } from "@/content/copy";
-import { Isologo } from "@/components/ui/brand";
+import { Iso } from "@/components/ui/brand";
 import { useCopy, useHref } from "@/components/copy-provider";
 
 export function SiteFooter() {
@@ -19,10 +19,12 @@ export function SiteFooter() {
           <div className="max-w-sm">
             <Link
               href={href("/")}
-              className="inline-flex items-center text-ink"
+              className="inline-flex items-center gap-3 text-ink"
             >
-              <span className="sr-only">{site.name}</span>
-              <Isologo className="h-8 w-auto" />
+              <Iso weight="heavy" className="h-4 w-auto" />
+              <span className="text-[0.98rem] font-semibold uppercase tracking-[0.08em]">
+                {site.name}
+              </span>
             </Link>
             <p className="mt-4 text-[0.95rem] leading-relaxed text-ink-soft">
               {fill(footer.blurb, {
