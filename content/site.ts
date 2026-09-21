@@ -66,40 +66,42 @@ export const bentoDesign: Record<
     area: string;
     art: string;
     /**
-     * Cómo se reparten el texto y el dibujo adentro de la tarjeta.
+     * Dónde va el dibujo respecto del texto.
      *
-     * «apilada» pone el texto arriba y el dibujo abajo a todo el ancho.
-     * «lado» los pone uno al lado del otro, que solo entra en la tarjeta
-     * ancha. Tener las cuatro apiladas era la mitad del problema: por más
-     * distinto que fuera cada dibujo, cuatro tarjetas con el texto arriba y
-     * una banda de color abajo se leen como la misma tarjeta repetida.
+     * Cada tarjeta lleva el suyo, y es a propósito: cuatro tarjetas con el
+     * texto arriba y una banda abajo se leen como la misma tarjeta repetida
+     * por más distinto que sea cada dibujo. «arriba» pone el dibujo sobre el
+     * texto, sangrando por el borde de arriba. «abajo» lo pone debajo,
+     * cortado por el borde de abajo. «fondo» lo pone detrás, ocupando la
+     * tarjeta entera, con el texto encima. «lado» lo pone a la derecha del
+     * texto, que solo entra en la ancha.
      */
-    composicion: "apilada" | "lado";
+    layout: "arriba" | "abajo" | "fondo" | "lado";
   }
 > = {
   velocidad: {
     tone: "aqua",
     area: "md:col-start-1 md:row-start-1",
-    art: "cronometro",
-    composicion: "apilada",
+    art: "cifra",
+    layout: "arriba",
   },
   seo: {
     tone: "rosa",
     area: "md:col-start-2 md:row-start-1",
-    art: "respuesta",
-    composicion: "apilada",
+    art: "consulta",
+    layout: "abajo",
   },
   pantallas: {
     tone: "verde",
     area: "md:col-start-3 md:row-start-1 md:row-span-2",
-    art: "pantallas",
-    composicion: "apilada",
+    art: "celdas",
+    layout: "fondo",
   },
   resultados: {
     tone: "miel",
     area: "md:col-start-1 md:col-span-2 md:row-start-2",
-    art: "formulario",
-    composicion: "lado",
+    art: "deslizador",
+    layout: "lado",
   },
 };
 

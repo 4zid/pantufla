@@ -565,3 +565,17 @@
     }
   }
 }
+
+/*
+   El cursor de la barra de consulta del tablero de capacidades. Dos pasos y
+   no una transición: un cursor parpadea, no se desvanece.
+*/
+@keyframes parpadeo {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}

@@ -1,12 +1,14 @@
 "use client";
 
 import { useGSAP } from "@gsap/react";
-import { useId, useRef } from "react";
+import { useRef } from "react";
 
 import { Reveal } from "@/components/motion/reveal";
 import { useCopy } from "@/components/copy-provider";
 import { bentoDesign } from "@/content/site";
 import { Section, SectionHead } from "@/components/ui/section";
+import { ArrowUpRightIcon } from "@/components/ui/icons";
+import { Sphere } from "@/components/ui/sphere";
 import { gsap, registerGsap, START } from "@/lib/motion";
 import { cn } from "@/lib/cn";
 
@@ -15,510 +17,476 @@ import { cn } from "@/lib/cn";
  *
  * Cuatro tarjetas iguales en fila se leen como una lista y se saltean como una
  * lista. Con tamaños distintos el ojo entra por la más grande y recorre el
- * resto, y de paso cada forma puede llevar algo que en las otras no entraría:
- * la vertical es forma de pila de pantallas y la ancha es la única donde entra
- * una secuencia de izquierda a derecha.
+ * resto.
  *
- * Y cada tarjeta lleva su propio dibujo, no una variante del mismo. La primera
- * versión tenía cuatro esqueletos de barras grises con distinto color de
- * fondo: por más que el layout fuera de bento, las cuatro figuras decían lo
- * mismo —«acá va algo»— y la sección se leía como una plantilla. Un dibujo
- * tiene que decir lo que dice su tarjeta y no poder estar en ninguna de las
- * otras tres.
+ * Los dibujos son abstractos a propósito. La versión anterior tenía cuatro
+ * maquetas de interfaz —un formulario, tres pantallas, una respuesta— y se
+ * leían como capturas de otro sitio: literales, y todas con el mismo peso.
+ * Ahora cada tarjeta tiene una atmósfera y un solo gesto encima: un color
+ * difuso detrás, vidrio esmerilado delante, y una cosa que se mueve. La
+ * velocidad es un número que sube. Que te encuentren es una pregunta que se
+ * escribe sola y una respuesta que llega. Las pantallas son celdas que se
+ * llenan en ola, con una esfera parada encima. Los resultados son una
+ * pastilla que recorre su riel.
  *
- * Por eso llevan texto de verdad adentro, y no renglones grises. Es lo que
- * separa una figura que se lee como una pantalla de una que se lee como
- * relleno. Es poco texto y sale del copy, así que se traduce con el resto.
+ * Y cada una tiene el dibujo en un lugar distinto: arriba, abajo, de fondo,
+ * al lado. Cuatro tarjetas con el texto arriba y una banda abajo se leen como
+ * la misma tarjeta repetida, por más distinto que sea el dibujo.
  */
 
-/** El tono de cada tarjeta, en clases, porque Tailwind no arma nombres al vuelo. */
+/** Las clases de cada tono, escritas enteras porque Tailwind no arma nombres al vuelo. */
 const tonos = {
-  aqua: {
-    texto: "text-aqua-deep",
-    fondo: "bg-aqua-soft",
-    trazo: "stroke-aqua-deep",
-    relleno: "fill-aqua",
-    solido: "bg-aqua",
-    profundo: "bg-aqua-deep",
-  },
-  rosa: {
-    texto: "text-rosa-deep",
-    fondo: "bg-rosa-soft",
-    trazo: "stroke-rosa-deep",
-    relleno: "fill-rosa",
-    solido: "bg-rosa",
-    profundo: "bg-rosa-deep",
-  },
-  verde: {
-    texto: "text-verde-deep",
-    fondo: "bg-verde-soft",
-    trazo: "stroke-verde-deep",
-    relleno: "fill-verde",
-    solido: "bg-verde",
-    profundo: "bg-verde-deep",
-  },
-  miel: {
-    texto: "text-miel-deep",
-    fondo: "bg-miel-soft",
-    trazo: "stroke-miel-deep",
-    relleno: "fill-miel",
-    solido: "bg-miel",
-    profundo: "bg-miel-deep",
-  },
+  aqua: { texto: "text-aqua-deep", suave: "bg-aqua-soft", solido: "bg-aqua", profundo: "bg-aqua-deep" },
+  rosa: { texto: "text-rosa-deep", suave: "bg-rosa-soft", solido: "bg-rosa", profundo: "bg-rosa-deep" },
+  verde: { texto: "text-verde-deep", suave: "bg-verde-soft", solido: "bg-verde", profundo: "bg-verde-deep" },
+  miel: { texto: "text-miel-deep", suave: "bg-miel-soft", solido: "bg-miel", profundo: "bg-miel-deep" },
 } as const;
 
 type Tono = keyof typeof tonos;
 
 /**
- * La tinta de los dibujos no es la del tema, y es a propósito.
- *
- * Los cuatro fondos —aqua-soft, rosa-soft, verde-soft, miel-soft— son los
- * únicos colores del sistema que NO se dan vuelta con el modo oscuro: son
- * pastel en los dos. Si lo que se dibuja encima usa --color-ink, en oscuro esa
- * tinta pasa a ser casi blanca y las figuras se borran sobre el pastel. Pasó:
- * en oscuro las tarjetas de velocidad y de SEO se veían como dos planchas de
- * color vacías.
- *
- * Así que acá la tinta va fija, del valor claro. El fondo no cambia, la tinta
- * tampoco, y el contraste es el mismo de noche que de día.
+ * La tinta de lo que va sobre vidrio o sobre color no es la del tema, y es a
+ * propósito. Los pastel de la paleta y el vidrio blanco son fijos —no se dan
+ * vuelta con el modo oscuro— así que la tinta de encima tampoco puede darse
+ * vuelta: en oscuro pasaría a casi blanca sobre un vidrio casi blanco y el
+ * texto desaparecería.
  */
 const TINTA = "#121212";
 const tinta = (alfa: number) => `color-mix(in srgb, ${TINTA} ${alfa}%, transparent)`;
-const PAPEL = "#ffffff";
 
-/** La sombra de las piezas que flotan arriba del pastel. */
-const FLOTA = `0 1px 2px ${tinta(6)}, 0 14px 30px -18px ${tinta(45)}`;
+/**
+ * Vidrio esmerilado. Blanco a medias con desenfoque de lo que hay detrás:
+ * es lo que hace que los blobs de color se vean A TRAVÉS de la pieza, y no
+ * que la pieza esté pegada encima.
+ */
+const VIDRIO =
+  "border border-white/70 bg-white/55 shadow-[0_12px_32px_-18px_rgba(18,18,18,0.45)] backdrop-blur-md";
 
-type ArteProps = {
-  tono: Tono;
-  figuras: {
-    speedOurs: string;
-    speedTheirs: string;
-    seoQuestion: string;
-    seoAnswer: string;
-    formButton: string;
-  };
+type Figuras = {
+  speedOurs: string;
+  speedTheirs: string;
+  seoQuestion: string;
+  seoAnswer: string;
+  formButton: string;
 };
 
 /* ------------------------------------------------------------------ */
-/* 1. Velocidad — el cronómetro                                        */
+/* Piezas comunes                                                      */
 /* ------------------------------------------------------------------ */
 
 /**
- * Un arco que se llena y el número adentro, grande.
+ * Un blob de color difuso.
  *
- * El número es el dibujo: en un sitio donde la tipografía ya funciona como
- * imagen, «0,9 s» puesto en cuerpo grande dice más rápido lo que la tarjeta
- * cuenta en cuatro renglones que cualquier ícono de velocímetro. El arco está
- * para darle escala —hasta dónde llegaría— y la marca del fondo, para decir
- * contra qué se compara.
+ * Es un radial con el borde en rampa más un desenfoque encima. El radial ya
+ * es blando; el filter es lo que le da el aspecto de mancha de luz que tiene
+ * la inspiración, en vez de círculo degradado. Son pocos —dos por tarjeta— y
+ * no se animan por scroll, así que el costo del filter no se nota.
  *
- * El arco va de 180° a 0°, o sea media vuelta, y el largo se calcula: radio 46
- * por pi. Ese número entra en el dasharray para que el relleno sea el 30% del
- * arco y no un valor a ojo que habría que retocar cada vez que cambie el radio.
+ * Se apaga del todo al 72% de su radio, a propósito. Los blobs sangran por
+ * los bordes de la tarjeta, y la tarjeta los recorta con overflow-hidden; el
+ * desenfoque no puede suavizar un corte, porque el corte pasa después. Con el
+ * cuarto exterior ya transparente, el recorte cae donde no hay nada que
+ * cortar. Antes el blob aqua terminaba en un rectángulo teal en la esquina.
  */
-const ARCO = Math.PI * 46;
-
-function Cronometro({ tono, figuras }: ArteProps) {
-  const t = tonos[tono];
-  const scope = useRef<HTMLDivElement>(null);
-
-  useGSAP(
-    () => {
-      registerGsap();
-      const raiz = scope.current;
-      if (!raiz) return;
-      const relleno = raiz.querySelector("[data-relleno]");
-      if (!relleno) return;
-
-      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-        gsap.set(relleno, { strokeDashoffset: ARCO * 0.7 });
-        return;
-      }
-
-      gsap.fromTo(
-        relleno,
-        { strokeDashoffset: ARCO },
-        {
-          strokeDashoffset: ARCO * 0.7,
-          duration: 1.1,
-          ease: "power3.out",
-          scrollTrigger: { trigger: raiz, start: START, once: true },
-        },
-      );
-    },
-    { scope },
-  );
-
+function Blob({
+  tono,
+  className,
+  intensidad = 100,
+}: {
+  tono: Tono;
+  className?: string;
+  intensidad?: number;
+}) {
   return (
-    <div ref={scope} className="flex h-full items-center justify-center px-6 py-6">
-      <div className="relative w-[13rem] max-w-full">
-        <svg viewBox="0 0 120 64" className="w-full" aria-hidden>
-          {/* El riel: hasta acá llegaría la barra de alguien que tarda tres
-              segundos. Es la referencia, así que va apagado. */}
-          <path
-            d="M14 58 A 46 46 0 0 1 106 58"
-            fill="none"
-            stroke={tinta(10)}
-            strokeWidth="7"
-            strokeLinecap="round"
-          />
-          <path
-            data-relleno
-            d="M14 58 A 46 46 0 0 1 106 58"
-            fill="none"
-            className={t.trazo}
-            strokeWidth="7"
-            strokeLinecap="round"
-            strokeDasharray={ARCO}
-            strokeDashoffset={ARCO}
-          />
-        </svg>
+    <span
+      aria-hidden
+      className={cn("pointer-events-none absolute rounded-full", className)}
+      style={{
+        background: `radial-gradient(closest-side, color-mix(in srgb, var(--color-${tono}) ${intensidad}%, transparent) 0%, color-mix(in srgb, var(--color-${tono}) ${intensidad * 0.5}%, transparent) 38%, transparent 72%)`,
+        filter: "blur(18px)",
+      }}
+    />
+  );
+}
 
-        {/* El número va encima del arco y no adentro del SVG: así hereda la
-            tipografía del sitio en vez de quedar atado a una fuente que el
-            SVG tendría que resolver por su cuenta. */}
-        <div className="absolute inset-x-0 bottom-0 text-center">
+/* ------------------------------------------------------------------ */
+/* 1. Velocidad — la cifra                                             */
+/* ------------------------------------------------------------------ */
+
+/**
+ * El número, grande, sobre vidrio, sobre un blob que sangra por el borde.
+ *
+ * El número es el dibujo: sube de cero al valor cuando la tarjeta entra, y
+ * debajo un riel se llena hasta donde el número marca contra la referencia.
+ * No hay velocímetro ni reloj: en un sitio donde la tipografía ya es imagen,
+ * «0,9 s» en cuerpo grande dice más que cualquier ícono.
+ */
+function Cifra({ tono, figuras }: { tono: Tono; figuras: Figuras }) {
+  const t = tonos[tono];
+  return (
+    <div className="relative h-full overflow-hidden">
+      <Blob tono={tono} className="-right-20 -top-28 h-96 w-96" intensidad={80} />
+      <Blob tono="miel" className="-left-14 top-6 h-56 w-56" intensidad={55} />
+
+      <div
+        data-cifra-chip
+        className={cn("absolute bottom-5 left-5 rounded-2xl px-5 py-4", VIDRIO)}
+      >
+        <div className="flex items-baseline gap-3">
           <p
+            data-cifra
             className={cn(
-              "text-[2.6rem] font-semibold leading-none tracking-[-0.045em] tabular-nums",
+              "text-[2.7rem] font-semibold leading-none tracking-[-0.045em] tabular-nums",
               t.texto,
             )}
           >
             {figuras.speedOurs}
           </p>
-        </div>
-
-        {/* La marca del otro extremo, al pie del riel, chiquita. */}
-        <span
-          className="absolute bottom-0 right-0 text-[0.72rem] font-medium tabular-nums"
-          style={{ color: tinta(38) }}
-        >
-          {figuras.speedTheirs}
-        </span>
-      </div>
-    </div>
-  );
-}
-
-/* ------------------------------------------------------------------ */
-/* 2. SEO — la respuesta                                               */
-/* ------------------------------------------------------------------ */
-
-/**
- * Una pregunta escrita y la respuesta que la contesta.
- *
- * La tarjeta habla de que te encuentren, y no solo en Google: lo que hay que
- * dibujar entonces no es un resultado de búsqueda sino una respuesta, que es
- * la forma que tiene hoy. Va inclinada apenas y cortada por el borde de abajo,
- * como si siguiera fuera de la tarjeta; una pieza centrada y entera se ve
- * pegada, una que se sale del cuadro se ve como un pedazo de algo más grande.
- *
- * Los tres puntitos de arriba son las fuentes. Sin logos: poner marcas ajenas
- * en un dibujo decorativo es prestarle autoridad al sitio que no es suya.
- */
-function Respuesta({ tono, figuras }: ArteProps) {
-  const t = tonos[tono];
-  return (
-    <div className="flex h-full items-end justify-center overflow-hidden px-5 pt-7">
-      <div className="w-full max-w-[19rem] -rotate-[1.4deg]">
-        {/* La pregunta, como la escribiría alguien: en minúscula y sin punto. */}
-        <p
-          className="mb-2.5 pl-1 text-[0.8rem] italic"
-          style={{ color: tinta(45) }}
-        >
-          {figuras.seoQuestion}
-        </p>
-
-        <div
-          className="rounded-t-2xl px-4 pb-6 pt-3.5"
-          style={{ background: PAPEL, boxShadow: FLOTA }}
-        >
-          <div className="mb-3 flex items-center gap-1.5">
-            {[t.solido, t.profundo, ""].map((clase, i) => (
-              <span
-                key={i}
-                className={cn("block h-1.5 w-1.5 rounded-full", clase)}
-                style={clase ? undefined : { background: tinta(18) }}
-              />
-            ))}
-            <span
-              className="ml-1 text-[0.62rem] font-medium uppercase tracking-[0.14em]"
-              style={{ color: tinta(35) }}
-            >
-              3
-            </span>
-          </div>
-
-          <p className="text-[0.86rem] leading-[1.5]" style={{ color: tinta(82) }}>
-            {figuras.seoAnswer}
+          <p className="text-[0.78rem] font-medium tabular-nums" style={{ color: tinta(42) }}>
+            {figuras.speedTheirs}
           </p>
         </div>
+        <div className="mt-3 h-1 w-40 overflow-hidden rounded-full" style={{ background: tinta(9) }}>
+          <span
+            data-cifra-barra
+            className={cn("block h-full w-full origin-left rounded-full", t.profundo)}
+            style={{ transform: "scaleX(0.3)" }}
+          />
+        </div>
       </div>
     </div>
   );
 }
 
 /* ------------------------------------------------------------------ */
-/* 3. Pantallas — las tres pantallas                                   */
+/* 2. SEO — la consulta                                                */
 /* ------------------------------------------------------------------ */
 
 /**
- * Los bloques de adentro de cada marco, que es lo que se rearma.
+ * Una barra de vidrio donde la pregunta se escribe sola, y la respuesta que
+ * aparece debajo cuando termina.
  *
- * La fila de abajo cambia de cantidad —tres, dos, una— y eso es todo el punto
- * de la figura: el mismo contenido repartido distinto según el ancho. Los
- * altos también cambian, porque en una columna sola el bloque puede ser más
- * alto sin apretar nada, que es exactamente lo que pasa de verdad.
+ * La tarjeta habla de que te encuentren y no solo en Google: lo que hay que
+ * mostrar no es un resultado de búsqueda sino una pregunta escrita como se
+ * escribe hoy —a un modelo, en minúscula, sin punto— y lo que contesta. La
+ * pregunta se tipea porque una pregunta es algo que alguien escribe; una ya
+ * escrita es un cartel.
  */
-function Bloques({
-  columnas,
-  alto,
-  tono,
-}: {
-  columnas: number;
-  alto: string;
-  tono: Tono;
-}) {
+function Consulta({ tono, figuras }: { tono: Tono; figuras: Figuras }) {
+  return (
+    <div className="relative h-full overflow-hidden">
+      <Blob tono={tono} className="-bottom-28 -left-24 h-96 w-96" intensidad={85} />
+      <Blob tono="miel" className="-right-16 -bottom-8 h-64 w-64" intensidad={60} />
+
+      {/* La barra. El punto de la izquierda es el orbe de la inspiración:
+          una esferita de dos tonos, que acá es la paleta entera en miniatura. */}
+      <div
+        className={cn(
+          "absolute inset-x-5 top-5 flex h-11 items-center gap-3 rounded-full pl-2.5 pr-4",
+          VIDRIO,
+        )}
+      >
+        <span
+          aria-hidden
+          className="h-6 w-6 shrink-0 rounded-full shadow-[inset_0_-2px_4px_rgba(0,0,0,0.12),0_1px_2px_rgba(0,0,0,0.15)]"
+          style={{
+            background:
+              "radial-gradient(circle at 35% 30%, #ffffff 0%, var(--color-rosa) 30%, var(--color-aqua) 75%, var(--color-verde) 100%)",
+          }}
+        />
+        <p className="truncate text-[0.88rem]" style={{ color: tinta(78) }}>
+          <span data-tipeo />
+          <span
+            data-caret
+            aria-hidden
+            className="ml-px inline-block h-[1em] w-px translate-y-[0.15em] animate-[parpadeo_1s_steps(2)_infinite]"
+            style={{ background: tinta(70) }}
+          />
+        </p>
+      </div>
+
+      {/* La respuesta, que llega después y se sale por abajo: es un pedazo de
+          algo más largo, no una tarjeta entera. */}
+      <div
+        data-respuesta
+        className={cn("absolute inset-x-5 top-[5.1rem] rounded-2xl px-4 pb-6 pt-3.5", VIDRIO)}
+        style={{ opacity: 0 }}
+      >
+        <p className="text-[0.86rem] leading-[1.5]" style={{ color: tinta(84) }}>
+          {figuras.seoAnswer}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* 3. Pantallas — las celdas                                           */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Una grilla de celdas redondeadas que se llena en ola, y una esfera parada
+ * encima.
+ *
+ * Es lo más abstracto de las cuatro: no hay pantalla ni teléfono. Las celdas
+ * son el layout —lo que se rearma— y los tres estados, lleno, a medias y
+ * vacío, son cómo cada bloque cae en cada ancho. La ola de entrada, de arriba
+ * a la izquierda hacia abajo a la derecha, es lo que hace que se lea como
+ * algo que se acomoda y no como un patrón impreso.
+ *
+ * La esfera es la misma de los proyectos, chica. Es lo que ata este tablero
+ * al resto del sitio.
+ */
+const ESTADOS = [
+  2, 1, 0, 2,
+  1, 2, 2, 0,
+  0, 2, 1, 2,
+  2, 0, 2, 1,
+  1, 2, 0, 2,
+  2, 2, 1, 0,
+  0, 1, 2, 2,
+];
+
+function Celdas({ tono }: { tono: Tono }) {
   const t = tonos[tono];
   return (
-    <div className="space-y-2">
-      <span className={cn("block h-2 w-[45%] rounded-full", t.solido)} />
-      <span className="block h-1.5 w-full rounded-full" style={{ background: tinta(13) }} />
-      <div className="flex gap-2 pt-1">
-        {Array.from({ length: columnas }).map((_, i) => (
+    <div className="relative h-full overflow-hidden">
+      <Blob tono={tono} className="-bottom-32 -right-28 h-[26rem] w-[26rem]" intensidad={70} />
+
+      <div
+        data-celdas
+        className="absolute inset-x-5 bottom-6 top-4 grid grid-cols-4 grid-rows-7 gap-2"
+      >
+        {ESTADOS.map((estado, i) => (
           <span
             key={i}
-            className={cn("block flex-1 rounded-md", alto)}
-            style={{ background: tinta(11) }}
+            data-celda
+            className={cn(
+              "rounded-[0.9rem]",
+              estado === 2 && cn(t.suave, "border border-transparent"),
+              estado === 1 && "border border-dashed",
+            )}
+            style={{
+              borderColor: estado === 1 ? `color-mix(in srgb, var(--color-${tono}-deep) 45%, transparent)` : undefined,
+              background: estado === 0 ? tinta(5) : undefined,
+            }}
           />
         ))}
       </div>
-    </div>
-  );
-}
 
-/**
- * La misma página en tres anchos, una arriba de la otra.
- *
- * Un teléfono solo no dice nada: un teléfono se ve prolijo o no se ve, pero no
- * cuenta que la sección se rearmó. Tres marcos con la misma página en tres
- * columnas, dos y una sí lo cuentan, y de paso usan el alto de la tarjeta
- * vertical, que es lo que esa forma pide.
- *
- * Los tres arrancan pegados al borde izquierdo y terminan cada vez más adentro:
- * el de escritorio se sale por la derecha, el de tablet queda corto y el
- * teléfono más corto todavía. Esa escalera es la que se lee como «el mismo
- * contenido, tres anchos». Centrados y enteros serían tres piezas simétricas
- * apiladas, que es un diagrama y no una composición.
- */
-function Pantallas({ tono }: { tono: Tono }) {
-  const marco = { background: PAPEL, boxShadow: FLOTA } as const;
-
-  return (
-    <div className="flex h-full flex-col justify-center gap-6 overflow-hidden py-8 pl-7">
-      {/* Escritorio: barra de ventana y tres columnas. */}
-      <div className="-mr-12 rounded-l-2xl rounded-r-md p-3" style={marco}>
-        <div className="mb-2.5 flex gap-1.5 pl-0.5">
-          {[0, 1, 2].map((i) => (
-            <span
-              key={i}
-              className="block h-1.5 w-1.5 rounded-full"
-              style={{ background: tinta(15) }}
-            />
-          ))}
-        </div>
-        <Bloques columnas={3} alto="h-8" tono={tono} />
-      </div>
-
-      {/* Tablet: dos columnas y un poco más de aire. */}
-      <div className="mr-12 rounded-xl p-3" style={marco}>
-        <Bloques columnas={2} alto="h-10" tono={tono} />
-      </div>
-
-      {/* Teléfono: una sola, más alta, con la muesca para que se lea qué es. */}
-      <div className="mr-24 rounded-2xl p-3 pt-3.5" style={marco}>
-        <span
-          className="mx-auto mb-2.5 block h-1 w-6 rounded-full"
-          style={{ background: tinta(16) }}
-        />
-        <Bloques columnas={1} alto="h-12" tono={tono} />
+      <div data-esfera-chica className="absolute bottom-5 right-5 w-24">
+        <Sphere tone={tono} className="w-full drop-shadow-[0_18px_28px_rgba(0,0,0,0.35)]" />
       </div>
     </div>
   );
 }
 
 /* ------------------------------------------------------------------ */
-/* 4. Resultados — del formulario a la curva                           */
+/* 4. Resultados — el deslizador                                       */
 /* ------------------------------------------------------------------ */
 
 /**
- * Un formulario, una flecha y la curva que sube.
+ * Un riel y una pastilla que lo recorre.
  *
- * Es la única tarjeta ancha, así que es la única donde entra una secuencia
- * leída de izquierda a derecha: esto lleva a esto. Y es lo que dice el texto
- * —que cada decisión del formulario sale de la misma pregunta— contado en una
- * figura en vez de en un gráfico suelto que podría estar en cualquier tarjeta.
+ * Es el gesto de la inspiración —la lectura de pulso con la pastilla
+ * brillante— vuelto sobre lo que dice la tarjeta: un sitio hecho para que te
+ * escriban es un sitio donde la aguja va para el lado correcto. La pastilla
+ * arranca del principio y llega casi al final cuando la tarjeta entra, y el
+ * riel se va llenando detrás.
  *
- * La curva se descubre con un rect que crece y no con strokeDasharray. El dash
- * se mide en unidades del viewBox: en cuanto el SVG se escala —y acá se escala
- * distinto en cada ancho— el patrón se estira con él y la línea aparece
- * cortada por la mitad.
+ * Sin números en las puntas. La inspiración los tiene y quedan bien, pero
+ * acá serían inventados, y un número inventado en una tarjeta que habla de
+ * resultados es exactamente lo que no.
  */
-const CURVA = "M0 176 C 56 170, 98 156, 140 132 S 236 78, 290 52 S 360 18, 400 8";
-const AREA = `${CURVA} L400 200 L0 200 Z`;
-
-function Formulario({ tono, figuras }: ArteProps) {
+function Deslizador({ tono }: { tono: Tono }) {
   const t = tonos[tono];
+  return (
+    <div className="relative h-full min-h-[17rem] overflow-hidden">
+      <Blob tono={tono} className="-right-28 -top-28 h-[26rem] w-[26rem]" intensidad={85} />
+      <Blob tono="rosa" className="-bottom-32 left-4 h-72 w-72" intensidad={45} />
+
+      <div className="absolute inset-x-8 top-1/2 -translate-y-1/2 sm:inset-x-10">
+        {/* El riel. */}
+        <div className="relative h-1.5 rounded-full" style={{ background: tinta(10) }}>
+          <span
+            data-lleno
+            className={cn("absolute inset-y-0 left-0 w-full origin-left rounded-full", t.solido)}
+            style={{ transform: "scaleX(0.14)" }}
+          />
+          {/* Las puntas. */}
+          <span className={cn("absolute -left-1 top-1/2 h-3 w-3 -translate-y-1/2 rounded-full", t.solido)} />
+          <span
+            className="absolute -right-1 top-1/2 h-3 w-3 -translate-y-1/2 rounded-full"
+            style={{ background: tinta(14) }}
+          />
+
+          {/* La pastilla. */}
+          <span
+            data-pastilla
+            className={cn(
+              "absolute top-1/2 flex h-11 min-w-[4.4rem] -translate-x-1/2 -translate-y-1/2 items-center justify-center gap-1.5 rounded-full px-4",
+              t.solido,
+            )}
+            style={{
+              left: "14%",
+              color: TINTA,
+              boxShadow: `0 0 0 6px color-mix(in srgb, var(--color-${tono}) 28%, transparent), 0 10px 26px -8px color-mix(in srgb, var(--color-${tono}-deep) 70%, transparent)`,
+            }}
+          >
+            <ArrowUpRightIcon className="h-4 w-4" />
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+
+const lienzos = { cifra: Cifra, consulta: Consulta, celdas: Celdas, deslizador: Deslizador };
+
+export function Bento() {
+  const { bento } = useCopy();
   const scope = useRef<HTMLDivElement>(null);
-  const id = useId().replace(/[^a-zA-Z0-9]/g, "");
 
   useGSAP(
     () => {
       registerGsap();
-      const raiz = scope.current;
-      if (!raiz) return;
-      const barrido = raiz.querySelector("[data-barrido]");
-      if (!barrido) return;
+      const root = scope.current;
+      if (!root) return;
+      const q = gsap.utils.selector(root);
+      const mm = gsap.matchMedia();
 
-      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-        gsap.set(barrido, { attr: { width: 420 } });
-        return;
-      }
+      mm.add(
+        {
+          motion: "(prefers-reduced-motion: no-preference)",
+          reduced: "(prefers-reduced-motion: reduce)",
+        },
+        (context) => {
+          const { reduced } = context.conditions as { reduced: boolean };
 
-      gsap.to(barrido, {
-        attr: { width: 420 },
-        duration: 1.4,
-        ease: "power2.inOut",
-        scrollTrigger: { trigger: raiz, start: START, once: true },
-      });
+          /* ---- 1. La cifra: sube de cero, y el riel se llena. ---- */
+          const cifra = q("[data-cifra]")[0];
+          if (cifra) {
+            const texto = cifra.textContent ?? "";
+            /*
+               «0,9 s» o «0.9s»: el separador y el sufijo salen del copy, que
+               cambia con el idioma. Se anima el número y se vuelve a armar
+               con lo que había alrededor, así el resultado es exactamente el
+               texto original y no una versión con el punto de otro idioma.
+            */
+            const m = texto.match(/^(\D*)(\d+)([.,])(\d+)(.*)$/);
+            if (m && !reduced) {
+              const [, antes, entero, sep, dec, despues] = m;
+              const valor = Number(`${entero}.${dec}`);
+              const proxy = { n: 0 };
+              gsap.to(proxy, {
+                n: valor,
+                duration: 1.3,
+                ease: "power3.out",
+                scrollTrigger: { trigger: cifra, start: START, once: true },
+                onUpdate: () => {
+                  cifra.textContent = `${antes}${proxy.n.toFixed(dec.length).replace(".", sep)}${despues}`;
+                },
+              });
+            }
+            gsap.fromTo(
+              q("[data-cifra-chip]"),
+              { opacity: 0, y: 14 },
+              { opacity: 1, y: 0, duration: reduced ? 0 : 0.7, ease: "power3.out",
+                scrollTrigger: { trigger: cifra, start: START, once: true } },
+            );
+            gsap.fromTo(
+              q("[data-cifra-barra]"),
+              { scaleX: 0 },
+              { scaleX: 0.3, duration: reduced ? 0 : 1.3, ease: "power3.out", delay: 0.2,
+                scrollTrigger: { trigger: cifra, start: START, once: true } },
+            );
+          }
+
+          /* ---- 2. La consulta: se tipea, y después llega la respuesta. ---- */
+          const tipeo = q("[data-tipeo]")[0];
+          const respuesta = q("[data-respuesta]")[0];
+          if (tipeo && respuesta) {
+            const pregunta = bento.figures.seoQuestion;
+            if (reduced) {
+              tipeo.textContent = pregunta;
+              gsap.set(respuesta, { opacity: 1 });
+            } else {
+              const proxy = { n: 0 };
+              const tl = gsap.timeline({
+                scrollTrigger: { trigger: tipeo, start: START, once: true },
+              });
+              tl.to(proxy, {
+                n: pregunta.length,
+                duration: Math.min(2.2, 0.05 * pregunta.length + 0.4),
+                ease: "none",
+                snap: "n",
+                onUpdate: () => {
+                  tipeo.textContent = pregunta.slice(0, proxy.n);
+                },
+              })
+                .to(q("[data-caret]"), { opacity: 0, duration: 0.2 }, "+=0.35")
+                .fromTo(
+                  respuesta,
+                  { opacity: 0, y: 10 },
+                  { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" },
+                  "<",
+                );
+            }
+          }
+
+          /* ---- 3. Las celdas: ola de entrada, y la esfera cae encima. ---- */
+          const celdas = q("[data-celda]");
+          if (celdas.length) {
+            if (reduced) {
+              gsap.set(celdas, { opacity: 1, scale: 1 });
+              gsap.set(q("[data-esfera-chica]"), { opacity: 1, scale: 1 });
+            } else {
+              const tl = gsap.timeline({
+                scrollTrigger: { trigger: q("[data-celdas]")[0], start: START, once: true },
+              });
+              tl.fromTo(
+                celdas,
+                { opacity: 0, scale: 0.55 },
+                {
+                  opacity: 1,
+                  scale: 1,
+                  duration: 0.55,
+                  ease: "back.out(1.6)",
+                  stagger: { grid: [7, 4], from: "start", amount: 0.9 },
+                },
+              ).fromTo(
+                q("[data-esfera-chica]"),
+                { opacity: 0, scale: 0.5, y: 24 },
+                { opacity: 1, scale: 1, y: 0, duration: 0.7, ease: "back.out(1.8)" },
+                "-=0.35",
+              );
+            }
+          }
+
+          /* ---- 4. El deslizador: la pastilla recorre el riel. ---- */
+          const pastilla = q("[data-pastilla]")[0];
+          if (pastilla) {
+            if (reduced) {
+              gsap.set(pastilla, { left: "82%" });
+              gsap.set(q("[data-lleno]"), { scaleX: 0.82 });
+            } else {
+              const tl = gsap.timeline({
+                scrollTrigger: { trigger: pastilla, start: START, once: true },
+              });
+              tl.to(pastilla, { left: "82%", duration: 1.5, ease: "power3.inOut", delay: 0.15 }).to(
+                q("[data-lleno]"),
+                { scaleX: 0.82, duration: 1.5, ease: "power3.inOut" },
+                "<",
+              );
+            }
+          }
+        },
+      );
     },
-    { scope },
+    { scope, dependencies: [bento.figures.seoQuestion] },
   );
-
-  return (
-    <div className="relative min-h-[18rem] overflow-hidden" ref={scope}>
-      {/*
-        La curva es el fondo del panel, no una pieza al costado.
-
-        Con preserveAspectRatio en none el dibujo se estira para ocupar todo,
-        que es lo que hace falta: la proporción del panel cambia con el ancho
-        de la pantalla y una curva que mantiene la suya deja una franja de
-        color vacía arriba. Estirar el trazo no se nota —es una curva suave,
-        no una figura reconocible— y el ancho de la línea queda igual gracias
-        a non-scaling-stroke.
-
-        Los puntos sobre la curva se fueron por esto mismo: un círculo bajo un
-        estirado no uniforme se convierte en un óvalo. No hacían falta.
-      */}
-      <svg
-        viewBox="0 0 400 200"
-        preserveAspectRatio="none"
-        className="absolute inset-0 h-full w-full"
-        aria-hidden
-      >
-        <defs>
-          <clipPath id={`barrido-${id}`}>
-            <rect data-barrido x="-10" y="-10" width="0" height="240" />
-          </clipPath>
-        </defs>
-
-        {[50, 100, 150].map((y) => (
-          <line
-            key={y}
-            x1="0"
-            y1={y}
-            x2="400"
-            y2={y}
-            stroke={tinta(6)}
-            strokeWidth="1"
-            vectorEffect="non-scaling-stroke"
-          />
-        ))}
-
-        <g clipPath={`url(#barrido-${id})`}>
-          <path d={AREA} className={t.relleno} fillOpacity="0.3" />
-          <path
-            d={CURVA}
-            fill="none"
-            className={t.trazo}
-            strokeWidth="2.5"
-            strokeLinecap="round"
-            vectorEffect="non-scaling-stroke"
-          />
-        </g>
-      </svg>
-
-      {/*
-        Y el formulario encima, parado sobre su propia curva.
-
-        Antes iban uno al lado del otro con una flecha en el medio y la tarjeta
-        quedaba en tres tiras finitas: formulario chico, flecha chica, gráfico
-        chico. Superpuestos dicen mejor lo que hay que decir, que no es «esto y
-        aquello» sino «esto produce aquello». La flecha sobraba: con las dos
-        cosas encimadas, el sentido ya está.
-
-        Va arriba a la izquierda porque es donde la curva está baja. Abajo la
-        taparía justo donde arranca.
-      */}
-      <div
-        className="absolute left-6 top-6 w-[10.5rem] rounded-xl p-3 sm:left-8 sm:top-8 sm:w-[11.5rem]"
-        style={{ background: PAPEL, boxShadow: FLOTA }}
-      >
-        <div className="space-y-2">
-          {[0, 1, 2].map((i) => (
-            <span
-              key={i}
-              className="block h-4 w-full rounded"
-              style={{ background: tinta(7) }}
-            />
-          ))}
-        </div>
-        {/* El botón va en tinta y no en el tono de la tarjeta: es el botón
-            primario del sitio, y dibujarlo de otro color sería dibujar un
-            formulario que no es el nuestro. */}
-        <span
-          className="mt-2.5 block rounded py-1.5 text-center text-[0.7rem] font-semibold"
-          style={{ background: TINTA, color: PAPEL }}
-        >
-          {figuras.formButton}
-        </span>
-      </div>
-    </div>
-  );
-}
-
-/* ------------------------------------------------------------------ */
-
-const lienzos = {
-  cronometro: Cronometro,
-  respuesta: Respuesta,
-  pantallas: Pantallas,
-  formulario: Formulario,
-};
-
-/**
- * Cuánto mide el lienzo de cada tarjeta.
- *
- * Las dos chicas de arriba lo llevan fijo, y eso es lo que hace que las dos
- * franjas de color empiecen a la misma altura. Con flex-1 no empezaban: las
- * tarjetas de una fila miden todas lo mismo, así que la que tiene el texto más
- * corto le regalaba los píxeles sobrantes a su lienzo y el escalón se veía.
- * Ahora el sobrante queda arriba, en el bloque de texto, donde son veinte
- * píxeles de aire que nadie mira.
- *
- * La vertical sí crece: tiene setecientos píxeles que llenar con las tres
- * pantallas. La ancha no está acá porque no apila: su dibujo va al lado del
- * texto y ocupa media tarjeta de alto completo.
- */
-const ALTO: Record<string, string> = {
-  cronometro: "h-[11rem] shrink-0",
-  respuesta: "h-[11rem] shrink-0",
-  pantallas: "min-h-[20rem] flex-1",
-};
-
-export function Bento() {
-  const { bento } = useCopy();
 
   return (
     <Section id="capacidades">
@@ -533,50 +501,40 @@ export function Bento() {
         Un tablero y no cuatro tarjetas sueltas.
 
         Las cuatro viven adentro de un mismo contenedor, separadas por una
-        junta de diez píxeles. Esa junta es todo el dibujo: donde se cruzan
-        dos juntas, las cuatro esquinas redondeadas que se encuentran dejan
-        una muesca en forma de estrella, y donde una junta muere contra el
-        borde de la tarjeta vertical queda una te. No hay que dibujar nada de
-        eso, sale solo de redondear las tarjetas y dejarlas respirar.
-
-        El relleno del tablero es el color de la página y no un gris propio.
-        Se probó con papel apagado, que es el gris de más abajo del blanco, y
-        la junta no se veía: cuatro por ciento de diferencia contra el blanco
-        de la tarjeta es menos de lo que separa a dos blancos, y las muescas
-        —que son el motivo de armar el tablero— no aparecían. Con el color de
-        la página la junta se lee como un hueco por donde se ve el fondo, que
-        es exactamente lo que es.
+        junta de diez píxeles del color de la página. Donde se cruzan dos
+        juntas, las cuatro esquinas redondeadas que se encuentran dejan una
+        muesca en forma de estrella; donde una junta muere contra el borde de
+        la tarjeta vertical queda una te. No hay que dibujar nada de eso: sale
+        de redondear las tarjetas y dejarlas respirar. Los radios de celda y
+        tablero se llevan exactamente el padding, o las curvas no son
+        paralelas.
 
         Tres columnas y dos filas en md: las dos chicas arriba a la izquierda,
         la vertical ocupando la columna de la derecha entera y la ancha abajo
-        cruzando las dos primeras. Abajo de md se cae sola a una columna, que
-        es lo único que entra en un teléfono.
+        cruzando las dos primeras. Abajo de md se cae sola a una columna.
       */}
-      <div className="mt-14 rounded-[var(--radius-tablero)] border border-line bg-mist p-2.5 shadow-[0_24px_60px_-40px_rgba(35,28,18,0.35)]">
+      <div
+        ref={scope}
+        className="mt-14 rounded-[var(--radius-tablero)] border border-line bg-mist p-2.5 shadow-[0_24px_60px_-40px_rgba(35,28,18,0.35)]"
+      >
         <Reveal stagger className="grid gap-2.5 md:grid-cols-3">
           {bento.cards.map((card) => {
             const diseño = bentoDesign[card.id] ?? {
               tone: "aqua" as const,
               area: "",
-              art: "cronometro",
-              composicion: "apilada" as const,
+              art: "cifra",
+              layout: "arriba" as const,
             };
             const t = tonos[diseño.tone];
-            const Lienzo = lienzos[diseño.art as keyof typeof lienzos] ?? Cronometro;
-            const alLado = diseño.composicion === "lado";
+            const Lienzo = lienzos[diseño.art as keyof typeof lienzos] ?? Cifra;
 
             const texto = (
-              <div className={cn("p-6 md:p-7", alLado && "md:flex md:flex-col md:justify-center")}>
-                <span
-                  aria-hidden
-                  className={cn("block h-2 w-2 rounded-full", t.solido)}
-                />
+              <div className={cn("relative z-10 p-6 md:p-7", diseño.layout === "lado" && "md:flex md:flex-col md:justify-center")}>
+                <span aria-hidden className={cn("block h-2 w-2 rounded-full", t.solido)} />
                 <h3 className="mt-4 text-[1.2rem] font-semibold leading-tight tracking-[-0.025em] md:text-[1.3rem]">
                   {card.title}
                 </h3>
-                <p className="mt-3 text-[0.94rem] leading-relaxed text-ink-soft">
-                  {card.body}
-                </p>
+                <p className="mt-3 text-[0.94rem] leading-relaxed text-ink-soft">{card.body}</p>
               </div>
             );
 
@@ -584,10 +542,10 @@ export function Bento() {
               <div
                 data-lienzo
                 className={cn(
-                  t.fondo,
-                  alLado
-                    ? ""
-                    : cn("mt-auto", ALTO[diseño.art] ?? ALTO.cronometro),
+                  diseño.layout === "arriba" && "h-[11.5rem] shrink-0",
+                  diseño.layout === "abajo" && "mt-auto h-[11.5rem] shrink-0",
+                  diseño.layout === "fondo" && "min-h-[22rem] flex-1",
+                  diseño.layout === "lado" && "min-h-[17rem]",
                 )}
               >
                 <Lienzo tono={diseño.tone} figuras={bento.figures} />
@@ -599,20 +557,23 @@ export function Bento() {
                 key={card.id}
                 className={cn(
                   "overflow-hidden rounded-[var(--radius-celda)] bg-card",
-                  /* Al lado: dos columnas de alto completo, el texto a la
-                     izquierda y el dibujo a la derecha. Es lo que rompe la
-                     repetición; con las cuatro apiladas, por más distinto que
-                     fuera cada dibujo, se leían como la misma tarjeta cuatro
-                     veces. En teléfono vuelve a apilarse, que es lo único que
-                     entra. */
-                  alLado
+                  diseño.layout === "lado"
                     ? "grid md:grid-cols-[minmax(0,0.95fr)_minmax(0,1.15fr)] md:items-stretch"
                     : "flex flex-col",
                   diseño.area,
                 )}
               >
-                {texto}
-                {dibujo}
+                {diseño.layout === "arriba" ? (
+                  <>
+                    {dibujo}
+                    {texto}
+                  </>
+                ) : (
+                  <>
+                    {texto}
+                    {dibujo}
+                  </>
+                )}
               </article>
             );
           })}

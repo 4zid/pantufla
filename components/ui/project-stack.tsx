@@ -22,10 +22,10 @@ import { cn } from "@/lib/cn";
  * es abrirlo. Todo eso competía con el nombre y empujaba el enlace hacia
  * abajo.
  *
- * Cuatro en una fila y no dos: así los cuatro de la home entran en una
- * pantalla, con el título de la sección incluido. De a dos eran dos filas de
- * esferas de medio metro, y la sección medía dos pantallas y media para
- * decir cuatro nombres.
+ * Dos por fila, y en escritorio la esfera a la izquierda con el nombre al
+ * lado, no debajo: así cada fila mide lo que mide la esfera y las dos filas
+ * entran en una pantalla. Con el nombre debajo, las dos filas sumaban los
+ * epígrafes y la sección se pasaba de largo.
  *
  * Las capturas de los sitios ya no están acá. Un portfolio de capturas es un
  * portfolio de rectángulos con texto chiquito adentro: no se lee ninguno,
@@ -131,7 +131,7 @@ export function ProjectStack({
     <div ref={scope}>
       <Reveal
         stagger
-        className="grid grid-cols-2 gap-x-5 gap-y-9 lg:grid-cols-4 lg:gap-x-6"
+        className="grid grid-cols-2 gap-x-5 gap-y-8 lg:gap-x-10 lg:gap-y-10"
       >
         {projects.map((project, i) => {
           // Sin URL cargada, la tarjeta cae en la ficha interna en vez de
@@ -140,7 +140,10 @@ export function ProjectStack({
           const destino = project.url ?? href(`/proyectos/${project.slug}`);
 
           return (
-            <article key={project._id} className="group/card relative">
+            <article
+              key={project._id}
+              className="group/card relative lg:flex lg:items-center lg:gap-7"
+            >
               {/*
                 La esfera suelta: sin tarjeta, sin plato, sin borde.
 
@@ -154,17 +157,16 @@ export function ProjectStack({
                 mismo elemento pisaría la clase del hover y el zoom dejaría
                 de andar.
               */}
-              <div data-esfera className="will-change-transform">
+              <div data-esfera className="will-change-transform lg:w-[46%] lg:shrink-0">
                 <Sphere
                   tone={tonos[i % tonos.length]}
                   className="w-full transition-transform duration-700 ease-out group-hover/card:scale-[1.03]"
                 />
               </div>
 
-              {/* El epígrafe, apilado: en una columna de doscientos y pico
-                  el nombre y el «ver sitio» no entran en el mismo renglón. */}
-              <div className="mt-4">
-                <Titulo className="text-[1.05rem] font-semibold leading-tight tracking-[-0.025em] md:text-[1.15rem]">
+              {/* El epígrafe: debajo en teléfono, al lado en escritorio. */}
+              <div className="mt-4 lg:mt-0">
+                <Titulo className="text-[1.05rem] font-semibold leading-tight tracking-[-0.025em] md:text-[1.35rem]">
                   <Link
                     href={destino}
                     target={externo ? "_blank" : undefined}
