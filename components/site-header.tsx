@@ -3,10 +3,10 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-import { site } from "@/content/site";
 import { useCopy, useHref } from "@/components/copy-provider";
 import { ButtonLink } from "@/components/ui/button";
 import { Logo } from "@/components/ui/icons";
+import { Wordmark } from "@/components/ui/wordmark";
 import { LocaleSwitcher } from "@/components/ui/locale-switcher";
 import { cn } from "@/lib/cn";
 
@@ -190,9 +190,7 @@ export function SiteHeader() {
               onClick={() => setOpen(false)}
             >
               <Logo className="h-6 w-6 text-aqua-deep" />
-              <span className="text-[1.02rem] font-semibold tracking-[-0.02em]">
-                {site.name}
-              </span>
+              <Wordmark className="h-[1.35rem] text-ink" />
             </Link>
 
             <nav className="hidden items-center gap-1 md:flex">
