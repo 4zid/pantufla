@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { site } from "@/content/site";
 import { useCopy, useHref } from "@/components/copy-provider";
 import { ButtonLink } from "@/components/ui/button";
-import { Logo } from "@/components/ui/icons";
+import { Iso, Isologo } from "@/components/ui/brand";
 import { LocaleSwitcher } from "@/components/ui/locale-switcher";
 import { cn } from "@/lib/cn";
 
@@ -15,7 +15,7 @@ import { cn } from "@/lib/cn";
  *
  * No va pegada al borde: es una píldora despegada, con margen y desenfoque
  * detrás. Arriba de todo se muestra expandida y, al bajar, se compacta: menos
- * alto, menos aire y sin el enlace secundario.
+ * alto, menos aire y la marca se queda en el iso solo.
  *
  * Y se esconde al bajar, vuelve al subir. Bajando, el visitante está leyendo y
  * la barra es lo único que le tapa la página —justo la primera línea de cada
@@ -43,6 +43,13 @@ export function SiteHeader() {
   const [compact, setCompact] = useState(false);
   const [oculto, setOculto] = useState(false);
   const [open, setOpen] = useState(false);
+
+  /*
+     Compacta, la marca es el iso solo; expandida, o con el menú abierto, el
+     isologotipo entero. Con el menú abierto la barra también está compacta,
+     pero es un panel con lugar de sobra y el nombre completo le viene bien.
+  */
+  const soloIso = compact && !open;
 
   useEffect(() => {
     /*
@@ -184,15 +191,39 @@ export function SiteHeader() {
               compact || open ? "h-12 sm:h-14" : "h-14 sm:h-16",
             )}
           >
+            {/*
+              La marca. Expandida es el isologotipo horizontal a 28 de alto,
+              que es lo que pide el kit para el header; compacta es el iso
+              solo, en el corte pesado porque a 16 de alto la suela normal se
+              afina. Son dos dibujos distintos y no uno que se recorta —el iso
+              del isologotipo mide 12 de alto, y solo en una barra de 48 se
+              perdía—, así que se cruzan en fundido mientras el ancho del
+              enlace se anima, que es lo que hace correr el menú del medio sin
+              saltos. El nombre en texto queda solo para lectores de pantalla:
+              el logotipo es un dibujo, no se lee.
+            */}
             <Link
               href={href("/")}
-              className="flex shrink-0 items-center gap-2.5"
               onClick={() => setOpen(false)}
+              className={cn(
+                "relative flex h-7 shrink-0 items-center overflow-hidden text-ink transition-[width] duration-500 ease-out",
+                soloIso ? "w-[30px]" : "w-[166px]",
+              )}
             >
-              <Logo className="h-6 w-6 text-aqua-deep" />
-              <span className="text-[1.02rem] font-semibold tracking-[-0.02em]">
-                {site.name}
-              </span>
+              <span className="sr-only">{site.name}</span>
+              <Isologo
+                className={cn(
+                  "absolute left-0 top-0 h-7 w-auto transition-opacity duration-300 ease-out",
+                  soloIso ? "opacity-0" : "opacity-100",
+                )}
+              />
+              <Iso
+                weight="heavy"
+                className={cn(
+                  "absolute left-0 top-1/2 h-4 w-auto -translate-y-1/2 transition-opacity duration-300 ease-out",
+                  soloIso ? "opacity-100" : "opacity-0",
+                )}
+              />
             </Link>
 
             <nav className="hidden items-center gap-1 md:flex">

@@ -4,7 +4,7 @@ import Link from "next/link";
 
 import { site } from "@/content/site";
 import { fill } from "@/content/copy";
-import { Logo } from "@/components/ui/icons";
+import { Isologo } from "@/components/ui/brand";
 import { useCopy, useHref } from "@/components/copy-provider";
 
 export function SiteFooter() {
@@ -17,11 +17,12 @@ export function SiteFooter() {
       <div className="shell py-14 md:py-16">
         <div className="grid gap-10 md:grid-cols-[1.4fr_1fr_1fr]">
           <div className="max-w-sm">
-            <Link href={href("/")} className="flex items-center gap-2.5">
-              <Logo className="h-7 w-7 text-aqua-deep" />
-              <span className="text-[1.06rem] font-semibold tracking-[-0.02em]">
-                {site.name}
-              </span>
+            <Link
+              href={href("/")}
+              className="inline-flex items-center text-ink"
+            >
+              <span className="sr-only">{site.name}</span>
+              <Isologo className="h-8 w-auto" />
             </Link>
             <p className="mt-4 text-[0.95rem] leading-relaxed text-ink-soft">
               {fill(footer.blurb, {

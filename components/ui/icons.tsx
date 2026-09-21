@@ -60,24 +60,6 @@ export function StarIcon({ className }: IconProps) {
 }
 
 /** Marca: una pantufla reducida a dos trazos. */
-export function Logo({ className }: IconProps) {
-  return (
-    <svg viewBox="0 0 32 32" className={className} aria-hidden="true">
-      <path
-        d="M5.5 12.5c0-1.4 1.1-2.5 2.5-2.5h6.2c1 0 1.9.6 2.3 1.5l1.1 2.6c.3.7.9 1.2 1.6 1.4l3.4 1c1.9.6 3.1 2.3 3.1 4.2 0 1.6-1.3 2.8-2.8 2.8H9.3c-2.1 0-3.8-1.7-3.8-3.8v-7.2Z"
-        fill="currentColor"
-      />
-      <path
-        d="M9.4 10V7.6C9.4 6.2 10.5 5 12 5h1.4"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth={2}
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
 /* ------------------------------------------------------------------ */
 /* Iconos de las etiquetas de sección                                  */
 /*                                                                     */
