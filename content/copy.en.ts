@@ -34,6 +34,8 @@ export const en: SiteCopy = {
   header: {
     plans: "See pricing",
     cta: "Start a project",
+    plansHref: "/#planes",
+    ctaHref: "/#brief",
     openMenu: "Open menu",
     skip: "Skip to content",
     closeMenu: "Close menu",

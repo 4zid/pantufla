@@ -104,7 +104,13 @@ export const siteCopy = defineType({
       options: { collapsible: true, collapsed: true },
       fields: [
         defineField({ name: "plans", title: "Enlace secundario", type: "string" }),
+        defineField({
+          name: "plansHref",
+          title: "Destino del enlace secundario",
+          type: "string",
+        }),
         defineField({ name: "cta", title: "Botón", type: "string" }),
+        defineField({ name: "ctaHref", title: "Destino del botón", type: "string" }),
         defineField({ name: "openMenu", title: "Abrir menú", type: "string" }),
         defineField({
           name: "skip",

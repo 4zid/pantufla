@@ -29,7 +29,7 @@ import { revalidateTag } from "next/cache";
 export const runtime = "nodejs";
 
 /** Los tipos que el sitio consulta con etiqueta. El resto se ignora. */
-const TIPOS = new Set(["project", "post", "testimonial", "siteCopy"]);
+const TIPOS = new Set(["project", "post", "testimonial", "siteCopy", "siteSections"]);
 
 export async function POST(request: Request) {
   const secreto = process.env.SANITY_REVALIDATE_SECRET;

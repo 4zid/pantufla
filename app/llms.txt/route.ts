@@ -1,5 +1,6 @@
 import { fallbackProjects } from "@/content/fallback-content";
 import { getCopy } from "@/content/get-copy";
+import { getSections } from "@/content/get-sections";
 import { site } from "@/content/site";
 import { defaultLocale, localeHref, locales } from "@/lib/i18n";
 import { siteUrl } from "@/lib/site-url";
@@ -28,7 +29,16 @@ export const revalidate = 3600;
 const sinPunto = (t: string) => t.replace(/\.$/, "");
 
 export async function GET() {
-  const copy = await getCopy(defaultLocale);
+  /*
+     Con los interruptores, porque esto es un espejo de la página y no un
+     segundo catálogo. Si los planes están apagados en el sitio, un modelo que
+     lee este archivo no tiene que seguir contestando precios que el visitante
+     no ve por ninguna parte.
+  */
+  const [copy, secciones] = await Promise.all([
+    getCopy(defaultLocale),
+    getSections(),
+  ]);
   const absoluta = (path: string) =>
     `${siteUrl}${localeHref(path, defaultLocale) === "/" ? "" : localeHref(path, defaultLocale)}`;
 
@@ -45,6 +55,9 @@ export async function GET() {
     (p) => `- **${p.title}**${p.url ? ` — ${p.url}` : ""}${p.tagline ? `: ${p.tagline}` : ""}`,
   );
 
+  /** Un bloque del archivo, o nada si su sección está apagada. */
+  const bloque = (prendida: boolean, cuerpo: string) => (prendida ? cuerpo : "");
+
   const texto = `# ${site.legalName}
 
 > ${copy.meta.description}
@@ -55,25 +68,38 @@ ${site.name} es un estudio de diseño y desarrollo web con base en ${site.locati
 - Contacto: ${site.email}
 - Idiomas: ${locales.join(", ")} (español en la raíz, inglés bajo /en)
 
-## Cómo trabaja
+${bloque(
+  secciones.approach,
+  `## Cómo trabaja
 
 ${copy.approach.pillars.map((p) => `- **${sinPunto(p.title)}**: ${p.body}`).join("\n")}
-
-## Planes y precios
+`,
+)}
+${bloque(
+  secciones.pricing,
+  `## Planes y precios
 
 ${planes.join("\n")}
 
 Incluido en todos los planes: ${copy.pricing.alwaysIncluded.join(", ")}.
 
 Sitios ya publicados que hay que retomar: ${copy.pricing.existing.summary}
-
-## Proyectos
+`,
+)}
+${bloque(
+  secciones.work,
+  `## Proyectos
 
 ${proyectos.join("\n")}
-
-## Preguntas frecuentes
+`,
+)}
+${bloque(
+  secciones.faq,
+  `## Preguntas frecuentes
 
 ${preguntas.join("\n\n")}
+`,
+)}
 
 ## Páginas
 

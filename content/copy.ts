@@ -2,6 +2,8 @@ import type { Segment } from "@/components/motion/split-heading";
 import type { Locale } from "@/lib/i18n";
 import { localeHref } from "@/lib/i18n";
 
+import { DESTINO_DE_RESCATE, SECCIONES } from "./sections";
+
 /**
  * La forma del texto del sitio, igual en los dos idiomas.
  *
@@ -24,6 +26,17 @@ export type SiteCopy = {
   header: {
     plans: string;
     cta: string;
+    /**
+     * Adónde van los dos enlaces de la barra.
+     *
+     * Estaban escritos a mano en el componente y era el único lugar del sitio
+     * donde un destino no salía del copy. Con los interruptores eso pasó de
+     * ser un detalle a ser un error: la poda recorre el copy, así que apagar
+     * los planes o el formulario limpiaba todos los enlaces del sitio menos
+     * justo los dos que están arriba de todo y en todas las páginas.
+     */
+    plansHref: string;
+    ctaHref: string;
     openMenu: string;
     skip: string;
     closeMenu: string;
@@ -252,7 +265,7 @@ function conPrefijo<T>(valor: T, locale: Locale): T {
     const salida: Record<string, unknown> = {};
     for (const [clave, v] of Object.entries(valor)) {
       salida[clave] =
-        clave === "href" && typeof v === "string"
+        esClaveDeEnlace(clave) && typeof v === "string"
           ? localeHref(v, locale)
           : conPrefijo(v, locale);
     }
@@ -263,6 +276,90 @@ function conPrefijo<T>(valor: T, locale: Locale): T {
 
 export function localizeHrefs(copy: SiteCopy, locale: Locale): SiteCopy {
   return conPrefijo(copy, locale);
+}
+
+/**
+ * Saca de la circulación los enlaces que apuntan a una sección apagada.
+ *
+ * Media docena de textos del sitio llevan a #planes, #proyectos o #brief. Si
+ * esas secciones se apagan desde el panel y los enlaces se quedan, el visitante
+ * toca un botón que dice «Ver planes» y no pasa nada: el navegador busca un
+ * ancla que no existe y se queda donde está. Es peor que no tener la sección,
+ * porque parece que el sitio está roto.
+ *
+ * Va de una pasada y a ciegas sobre todo el copy, igual que el prefijo de
+ * idioma, y por el mismo motivo: acordarse en cada componente funciona hasta el
+ * día que alguien se olvida.
+ *
+ * Los del menú se borran y el resto se redirige. Un botón sin destino igual
+ * tiene que llevar a alguna parte —la reunión, que no se puede apagar— pero un
+ * menú de cuatro entradas donde dos van al mismo lado se nota enseguida.
+ */
+function apagadas(secciones: Record<string, boolean>): Set<string> {
+  const anclas = new Set<string>();
+  for (const { id, ancla } of SECCIONES) {
+    if (ancla && secciones[id] === false) anclas.add(ancla);
+  }
+  return anclas;
+}
+
+/**
+ * Qué claves llevan un destino.
+ *
+ * «href» a secas y cualquiera que termine en Href, como ctaHref. La segunda
+ * forma existe para los destinos sueltos, los que no vienen acompañados de su
+ * etiqueta en un objeto {label, href}: el enlace secundario de la barra, por
+ * ejemplo, tiene el texto en header.plans desde siempre y meterlo adentro de
+ * un objeto habría cambiado la forma de un campo que ya está cargado en
+ * Sanity como texto suelto.
+ */
+function esClaveDeEnlace(clave: string) {
+  return clave === "href" || clave.endsWith("Href");
+}
+
+/** El ancla de un href, sea «/#planes» o «/?plan=landing#brief». */
+function anclaDe(href: string): string | null {
+  const i = href.indexOf("#");
+  return i === -1 ? null : href.slice(i + 1);
+}
+
+function podar<T>(valor: T, muertas: Set<string>): T {
+  if (Array.isArray(valor)) {
+    return valor.map((v) => podar(v, muertas)) as unknown as T;
+  }
+  if (valor && typeof valor === "object") {
+    const salida: Record<string, unknown> = {};
+    for (const [clave, v] of Object.entries(valor)) {
+      if (esClaveDeEnlace(clave) && typeof v === "string") {
+        const ancla = anclaDe(v);
+        salida[clave] =
+          ancla && muertas.has(ancla) ? DESTINO_DE_RESCATE : v;
+      } else {
+        salida[clave] = podar(v, muertas);
+      }
+    }
+    return salida as T;
+  }
+  return valor;
+}
+
+export function pruneHrefs(
+  copy: SiteCopy,
+  secciones: Record<string, boolean>,
+): SiteCopy {
+  const muertas = apagadas(secciones);
+  if (muertas.size === 0) return copy;
+
+  const podado = podar(copy, muertas);
+
+  // El menú es la excepción: sus entradas se van en vez de redirigirse.
+  return {
+    ...podado,
+    nav: copy.nav.filter((item) => {
+      const ancla = anclaDe(item.href);
+      return !(ancla && muertas.has(ancla));
+    }),
+  };
 }
 
 /** Reemplaza {marcadores} en un texto. Para las frases que llevan un dato. */

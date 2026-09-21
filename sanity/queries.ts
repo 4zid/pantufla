@@ -81,6 +81,17 @@ export const siteCopyQuery = groq`
   *[_type == "siteCopy" && language == $language][0]
 `;
 
+/**
+ * Los interruptores de las secciones.
+ *
+ * Por id y no por tipo: es un documento único y buscarlo por _type devolvería
+ * el primero que aparezca, que el día que alguien cree un segundo sin querer
+ * puede no ser el que el Studio está editando.
+ */
+export const siteSectionsQuery = groq`
+  *[_id == "siteSections"][0]
+`;
+
 export const testimonialsQuery = groq`
   *[_type == "testimonial" && ${enIdioma}] | order(order asc)[0...6] {
     _id, quote, name, role, company, rating, avatar

@@ -3,6 +3,8 @@ import { siteCopyQuery } from "@/sanity/queries";
 import type { Locale } from "@/lib/i18n";
 
 import type { SiteCopy } from "./copy";
+import { pruneHrefs } from "./copy";
+import { getSections } from "./get-sections";
 import { es } from "./copy.es";
 import { en } from "./copy.en";
 import { resolveCopy, type ResolvedCopy } from "./resolve";
@@ -21,16 +23,28 @@ const respaldo: Record<Locale, SiteCopy> = { es, en };
 export async function getCopy(locale: Locale): Promise<ResolvedCopy> {
   const local = respaldo[locale];
 
-  const remoto = await sanityFetch<Partial<SiteCopy> | null>(
-    siteCopyQuery,
-    { language: locale },
-    null,
-    ["siteCopy"],
-  );
+  /*
+     Las dos consultas en paralelo. Los interruptores hacen falta acá y no solo
+     en la home porque de ellos depende adónde apuntan los botones, y los
+     botones están en el encabezado y en el pie, que viven en el layout.
+  */
+  const [remoto, secciones] = await Promise.all([
+    sanityFetch<Partial<SiteCopy> | null>(
+      siteCopyQuery,
+      { language: locale },
+      null,
+      ["siteCopy"],
+    ),
+    getSections(),
+  ]);
 
   const copy = (remoto ? fundir(local, remoto) : local) as SiteCopy;
 
-  return resolveCopy(copy, locale);
+  // La poda va antes del prefijo de idioma, que corre dentro de resolveCopy:
+  // los href todavía están en su forma corta —/#planes— y el ancla se lee
+  // igual de un lado que del otro, pero mezclarlos sería pedir que un día
+  // alguien escriba /en/#planes a mano y deje de coincidir.
+  return resolveCopy(pruneHrefs(copy, secciones), locale);
 }
 
 /**

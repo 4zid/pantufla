@@ -1,3 +1,5 @@
+import { Fragment } from "react";
+
 import { Approach } from "@/components/sections/approach";
 import { Bento } from "@/components/sections/bento";
 import { ClientsMap } from "@/components/sections/clients-map";
@@ -16,8 +18,9 @@ import {
 } from "@/content/fallback-content";
 import { JsonLd } from "@/components/json-ld";
 import { getCopy } from "@/content/get-copy";
+import { getSections } from "@/content/get-sections";
+import { SECCIONES, type SeccionId } from "@/content/sections";
 import { site } from "@/content/site";
-import type { ResolvedCopy } from "@/content/resolve";
 import type { Locale } from "@/lib/i18n";
 import { nodoFaq, nodoPagina, nodoProyectos } from "@/lib/schema";
 import { sanityFetch } from "@/sanity/client";
@@ -32,8 +35,9 @@ export default async function HomePage({
   params: Promise<{ locale: Locale }>;
 }) {
   const { locale } = await params;
-  const [copy, cmsProjects, cmsTestimonials] = await Promise.all([
+  const [copy, secciones, cmsProjects, cmsTestimonials] = await Promise.all([
     getCopy(locale),
+    getSections(),
     sanityFetch<SanityProject[]>(
       allProjectsQuery,
       { language: locale },
@@ -61,20 +65,35 @@ export default async function HomePage({
     ? cmsTestimonials
     : (fallbackTestimonials[locale] ?? fallbackTestimonials.es);
 
+  /*
+     Qué pinta cada interruptor.
+
+     El orden de la página lo marca SECCIONES, no este objeto: acá solo está
+     cómo se construye cada una. Tenerlo separado es lo que hace que el orden
+     de la home, la lista de interruptores del panel y la poda de enlaces sean
+     todos la misma lista y no tres que hay que mantener iguales a mano.
+  */
+  const piezas: Record<SeccionId, () => React.ReactNode> = {
+    hero: () => <Hero />,
+    socialProof: () => <SocialProof />,
+    approach: () => <Approach />,
+    bento: () => <Bento />,
+    process: () => <Process />,
+    stackTicker: () => <StackTicker />,
+    pricing: () => <Pricing />,
+    work: () => <Work projects={projects} />,
+    testimonials: () => <Testimonials items={testimonials} />,
+    clientsMap: () => <ClientsMap />,
+    faq: () => <Faq />,
+    finalCta: () => <FinalCta withForm />,
+  };
+
   return (
     <>
-      <Hero />
-      <SocialProof />
-      <Approach />
-      <Bento />
-      <Process />
-      <StackTicker />
-      <Pricing />
-      <Work projects={projects} />
-      <Testimonials items={testimonials} />
-      <ClientsMap />
-      <Faq />
-      <FinalCta withForm />
+      {SECCIONES.filter(({ id }) => secciones[id]).map(({ id }) => (
+        <Fragment key={id}>{piezas[id]()}</Fragment>
+      ))}
+
       <JsonLd
         nodos={[
           nodoPagina({
@@ -83,8 +102,17 @@ export default async function HomePage({
             title: `${site.name} — ${copy.meta.tagline}`,
             description: copy.meta.description,
           }),
-          nodoFaq(copy, locale),
-          nodoProyectos(projects, locale, copy.work.title),
+          /*
+             Los datos estructurados siguen a lo que hay en la página, no a lo
+             que hay en el CMS. Declarar un FAQPage en una home sin preguntas, o
+             una lista de proyectos que no está, es decirle al buscador algo que
+             no puede verificar: no suma nada y es de las cosas que hacen que
+             deje de confiar en el resto del marcado.
+          */
+          ...(secciones.faq ? [nodoFaq(copy, locale)] : []),
+          ...(secciones.work
+            ? [nodoProyectos(projects, locale, copy.work.title)]
+            : []),
         ]}
       />
     </>

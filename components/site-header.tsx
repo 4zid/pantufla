@@ -210,7 +210,7 @@ export function SiteHeader() {
             <div className="hidden shrink-0 items-center gap-4 md:flex">
               {/* El enlace secundario se retira cuando la barra se compacta. */}
               <Link
-                href={href("/#planes")}
+                href={header.plansHref}
                 className={cn(
                   "overflow-hidden whitespace-nowrap text-[0.92rem] text-ink-soft transition-all duration-400 hover:text-ink",
                   compact
@@ -221,7 +221,7 @@ export function SiteHeader() {
                 {header.plans}
               </Link>
               <LocaleSwitcher />
-              <ButtonLink href={href("/#brief")} size={compact ? "sm" : "md"}>
+              <ButtonLink href={header.ctaHref} size={compact ? "sm" : "md"}>
                 {header.cta}
               </ButtonLink>
             </div>
@@ -283,7 +283,7 @@ export function SiteHeader() {
                 <div className="mt-4 flex items-center gap-3">
                   <LocaleSwitcher />
                   <ButtonLink
-                    href={href("/#brief")}
+                    href={header.ctaHref}
                     size="lg"
                     className="w-full"
                     onClick={() => setOpen(false)}
