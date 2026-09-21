@@ -1,6 +1,8 @@
 "use client";
 
+import { useGSAP } from "@gsap/react";
 import Link from "next/link";
+import { useRef } from "react";
 
 import { Reveal } from "@/components/motion/reveal";
 import { ArrowUpRightIcon } from "@/components/ui/icons";
@@ -8,37 +10,35 @@ import { Sphere } from "@/components/ui/sphere";
 import type { SanityProject } from "@/sanity/types";
 import type { Tone } from "@/lib/tones";
 import { useCopy, useHref } from "@/components/copy-provider";
+import { gsap, registerGsap } from "@/lib/motion";
 import { cn } from "@/lib/cn";
 
 /**
- * Los proyectos, de a dos por fila.
+ * Los proyectos, de a cuatro por fila.
  *
- * Cada uno es una esfera, grande, y debajo el nombre del cliente. Nada más: la
- * bajada, el rubro, el plan y la lista de servicios estuvieron y se fueron,
- * porque en un portfolio lo que convence no es leer que un sitio es «limpio y
- * actual», es abrirlo. Todo eso competía con el nombre y empujaba el enlace
- * hacia abajo.
+ * Cada uno es una esfera y debajo el nombre del cliente. Nada más: la bajada,
+ * el rubro, el plan y la lista de servicios estuvieron y se fueron, porque en
+ * un portfolio lo que convence no es leer que un sitio es «limpio y actual»,
+ * es abrirlo. Todo eso competía con el nombre y empujaba el enlace hacia
+ * abajo.
  *
- * La pieza va primero y el nombre después, como el epígrafe de una foto. Con el
- * nombre arriba, lo primero que aparecía al scrollear era una palabra suelta y
- * recién después el trabajo; ahora entra la pieza y el nombre llega cuando ya
- * se está mirando, que es cuando importa saber de quién es.
+ * Cuatro en una fila y no dos: así los cuatro de la home entran en una
+ * pantalla, con el título de la sección incluido. De a dos eran dos filas de
+ * esferas de medio metro, y la sección medía dos pantallas y media para
+ * decir cuatro nombres.
  *
  * Las capturas de los sitios ya no están acá. Un portfolio de capturas es un
- * portfolio de rectángulos con texto chiquito adentro: no se lee ninguno, todos
- * se parecen y el que menos calidad tiene arrastra a los demás. La esfera no
- * intenta mostrar el trabajo, lo señala, y el trabajo está a un clic. La imagen
- * de cada proyecto sigue cargada y sigue saliendo en su ficha, que es donde hay
- * espacio para verla en serio.
+ * portfolio de rectángulos con texto chiquito adentro: no se lee ninguno,
+ * todos se parecen y el que peor está arrastra a los demás. La esfera no
+ * intenta mostrar el trabajo, lo señala, y el trabajo está a un clic. La
+ * imagen de cada proyecto sigue cargada y sigue saliendo en su ficha, que es
+ * donde hay espacio para verla en serio.
  *
  * Toda la tarjeta lleva al sitio publicado —no a una ficha interna que cuenta
  * el sitio en vez de mostrarlo— y el área clicable la da el enlace del título
  * estirado sobre la tarjeta entera. Es un solo enlace: con uno en el título,
- * otro en la imagen y otro en el botón, el foco pasaba tres veces por el mismo
- * destino antes de llegar al proyecto siguiente.
- *
- * Las fichas de /proyectos/[slug] siguen existiendo y siguen usando la bajada
- * y el resto de los campos. Lo que cambió es por dónde se entra.
+ * otro en la esfera y otro en el botón, el foco pasaba tres veces por el
+ * mismo destino antes de llegar al proyecto siguiente.
  */
 
 /**
@@ -50,6 +50,17 @@ import { cn } from "@/lib/cn";
  * el panel pueden quedar dos verdes juntas sin que nadie haya tocado nada.
  */
 const tonos: Tone[] = ["aqua", "rosa", "verde", "miel"];
+
+/**
+ * Cuánto gira cada esfera de punta a punta del recorrido, en grados.
+ *
+ * Poco. La luz viene de arriba, y girar la esfera es girar la luz: con
+ * cuarenta grados se lee como una pelota rodando y el casquete termina de
+ * costado. Con dieciséis se lee como que respira. Y alternan el sentido —una
+ * para un lado, la de al lado para el otro— porque cuatro esferas girando
+ * igual se ven como una sola animación copiada cuatro veces.
+ */
+const GIRO = 16;
 
 export function ProjectStack({
   projects,
@@ -66,69 +77,122 @@ export function ProjectStack({
 }) {
   const { work } = useCopy();
   const href = useHref();
+  const scope = useRef<HTMLDivElement>(null);
+
+  useGSAP(
+    () => {
+      registerGsap();
+      const root = scope.current;
+      if (!root) return;
+
+      const mm = gsap.matchMedia();
+
+      mm.add(
+        {
+          motion: "(prefers-reduced-motion: no-preference)",
+          reduced: "(prefers-reduced-motion: reduce)",
+        },
+        (context) => {
+          const { reduced } = context.conditions as { reduced: boolean };
+          if (reduced) return;
+
+          /*
+             Atada al scroll y no al tiempo: la esfera gira mientras cruza la
+             pantalla y se queda quieta cuando el visitante se queda quieto.
+             Una rotación continua es un GIF; una que responde a la mano es un
+             objeto. El scrub con inercia es lo que hace que no se sienta
+             pegada al dedo.
+          */
+          gsap.utils.selector(root)("[data-esfera]").forEach((el, i) => {
+            const sentido = i % 2 === 0 ? 1 : -1;
+            gsap.fromTo(
+              el,
+              { rotate: -GIRO * sentido },
+              {
+                rotate: GIRO * sentido,
+                ease: "none",
+                scrollTrigger: {
+                  trigger: el,
+                  start: "top bottom",
+                  end: "bottom top",
+                  scrub: 0.6,
+                  invalidateOnRefresh: true,
+                },
+              },
+            );
+          });
+        },
+      );
+    },
+    { scope },
+  );
 
   return (
-    <Reveal stagger className="grid gap-x-8 gap-y-12 lg:grid-cols-2">
-      {projects.map((project, i) => {
-        // Sin URL cargada, la tarjeta cae en la ficha interna en vez de
-        // quedar muerta. Es el único caso en que el enlace no sale del sitio.
-        const externo = Boolean(project.url);
-        const destino = project.url ?? href(`/proyectos/${project.slug}`);
-        return (
-          <article key={project._id} className="group/card relative">
-            {/*
-              La esfera suelta: sin tarjeta, sin plato, sin borde.
+    <div ref={scope}>
+      <Reveal
+        stagger
+        className="grid grid-cols-2 gap-x-5 gap-y-9 lg:grid-cols-4 lg:gap-x-6"
+      >
+        {projects.map((project, i) => {
+          // Sin URL cargada, la tarjeta cae en la ficha interna en vez de
+          // quedar muerta. Es el único caso en que el enlace no sale del sitio.
+          const externo = Boolean(project.url);
+          const destino = project.url ?? href(`/proyectos/${project.slug}`);
 
-              No hay nada que la contenga a propósito. Una esfera adentro de un
-              rectángulo con borde es una ilustración pegada en una ficha; sola
-              sobre la página es un objeto, y la página se vuelve el aire que la
-              rodea. Es también lo que hace que las cuatro se lean como una
-              familia y no como cuatro tarjetas que casualmente traen un dibujo.
+          return (
+            <article key={project._id} className="group/card relative">
+              {/*
+                La esfera suelta: sin tarjeta, sin plato, sin borde.
 
-              Y no hay captura del sitio. Un portfolio de capturas es un
-              portfolio de rectángulos con texto chiquito adentro: no se lee
-              ninguno, todos se parecen y el que peor está arrastra a los demás.
-              La esfera no intenta mostrar el trabajo, lo señala, y el trabajo
-              está a un clic.
-            */}
-            <Sphere
-              tone={tonos[i % tonos.length]}
-              className="w-full max-w-[34rem] transition-transform duration-700 ease-out group-hover/card:scale-[1.03]"
-            />
+                No hay nada que la contenga a propósito. Una esfera adentro de
+                un rectángulo con borde es una ilustración pegada en una ficha;
+                sola sobre la página es un objeto, y la página se vuelve el
+                aire que la rodea.
 
-            <div className="mt-5 flex items-start justify-between gap-6">
-              <Titulo className="text-[1.45rem] font-semibold leading-tight tracking-[-0.03em] md:text-[1.6rem]">
-                <Link
-                  href={destino}
-                  target={externo ? "_blank" : undefined}
-                  rel={externo ? "noreferrer" : undefined}
-                  /* Estirado sobre toda la tarjeta: se puede tocar en
-                     cualquier parte —imagen incluida— y sigue habiendo un solo
-                     enlace.
+                El giro va en el envoltorio y el zoom del hover en la esfera:
+                GSAP escribe el transform en línea, y si estuvieran en el
+                mismo elemento pisaría la clase del hover y el zoom dejaría
+                de andar.
+              */}
+              <div data-esfera className="will-change-transform">
+                <Sphere
+                  tone={tonos[i % tonos.length]}
+                  className="w-full transition-transform duration-700 ease-out group-hover/card:scale-[1.03]"
+                />
+              </div>
 
-                     El z-10 queda aunque ahora el enlace esté después de la
-                     imagen en el árbol y ya ganaría por orden. Es barato y es
-                     lo único que sostiene el área clicable si alguien vuelve a
-                     mover estos dos bloques de lugar. */
-                  className="after:absolute after:inset-0 after:z-10 after:content-['']"
+              {/* El epígrafe, apilado: en una columna de doscientos y pico
+                  el nombre y el «ver sitio» no entran en el mismo renglón. */}
+              <div className="mt-4">
+                <Titulo className="text-[1.05rem] font-semibold leading-tight tracking-[-0.025em] md:text-[1.15rem]">
+                  <Link
+                    href={destino}
+                    target={externo ? "_blank" : undefined}
+                    rel={externo ? "noreferrer" : undefined}
+                    /* Estirado sobre toda la tarjeta: se puede tocar en
+                       cualquier parte —esfera incluida— y sigue habiendo un
+                       solo enlace. */
+                    className="after:absolute after:inset-0 after:z-10 after:content-['']"
+                  >
+                    {project.title}
+                  </Link>
+                </Titulo>
+
+                <span
+                  aria-hidden
+                  className={cn(
+                    "mt-1.5 inline-flex items-center gap-1.5 text-[0.85rem] text-ink-soft",
+                    "transition-colors duration-200 group-hover/card:text-ink",
+                  )}
                 >
-                  {project.title}
-                </Link>
-              </Titulo>
-
-              <span
-                aria-hidden
-                className="flex shrink-0 items-center gap-3 pt-1 text-[0.95rem] font-medium text-ink-soft transition-colors duration-200 group-hover/card:text-ink"
-              >
-                {work.view}
-                <span className="grid h-10 w-10 place-items-center rounded-full border border-line-strong transition-colors duration-200 group-hover/card:border-ink group-hover/card:bg-ink group-hover/card:text-paper">
-                  <ArrowUpRightIcon className="h-4 w-4" />
+                  {work.view}
+                  <ArrowUpRightIcon className="h-3.5 w-3.5 transition-transform duration-200 group-hover/card:-translate-y-0.5 group-hover/card:translate-x-0.5" />
                 </span>
-              </span>
-            </div>
-          </article>
-        );
-      })}
-    </Reveal>
+              </div>
+            </article>
+          );
+        })}
+      </Reveal>
+    </div>
   );
 }
