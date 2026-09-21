@@ -40,7 +40,19 @@ export function Work({ projects }: { projects: SanityProject[] }) {
   const faltan = projects.length - mostrados.length;
 
   return (
-    <Section id="proyectos">
+    /*
+       Oscura, por las esferas.
+
+       El degradé de la esfera está calculado para que el casquete se lea como
+       luz, y eso sobre una página clara no pasa: medido, el casquete da 1,17
+       contra el fondo. La silueta quedaba sostenida apenas por el aro de un
+       píxel, que es lo que sostiene un contorno, no un objeto.
+
+       Sobre oscuro la misma esfera se lee entera sin agregarle nada encima, y
+       sin meter cada una adentro de un plato negro propio: el fondo es la
+       página, que ya sabe apagarse sola cuando esta sección entra en pantalla.
+    */
+    <Section id="proyectos" surface="deep">
       <SectionHead
         icon="grilla"
         eyebrow={work.eyebrow}
