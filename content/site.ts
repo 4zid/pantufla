@@ -59,14 +59,36 @@ export const processDesign: Record<
  * Abajo de md es una sola columna y todo esto no aplica: cuatro tarjetas
  * apiladas en el orden en que están escritas.
  */
+/**
+ * Dónde va cada celda del tablero y qué forma tiene. Tres columnas y dos
+ * filas desde lg: las dos chicas arriba a la izquierda, la alta ocupando la
+ * columna de la derecha entera y la ancha abajo cruzando las dos primeras.
+ * En md son dos columnas parejas y las áreas no aplican; abajo, una sola.
+ */
 export const bentoDesign: Record<
   string,
-  { tone: "aqua" | "rosa" | "verde" | "miel" }
+  {
+    tone: "aqua" | "rosa" | "verde" | "miel";
+    area: string;
+    shape: "chica" | "alta" | "ancha";
+  }
 > = {
-  velocidad: { tone: "aqua" },
-  seo: { tone: "rosa" },
-  pantallas: { tone: "verde" },
-  resultados: { tone: "miel" },
+  velocidad: {
+    tone: "aqua",
+    area: "lg:col-start-1 lg:row-start-1",
+    shape: "chica",
+  },
+  seo: { tone: "rosa", area: "lg:col-start-2 lg:row-start-1", shape: "chica" },
+  pantallas: {
+    tone: "verde",
+    area: "lg:col-start-3 lg:row-start-1 lg:row-span-2",
+    shape: "alta",
+  },
+  resultados: {
+    tone: "miel",
+    area: "lg:col-start-1 lg:col-span-2 lg:row-start-2",
+    shape: "ancha",
+  },
 };
 
 export const planDesign: Record<string, { tone: string; featured: boolean }> = {
