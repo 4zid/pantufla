@@ -61,9 +61,9 @@ export const processDesign: Record<
  */
 /**
  * Dónde va cada celda del tablero y qué forma tiene. Tres columnas y dos
- * filas desde lg: a la izquierda las dos anchas, una sobre otra, y en la
- * columna de la derecha las dos chicas. En md son dos columnas parejas y las
- * áreas no aplican; abajo, una sola.
+ * filas desde lg, en damero: arriba la chica a la izquierda y la ancha a la
+ * derecha; abajo la ancha a la izquierda y la chica a la derecha. En md son
+ * dos columnas parejas y las áreas no aplican; abajo, una sola.
  */
 export const bentoDesign: Record<
   string,
@@ -75,10 +75,10 @@ export const bentoDesign: Record<
 > = {
   velocidad: {
     tone: "aqua",
-    area: "lg:col-start-1 lg:col-span-2 lg:row-start-1",
+    area: "lg:col-start-2 lg:col-span-2 lg:row-start-1",
     shape: "ancha",
   },
-  seo: { tone: "rosa", area: "lg:col-start-3 lg:row-start-1", shape: "chica" },
+  seo: { tone: "rosa", area: "lg:col-start-1 lg:row-start-1", shape: "chica" },
   pantallas: {
     tone: "verde",
     area: "lg:col-start-3 lg:row-start-2",

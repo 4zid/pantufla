@@ -24,9 +24,10 @@ import { cn } from "@/lib/cn";
  * Un tablero y no cuatro tarjetas sueltas: las cuatro viven adentro de un
  * mismo contenedor, separadas por una junta de diez píxeles del color de la
  * página, y donde se cruzan dos juntas las esquinas redondeadas dejan una
- * muesca en forma de estrella. Tres columnas y dos filas desde lg: a la
- * izquierda las dos anchas, una sobre otra, y en la columna de la derecha las
- * dos chicas, con la lámina ancha de arriba pesando lo mismo que la de abajo. En tablet son
+ * muesca en forma de estrella. Tres columnas y dos filas desde lg, en
+ * damero: arriba la chica del chat a la izquierda y la ancha de velocidad a
+ * la derecha; abajo la ancha del formulario a la izquierda y la chica de las
+ * pantallas a la derecha. Las dos anchas nunca quedan una sobre otra. En tablet son
  * dos columnas parejas —a tres, cada celda quedaba de 220 y el chat se
  * partía en palabras sueltas— y en teléfono, una sola.
  *
