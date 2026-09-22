@@ -1,7 +1,13 @@
 "use client";
 
 import { useGSAP } from "@gsap/react";
-import { Fragment, useMemo, useRef, type ElementType } from "react";
+import {
+  Fragment,
+  useMemo,
+  useRef,
+  type CSSProperties,
+  type ElementType,
+} from "react";
 
 import { ease, gsap, registerGsap, START } from "@/lib/motion";
 import { cn } from "@/lib/cn";
@@ -20,7 +26,14 @@ type Props = {
   as?: ElementType;
   className?: string;
   delay?: number;
-  /** Dispara apenas monta en vez de esperar el scroll (para el hero). */
+  /**
+   * Entra apenas se pinta, sin esperar el scroll ni el JS (para el hero).
+   *
+   * En este modo la animación es de CSS y no de GSAP: arriba del pliegue el
+   * titular no puede esperar a que llegue el JavaScript para aparecer, que
+   * en un teléfono con 4G son dos segundos de opacidad cero y un LCP que se
+   * mide recién al final. Ver la entrada del hero en globals.css.
+   */
   immediate?: boolean;
 };
 
@@ -80,10 +93,15 @@ export function SplitHeading({
    * Con una cadena la comparación es por contenido y no por identidad, así que
    * solo se vuelve a animar si el titular de verdad cambió.
    */
-  const firma = partes.map((p) => `${p.mark ?? ""}\u0000${p.text}`).join("\u0001");
+  const firma = partes
+    .map((p) => `${p.mark ?? ""}\u0000${p.text}`)
+    .join("\u0001");
 
   useGSAP(
     () => {
+      // Con entrada de CSS acá no hay nada que hacer.
+      if (immediate) return;
+
       registerGsap();
       const root = scope.current;
       if (!root) return;
@@ -119,11 +137,7 @@ export function SplitHeading({
               delay,
               stagger: 0.055,
               onComplete: soltar,
-              ...(immediate
-                ? {}
-                : {
-                    scrollTrigger: { trigger: root, start: START, once: true },
-                  }),
+              scrollTrigger: { trigger: root, start: START, once: true },
             },
           );
         },
@@ -140,6 +154,9 @@ export function SplitHeading({
    * línea, así que dos palabras seguidas terminaban pegadas.
    */
   const unidades: React.ReactNode[] = [];
+  /** El número de orden de cada unidad, para escalonar la entrada de CSS. */
+  const indice = (): CSSProperties | undefined =>
+    immediate ? ({ "--i": unidades.length } as CSSProperties) : undefined;
 
   partes.forEach((parte, p) => {
     if (parte.mark) {
@@ -147,6 +164,7 @@ export function SplitHeading({
         <span
           key={`m-${p}`}
           data-word
+          style={indice()}
           className={cn(
             "inline-block rounded-[0.26em] px-[0.2em] pb-[0.03em] align-bottom",
             marks[parte.mark],
@@ -166,6 +184,7 @@ export function SplitHeading({
           <span
             key={`w-${p}-${i}`}
             data-mask
+            style={indice()}
             className="inline-block overflow-hidden align-bottom"
           >
             <span data-word className="inline-block">
@@ -177,7 +196,14 @@ export function SplitHeading({
   });
 
   return (
-    <Tag ref={scope} className={className} data-split>
+    <Tag
+      ref={scope}
+      className={className}
+      data-split={immediate ? "css" : ""}
+      style={
+        immediate ? ({ "--base": `${delay}s` } as CSSProperties) : undefined
+      }
+    >
       {unidades.map((unidad, i) => (
         <Fragment key={i}>
           {unidad}

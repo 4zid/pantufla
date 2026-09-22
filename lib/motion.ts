@@ -8,6 +8,13 @@ let registered = false;
 export function registerGsap() {
   if (registered || typeof window === "undefined") return;
   gsap.registerPlugin(ScrollTrigger, Draggable);
+  /*
+     En el teléfono la barra del navegador se esconde y aparece al hacer
+     scroll, y eso cambia el alto de la ventana: sin esto ScrollTrigger lo
+     toma como un resize y recalcula las posiciones de todos los triggers
+     cada vez, que es leer el layout entero en medio del scroll.
+  */
+  ScrollTrigger.config({ ignoreMobileResize: true });
   registered = true;
 }
 

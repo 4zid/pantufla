@@ -16,6 +16,15 @@ import type { NextConfig } from "next";
  * source "/proyectos" coincide exacto, no con lo que cuelga debajo.
  */
 const nextConfig: NextConfig = {
+  /*
+     El CSS va adentro del HTML y no como archivo aparte. Un archivo de CSS
+     bloquea el primer pintado hasta que llega: con Tailwind son trece
+     kilobytes que en 4G cuestan un viaje de ida y vuelta —Lighthouse lo
+     medía en 300 ms—. En línea llegan con la página. El costo es que quien
+     vuelve no lo tiene en caché; para un sitio de una página que se visita
+     una vez, la primera visita importa más.
+  */
+  experimental: { inlineCss: true },
   images: {
     remotePatterns: [{ protocol: "https", hostname: "cdn.sanity.io" }],
   },

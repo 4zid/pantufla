@@ -461,6 +461,82 @@
   }
 }
 
+/* ------------------------------------------------------------------
+   Entrada del hero, en CSS y sin esperar al JS.
+
+   Lo que está arriba del pliegue no puede depender del JavaScript para
+   aparecer: en un teléfono con 4G el paquete tarda dos segundos en llegar,
+   y hasta entonces el titular y la bajada estaban en opacidad cero. Para el
+   navegador un elemento a opacidad cero no está pintado, así que el LCP
+   —la bajada, en móvil— se medía recién cuando terminaba de animar: casi
+   tres segundos de «render delay» sobre un HTML que ya estaba ahí.
+
+   Con animaciones de CSS la entrada arranca en el primer pintado, con el
+   HTML solo, y el JS no tiene nada que hacer. Las demoras son cortas a
+   propósito: la bajada arranca a los 0,3 s y el LCP se mide ahí.
+
+   Las palabras del titular suben desde abajo de su máscara, escalonadas por
+   --i; la máscara se suelta cuando la palabra llegó (ver split-heading.tsx),
+   con una animación discreta de un cuadro que cambia el overflow.
+   ------------------------------------------------------------------ */
+
+@keyframes entrar {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes subir-palabra {
+  from {
+    opacity: 0;
+    transform: translateY(108%);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes soltar-mascara {
+  from {
+    overflow: hidden;
+  }
+  to {
+    overflow: visible;
+  }
+}
+
+[data-entra] {
+  animation: entrar 0.8s cubic-bezier(0.215, 0.61, 0.355, 1) both;
+  animation-delay: var(--entra, 0s);
+}
+
+[data-split="css"] [data-word] {
+  animation: subir-palabra 1s cubic-bezier(0.215, 0.61, 0.355, 1) both;
+  animation-delay: calc(var(--base, 0s) + var(--i, 0) * 55ms);
+}
+
+[data-split="css"] [data-mask] {
+  animation: soltar-mascara 10ms step-end both;
+  animation-delay: calc(var(--base, 0s) + var(--i, 0) * 55ms + 1s);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-entra],
+  [data-split="css"] [data-word],
+  [data-split="css"] [data-mask] {
+    animation: none;
+  }
+  [data-split="css"] [data-mask] {
+    overflow: visible;
+  }
+}
+
 /* Deriva lenta de los blobs. Se apaga sola con reduced-motion (ver abajo). */
 @keyframes drift {
   0% {
