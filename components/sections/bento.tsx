@@ -24,9 +24,9 @@ import { cn } from "@/lib/cn";
  * Un tablero y no cuatro tarjetas sueltas: las cuatro viven adentro de un
  * mismo contenedor, separadas por una junta de diez píxeles del color de la
  * página, y donde se cruzan dos juntas las esquinas redondeadas dejan una
- * muesca en forma de estrella. Tres columnas y dos filas desde lg: dos
- * celdas chicas arriba a la izquierda, una alta ocupando la columna de la
- * derecha entera y una ancha abajo cruzando las dos primeras. En tablet son
+ * muesca en forma de estrella. Tres columnas y dos filas desde lg: a la
+ * izquierda las dos anchas, una sobre otra, y en la columna de la derecha las
+ * dos chicas, con la lámina ancha de arriba pesando lo mismo que la de abajo. En tablet son
  * dos columnas parejas —a tres, cada celda quedaba de 220 y el chat se
  * partía en palabras sueltas— y en teléfono, una sola.
  *
@@ -78,8 +78,9 @@ const sombra = (tone: Tone, pct: number) =>
  * Una composición por tono, capa por capa, de arriba hacia abajo. Todas se
  * iluminan arriba a la izquierda, donde va el texto, y se apagan lejos: la
  * aqua abajo a la derecha, la rosa abajo a la izquierda, la verde en el pie
- * con una franja de luz cruzándola en diagonal, y la miel —la ancha— por el
- * costado derecho, casi a negro, detrás de la viñeta.
+ * con una franja de luz cruzándola en diagonal, y la miel por el costado
+ * derecho, casi a negro, detrás de la viñeta. En las dos anchas la viñeta va a
+ * la derecha, sobre la zona apagada, y el texto a la izquierda, sobre la luz.
  */
 const laminas: Record<Tone, string> = {
   aqua: [
@@ -485,7 +486,6 @@ export function Bento() {
             };
             const Dibujo = vinetas[card.id] ?? Velocidad;
             const ancha = diseño.shape === "ancha";
-            const alta = diseño.shape === "alta";
             return (
               <article
                 key={card.id}
@@ -493,11 +493,6 @@ export function Bento() {
                 className={cn(
                   "group relative overflow-hidden rounded-[var(--radius-celda)]",
                   "md:min-h-[24rem]",
-                  alta
-                    ? "lg:min-h-[44rem]"
-                    : ancha
-                      ? "lg:min-h-[18rem]"
-                      : "lg:min-h-[26rem]",
                   diseño.area,
                 )}
               >
@@ -540,7 +535,6 @@ export function Bento() {
                     className={cn(
                       "flex flex-1 items-center justify-center pt-8 md:pt-6",
                       ancha && "lg:pt-0",
-                      alta && "lg:pt-0",
                     )}
                   >
                     <Dibujo tone={diseño.tone} f={bento.figures} />
