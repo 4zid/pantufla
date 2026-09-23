@@ -537,6 +537,32 @@
   }
 }
 
+/* ------------------------------------------------------------------
+   Los proyectos se anclan.
+
+   El scroll de la página imanta cada fila de proyecto al medio de la
+   pantalla, que es la línea del título y la que decide cuál está resaltada.
+   Es proximity y no mandatory: solo tira cuando el scroll frena cerca de una
+   fila. En el resto de la página no hay imanes y se mueve libre. Va desde lg,
+   que es donde el título está pegado al medio; en teléfono la lista es una
+   lista y el dedo manda.
+   ------------------------------------------------------------------ */
+@media (min-width: 64rem) {
+  html {
+    scroll-snap-type: y proximity;
+  }
+  [data-fila] {
+    scroll-snap-align: center;
+    /*
+       El imán centra contra la zona de scroll, y esa zona arranca 6rem más
+       abajo del borde por el scroll-padding-top de la barra: el centro le
+       queda 3rem por debajo del medio de la pantalla, que es donde está el
+       título. El margen negativo lo devuelve.
+    */
+    scroll-margin-top: -6rem;
+  }
+}
+
 /* Deriva lenta de los blobs. Se apaga sola con reduced-motion (ver abajo). */
 @keyframes drift {
   0% {

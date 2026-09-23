@@ -21,7 +21,9 @@ import { useCopy, useHref } from "@/components/copy-provider";
  * tamaño, solo se prende la que se está mirando.
  *
  * Nada rota ni se anima con GSAP. Quién está en el medio lo decide un
- * cálculo de una línea en cada cuadro de scroll.
+ * cálculo de una línea en cada cuadro de scroll. Y el scroll se ancla: cada
+ * fila imanta la página para que frene con ella en el medio (ver globals.css,
+ * «Los proyectos se anclan»).
  *
  * El nombre y la descripción van a la derecha de la esfera, afuera. Adentro
  * solo aparece «ver sitio» con la flecha, al pasar el mouse: la esfera es el
