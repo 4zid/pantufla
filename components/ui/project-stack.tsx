@@ -47,9 +47,9 @@ import { useCopy, useHref } from "@/components/copy-provider";
 const tonos: Tone[] = ["aqua", "rosa", "verde", "miel"];
 
 /** Cuánto dura el viaje de un proyecto al siguiente, en segundos. */
-const DURACION = 0.85;
+const DURACION = 0.7;
 /** Reposo después de un viaje antes de aceptar otro gesto, en ms. */
-const REPOSO = 300;
+const REPOSO = 100;
 /** Sin scroll durante este tiempo, la página frenó (ms). */
 const QUIETO = 150;
 /** A menos de esta fracción de paso, se está «en» el proyecto. */
@@ -115,9 +115,12 @@ export function ProjectStack({
     }
 
     /* El viaje a un proyecto. Lo lleva Lenis, con la misma curva que el
-       resto del sitio; sin Lenis, el navegador. Mientras dura, y un ratito
-       después, la rueda no cuenta: así un solo gesto es un solo proyecto. */
+       resto del sitio; sin Lenis, el navegador. Mientras dura, la rueda no
+       mueve nada, pero cada gesto nuevo que llega en el medio queda anotado
+       y sale apenas termina: así una seguidilla de muescas encadena un
+       proyecto por muesca sin esperar a que cada viaje repose. */
     let animando = false;
+    let pendiente = 0;
     function irA(i: number) {
       animando = true;
       const destino = arriba + i * paso;
@@ -125,6 +128,16 @@ export function ProjectStack({
       const listo = () => {
         if (hecho) return;
         hecho = true;
+        if (pendiente) {
+          const d = Math.sign(pendiente);
+          pendiente -= d;
+          const siguiente = Math.round(progreso()) + d;
+          if (siguiente >= 0 && siguiente <= n - 1) {
+            irA(siguiente);
+            return;
+          }
+          pendiente = 0;
+        }
         window.setTimeout(() => {
           animando = false;
         }, REPOSO);
@@ -203,17 +216,21 @@ export function ProjectStack({
 
     /* La rueda. Cada gesto, un proyecto.
 
-       Un gesto de trackpad son muchos eventos: primero crecen, después se
-       apagan solos durante un rato largo, más largo que el viaje. Se agrupan
-       en gestos: empieza uno nuevo con una pausa, con un salto grande (una
-       muesca de mouse siempre es un gesto) o cuando la magnitud vuelve a
-       crecer, que una cola que se apaga nunca hace. Un gesto que ya pidió
-       un viaje, o que llegó mientras había uno en marcha, está gastado:
-       el resto de sus eventos no cuenta, ni siquiera para salir. Para salir
-       de la sección hace falta un gesto nuevo en el primer o el último
-       proyecto; ese sí vuelve a mover la página. */
+       Un gesto de trackpad son muchos eventos: crecen, llegan a un pico y
+       después se apagan solos durante un rato largo, más largo que el
+       viaje. Hay que juntarlos en gestos. Empieza uno nuevo con una pausa,
+       con una muesca de mouse o cuando la magnitud vuelve a crecer después
+       de haber bajado: la cola de un gesto
+       nunca crece, así que crecer es otro dedo empujando, aunque la cola
+       anterior no haya terminado. Un gesto que ya pidió un viaje, o que
+       llegó mientras había uno en marcha, está gastado: el resto de sus
+       eventos no cuenta, ni siquiera para salir. Para salir de la sección
+       hace falta un gesto nuevo en el primer o el último proyecto; ese sí
+       vuelve a mover la página. */
     let ultimoT = 0;
     let ultimaMag = 0;
+    const ultimas: number[] = [];
+    let subiendo = false;
     let gastado = false;
     function alRueda(e: WheelEvent) {
       if (!escritorio.matches || e.ctrlKey || e.defaultPrevented) return;
@@ -223,11 +240,20 @@ export function ProjectStack({
       if (delta === 0 || Math.abs(delta) < Math.abs(e.deltaX)) return;
       const ahora = performance.now();
       const mag = Math.abs(delta);
-      const nuevo =
-        ahora - ultimoT >= 200 || mag >= 60 || mag > ultimaMag * 1.5 + 2;
-      if (nuevo) gastado = false;
+      const pausa = ahora - ultimoT;
+      const crece = mag > Math.max(0, ...ultimas) + 1;
+      // Muesca de mouse: grande, espaciada y del mismo tamaño que la anterior
+      // (una rampa de trackpad que el navegador juntó en pocos eventos
+      // también es grande y espaciada, pero nunca repite el valor).
+      const muesca = mag >= 60 && pausa >= 40 && Math.abs(mag - ultimaMag) < 1;
+      const nuevo = pausa >= 150 || muesca || (crece && !subiendo);
+      if (pausa >= 150 || crece) subiendo = true;
+      else if (mag < ultimaMag) subiendo = false;
+      ultimas.push(mag);
+      if (ultimas.length > 3) ultimas.shift();
       ultimoT = ahora;
       ultimaMag = mag;
+      if (nuevo) gastado = false;
 
       const p = progreso();
       if (!paso || p < -zona() || p > n - 1 + zona()) return;
@@ -238,6 +264,7 @@ export function ProjectStack({
       e.preventDefault();
       e.stopImmediatePropagation();
       if (animando || gastado) {
+        if (nuevo && animando) pendiente += dir;
         gastado = true;
         return;
       }
