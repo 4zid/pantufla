@@ -179,9 +179,6 @@ export type SiteCopy = {
     title: string;
     lead: string;
     view: string;
-    /** Los botones de la fila deslizable, para lectores de pantalla. */
-    prev: string;
-    next: string;
   };
   testimonials: { eyebrow: string; title: string; rating: string };
   clientsMap: { eyebrow: string; title: string; note: string };

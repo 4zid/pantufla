@@ -8,11 +8,10 @@ import type { SanityProject } from "@/sanity/types";
 /**
  * Los proyectos, en la home y sin página aparte.
  *
- * Todos en una fila que se desliza: entran cuatro, y los que siguen quedan
- * fuera de la pantalla, a un arrastre o un botón de distancia. Antes había un
- * botón de «cargar más» que sumaba de a dos filas; con las esferas en fila la
- * pregunta cambió: no es cuántas mostrar sino cuántas caben, y las que no
- * caben se corren, no se cargan.
+ * Dos columnas en escritorio. A la izquierda el título y la bajada, pegados
+ * mientras dura la sección; a la derecha los proyectos, uno debajo de otro,
+ * que suben y se van reemplazando en el puesto de arriba (ver project-stack).
+ * En teléfono es una columna: el título y después la lista.
  *
  * Las fichas de cada proyecto siguen existiendo: lo que se fue es el índice,
  * no el detalle.
@@ -39,14 +38,15 @@ export function Work({
        cuando esta sección entra en pantalla.
     */
     <Section id="proyectos" surface={surface}>
-      <SectionHead
-        icon="grilla"
-        eyebrow={work.eyebrow}
-        title={work.title}
-        lead={work.lead}
-      />
-
-      <div className="mt-12">
+      <div className="grid gap-14 lg:grid-cols-2 lg:gap-16">
+        <div className="lg:sticky lg:top-28 lg:self-start">
+          <SectionHead
+            icon="grilla"
+            eyebrow={work.eyebrow}
+            title={work.title}
+            lead={work.lead}
+          />
+        </div>
         <ProjectStack projects={projects} />
       </div>
     </Section>

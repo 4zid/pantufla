@@ -4,14 +4,42 @@ import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 
 import { site } from "@/content/site";
+import { cn } from "@/lib/cn";
 import { useCopy } from "@/components/copy-provider";
 import { Button } from "@/components/ui/button";
-import { CheckIcon } from "@/components/ui/icons";
+import { CheckIcon, ChevronDownIcon } from "@/components/ui/icons";
 
 const fieldClass =
   "w-full rounded-xl border border-line-strong bg-card px-4 py-3 text-[0.98rem] text-ink transition-colors placeholder:text-ink-faint focus:border-ink focus:outline-none";
 
 const labelClass = "block text-[0.88rem] font-medium";
+
+/**
+ * El selector: el mismo campo, sin la flecha del sistema y con la nuestra.
+ *
+ * Con la apariencia nativa, Safari pinta su flecha pegada al borde de la
+ * derecha y el texto sigue corriendo por debajo, así que «En 2 a 4 semanas»
+ * terminaba en «semana». Acá el campo reserva lugar para la flecha, la flecha
+ * es un ícono nuestro que no recibe clics, y el texto largo se corta con
+ * puntos suspensivos en vez de meterse abajo.
+ */
+function Selector({
+  className,
+  children,
+  ...props
+}: React.SelectHTMLAttributes<HTMLSelectElement>) {
+  return (
+    <div className={cn("relative", className)}>
+      <select
+        {...props}
+        className={`${fieldClass} appearance-none truncate pr-10`}
+      >
+        {children}
+      </select>
+      <ChevronDownIcon className="pointer-events-none absolute right-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-faint" />
+    </div>
+  );
+}
 
 export function BriefForm() {
   const { form, pricing } = useCopy();
@@ -42,7 +70,8 @@ export function BriefForm() {
 
     const data = Object.fromEntries(new FormData(event.currentTarget));
     const planLabel =
-      planOptions.find((p) => p.value === data.plan)?.label ?? String(data.plan);
+      planOptions.find((p) => p.value === data.plan)?.label ??
+      String(data.plan);
 
     try {
       const response = await fetch("/api/brief", {
@@ -124,7 +153,9 @@ export function BriefForm() {
       <div className="mt-5">
         <label className={labelClass} htmlFor="company">
           {form.company.label}{" "}
-          <span className="font-normal text-ink-faint">{form.company.optional}</span>
+          <span className="font-normal text-ink-faint">
+            {form.company.optional}
+          </span>
         </label>
         <input
           id="company"
@@ -135,60 +166,69 @@ export function BriefForm() {
         />
       </div>
 
-      <div className="mt-5 grid gap-5 sm:grid-cols-3">
+      {/*
+        Tres columnas desiguales: el plan es una palabra y las otras dos son
+        una frase. Repartidas iguales, «En 2 a 4 semanas» no entraba en la
+        columna del formulario y se cortaba con puntos suspensivos. Entre lg
+        y xl el formulario ya está en su columna pero todavía es angosto, y
+        tres no entran de ningún modo: ahí van dos y el plazo abajo, ancho.
+      */}
+      <div className="mt-5 grid gap-5 sm:grid-cols-[0.75fr_1.15fr_1.1fr] lg:grid-cols-2 xl:grid-cols-[0.75fr_1.15fr_1.1fr]">
         <div>
           <label className={labelClass} htmlFor="plan">
             {form.plan.label}
           </label>
-          <select
+          <Selector
             id="plan"
             name="plan"
             defaultValue={initialPlan}
-            className={`${fieldClass} mt-2`}
+            className="mt-2"
           >
             {planOptions.map((option) => (
               <option key={option.value} value={option.value}>
                 {option.label}
               </option>
             ))}
-          </select>
+          </Selector>
         </div>
 
         <div>
           <label className={labelClass} htmlFor="budget">
             {form.budget.label}{" "}
-            <span className="font-normal text-ink-faint">{form.budget.currency}</span>
+            <span className="font-normal text-ink-faint">
+              {form.budget.currency}
+            </span>
           </label>
-          <select
+          <Selector
             id="budget"
             name="budget"
             defaultValue={form.budgetRanges[1]}
-            className={`${fieldClass} mt-2`}
+            className="mt-2"
           >
             {form.budgetRanges.map((range) => (
               <option key={range} value={range}>
                 {range}
               </option>
             ))}
-          </select>
+          </Selector>
         </div>
 
-        <div>
+        <div className="lg:col-span-2 xl:col-span-1">
           <label className={labelClass} htmlFor="timeline">
             {form.timeline.label}
           </label>
-          <select
+          <Selector
             id="timeline"
             name="timeline"
             defaultValue={form.timelineOptions[1]}
-            className={`${fieldClass} mt-2`}
+            className="mt-2"
           >
             {form.timelineOptions.map((option) => (
               <option key={option} value={option}>
                 {option}
               </option>
             ))}
-          </select>
+          </Selector>
         </div>
       </div>
 
@@ -210,7 +250,10 @@ export function BriefForm() {
       </div>
 
       {/* Trampa para bots: oculta a la vista y fuera del orden de tabulación. */}
-      <div aria-hidden className="absolute left-[-9999px] h-0 w-0 overflow-hidden">
+      <div
+        aria-hidden
+        className="absolute left-[-9999px] h-0 w-0 overflow-hidden"
+      >
         <label htmlFor="website">{form.honeypot}</label>
         <input id="website" name="website" tabIndex={-1} autoComplete="off" />
       </div>

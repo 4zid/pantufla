@@ -333,8 +333,6 @@ export const es: SiteCopy = {
     title: "Algunos sitios que salieron de acá.",
     lead: "Distintos rubros, distintos tamaños, el mismo método.",
     view: "Ver sitio",
-    prev: "Proyectos anteriores",
-    next: "Proyectos siguientes",
   },
 
   testimonials: {

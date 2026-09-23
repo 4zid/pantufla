@@ -720,16 +720,6 @@ export const siteCopy = defineType({
         defineField({ name: "title", title: "Título", type: "string" }),
         texto("lead", "Bajada", 2),
         defineField({ name: "view", title: "Palabra «ver»", type: "string" }),
-        defineField({
-          name: "prev",
-          title: "Botón «anteriores» (lectores de pantalla)",
-          type: "string",
-        }),
-        defineField({
-          name: "next",
-          title: "Botón «siguientes» (lectores de pantalla)",
-          type: "string",
-        }),
       ],
     }),
     defineField({

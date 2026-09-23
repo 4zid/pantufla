@@ -326,8 +326,6 @@ export const en: SiteCopy = {
     title: "Some of the sites that came out of here.",
     lead: "Different industries, different sizes, the same method.",
     view: "Visit site",
-    prev: "Previous projects",
-    next: "Next projects",
   },
 
   testimonials: {

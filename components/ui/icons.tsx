@@ -16,6 +16,14 @@ export function CheckIcon({ className }: IconProps) {
   );
 }
 
+export function ChevronDownIcon({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 16 16" className={className} aria-hidden="true">
+      <path d="M3.5 6 8 10.5 12.5 6" {...stroke} />
+    </svg>
+  );
+}
+
 export function MinusIcon({ className }: IconProps) {
   return (
     <svg viewBox="0 0 16 16" className={className} aria-hidden="true">
