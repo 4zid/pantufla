@@ -1,18 +1,25 @@
 "use client";
 
+import type { CSSProperties } from "react";
+
 import { useCopy } from "@/components/copy-provider";
 import { ProjectStack } from "@/components/ui/project-stack";
-import { Section, SectionHead, type Surface } from "@/components/ui/section";
+import { SectionHead, type Surface } from "@/components/ui/section";
 import type { SanityProject } from "@/sanity/types";
 
 /**
  * Los proyectos, en la home y sin página aparte.
  *
- * Dos columnas en escritorio. A la izquierda el título y la bajada, pegados
- * al medio de la pantalla mientras dura la sección; a la derecha los
- * proyectos, uno debajo de otro, y se resalta el que pasa por el medio (ver
- * project-stack).
- * En teléfono es una columna: el título y después la lista.
+ * En escritorio la sección se clava en la pantalla y se recorre de a un
+ * proyecto por gesto: a la izquierda el título, a media altura; a la derecha
+ * la columna de esferas, que se corre para poner a esa misma altura el
+ * proyecto que toca (ver project-stack, que es quien la mueve). No usa
+ * <Section> porque necesita un alto propio —un alto de pantalla más el
+ * recorrido— y un panel sticky adentro; el fondo lo declara igual, con
+ * data-surface, y el motor del tema hace lo suyo.
+ *
+ * En teléfono es una columna: el título y después la lista, con scroll
+ * normal.
  *
  * Las fichas de cada proyecto siguen existiendo: lo que se fue es el índice,
  * no el detalle.
@@ -37,20 +44,38 @@ export function Work({
        contra el fondo. Sobre oscuro la misma esfera se lee entera sin
        agregarle nada encima: el fondo es la página, que ya sabe apagarse sola
        cuando esta sección entra en pantalla.
+
+       --pasos son los proyectos después del primero: cada uno agrega medio
+       alto de pantalla de recorrido (globals.css, «Los proyectos se clavan»).
+       data-clavada también le dice al scroll suave que esta sección se ancla
+       al borde de arriba, sin el margen de la barra.
     */
-    <Section id="proyectos" surface={surface}>
-      <div className="grid gap-14 lg:grid-cols-2 lg:gap-16">
-        {/* Pegado al medio de la pantalla, que es la línea donde se resalta cada proyecto. */}
-        <div className="lg:sticky lg:top-1/2 lg:self-start lg:-translate-y-1/2">
-          <SectionHead
-            icon="grilla"
-            eyebrow={work.eyebrow}
-            title={work.title}
-            lead={work.lead}
-          />
+    <section
+      id="proyectos"
+      data-surface={surface}
+      data-clavada
+      className="proyectos relative py-20 md:py-28 lg:py-0"
+      style={{ "--pasos": projects.length - 1 } as CSSProperties}
+    >
+      <div
+        data-panel
+        className="lg:sticky lg:top-0 lg:h-screen lg:overflow-clip"
+      >
+        <div className="shell grid gap-14 lg:h-full lg:grid-cols-2 lg:gap-16">
+          {/* A media altura, que es la línea donde se resalta cada proyecto. */}
+          <div className="lg:flex lg:items-center">
+            <SectionHead
+              icon="grilla"
+              eyebrow={work.eyebrow}
+              title={work.title}
+              lead={work.lead}
+            />
+          </div>
+          <div className="relative lg:h-full">
+            <ProjectStack projects={projects} />
+          </div>
         </div>
-        <ProjectStack projects={projects} />
       </div>
-    </Section>
+    </section>
   );
 }

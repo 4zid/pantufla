@@ -1,7 +1,6 @@
 "use client";
 
 import Lenis from "lenis";
-import Snap from "lenis/snap";
 import { useEffect } from "react";
 
 import { gsap, registerGsap, ScrollTrigger } from "@/lib/motion";
@@ -20,24 +19,36 @@ import { gsap, registerGsap, ScrollTrigger } from "@/lib/motion";
  * Con prefers-reduced-motion Lenis se apaga solo: el scroll sigue al
  * dispositivo 1:1 y los saltos a un ancla son instantáneos.
  *
- * Tres cosas se cablean acá porque dependen de Lenis:
+ * Dos cosas se cablean acá porque dependen de Lenis:
  *
  * 1. ScrollTrigger se actualiza en cada scroll de Lenis y Lenis corre en el
  *    ticker de GSAP, así los dos miran el mismo reloj.
  * 2. Los enlaces a un ancla de la misma página los lleva Lenis, con el mismo
  *    margen de la barra que tenía el scroll-padding. Sin esto, con el
  *    scroll-behavior de CSS apagado (ver globals.css), saltaban de golpe.
- * 3. Los proyectos se anclan con el plugin de snap: el CSS scroll-snap no
- *    convive con un scroll manejado por JS.
+ *
+ * Y la instancia queda a mano en scrollSuave para quien necesite pedirle un
+ * viaje con la misma curva: hoy, los proyectos (components/ui/project-stack).
  */
 
 /** Lo que tapa la barra: el mismo 6rem del scroll-padding-top. */
 const MARGEN_BARRA = 96;
 
+/**
+ * El Lenis vivo, si lo hay, y si en este momento está llevando la página a
+ * un ancla: mientras lleva, las secciones que agarran la inercia (los
+ * proyectos) lo dejan pasar.
+ */
+export const scrollSuave: { actual: Lenis | null; llevando: boolean } = {
+  actual: null,
+  llevando: false,
+};
+
 export function SmoothScroll() {
   useEffect(() => {
     registerGsap();
     const lenis = new Lenis({ lerp: 0.1 });
+    scrollSuave.actual = lenis;
 
     lenis.on("scroll", () => ScrollTrigger.update());
     const tick = (time: number) => lenis.raf(time * 1000);
@@ -68,33 +79,30 @@ export function SmoothScroll() {
       // pushState y no router.push: Next sincroniza useSearchParams con el
       // historial, y así ?plan=sitio llega al formulario sin recargar nada.
       history.pushState(null, "", destino.search + destino.hash);
-      lenis.scrollTo(seccion, { offset: -MARGEN_BARRA });
+      // Una sección clavada (los proyectos) va justo al borde de arriba: su
+      // contenido está centrado y el panel tiene que quedar en su lugar. Las
+      // demás dejan el margen de la barra. El destino se calcula acá, en
+      // número, para que Lenis no le sume además el scroll-padding.
+      const margen = seccion.hasAttribute("data-clavada") ? 0 : MARGEN_BARRA;
+      const y = seccion.getBoundingClientRect().top + window.scrollY - margen;
+      scrollSuave.llevando = true;
+      const soltar = () => {
+        scrollSuave.llevando = false;
+      };
+      lenis.scrollTo(y, { onComplete: soltar });
+      window.setTimeout(soltar, 2500);
     }
-    document.addEventListener("click", alClic);
-
-    /* 3. El anclaje de los proyectos, solo en escritorio. */
-    const escritorio = window.matchMedia("(min-width: 1024px)");
-    let snap: Snap | null = null;
-    function armarSnap() {
-      snap?.destroy();
-      snap = null;
-      if (!escritorio.matches) return;
-      const filas = Array.from(
-        document.querySelectorAll<HTMLElement>("[data-fila]"),
-      );
-      if (!filas.length) return;
-      snap = new Snap(lenis, { type: "proximity" });
-      snap.addElements(filas, { align: "center" });
-    }
-    armarSnap();
-    escritorio.addEventListener("change", armarSnap);
+    // En captura, para llegar antes que el Link de Next: si ve el clic
+    // prevenido no navega él, y el ancla queda para Lenis. Si no, el salto
+    // es de Next, instantáneo, y el scroll suave se pierde justo ahí.
+    document.addEventListener("click", alClic, true);
 
     return () => {
-      escritorio.removeEventListener("change", armarSnap);
-      snap?.destroy();
-      document.removeEventListener("click", alClic);
+      document.removeEventListener("click", alClic, true);
       gsap.ticker.remove(tick);
       lenis.destroy();
+      scrollSuave.actual = null;
+      scrollSuave.llevando = false;
     };
   }, []);
 

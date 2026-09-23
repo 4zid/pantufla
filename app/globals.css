@@ -566,6 +566,20 @@ html.lenis {
   pointer-events: none;
 }
 
+/* ------------------------------------------------------------------
+   Los proyectos se clavan (ver components/ui/project-stack.tsx).
+
+   En escritorio la sección mide un alto de pantalla —el panel sticky que se
+   queda quieto— más medio alto de recorrido por cada proyecto después del
+   primero: --pasos, que pone el componente. Ese recorrido es lo que se
+   scrollea mientras la columna de esferas pasa de a un proyecto.
+   ------------------------------------------------------------------ */
+@media (min-width: 64rem) {
+  .proyectos {
+    height: calc(100vh + var(--pasos, 0) * 50vh);
+  }
+}
+
 /* Deriva lenta de los blobs. Se apaga sola con reduced-motion (ver abajo). */
 @keyframes drift {
   0% {
