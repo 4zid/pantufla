@@ -1,5 +1,7 @@
 "use client";
 
+import type { Surface } from "@/components/ui/section";
+
 import { Reveal } from "@/components/motion/reveal";
 import { socialProof } from "@/content/site";
 import { useCopy } from "@/components/copy-provider";
@@ -36,12 +38,16 @@ import { useCopy } from "@/components/copy-provider";
  */
 const REPES = 3;
 
-export function SocialProof() {
+export function SocialProof({ surface = "mist" }: { surface?: Surface }) {
   const copy = useCopy();
   const marcas = socialProof.brands;
 
   return (
-    <section aria-label={copy.socialProof.label} className="relative">
+    <section
+      aria-label={copy.socialProof.label}
+      data-surface={surface}
+      className="relative"
+    >
       <Reveal className="relative z-10 shell flex flex-col items-center gap-6 py-8 lg:flex-row lg:gap-10 lg:py-7">
         <div className="flex shrink-0 items-center gap-4">
           <ul className="flex" aria-hidden>

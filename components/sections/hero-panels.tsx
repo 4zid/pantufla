@@ -31,7 +31,9 @@ function Card({ children }: { children: React.ReactNode }) {
 
 function Title({ children }: { children: React.ReactNode }) {
   return (
-    <p className="text-[0.92rem] font-semibold tracking-[-0.01em]">{children}</p>
+    <p className="text-[0.92rem] font-semibold tracking-[-0.01em]">
+      {children}
+    </p>
   );
 }
 

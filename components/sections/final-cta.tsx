@@ -8,7 +8,7 @@ import { Reveal } from "@/components/motion/reveal";
 import { SplitHeading } from "@/components/motion/split-heading";
 import { ButtonLink } from "@/components/ui/button";
 import { CheckIcon } from "@/components/ui/icons";
-import { Section } from "@/components/ui/section";
+import { Section, type Surface } from "@/components/ui/section";
 import { site } from "@/content/site";
 import { useCopy } from "@/components/copy-provider";
 import { fill } from "@/content/copy";
@@ -29,11 +29,17 @@ import { fill } from "@/content/copy";
  * izquierda; como esa caja no scrollea, el navegador clava el elemento contra
  * el pie de su celda y el título arrancaba 106px más abajo que el formulario.
  */
-export function FinalCta({ withForm = false }: { withForm?: boolean }) {
+export function FinalCta({
+  withForm = false,
+  surface = "deep",
+}: {
+  withForm?: boolean;
+  surface?: Surface;
+}) {
   const { finalCta } = useCopy();
   if (withForm) {
     return (
-      <Section id="brief" surface="deep" className="py-20 md:py-28">
+      <Section id="brief" surface={surface} className="py-20 md:py-28">
         <div className="grid gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:items-start lg:gap-16">
           <div className="lg:sticky lg:top-28 lg:self-start">
             <SplitHeading text={finalCta.title} className="text-h2" />
@@ -80,7 +86,7 @@ export function FinalCta({ withForm = false }: { withForm?: boolean }) {
   }
 
   return (
-    <Section surface="deep" className="py-24 md:py-32">
+    <Section surface={surface} className="py-24 md:py-32">
       <div className="relative mx-auto max-w-2xl text-center">
         <SplitHeading text={finalCta.title} className="text-h2" />
         <Reveal delay={0.15}>

@@ -18,8 +18,9 @@ import {
 } from "@/content/fallback-content";
 import { JsonLd } from "@/components/json-ld";
 import { getCopy } from "@/content/get-copy";
-import { getSections } from "@/content/get-sections";
-import { SECCIONES, type SeccionId } from "@/content/sections";
+import { getFondos, getSections } from "@/content/get-sections";
+import { SECCIONES, type Fondo, type SeccionId } from "@/content/sections";
+import type { Surface } from "@/components/ui/section";
 import { site } from "@/content/site";
 import type { Locale } from "@/lib/i18n";
 import { nodoFaq, nodoPagina, nodoProyectos } from "@/lib/schema";
@@ -35,22 +36,24 @@ export default async function HomePage({
   params: Promise<{ locale: Locale }>;
 }) {
   const { locale } = await params;
-  const [copy, secciones, cmsProjects, cmsTestimonials] = await Promise.all([
-    getCopy(locale),
-    getSections(),
-    sanityFetch<SanityProject[]>(
-      allProjectsQuery,
-      { language: locale },
-      [],
-      ["project"],
-    ),
-    sanityFetch<SanityTestimonial[]>(
-      testimonialsQuery,
-      { language: locale },
-      [],
-      ["testimonial"],
-    ),
-  ]);
+  const [copy, secciones, fondos, cmsProjects, cmsTestimonials] =
+    await Promise.all([
+      getCopy(locale),
+      getSections(),
+      getFondos(),
+      sanityFetch<SanityProject[]>(
+        allProjectsQuery,
+        { language: locale },
+        [],
+        ["project"],
+      ),
+      sanityFetch<SanityTestimonial[]>(
+        testimonialsQuery,
+        { language: locale },
+        [],
+        ["testimonial"],
+      ),
+    ]);
 
   /*
      Todos y no los cuatro destacados: el corte lo hace la sección, que muestra
@@ -73,25 +76,31 @@ export default async function HomePage({
      de la home, la lista de interruptores del panel y la poda de enlaces sean
      todos la misma lista y no tres que hay que mantener iguales a mano.
   */
-  const piezas: Record<SeccionId, () => React.ReactNode> = {
-    hero: () => <Hero />,
-    socialProof: () => <SocialProof />,
-    approach: () => <Approach />,
-    bento: () => <Bento />,
-    process: () => <Process />,
-    stackTicker: () => <StackTicker />,
-    pricing: () => <Pricing />,
-    work: () => <Work projects={projects} />,
-    testimonials: () => <Testimonials items={testimonials} />,
-    clientsMap: () => <ClientsMap />,
-    faq: () => <Faq />,
-    finalCta: () => <FinalCta withForm />,
+  const piezas: Record<SeccionId, (surface: Surface) => React.ReactNode> = {
+    hero: (surface) => <Hero surface={surface} />,
+    socialProof: (surface) => <SocialProof surface={surface} />,
+    approach: (surface) => <Approach surface={surface} />,
+    bento: (surface) => <Bento surface={surface} />,
+    process: (surface) => <Process surface={surface} />,
+    stackTicker: (surface) => <StackTicker surface={surface} />,
+    pricing: (surface) => <Pricing surface={surface} />,
+    work: (surface) => <Work projects={projects} surface={surface} />,
+    testimonials: (surface) => (
+      <Testimonials items={testimonials} surface={surface} />
+    ),
+    clientsMap: (surface) => <ClientsMap surface={surface} />,
+    faq: (surface) => <Faq surface={surface} />,
+    finalCta: (surface) => <FinalCta withForm surface={surface} />,
   };
+
+  /* El panel habla de claro y oscuro; las secciones, de bruma y profundo. */
+  const superficie = (fondo: Fondo): Surface =>
+    fondo === "oscuro" ? "deep" : "mist";
 
   return (
     <>
       {SECCIONES.filter(({ id }) => secciones[id]).map(({ id }) => (
-        <Fragment key={id}>{piezas[id]()}</Fragment>
+        <Fragment key={id}>{piezas[id](superficie(fondos[id]))}</Fragment>
       ))}
 
       <JsonLd

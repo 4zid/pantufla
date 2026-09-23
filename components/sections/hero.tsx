@@ -1,3 +1,4 @@
+import type { Surface } from "@/components/ui/section";
 import { HeroAurora } from "@/components/sections/hero-aurora";
 import { HeroIntro } from "@/components/sections/hero-intro";
 import { HeroScene } from "@/components/sections/hero-scene";
@@ -29,10 +30,10 @@ import { HeroScene } from "@/components/sections/hero-scene";
  * 112px quedaban arriba del fondo, que arranca donde arranca el marco, y en el
  * teléfono se veía una banda blanca con un corte recto contra la bruma.
  */
-export function Hero() {
+export function Hero({ surface = "mist" }: { surface?: Surface }) {
   return (
     <section
-      data-surface="mist"
+      data-surface={surface}
       className="relative max-[1439px]:pb-16 min-[1440px]:h-[300vh]"
     >
       <div className="relative overflow-hidden min-[1440px]:sticky min-[1440px]:top-0 min-[1440px]:flex min-[1440px]:h-screen min-[1440px]:flex-col">

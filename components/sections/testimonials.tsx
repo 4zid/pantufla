@@ -9,7 +9,7 @@ import { useCopy } from "@/components/copy-provider";
 import { fill } from "@/content/copy";
 import { Tag } from "@/components/ui/tag";
 import { StarIcon } from "@/components/ui/icons";
-import { Section } from "@/components/ui/section";
+import { Section, type Surface } from "@/components/ui/section";
 import { urlForImage } from "@/sanity/image";
 import type { SanityTestimonial } from "@/sanity/types";
 import { gsap, registerGsap } from "@/lib/motion";
@@ -79,7 +79,13 @@ function iniciales(nombre: string) {
     .join("");
 }
 
-export function Testimonials({ items }: { items: SanityTestimonial[] }) {
+export function Testimonials({
+  items,
+  surface,
+}: {
+  items: SanityTestimonial[];
+  surface?: Surface;
+}) {
   const { testimonials } = useCopy();
   const lista = items.slice(0, CARAS);
   const [activo, setActivo] = useState(0);
@@ -120,7 +126,7 @@ export function Testimonials({ items }: { items: SanityTestimonial[] }) {
   const actual = lista[activo];
 
   return (
-    <Section id="testimonios">
+    <Section id="testimonios" surface={surface}>
       {/* Sin título a la vista: la sección entera es una cita, y un titular
           arriba le estaría diciendo al visitante qué pensar antes de leerla.
           El documento sí lo necesita —es la única manera de que la sección

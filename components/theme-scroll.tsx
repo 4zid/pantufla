@@ -28,17 +28,24 @@ import { useEffect } from "react";
  */
 
 /**
- * Cuánto tiene que tapar lo oscuro para tomar el mando, y cuánto tiene que
- * soltar para devolverlo.
+ * Manda lo que está en el medio de la pantalla.
  *
- * Son dos números y no uno para que el cambio no titile. Con un solo umbral,
- * quedarse parado justo encima —y basta el rebote de un trackpad— alcanza para
- * cruzarlo en los dos sentidos varias veces por segundo, y cada cruce dispara
- * una transición de 600ms. Con la ventana de por medio hay que moverse una
- * décima de pantalla para volver atrás, que ya es una decisión y no un temblor.
+ * Antes mandaba la cobertura: lo oscuro tomaba el fondo cuando tapaba más de
+ * la mitad de la pantalla. Tenía dos problemas. El cambio caía en un punto
+ * que no se correspondía con nada que el visitante estuviera mirando —a
+ * veces con la sección anterior todavía ocupando media pantalla— y una
+ * sección corta en una pantalla alta no llegaba nunca a la mitad, así que
+ * marcarla oscura no hacía nada.
+ *
+ * Ahora se mira una banda angosta alrededor del medio de la pantalla, que es
+ * donde está lo que se lee. Lo oscuro toma el fondo cuando una sección
+ * oscura cubre la banda entera, y lo suelta cuando ya no toca la banda. Entre
+ * una cosa y la otra —tocándola a medias— el fondo se queda como estaba: es
+ * lo que evita que titile si el visitante frena justo ahí. Alcanza con que
+ * la sección mida un décimo de la pantalla.
  */
-const PRENDE = 0.55;
-const APAGA = 0.45;
+const BANDA_ARRIBA = 0.45;
+const BANDA_ABAJO = 0.55;
 
 export function ThemeScroll() {
   useEffect(() => {
@@ -51,23 +58,23 @@ export function ThemeScroll() {
       pedido = 0;
 
       const alto = window.innerHeight;
+      const arriba = alto * BANDA_ARRIBA;
+      const abajo = alto * BANDA_ABAJO;
       const secciones = document.querySelectorAll<HTMLElement>(
         '[data-surface="deep"]',
       );
 
-      let tapaOscuro = 0;
-
+      let cubreEntera = false;
+      let tocaAlgo = false;
       for (const seccion of secciones) {
         const caja = seccion.getBoundingClientRect();
-        // Qué parte de la pantalla ocupa esta sección, de 0 a 1.
-        const visible =
-          (Math.min(caja.bottom, alto) - Math.max(caja.top, 0)) / alto;
-        if (visible > 0) tapaOscuro += visible;
+        if (caja.top <= arriba && caja.bottom >= abajo) cubreEntera = true;
+        if (caja.top < abajo && caja.bottom > arriba) tocaAlgo = true;
       }
 
-      // El estado se sostiene solo: sube a oscuro al pasar PRENDE y baja al
-      // caer de APAGA; en el medio se queda donde estaba.
-      const quiereOscuro = oscuro ? tapaOscuro > APAGA : tapaOscuro >= PRENDE;
+      // Sube a oscuro al cubrir la banda entera y baja al soltarla del todo;
+      // tocándola a medias se queda donde estaba.
+      const quiereOscuro = oscuro ? tocaAlgo : cubreEntera;
       if (quiereOscuro === oscuro) return;
 
       oscuro = quiereOscuro;

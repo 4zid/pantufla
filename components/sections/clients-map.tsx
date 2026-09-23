@@ -8,8 +8,15 @@ import { useCopy, useLocale } from "@/components/copy-provider";
 import { fill } from "@/content/copy";
 import { nombrePais } from "@/content/countries";
 import { Reveal } from "@/components/motion/reveal";
-import { Section, SectionHead } from "@/components/ui/section";
-import { TIERRA, VISTA, aX, aY, porcentajeX, porcentajeY } from "@/content/world";
+import { Section, SectionHead, type Surface } from "@/components/ui/section";
+import {
+  TIERRA,
+  VISTA,
+  aX,
+  aY,
+  porcentajeX,
+  porcentajeY,
+} from "@/content/world";
 import { ease, gsap, registerGsap, START } from "@/lib/motion";
 import { cn } from "@/lib/cn";
 
@@ -65,7 +72,7 @@ const destinos = clients
   .filter((c) => c.city !== studio.city)
   .map((c) => ({ ...c, d: arco(casa.x, casa.y, aX(c.lon), aY(c.lat)) }));
 
-export function ClientsMap() {
+export function ClientsMap({ surface }: { surface?: Surface }) {
   const { clientsMap } = useCopy();
   const locale = useLocale();
   const scope = useRef<HTMLDivElement>(null);
@@ -132,7 +139,7 @@ export function ClientsMap() {
   );
 
   return (
-    <Section id="clientes">
+    <Section id="clientes" surface={surface}>
       <SectionHead
         icon="globo"
         eyebrow={clientsMap.eyebrow}

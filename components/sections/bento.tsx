@@ -7,7 +7,7 @@ import { Reveal } from "@/components/motion/reveal";
 import { useCopy } from "@/components/copy-provider";
 import { bentoDesign } from "@/content/site";
 import type { SiteCopy } from "@/content/copy";
-import { Section, SectionHead } from "@/components/ui/section";
+import { Section, SectionHead, type Surface } from "@/components/ui/section";
 import {
   toneBg,
   tonePill,
@@ -366,7 +366,7 @@ const vinetas: Record<string, (p: Vineta) => ReactElement> = {
 /* La sección                                                          */
 /* ------------------------------------------------------------------ */
 
-export function Bento() {
+export function Bento({ surface }: { surface?: Surface }) {
   const { bento } = useCopy();
   const scope = useRef<HTMLDivElement>(null);
 
@@ -466,7 +466,7 @@ export function Bento() {
   );
 
   return (
-    <Section id="capacidades">
+    <Section id="capacidades" surface={surface}>
       <SectionHead
         icon="cubo"
         eyebrow={bento.eyebrow}

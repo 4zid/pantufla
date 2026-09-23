@@ -25,16 +25,48 @@ export const siteSections = defineType({
   name: "siteSections",
   title: "Secciones de la home",
   type: "document",
-  fields: SECCIONES.map((seccion) =>
+  /*
+     Un grupo por sección, con dos cosas adentro: si se muestra y de qué
+     color está la página mientras se la mira. El fondo es del sitio entero
+     —una sola superficie que cambia con el scroll— así que elegir «oscuro»
+     en una sección es decir que la página se oscurece al llegar a ella y se
+     aclara al salir, no que la sección se pinte a sí misma.
+  */
+  fieldsets: SECCIONES.map((seccion) => ({
+    name: seccion.id,
+    title: seccion.titulo,
+    options: { collapsible: true, collapsed: false, columns: 2 },
+  })),
+  fields: SECCIONES.flatMap((seccion) => [
     defineField({
       name: seccion.id,
-      title: seccion.titulo,
+      title: "Se muestra",
       type: "boolean",
       initialValue: true,
       description: seccion.nota,
       options: { layout: "switch" },
+      fieldset: seccion.id,
     }),
-  ),
+    defineField({
+      name: `${seccion.id}Fondo`,
+      title: "Fondo",
+      type: "string",
+      initialValue: seccion.fondo,
+      description:
+        seccion.fondo === "oscuro"
+          ? "De fábrica: oscuro."
+          : "De fábrica: claro.",
+      options: {
+        layout: "radio",
+        direction: "horizontal",
+        list: [
+          { title: "Claro", value: "claro" },
+          { title: "Oscuro", value: "oscuro" },
+        ],
+      },
+      fieldset: seccion.id,
+    }),
+  ]),
   preview: {
     prepare: () => ({ title: "Secciones de la home" }),
   },

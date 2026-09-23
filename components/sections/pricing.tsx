@@ -13,17 +13,16 @@ import { type BillingMode } from "@/content/site";
 import { useCopy } from "@/components/copy-provider";
 import { ButtonLink } from "@/components/ui/button";
 import { CheckIcon } from "@/components/ui/icons";
-import { Section, SectionHead } from "@/components/ui/section";
+import { Section, SectionHead, type Surface } from "@/components/ui/section";
 import { toneTextBase, toneTextDeep, type Tone } from "@/lib/tones";
 import { cn } from "@/lib/cn";
 
 const money = new Intl.NumberFormat("es-AR", { maximumFractionDigits: 0 });
 
 /** Marco común de las tres tarjetas, para que entren parejas en una pantalla. */
-const card =
-  "flex h-full flex-col rounded-panel p-7 lg:p-8";
+const card = "flex h-full flex-col rounded-panel p-7 lg:p-8";
 
-export function Pricing() {
+export function Pricing({ surface }: { surface?: Surface }) {
   const { pricing } = useCopy();
   const [mode, setMode] = useState<BillingMode>("once");
   const groupId = useId();
@@ -60,7 +59,7 @@ export function Pricing() {
   );
 
   return (
-    <Section id="planes" className="py-16 md:py-20">
+    <Section id="planes" surface={surface} className="py-16 md:py-20">
       <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
         <SectionHead
           icon="etiqueta"
@@ -104,7 +103,9 @@ export function Pricing() {
                     className={cn(
                       "rounded-full px-2 py-0.5 text-[0.7rem] font-semibold tabular-nums",
                       "transition-colors duration-300",
-                      active ? "bg-white/15 text-white" : "bg-verde-soft text-verde-deep",
+                      active
+                        ? "bg-white/15 text-white"
+                        : "bg-verde-soft text-verde-deep",
                     )}
                   >
                     <span className="sm:hidden">{option.note}</span>
@@ -133,7 +134,12 @@ export function Pricing() {
               )}
             >
               <div className="flex items-center justify-between gap-3">
-                <h3 className={cn("text-[1.3rem] font-semibold tracking-[-0.03em]", dark && "text-white")}>
+                <h3
+                  className={cn(
+                    "text-[1.3rem] font-semibold tracking-[-0.03em]",
+                    dark && "text-white",
+                  )}
+                >
                   {plan.name}
                 </h3>
                 {dark && "badge" in plan && plan.badge ? (
@@ -143,7 +149,12 @@ export function Pricing() {
                 ) : null}
               </div>
 
-              <p className={cn("mt-2 text-[0.95rem] leading-snug", dark ? "text-white/60" : "text-ink-soft")}>
+              <p
+                className={cn(
+                  "mt-2 text-[0.95rem] leading-snug",
+                  dark ? "text-white/60" : "text-ink-soft",
+                )}
+              >
                 {plan.summary}
               </p>
 
@@ -155,19 +166,35 @@ export function Pricing() {
                     className="text-[2.8rem] font-semibold leading-none tracking-[-0.045em]"
                   />
                   {mode === "once" ? (
-                    <span className={cn("text-[0.95rem] line-through", dark ? "text-white/50" : "text-ink-faint")}>
+                    <span
+                      className={cn(
+                        "text-[0.95rem] line-through",
+                        dark ? "text-white/50" : "text-ink-faint",
+                      )}
+                    >
                       ${money.format(total)}
                     </span>
                   ) : (
-                    <span className={cn("text-[0.95rem]", dark ? "text-white/55" : "text-ink-soft")}>
+                    <span
+                      className={cn(
+                        "text-[0.95rem]",
+                        dark ? "text-white/55" : "text-ink-soft",
+                      )}
+                    >
                       × {plan.price.splitCount}
                     </span>
                   )}
                 </div>
-                <p className={cn("mt-2 text-[0.85rem]", dark ? "text-white/55" : "text-ink-faint")}>
+                <p
+                  className={cn(
+                    "mt-2 text-[0.85rem]",
+                    dark ? "text-white/55" : "text-ink-faint",
+                  )}
+                >
                   {mode === "once"
                     ? pricing.toggle.once.label
-                    : `${pricing.totalLabel} $${money.format(total)}`} · Entrega en {plan.delivery}
+                    : `${pricing.totalLabel} $${money.format(total)}`}{" "}
+                  · Entrega en {plan.delivery}
                 </p>
               </div>
 
@@ -185,10 +212,14 @@ export function Pricing() {
                     <CheckIcon
                       className={cn(
                         "mt-[4px] h-3.5 w-3.5 shrink-0",
-                        dark ? toneTextBase[plan.tone as Tone] : toneTextDeep[plan.tone as Tone],
+                        dark
+                          ? toneTextBase[plan.tone as Tone]
+                          : toneTextDeep[plan.tone as Tone],
                       )}
                     />
-                    <span className={cn("leading-snug", dark && "text-white/85")}>
+                    <span
+                      className={cn("leading-snug", dark && "text-white/85")}
+                    >
                       {feature}
                     </span>
                   </li>

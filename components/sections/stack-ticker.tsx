@@ -1,5 +1,7 @@
 "use client";
 
+import type { Surface } from "@/components/ui/section";
+
 import Image from "next/image";
 
 import { Reveal } from "@/components/motion/reveal";
@@ -104,12 +106,12 @@ function Row({
   );
 }
 
-export function StackTicker() {
+export function StackTicker({ surface = "mist" }: { surface?: Surface }) {
   const { stack } = useCopy();
   return (
     <section
       id="stack"
-      data-surface="mist"
+      data-surface={surface}
       className="relative overflow-hidden py-20 md:py-24"
     >
       <div className="shell">

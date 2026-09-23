@@ -7,7 +7,7 @@ import { useCopy } from "@/components/copy-provider";
 import { Reveal } from "@/components/motion/reveal";
 import { SplitHeading } from "@/components/motion/split-heading";
 import { ButtonLink } from "@/components/ui/button";
-import { Section, SectionHead } from "@/components/ui/section";
+import { Section, SectionHead, type Surface } from "@/components/ui/section";
 import { gsap, registerGsap } from "@/lib/motion";
 import { cn } from "@/lib/cn";
 
@@ -31,7 +31,7 @@ import { cn } from "@/lib/cn";
  */
 const STOPS = ["#166b67", "#2f9d97", "#6fcfca", "#a8e3df"] as const;
 
-export function Process() {
+export function Process({ surface = "deep" }: { surface?: Surface }) {
   const { process } = useCopy();
   const scope = useRef<HTMLDivElement>(null);
 
@@ -126,7 +126,7 @@ export function Process() {
   return (
     <Section
       id="proceso"
-      surface="deep"
+      surface={surface}
       className="md:py-40"
       overlay={
         /* El resplandor sube desde el piso y se apaga antes de la mitad.
@@ -270,7 +270,11 @@ export function Process() {
             peor que ninguno. */}
         {process.payment.cta.label ? (
           <Reveal delay={0.3}>
-            <ButtonLink href={process.payment.cta.href} size="lg" className="mt-9">
+            <ButtonLink
+              href={process.payment.cta.href}
+              size="lg"
+              className="mt-9"
+            >
               {process.payment.cta.label}
             </ButtonLink>
           </Reveal>

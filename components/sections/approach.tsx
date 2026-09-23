@@ -2,15 +2,15 @@
 
 import { useCopy } from "@/components/copy-provider";
 import { Reveal } from "@/components/motion/reveal";
-import { Section, SectionHead } from "@/components/ui/section";
+import { Section, SectionHead, type Surface } from "@/components/ui/section";
 import { toneTextDeep, type Tone } from "@/lib/tones";
 
 const tones: Tone[] = ["aqua", "rosa", "verde"];
 
-export function Approach() {
+export function Approach({ surface }: { surface?: Surface }) {
   const { approach } = useCopy();
   return (
-    <Section id="metodo">
+    <Section id="metodo" surface={surface}>
       <SectionHead
         icon="ruta"
         eyebrow={approach.eyebrow}

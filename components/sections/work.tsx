@@ -2,7 +2,7 @@
 
 import { useCopy } from "@/components/copy-provider";
 import { ProjectStack } from "@/components/ui/project-stack";
-import { Section, SectionHead } from "@/components/ui/section";
+import { Section, SectionHead, type Surface } from "@/components/ui/section";
 import type { SanityProject } from "@/sanity/types";
 
 /**
@@ -17,7 +17,13 @@ import type { SanityProject } from "@/sanity/types";
  * Las fichas de cada proyecto siguen existiendo: lo que se fue es el índice,
  * no el detalle.
  */
-export function Work({ projects }: { projects: SanityProject[] }) {
+export function Work({
+  projects,
+  surface = "deep",
+}: {
+  projects: SanityProject[];
+  surface?: Surface;
+}) {
   const { work } = useCopy();
 
   if (!projects.length) return null;
@@ -32,7 +38,7 @@ export function Work({ projects }: { projects: SanityProject[] }) {
        agregarle nada encima: el fondo es la página, que ya sabe apagarse sola
        cuando esta sección entra en pantalla.
     */
-    <Section id="proyectos" surface="deep">
+    <Section id="proyectos" surface={surface}>
       <SectionHead
         icon="grilla"
         eyebrow={work.eyebrow}

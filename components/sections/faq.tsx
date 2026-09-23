@@ -8,7 +8,7 @@ import { useCopy } from "@/components/copy-provider";
 import { Reveal } from "@/components/motion/reveal";
 import { SplitHeading } from "@/components/motion/split-heading";
 import { ButtonLink } from "@/components/ui/button";
-import { Section } from "@/components/ui/section";
+import { Section, type Surface } from "@/components/ui/section";
 import { Tag } from "@/components/ui/tag";
 import { gsap, registerGsap } from "@/lib/motion";
 import { cn } from "@/lib/cn";
@@ -69,7 +69,7 @@ function Signo({ open }: { open: boolean }) {
   );
 }
 
-export function Faq() {
+export function Faq({ surface }: { surface?: Surface }) {
   const { faq } = useCopy();
   const [open, setOpen] = useState<number | null>(null);
   const scope = useRef<HTMLDivElement>(null);
@@ -154,7 +154,7 @@ export function Faq() {
   );
 
   return (
-    <Section id="faq" className="py-16 md:py-20">
+    <Section id="faq" surface={surface} className="py-16 md:py-20">
       <div className="mx-auto max-w-2xl text-center">
         <Reveal>
           <div className="flex justify-center">
