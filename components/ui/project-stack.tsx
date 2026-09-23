@@ -29,7 +29,7 @@ import { useCopy, useHref } from "@/components/copy-provider";
  * En teléfono no hay tramos ni puestos: es una lista, una debajo de otra,
  * todas prendidas.
  *
- * El nombre y la descripción van abajo y afuera de la esfera. Adentro solo
+ * El nombre y la descripción van a la derecha de la esfera, afuera. Adentro solo
  * aparece «ver sitio» con la flecha, al pasar el mouse: la esfera es el
  * enlace, y eso es lo que lo dice.
  */
@@ -115,7 +115,7 @@ export function ProjectStack({
 
         return (
           /*
-            El tramo: en escritorio mide 80% de la pantalla de alto, y la
+            El tramo: en escritorio mide 55% de la pantalla de alto, y la
             tarjeta se pega arriba mientras dura. El relleno de abajo es el
             aire entre la que se va y la que sube: sin él viajaban pegadas y
             el texto de una rozaba la esfera de la otra. El último no tiene
@@ -125,14 +125,14 @@ export function ProjectStack({
           <li
             key={project._id}
             data-tramo
-            className="group/tramo lg:h-[max(80vh,36rem)] lg:pb-20 lg:last:h-auto lg:last:pb-0"
+            className="group/tramo lg:h-[max(55vh,22rem)] lg:pb-16 lg:last:h-auto lg:last:pb-0"
           >
-            <article className="flex flex-col items-start gap-6 transition-[opacity,transform] duration-500 ease-out lg:sticky lg:top-28 lg:origin-top-left group-data-[estado=espera]/tramo:lg:scale-[0.94] group-data-[estado=espera]/tramo:lg:opacity-35 group-data-[estado=pasada]/tramo:lg:opacity-0">
+            <article className="flex items-center gap-6 transition-[opacity,transform] lg:gap-8 duration-500 ease-out lg:sticky lg:top-28 lg:origin-top-left group-data-[estado=espera]/tramo:lg:scale-[0.94] group-data-[estado=espera]/tramo:lg:opacity-35 group-data-[estado=pasada]/tramo:lg:opacity-0">
               <Link
                 href={destino}
                 target={externo ? "_blank" : undefined}
                 rel={externo ? "noreferrer" : undefined}
-                className="group/esfera relative block w-[min(100%,18rem)] rounded-full outline-none lg:w-[20rem]"
+                className="group/esfera relative block w-[7.5rem] shrink-0 rounded-full outline-none sm:w-[10rem] lg:w-[12rem]"
               >
                 <span className="sr-only">
                   {work.view}: {project.title}
@@ -143,15 +143,15 @@ export function ProjectStack({
                 />
                 <span
                   aria-hidden
-                  className="absolute inset-0 flex translate-y-1 items-center justify-center gap-1.5 pt-[32%] text-[1.15rem] font-semibold tracking-[-0.025em] text-white opacity-0 transition-all duration-300 ease-out group-hover/esfera:translate-y-0 group-hover/esfera:opacity-100 group-focus-visible/esfera:translate-y-0 group-focus-visible/esfera:opacity-100"
+                  className="absolute inset-0 flex translate-y-1 items-center justify-center gap-1 pt-[32%] text-[0.82rem] font-semibold tracking-[-0.02em] text-white sm:text-[0.95rem] opacity-0 transition-all duration-300 ease-out group-hover/esfera:translate-y-0 group-hover/esfera:opacity-100 group-focus-visible/esfera:translate-y-0 group-focus-visible/esfera:opacity-100"
                 >
                   {work.view}
                   <ArrowUpRightIcon className="h-[0.9em] w-[0.9em]" />
                 </span>
               </Link>
 
-              <div className="max-w-md">
-                <Titulo className="text-[1.5rem] font-semibold leading-tight tracking-[-0.03em]">
+              <div className="min-w-0 max-w-md">
+                <Titulo className="text-[1.35rem] font-semibold leading-tight tracking-[-0.03em] sm:text-[1.5rem]">
                   {project.title}
                 </Titulo>
                 {project.tagline ? (
