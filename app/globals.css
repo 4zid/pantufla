@@ -480,6 +480,27 @@
    con una animación discreta de un cuadro que cambia el overflow.
    ------------------------------------------------------------------ */
 
+/* El menú del selector propio (components/ui/select.tsx) aparece desde el
+   campo: baja si abre para abajo, sube si abre para arriba. */
+@keyframes desplegar {
+  from {
+    opacity: 0;
+    transform: translateY(var(--desde, -4px));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.desplegable {
+  animation: desplegar 0.16s cubic-bezier(0.215, 0.61, 0.355, 1) both;
+}
+
+.desplegable[data-arriba] {
+  --desde: 4px;
+}
+
 @keyframes entrar {
   from {
     opacity: 0;

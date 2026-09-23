@@ -4,42 +4,11 @@ import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 
 import { site } from "@/content/site";
-import { cn } from "@/lib/cn";
 import { useCopy } from "@/components/copy-provider";
 import { Button } from "@/components/ui/button";
-import { CheckIcon, ChevronDownIcon } from "@/components/ui/icons";
-
-const fieldClass =
-  "w-full rounded-xl border border-line-strong bg-card px-4 py-3 text-[0.98rem] text-ink transition-colors placeholder:text-ink-faint focus:border-ink focus:outline-none";
-
-const labelClass = "block text-[0.88rem] font-medium";
-
-/**
- * El selector: el mismo campo, sin la flecha del sistema y con la nuestra.
- *
- * Con la apariencia nativa, Safari pinta su flecha pegada al borde de la
- * derecha y el texto sigue corriendo por debajo, así que «En 2 a 4 semanas»
- * terminaba en «semana». Acá el campo reserva lugar para la flecha, la flecha
- * es un ícono nuestro que no recibe clics, y el texto largo se corta con
- * puntos suspensivos en vez de meterse abajo.
- */
-function Selector({
-  className,
-  children,
-  ...props
-}: React.SelectHTMLAttributes<HTMLSelectElement>) {
-  return (
-    <div className={cn("relative", className)}>
-      <select
-        {...props}
-        className={`${fieldClass} appearance-none truncate pr-10`}
-      >
-        {children}
-      </select>
-      <ChevronDownIcon className="pointer-events-none absolute right-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-faint" />
-    </div>
-  );
-}
+import { fieldClass, labelClass } from "@/components/ui/field";
+import { CheckIcon } from "@/components/ui/icons";
+import { Select } from "@/components/ui/select";
 
 export function BriefForm() {
   const { form, pricing } = useCopy();
@@ -178,18 +147,13 @@ export function BriefForm() {
           <label className={labelClass} htmlFor="plan">
             {form.plan.label}
           </label>
-          <Selector
+          <Select
             id="plan"
             name="plan"
+            options={planOptions}
             defaultValue={initialPlan}
             className="mt-2"
-          >
-            {planOptions.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </Selector>
+          />
         </div>
 
         <div>
@@ -199,36 +163,26 @@ export function BriefForm() {
               {form.budget.currency}
             </span>
           </label>
-          <Selector
+          <Select
             id="budget"
             name="budget"
+            options={form.budgetRanges.map((r) => ({ value: r, label: r }))}
             defaultValue={form.budgetRanges[1]}
             className="mt-2"
-          >
-            {form.budgetRanges.map((range) => (
-              <option key={range} value={range}>
-                {range}
-              </option>
-            ))}
-          </Selector>
+          />
         </div>
 
         <div className="lg:col-span-2 xl:col-span-1">
           <label className={labelClass} htmlFor="timeline">
             {form.timeline.label}
           </label>
-          <Selector
+          <Select
             id="timeline"
             name="timeline"
+            options={form.timelineOptions.map((o) => ({ value: o, label: o }))}
             defaultValue={form.timelineOptions[1]}
             className="mt-2"
-          >
-            {form.timelineOptions.map((option) => (
-              <option key={option} value={option}>
-                {option}
-              </option>
-            ))}
-          </Selector>
+          />
         </div>
       </div>
 
