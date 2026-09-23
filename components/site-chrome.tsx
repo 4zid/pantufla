@@ -1,6 +1,7 @@
 "use client";
 
 import { useCopy } from "@/components/copy-provider";
+import { SmoothScroll } from "@/components/smooth-scroll";
 import { ThemeScroll } from "@/components/theme-scroll";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
@@ -17,6 +18,7 @@ export function SiteChrome({ children }: { children: React.ReactNode }) {
   const { header } = useCopy();
   return (
     <div className="relative z-10 flex min-h-dvh flex-col">
+      <SmoothScroll />
       <ThemeScroll />
       <a
         href="#contenido"
