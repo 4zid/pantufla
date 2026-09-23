@@ -31,10 +31,11 @@ export type BillingMode = "once" | "split";
 /* Diseño de cada bloque, cruzado por id con el texto                  */
 /* ------------------------------------------------------------------ */
 
-export const approachDesign: Record<string, { tone: string; art: string }> = {
-  alcance: { tone: "aqua", art: "precio" },
-  ritmo: { tone: "rosa", art: "reloj" },
-  entrega: { tone: "verde", art: "llaves" },
+/** Qué dibujo lleva cada pilar de «Cómo lo resolvemos» (ver approach-art). */
+export const approachDesign: Record<string, { art: string }> = {
+  alcance: { art: "precio" },
+  ritmo: { art: "reloj" },
+  entrega: { art: "llaves" },
 };
 
 export const processDesign: Record<

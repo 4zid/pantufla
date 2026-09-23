@@ -22,12 +22,12 @@ import type { Locale } from "@/lib/i18n";
 
 type Con<T, E> = T & E;
 
-export type ResolvedCopy = Omit<SiteCopy, "approach" | "process" | "pricing"> & {
+export type ResolvedCopy = Omit<
+  SiteCopy,
+  "approach" | "process" | "pricing"
+> & {
   approach: Omit<SiteCopy["approach"], "pillars"> & {
-    pillars: Con<
-      SiteCopy["approach"]["pillars"][number],
-      { tone: string; art: string }
-    >[];
+    pillars: Con<SiteCopy["approach"]["pillars"][number], { art: string }>[];
   };
   process: Omit<SiteCopy["process"], "steps"> & {
     steps: Con<
@@ -58,7 +58,10 @@ function normalizarPago(
   valor: SiteCopy["process"]["payment"] | string,
 ): SiteCopy["process"]["payment"] {
   if (typeof valor === "string") {
-    return { segments: [{ text: valor }], cta: { label: "", href: "/contacto" } };
+    return {
+      segments: [{ text: valor }],
+      cta: { label: "", href: "/contacto" },
+    };
   }
   return valor;
 }
@@ -70,9 +73,8 @@ export function resolveCopy(copy: SiteCopy, locale: Locale): ResolvedCopy {
     ...c,
     approach: {
       ...c.approach,
-      pillars: c.approach.pillars.map((p, i) => ({
+      pillars: c.approach.pillars.map((p) => ({
         ...p,
-        tone: approachDesign[p.id]?.tone ?? ["aqua", "rosa", "verde"][i % 3],
         art: approachDesign[p.id]?.art ?? "precio",
       })),
     },
@@ -91,7 +93,8 @@ export function resolveCopy(copy: SiteCopy, locale: Locale): ResolvedCopy {
         ...s,
         number: processDesign[s.id]?.number ?? String(i + 1).padStart(2, "0"),
         art: processDesign[s.id]?.art ?? "brief",
-        tone: processDesign[s.id]?.tone ?? ["aqua", "rosa", "verde", "miel"][i % 4],
+        tone:
+          processDesign[s.id]?.tone ?? ["aqua", "rosa", "verde", "miel"][i % 4],
       })),
     },
     pricing: {
