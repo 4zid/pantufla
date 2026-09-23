@@ -10,42 +10,26 @@ import type { Tone } from "@/lib/tones";
 import { useCopy, useHref } from "@/components/copy-provider";
 
 /**
- * Los proyectos: una columna de esferas que suben y se van reemplazando.
+ * Los proyectos: una columna de esferas que pasa por el medio de la pantalla.
  *
- * En escritorio cada proyecto es un tramo de scroll. Su esfera, con el nombre
- * y la descripción abajo, queda pegada a la altura del título de la sección
- * —que a su vez está pegado a la izquierda— mientras su tramo pasa; cuando el
- * tramo termina, se va por arriba y la siguiente, que venía subiendo desde
- * abajo, ocupa el mismo lugar. Nada rota ni se anima con GSAP: el movimiento
- * es el scroll mismo, con position: sticky, y se frena donde el visitante
- * frena.
+ * Es una lista que hace scroll normal, sin trucos: cada proyecto es una fila
+ * con la esfera a la izquierda y el nombre y la descripción al lado. Lo que
+ * cambia con el scroll es cuál está resaltada: la que está más cerca del
+ * medio de la pantalla, que es donde está también el título de la sección,
+ * pegado a esa altura. Las demás —las que ya pasaron, arriba, y las que
+ * vienen, abajo— se ven apagadas pero se ven: nada desaparece ni cambia de
+ * tamaño, solo se prende la que se está mirando.
  *
- * La que está en el puesto es la resaltada. Las que esperan abajo se ven
- * apagadas y un poco más chicas, y la que ya pasó se apaga al irse: así se lee
- * cuál es la que se está mirando sin marcarla con nada. Quién está en el
- * puesto lo decide un cálculo de dos líneas en cada cuadro de scroll: la
- * última cuyo borde de arriba llegó al tope.
+ * Nada rota ni se anima con GSAP. Quién está en el medio lo decide un
+ * cálculo de una línea en cada cuadro de scroll.
  *
- * En teléfono no hay tramos ni puestos: es una lista, una debajo de otra,
- * todas prendidas.
- *
- * El nombre y la descripción van a la derecha de la esfera, afuera. Adentro solo
- * aparece «ver sitio» con la flecha, al pasar el mouse: la esfera es el
+ * El nombre y la descripción van a la derecha de la esfera, afuera. Adentro
+ * solo aparece «ver sitio» con la flecha, al pasar el mouse: la esfera es el
  * enlace, y eso es lo que lo dice.
  */
 
 /** El tono de cada esfera, por posición: dos vecinas nunca del mismo color. */
 const tonos: Tone[] = ["aqua", "rosa", "verde", "miel"];
-
-/**
- * A qué altura de la ventana se pega cada tarjeta, en píxeles. Es top-28, y
- * tiene que ser el mismo número que lleva la columna del título: las dos se
- * pegan a la misma línea.
- */
-const TOPE = 112;
-
-/** Desde qué ancho hay tramos y puestos; abajo es lista. */
-const ESCRITORIO = "(min-width: 1024px)";
 
 export function ProjectStack({
   projects,
@@ -65,27 +49,25 @@ export function ProjectStack({
   useEffect(() => {
     const root = lista.current;
     if (!root) return;
-    const escritorio = window.matchMedia(ESCRITORIO);
     let pedido = 0;
 
     function decidir() {
       pedido = 0;
-      const tramos = root!.querySelectorAll<HTMLElement>("[data-tramo]");
-      if (!escritorio.matches) {
-        tramos.forEach((el) => (el.dataset.estado = "activa"));
-        return;
-      }
-      // La activa es la última que llegó al tope. La que se está yendo por
-      // arriba también pasó el tope, pero la siguiente llega justo cuando el
-      // tramo de la anterior termina, así que la última siempre es la nueva.
+      const filas = root!.querySelectorAll<HTMLElement>("[data-fila]");
+      const medio = window.innerHeight / 2;
+      // La activa es la que tiene el centro más cerca del medio de la pantalla.
       let activa = 0;
-      tramos.forEach((el, i) => {
-        const tarjeta = el.firstElementChild as HTMLElement;
-        if (tarjeta.getBoundingClientRect().top <= TOPE + 1) activa = i;
+      let mejor = Infinity;
+      filas.forEach((el, i) => {
+        const caja = el.getBoundingClientRect();
+        const distancia = Math.abs((caja.top + caja.bottom) / 2 - medio);
+        if (distancia < mejor) {
+          mejor = distancia;
+          activa = i;
+        }
       });
-      tramos.forEach((el, i) => {
-        el.dataset.estado =
-          i === activa ? "activa" : i < activa ? "pasada" : "espera";
+      filas.forEach((el, i) => {
+        el.dataset.estado = i === activa ? "activa" : "apagada";
       });
     }
 
@@ -96,17 +78,22 @@ export function ProjectStack({
     decidir();
     window.addEventListener("scroll", pedir, { passive: true });
     window.addEventListener("resize", pedir);
-    escritorio.addEventListener("change", pedir);
     return () => {
       window.removeEventListener("scroll", pedir);
       window.removeEventListener("resize", pedir);
-      escritorio.removeEventListener("change", pedir);
       if (pedido) cancelAnimationFrame(pedido);
     };
   }, [projects.length]);
 
   return (
-    <ul ref={lista} className="flex flex-col gap-14 lg:block">
+    /*
+      El aire de arriba y de abajo en escritorio es para que la primera y la
+      última puedan llegar al medio de la pantalla, donde está el título.
+    */
+    <ul
+      ref={lista}
+      className="flex flex-col gap-14 lg:gap-20 lg:pb-[calc(50vh-12rem)] lg:pt-[calc(50vh-12rem)]"
+    >
       {projects.map((project, i) => {
         // Sin URL cargada, la esfera lleva a la ficha interna en vez de
         // quedar muerta. Es el único caso en que el enlace no sale del sitio.
@@ -114,20 +101,8 @@ export function ProjectStack({
         const destino = project.url ?? href(`/proyectos/${project.slug}`);
 
         return (
-          /*
-            El tramo: en escritorio mide 55% de la pantalla de alto, y la
-            tarjeta se pega arriba mientras dura. El relleno de abajo es el
-            aire entre la que se va y la que sube: sin él viajaban pegadas y
-            el texto de una rozaba la esfera de la otra. El último no tiene
-            tramo: llega a su puesto y se queda, porque después de él no
-            viene nadie a reemplazarlo.
-          */
-          <li
-            key={project._id}
-            data-tramo
-            className="group/tramo lg:h-[max(55vh,22rem)] lg:pb-16 lg:last:h-auto lg:last:pb-0"
-          >
-            <article className="flex items-center gap-6 transition-[opacity,transform] lg:gap-8 duration-500 ease-out lg:sticky lg:top-28 lg:origin-top-left group-data-[estado=espera]/tramo:lg:scale-[0.94] group-data-[estado=espera]/tramo:lg:opacity-35 group-data-[estado=pasada]/tramo:lg:opacity-0">
+          <li key={project._id} data-fila className="group/fila">
+            <article className="flex items-center gap-6 transition-opacity duration-500 ease-out group-data-[estado=apagada]/fila:opacity-35 lg:gap-8">
               <Link
                 href={destino}
                 target={externo ? "_blank" : undefined}
@@ -143,7 +118,7 @@ export function ProjectStack({
                 />
                 <span
                   aria-hidden
-                  className="absolute inset-0 flex translate-y-1 items-center justify-center gap-1 pt-[32%] text-[0.82rem] font-semibold tracking-[-0.02em] text-white sm:text-[0.95rem] opacity-0 transition-all duration-300 ease-out group-hover/esfera:translate-y-0 group-hover/esfera:opacity-100 group-focus-visible/esfera:translate-y-0 group-focus-visible/esfera:opacity-100"
+                  className="absolute inset-0 flex translate-y-1 items-center justify-center gap-1 pt-[32%] text-[0.82rem] font-semibold tracking-[-0.02em] text-white opacity-0 transition-all duration-300 ease-out group-hover/esfera:translate-y-0 group-hover/esfera:opacity-100 group-focus-visible/esfera:translate-y-0 group-focus-visible/esfera:opacity-100 sm:text-[0.95rem]"
                 >
                   {work.view}
                   <ArrowUpRightIcon className="h-[0.9em] w-[0.9em]" />

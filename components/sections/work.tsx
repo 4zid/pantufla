@@ -9,8 +9,9 @@ import type { SanityProject } from "@/sanity/types";
  * Los proyectos, en la home y sin página aparte.
  *
  * Dos columnas en escritorio. A la izquierda el título y la bajada, pegados
- * mientras dura la sección; a la derecha los proyectos, uno debajo de otro,
- * que suben y se van reemplazando en el puesto de arriba (ver project-stack).
+ * al medio de la pantalla mientras dura la sección; a la derecha los
+ * proyectos, uno debajo de otro, y se resalta el que pasa por el medio (ver
+ * project-stack).
  * En teléfono es una columna: el título y después la lista.
  *
  * Las fichas de cada proyecto siguen existiendo: lo que se fue es el índice,
@@ -39,7 +40,8 @@ export function Work({
     */
     <Section id="proyectos" surface={surface}>
       <div className="grid gap-14 lg:grid-cols-2 lg:gap-16">
-        <div className="lg:sticky lg:top-28 lg:self-start">
+        {/* Pegado al medio de la pantalla, que es la línea donde se resalta cada proyecto. */}
+        <div className="lg:sticky lg:top-1/2 lg:self-start lg:-translate-y-1/2">
           <SectionHead
             icon="grilla"
             eyebrow={work.eyebrow}
