@@ -1,14 +1,14 @@
 "use client";
 
 import { useGSAP } from "@gsap/react";
-import { useId, useRef, type ReactElement, type ReactNode } from "react";
+import { useRef, type ReactElement } from "react";
 
 import { Reveal } from "@/components/motion/reveal";
 import { useCopy } from "@/components/copy-provider";
 import { bentoDesign } from "@/content/site";
 import type { SiteCopy } from "@/content/copy";
 import { Section, SectionHead, type Surface } from "@/components/ui/section";
-import { toneSoftBg, toneTextDeep, type Tone } from "@/lib/tones";
+import { tonePill, toneSoftBg, toneTextDeep, type Tone } from "@/lib/tones";
 import { gsap, registerGsap, ScrollTrigger, START } from "@/lib/motion";
 import { cn } from "@/lib/cn";
 
@@ -36,23 +36,29 @@ import { cn } from "@/lib/cn";
  * overlay, que es lo que las hace parecer una fotografía desenfocada y no un
  * relleno de CSS. Es una textura de 160 píxeles repetida, no un blur.
  *
- * Las viñetas no van encerradas en un marco: cada una es una cosa distinta
- * dibujada suelta sobre la lámina, y las cuatro son distintas entre sí. Una
- * regla de tiempo que entra y sale del cuadro, con el número grande arriba.
- * Una pila de tarjetas colapsadas, de la que solo se lee la de adelante. Una
- * ventana y un teléfono cortados por el borde de la celda. Y unas barras
- * paradas sobre una línea que también se va de cuadro, con un aviso flotando
- * sobre la última. Cuatro tarjetas iguales con una interfaz adentro eran
- * cuatro veces la misma idea; esto son cuatro ideas.
+ * Las cuatro viñetas son cuatro cosas distintas, y solo una va en un marco.
+ * Velocidad: el texto arriba y, en el pie de la celda, una regla de segundos
+ * que la cruza entera y se va de cuadro por los dos lados, con el número
+ * grande arriba a la derecha. SEO: un chat suelto sobre la lámina, la
+ * pregunta a la derecha y la respuesta a la izquierda, con el «escribiendo»
+ * en el medio. Pantallas: una ventana y un teléfono cortados por el borde de
+ * la celda. Resultados: una tarjeta blanca con las consultas en barras, y el
+ * aviso de la nueva pisando su esquina. Cuatro tarjetas iguales con una
+ * interfaz adentro eran cuatro veces la misma idea; esto son cuatro ideas, y
+ * la tarjeta, que es una sola, vuelve a ser una tarjeta.
  *
- * Se mueven dos veces y nada más. Al entrar en pantalla, cada viñeta llega
- * de a piezas: la regla se traza, la pila cae de atrás para adelante, la
- * ventana entra de costado y el teléfono sube, las barras crecen y el aviso
- * salta. Todo por opacidad y transformación, con cada pieza ya ocupando su
- * lugar desde el primer pintado: nada cambia de alto. Y al pasar el mouse,
- * la lámina hace un zoom lento y una pieza de cada viñeta se mueve un poco.
- * El hover es CSS puro y va en un envoltorio aparte del elemento que anima
- * GSAP: los dos escriben transform, y en el mismo elemento se pisan.
+ * Se mueven dos veces y nada más. Al entrar en pantalla, cada viñeta tiene su
+ * propia coreografía (ver `entrada` en cada una): la regla se traza y el
+ * número cuenta; la pregunta llega, ChatGPT escribe un rato y contesta; la
+ * ventana entra de costado y el teléfono sube; la tarjeta se asienta, las
+ * barras crecen y el aviso salta. Todo por opacidad y transformación, con
+ * cada pieza ya ocupando su lugar desde el primer pintado: nada cambia de
+ * alto, ni siquiera cuando el «escribiendo» se vuelve respuesta, porque la
+ * respuesta ya está ahí, invisible, y el «escribiendo» va encima. Y al pasar
+ * el mouse, la lámina hace un zoom lento y una pieza de cada viñeta se mueve
+ * un poco. El hover es CSS puro y va en un envoltorio aparte del elemento
+ * que anima GSAP: los dos escriben transform, y en el mismo elemento se
+ * pisan.
  */
 
 /** La tinta de las láminas es fija: son imágenes, no cambian con el tema. */
@@ -126,188 +132,178 @@ function numero(texto: string) {
 /** El tono profundo, como color CSS. */
 const profundo = (tone: Tone) => `var(--color-${tone}-deep)`;
 
-/**
- * Un halo blanco que se apaga —la luz alrededor de un punto— y un trazo de
- * tinta que aparece de a poco desde la izquierda, para las líneas que vienen
- * de fuera de cuadro: en las celdas anchas la viñeta arranca a mitad de la
- * celda y una línea que empezara ahí de golpe se vería cortada.
- */
-function Degrades({ halo, entrada }: { halo: string; entrada: string }) {
-  return (
-    <defs>
-      <radialGradient id={halo}>
-        <stop offset="0%" stopColor="#fff" stopOpacity="0.85" />
-        <stop offset="55%" stopColor="#fff" stopOpacity="0.25" />
-        <stop offset="100%" stopColor="#fff" stopOpacity="0" />
-      </radialGradient>
-      <linearGradient
-        id={entrada}
-        gradientUnits="userSpaceOnUse"
-        x1="-120"
-        x2="10"
-        y1="0"
-        y2="0"
-      >
-        <stop offset="0%" stopColor={TINTA} stopOpacity="0" />
-        <stop offset="100%" stopColor={TINTA} stopOpacity="1" />
-      </linearGradient>
-    </defs>
-  );
-}
+/** Tinta a una opacidad. */
+const tinta = (alfa: number) => `rgba(18, 18, 18, ${alfa})`;
 
-/** El rótulo chico de una viñeta, arriba a la izquierda. */
-function Rotulo({ children }: { children: ReactNode }) {
-  return (
-    <p
-      data-pieza
-      className="text-[0.7rem] font-medium tracking-[-0.01em]"
-      style={{ color: TINTA_SUAVE }}
-    >
-      {children}
-    </p>
-  );
-}
+/** La entrada de una viñeta: lo que cada una hace con su línea de tiempo. */
+type Entrada = (tl: gsap.core.Timeline, q: gsap.utils.SelectorFunc) => void;
 
 /**
- * Velocidad: el tiempo grande y, debajo, una regla de segundos que entra por
- * la izquierda y sale por la derecha del cuadro. Un trazo grueso llega hasta
- * nuestro tiempo y termina en un punto encendido; de ahí sigue punteado,
- * apagado, hasta el promedio. La regla se dibuja hasta el segundo entero que
- * sigue al número más alto, así sirve para cualquier par de valores.
+ * Velocidad: la regla de segundos. Cruza la celda entera por el pie y se va
+ * de cuadro por los dos lados; un trazo grueso llega hasta nuestro tiempo y
+ * termina en un punto encendido, y de ahí sigue punteado y apagado hasta el
+ * promedio. El número grande va arriba a la derecha en escritorio, frente al
+ * título, y arriba de la regla cuando la celda es angosta. La regla llega
+ * hasta el segundo entero que sigue al número más alto, así sirve para
+ * cualquier par de valores.
+ *
+ * Es HTML con posiciones en porcentaje y no un SVG: un SVG escalado al ancho
+ * de la celda agranda también los textos y los grosores, y acá el ancho va
+ * de 300 a 700 píxeles.
  */
 function Velocidad({ tone, f }: Vineta) {
-  const halo = useId();
-  const entrada = useId();
   const nuestro = numero(f.speedOurs);
   const suyo = numero(f.speedTheirs);
   const tope = Math.max(1, Math.ceil(Math.max(nuestro, suyo)));
-  const x = (seg: number) => 14 + (seg / tope) * 286;
+  const x = (seg: number) => 6 + (seg / tope) * 82;
   const marcas = Array.from({ length: tope + 1 }, (_, i) => i);
-  const Y = 60;
+  const etiqueta = "absolute -translate-x-1/2 whitespace-nowrap text-[0.68rem]";
   return (
-    <div className="w-full max-w-[360px]">
-      <Rotulo>{f.speedCaption}</Rotulo>
-      <p
-        data-pieza
-        data-cifra
-        className="mt-1 text-[2.5rem] font-semibold leading-none tracking-[-0.04em] tabular-nums"
-        style={{ color: TINTA }}
-      >
-        {f.speedOurs}
-      </p>
-      <svg
-        viewBox="0 0 320 92"
-        className="mt-5 w-full overflow-visible"
-        aria-hidden="true"
-      >
-        <Degrades halo={halo} entrada={entrada} />
-        <line
-          x1="-120"
-          x2="440"
-          y1={Y}
-          y2={Y}
-          stroke={`url(#${entrada})`}
-          strokeOpacity="0.25"
+    <div className="w-full">
+      <div className="lg:absolute lg:right-7 lg:top-7 lg:text-right">
+        <p
+          data-pieza
+          className="text-[0.7rem] font-medium"
+          style={{ color: TINTA_SUAVE }}
+        >
+          {f.speedCaption}
+        </p>
+        <p
+          data-pieza
+          data-cifra
+          className="mt-1 text-[2.5rem] font-semibold leading-none tracking-[-0.04em] tabular-nums"
+          style={{ color: TINTA }}
+        >
+          {f.speedOurs}
+        </p>
+      </div>
+
+      <div className="relative mt-7 h-[5.75rem] w-full lg:mt-0">
+        {/* La línea de base, de borde a borde, apareciendo desde la izquierda. */}
+        <span
+          className="absolute -left-12 -right-12 top-1/2 h-px"
+          style={{
+            background: `linear-gradient(90deg, transparent, ${tinta(0.28)} 10%, ${tinta(0.28)})`,
+          }}
         />
         {marcas.map((seg) => (
-          <g key={seg}>
-            <line
-              x1={x(seg)}
-              x2={x(seg)}
-              y1="4"
-              y2={Y}
-              stroke={TINTA}
-              strokeOpacity="0.22"
-              strokeDasharray="2 4"
-            />
-            <text
-              x={x(seg)}
-              y={Y + 20}
-              textAnchor="middle"
-              fontSize="10"
-              fill={TINTA}
-              fillOpacity="0.7"
+          <span
+            key={seg}
+            className="absolute bottom-1/2 top-1 border-l border-dashed"
+            style={{ left: `${x(seg)}%`, borderColor: tinta(0.28) }}
+          >
+            <span
+              className={cn(etiqueta, "left-0 top-[calc(100%+0.55rem)]")}
+              style={{ color: tinta(0.7) }}
             >
               {seg} s
-            </text>
-          </g>
+            </span>
+          </span>
         ))}
         {/* El promedio: punteado y apagado, del punto nuestro hasta el suyo. */}
-        <line
+        <span
           data-pieza
-          x1={x(nuestro)}
-          x2={x(suyo)}
-          y1={Y}
-          y2={Y}
-          stroke={TINTA}
-          strokeOpacity="0.4"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeDasharray="1 6"
+          className="absolute top-1/2 border-t-2 border-dotted"
+          style={{
+            left: `${x(nuestro)}%`,
+            width: `${x(suyo) - x(nuestro)}%`,
+            borderColor: tinta(0.45),
+          }}
         />
-        <circle
+        <span
           data-pieza
-          cx={x(suyo)}
-          cy={Y}
-          r="4"
-          fill="none"
-          stroke={TINTA}
-          strokeOpacity="0.7"
-          strokeWidth="1.5"
+          className="absolute top-1/2 h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full border-[1.5px]"
+          style={{ left: `${x(suyo)}%`, borderColor: tinta(0.7) }}
         />
-        <text
+        <span
           data-pieza
-          x={x(suyo)}
-          y={Y - 16}
-          textAnchor="middle"
-          fontSize="10"
-          fill={TINTA}
-          fillOpacity="0.75"
+          className={cn(etiqueta, "bottom-[calc(50%+0.8rem)]")}
+          style={{ left: `${x(suyo)}%`, color: tinta(0.75) }}
         >
           {f.speedLabelTheirs} · {f.speedTheirs}
-        </text>
+        </span>
         {/* El nuestro: un trazo grueso desde fuera de cuadro hasta el punto. */}
-        <line
+        <span
           data-lleno
-          x1="-120"
-          x2={x(nuestro)}
-          y1={Y}
-          y2={Y}
-          stroke={`url(#${entrada})`}
-          strokeWidth="5"
-          strokeLinecap="round"
+          className="absolute -left-12 top-1/2 h-[5px] -translate-y-1/2 rounded-full"
+          style={{
+            width: `calc(${x(nuestro)}% + 3rem)`,
+            background: `linear-gradient(90deg, transparent, ${TINTA} 22%, ${TINTA})`,
+          }}
         />
-        <g
-          className="origin-center transition-transform duration-500 ease-out group-hover:scale-125"
-          style={{ transformBox: "fill-box" }}
+        <span
+          className="absolute top-1/2 -translate-x-1/2 -translate-y-1/2 transition-transform duration-500 ease-out group-hover:scale-125"
+          style={{ left: `${x(nuestro)}%` }}
         >
-          <g data-punto>
-            <circle cx={x(nuestro)} cy={Y} r="18" fill={`url(#${halo})`} />
-            <circle
-              cx={x(nuestro)}
-              cy={Y}
-              r="6.5"
-              fill={profundo(tone)}
-              stroke="#fff"
-              strokeWidth="2.5"
+          <span data-punto className="relative block h-4 w-4">
+            <span
+              className="absolute -inset-4 rounded-full"
+              style={{
+                background:
+                  "radial-gradient(circle, rgba(255,255,255,0.85), rgba(255,255,255,0.25) 55%, transparent 72%)",
+              }}
             />
-          </g>
-        </g>
-        <text
+            <span
+              className="absolute inset-0 rounded-full border-[2.5px] border-white"
+              style={{ background: profundo(tone) }}
+            />
+          </span>
+        </span>
+        <span
           data-pieza
-          x={x(nuestro)}
-          y={Y - 16}
-          textAnchor="middle"
-          fontSize="10"
-          fontWeight="600"
-          fill={TINTA}
+          className={cn(etiqueta, "bottom-[calc(50%+0.8rem)] font-semibold")}
+          style={{ left: `${x(nuestro)}%`, color: TINTA }}
         >
           {f.speedLabelOurs}
-        </text>
-      </svg>
+        </span>
+      </div>
     </div>
   );
 }
+
+const entradaVelocidad: Entrada = (tl, q) => {
+  tl.fromTo(
+    q("[data-pieza]"),
+    { y: 8, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.5, stagger: 0.08, delay: 0.15 },
+  );
+  tl.fromTo(
+    q("[data-lleno]"),
+    { scaleX: 0, transformOrigin: "0% 50%" },
+    { scaleX: 1, duration: 0.9 },
+    "<0.1",
+  );
+  tl.fromTo(
+    q("[data-punto]"),
+    { scale: 0 },
+    { scale: 1, duration: 0.5, ease: "back.out(2.2)" },
+    "-=0.25",
+  );
+  /*
+     El número cuenta hasta su valor. «0,9 s» o «0.9s»: separador y sufijo
+     salen del copy y se vuelven a armar, así el resultado es el texto
+     original de cada idioma. Con cifras tabulares el ancho no cambia
+     mientras cuenta.
+  */
+  const cifra = q("[data-cifra]")[0];
+  const m = cifra?.textContent?.match(/^(\D*)(\d+)([.,])(\d+)(.*)$/);
+  if (cifra && m) {
+    const [, antes, entero, sep, dec, despues] = m;
+    const valor = Number(`${entero}.${dec}`);
+    const proxy = { n: 0 };
+    tl.to(
+      proxy,
+      {
+        n: valor,
+        duration: 1.1,
+        onUpdate: () => {
+          cifra.textContent = `${antes}${proxy.n.toFixed(dec.length).replace(".", sep)}${despues}`;
+        },
+      },
+      0.3,
+    );
+  }
+};
 
 function Chispa({ className }: { className?: string }) {
   return (
@@ -321,79 +317,101 @@ function Chispa({ className }: { className?: string }) {
 }
 
 /**
- * SEO: una pila de respuestas. Se lee la de adelante —la pregunta y lo que
- * contesta ChatGPT— y de las de atrás asoma solo el borde, cada una un poco
- * más angosta y más apagada. Debajo, tres líneas punteadas: sigue habiendo
- * más. Al pasar el mouse la pila se abre un poco.
+ * SEO: un chat suelto sobre la lámina. La pregunta a la derecha, en el tono
+ * de la celda; la respuesta a la izquierda, blanca, con el avatar de ChatGPT
+ * al lado. Entre una y otra, ChatGPT escribe: tres puntos que laten sobre el
+ * mismo lugar donde después aparece la respuesta, que ya está ahí ocupando
+ * su alto. Al pasar el mouse los dos globos se levantan apenas.
  */
 function Seo({ tone, f }: Vineta) {
-  const fondo = (
-    <div className="flex items-center gap-1.5 px-3.5 pt-3">
-      <span
-        className="h-1.5 w-1.5 rounded-full"
-        style={{ background: TINTA, opacity: 0.25 }}
-      />
-      <span
-        className="h-1.5 w-1/3 rounded-full"
-        style={{ background: TINTA, opacity: 0.12 }}
-      />
-    </div>
-  );
+  const globo =
+    "rounded-[16px] px-3.5 py-2.5 shadow-[0_14px_30px_-18px_rgba(0,0,0,0.4)]";
   return (
-    <div className="w-full max-w-[340px]">
-      <div className="relative pt-6">
-        <div className="absolute left-[12%] top-0 w-[76%] transition-transform duration-500 ease-out group-hover:-translate-y-2.5">
-          <div data-carta className="h-11 rounded-[14px] bg-white/55">
-            {fondo}
-          </div>
-        </div>
-        <div className="absolute left-[6%] top-3 w-[88%] transition-transform duration-500 ease-out group-hover:-translate-y-1.5">
-          <div
-            data-carta
-            className="h-11 rounded-[14px] bg-white/80 shadow-[0_6px_16px_-12px_rgba(0,0,0,0.3)]"
+    <div className="w-full max-w-[340px] text-[0.76rem] leading-snug">
+      <div className="flex justify-end pl-8">
+        <div className="transition-transform duration-500 ease-out group-hover:-translate-y-0.5">
+          <p
+            data-pregunta
+            className={cn(
+              globo,
+              "rounded-br-[5px] font-medium",
+              tonePill[tone],
+            )}
           >
-            {fondo}
-          </div>
+            {f.seoQuestion}
+          </p>
         </div>
-        <div className="relative">
+      </div>
+      <div className="mt-3 flex items-end gap-2 pr-6">
+        <span
+          data-avatar
+          className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-white"
+          style={{ background: TINTA }}
+        >
+          <Chispa className="h-3 w-3" />
+        </span>
+        <div className="relative min-w-0 transition-transform duration-500 ease-out group-hover:-translate-y-0.5">
           <div
-            data-carta
-            className="rounded-[14px] bg-white p-3.5 shadow-[0_18px_36px_-20px_rgba(0,0,0,0.4)]"
+            data-respuesta
+            className={cn(globo, "rounded-bl-[5px] bg-white")}
           >
-            <p
-              className={cn(
-                "flex items-center gap-1 text-[0.62rem] font-medium",
-                toneTextDeep[tone],
-              )}
-            >
-              <Chispa className="h-2.5 w-2.5" />
+            <p className={cn("text-[0.62rem] font-medium", toneTextDeep[tone])}>
               {f.seoCaption}
             </p>
-            <p className="mt-1.5 text-[0.68rem] leading-snug text-[#8a8a86]">
-              {f.seoQuestion}
-            </p>
-            <p
-              className="mt-1.5 text-[0.8rem] font-medium leading-snug"
-              style={{ color: TINTA }}
-            >
+            <p className="mt-1 font-medium" style={{ color: TINTA }}>
               {f.seoAnswer}
             </p>
           </div>
+          <div
+            data-escribiendo
+            className={cn(
+              globo,
+              "escribiendo absolute bottom-0 left-0 flex h-9 items-center gap-1 rounded-bl-[5px] bg-white",
+            )}
+          >
+            <span className="h-1.5 w-1.5 rounded-full bg-[#9b9b97]" />
+            <span className="h-1.5 w-1.5 rounded-full bg-[#9b9b97]" />
+            <span className="h-1.5 w-1.5 rounded-full bg-[#9b9b97]" />
+          </div>
         </div>
-      </div>
-      <div className="mt-4 space-y-2.5">
-        {["70%", "100%", "55%"].map((ancho) => (
-          <span
-            key={ancho}
-            data-pieza
-            className="block border-t border-dashed"
-            style={{ width: ancho, borderColor: "rgba(18, 18, 18, 0.3)" }}
-          />
-        ))}
       </div>
     </div>
   );
 }
+
+const entradaSeo: Entrada = (tl, q) => {
+  tl.fromTo(
+    q("[data-pregunta]"),
+    { y: 10, scale: 0.9, opacity: 0, transformOrigin: "100% 100%" },
+    {
+      y: 0,
+      scale: 1,
+      opacity: 1,
+      duration: 0.5,
+      ease: "back.out(1.7)",
+      delay: 0.2,
+    },
+  );
+  tl.fromTo(
+    q("[data-avatar]"),
+    { scale: 0, opacity: 0 },
+    { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(2)" },
+    "-=0.1",
+  );
+  tl.fromTo(
+    q("[data-escribiendo]"),
+    { y: 6, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.3 },
+    "-=0.15",
+  );
+  tl.to(q("[data-escribiendo]"), { opacity: 0, duration: 0.2 }, "+=1.2");
+  tl.fromTo(
+    q("[data-respuesta]"),
+    { y: 10, scale: 0.92, opacity: 0, transformOrigin: "0% 100%" },
+    { y: 0, scale: 1, opacity: 1, duration: 0.5, ease: "back.out(1.7)" },
+    "<",
+  );
+};
 
 /**
  * Pantallas: la misma página en una ventana y en un teléfono, sin marco
@@ -453,105 +471,68 @@ function Pantallas({ tone }: Vineta) {
   );
 }
 
+const entradaPantallas: Entrada = (tl, q) => {
+  tl.fromTo(
+    q("[data-ventana]"),
+    { x: 28, opacity: 0 },
+    { x: 0, opacity: 1, duration: 0.7, delay: 0.2 },
+  );
+  tl.fromTo(
+    q("[data-telefono]"),
+    { y: 40, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.7 },
+    "-=0.45",
+  );
+};
+
 /**
- * Resultados: las consultas que fueron llegando desde que el sitio se
- * publicó, en barras paradas sobre una línea que se va de cuadro por los dos
- * lados. Las barras de atrás van apagadas y la última, la de hoy, en el tono
- * de la celda y encendida; sobre ella flota el aviso de que acaba de llegar
- * otra. Al pasar el mouse la última crece un poco y el aviso se levanta.
+ * Resultados: la única viñeta con marco, porque es la que dibuja un panel.
+ * Una tarjeta blanca con las consultas que fueron llegando desde que el
+ * sitio se publicó, en barras del tono de la celda: las de atrás más
+ * claras, la de hoy en el tono profundo. Sobre la esquina de la tarjeta, el
+ * aviso de que acaba de llegar otra. Al pasar el mouse la tarjeta se levanta
+ * y el aviso se ladea.
  */
 const ALTURAS = [16, 24, 20, 32, 38, 34, 50, 58, 66, 88];
 
 function Resultados({ tone, f }: Vineta) {
-  const halo = useId();
-  const entrada = useId();
-  const ANCHO = 14;
-  const PASO = 30;
-  const X0 = 8;
-  const BASE = 112;
   const ultima = ALTURAS.length - 1;
-  const cx = (i: number) => X0 + i * PASO + ANCHO / 2;
   return (
-    <div className="relative w-full max-w-[360px]">
-      <Rotulo>{f.leadsCaption}</Rotulo>
-      <svg
-        viewBox="0 0 320 132"
-        className="mt-3 w-full overflow-visible"
-        aria-hidden="true"
+    <div className="relative w-full max-w-[320px] transition-transform duration-500 ease-out group-hover:-translate-y-1.5">
+      <div
+        data-tarjeta
+        className="rounded-[18px] bg-white p-4 shadow-[0_26px_50px_-24px_rgba(0,0,0,0.45)]"
       >
-        <Degrades halo={halo} entrada={entrada} />
-        <line
-          x1="-120"
-          x2="440"
-          y1={BASE}
-          y2={BASE}
-          stroke={`url(#${entrada})`}
-          strokeOpacity="0.25"
-        />
-        <circle
-          data-pieza
-          cx={cx(ultima)}
-          cy={BASE - ALTURAS[ultima]}
-          r="26"
-          fill={`url(#${halo})`}
-        />
-        {ALTURAS.map((alto, i) =>
-          i === ultima ? (
-            <g
-              key={i}
-              className="origin-bottom transition-transform duration-500 ease-out group-hover:scale-y-110"
-              style={{ transformBox: "fill-box" }}
-            >
-              <rect
-                data-barra
-                x={X0 + i * PASO}
-                y={BASE - alto}
-                width={ANCHO}
-                height={alto}
-                rx={ANCHO / 2}
-                fill={profundo(tone)}
-              />
-            </g>
-          ) : (
-            <rect
+        <p className="text-[0.74rem] font-medium" style={{ color: TINTA }}>
+          {f.leadsCaption}
+        </p>
+        <div className="mt-4 flex h-[5.5rem] items-end gap-[7px]">
+          {ALTURAS.map((alto, i) => (
+            <span
               key={i}
               data-barra
-              x={X0 + i * PASO}
-              y={BASE - alto}
-              width={ANCHO}
-              height={alto}
-              rx={ANCHO / 2}
-              fill={TINTA}
-              fillOpacity={0.18 + i * 0.04}
+              className="block flex-1 rounded-full"
+              style={{
+                height: `${alto}%`,
+                background:
+                  i === ultima ? profundo(tone) : `var(--color-${tone})`,
+                opacity: i === ultima ? 1 : 0.4 + (i / ultima) * 0.6,
+              }}
             />
-          ),
-        )}
-        <text
-          data-pieza
-          x={X0}
-          y={BASE + 18}
-          fontSize="10"
-          fill={TINTA}
-          fillOpacity="0.7"
+          ))}
+        </div>
+        <div
+          className="mt-2.5 flex justify-between border-t pt-2 text-[0.64rem]"
+          style={{ borderColor: "#ececea", color: "#8a8a86" }}
         >
-          {f.leadsStart}
-        </text>
-        <text
-          data-pieza
-          x={X0 + ultima * PASO + ANCHO}
-          y={BASE + 18}
-          textAnchor="end"
-          fontSize="10"
-          fill={TINTA}
-          fillOpacity="0.7"
-        >
-          {f.leadsEnd}
-        </text>
-      </svg>
-      <div className="absolute right-[-4%] top-[22%] transition-transform duration-500 ease-out group-hover:-translate-y-1.5 group-hover:-rotate-3 group-hover:scale-105">
+          <span>{f.leadsStart}</span>
+          <span>{f.leadsEnd}</span>
+        </div>
+      </div>
+      <div className="absolute -right-3 -top-3 transition-transform duration-500 ease-out group-hover:-rotate-3 group-hover:scale-105">
         <div
           data-pop
-          className="flex items-center gap-1.5 whitespace-nowrap rounded-full bg-white px-2.5 py-1.5 text-[0.66rem] font-medium shadow-[0_12px_28px_-12px_rgba(0,0,0,0.4)]"
+          className="flex items-center gap-1.5 whitespace-nowrap rounded-full border border-white/70 bg-white px-2.5 py-1.5 text-[0.66rem] font-medium shadow-[0_12px_28px_-12px_rgba(0,0,0,0.4)]"
           style={{ color: TINTA }}
         >
           <span
@@ -565,15 +546,49 @@ function Resultados({ tone, f }: Vineta) {
   );
 }
 
-/** Qué dibuja cada celda y si la viñeta va pegada abajo (para que se corte). */
+const entradaResultados: Entrada = (tl, q) => {
+  tl.fromTo(
+    q("[data-tarjeta]"),
+    { y: 24, scale: 0.96, opacity: 0 },
+    { y: 0, scale: 1, opacity: 1, duration: 0.8, delay: 0.2 },
+  );
+  tl.fromTo(
+    q("[data-barra]"),
+    { scaleY: 0, transformOrigin: "50% 100%" },
+    { scaleY: 1, duration: 0.7, stagger: 0.06 },
+    "-=0.4",
+  );
+  tl.fromTo(
+    q("[data-pop]"),
+    { scale: 0.5, opacity: 0 },
+    { scale: 1, opacity: 1, duration: 0.55, ease: "back.out(2.2)" },
+    "-=0.2",
+  );
+};
+
+/**
+ * Qué dibuja cada celda, cómo entra, y cómo se reparte la celda ancha:
+ * en fila (texto a la izquierda, viñeta a la derecha) o en columna (texto
+ * arriba, viñeta abajo a todo el ancho). `abajo` pega la viñeta al pie.
+ */
 const vinetas: Record<
   string,
-  { Dibujo: (p: Vineta) => ReactElement; abajo?: boolean }
+  {
+    Dibujo: (p: Vineta) => ReactElement;
+    entrada: Entrada;
+    abajo?: boolean;
+    columna?: boolean;
+  }
 > = {
-  velocidad: { Dibujo: Velocidad },
-  seo: { Dibujo: Seo },
-  pantallas: { Dibujo: Pantallas, abajo: true },
-  resultados: { Dibujo: Resultados },
+  velocidad: {
+    Dibujo: Velocidad,
+    entrada: entradaVelocidad,
+    abajo: true,
+    columna: true,
+  },
+  seo: { Dibujo: Seo, entrada: entradaSeo },
+  pantallas: { Dibujo: Pantallas, entrada: entradaPantallas, abajo: true },
+  resultados: { Dibujo: Resultados, entrada: entradaResultados },
 };
 
 /* ------------------------------------------------------------------ */
@@ -605,92 +620,13 @@ export function Bento({ surface }: { surface?: Surface }) {
           gsap.utils
             .selector(root)("[data-celda]")
             .forEach((celda) => {
-              const q = gsap.utils.selector(celda);
+              const id = (celda as HTMLElement).dataset.celda ?? "";
+              const entrada = (vinetas[id] ?? vinetas.velocidad).entrada;
               const tl = gsap.timeline({
                 scrollTrigger: { trigger: celda, start: START, once: true },
                 defaults: { ease: "power3.out" },
               });
-
-              // Las piezas sueltas llegan una detrás de otra.
-              tl.fromTo(
-                q("[data-pieza]"),
-                { y: 10, opacity: 0 },
-                { y: 0, opacity: 1, duration: 0.5, stagger: 0.1, delay: 0.15 },
-              );
-              // La pila cae de atrás para adelante.
-              tl.fromTo(
-                q("[data-carta]"),
-                { y: -16, opacity: 0 },
-                { y: 0, opacity: 1, duration: 0.55, stagger: 0.14 },
-                "<0.1",
-              );
-              // La regla se traza desde fuera de cuadro.
-              tl.fromTo(
-                q("[data-lleno]"),
-                { scaleX: 0, transformOrigin: "0% 50%" },
-                { scaleX: 1, duration: 0.9 },
-                "<0.1",
-              );
-              // Las barras crecen desde la línea.
-              tl.fromTo(
-                q("[data-barra]"),
-                { scaleY: 0, transformOrigin: "50% 100%" },
-                { scaleY: 1, duration: 0.7, stagger: 0.06 },
-                "<",
-              );
-              // La ventana entra de costado y el teléfono sube desde abajo.
-              tl.fromTo(
-                q("[data-ventana]"),
-                { x: 28, opacity: 0 },
-                { x: 0, opacity: 1, duration: 0.7 },
-                "<",
-              );
-              tl.fromTo(
-                q("[data-telefono]"),
-                { y: 40, opacity: 0 },
-                { y: 0, opacity: 1, duration: 0.7 },
-                "<0.15",
-              );
-              // El punto se enciende y el aviso salta.
-              tl.fromTo(
-                q("[data-punto]"),
-                { scale: 0, transformOrigin: "50% 50%" },
-                { scale: 1, duration: 0.5, ease: "back.out(2.2)" },
-                "-=0.25",
-              );
-              tl.fromTo(
-                q("[data-pop]"),
-                { scale: 0.5, opacity: 0 },
-                { scale: 1, opacity: 1, duration: 0.55, ease: "back.out(2.2)" },
-                "-=0.1",
-              );
-
-              /*
-               El número cuenta hasta su valor. «0,9 s» o «0.9s»: separador y
-               sufijo salen del copy y se vuelven a armar, así el resultado es
-               el texto original de cada idioma. Con cifras tabulares el ancho
-               no cambia mientras cuenta.
-            */
-              const cifra = q("[data-cifra]")[0];
-              const m = cifra?.textContent?.match(
-                /^(\D*)(\d+)([.,])(\d+)(.*)$/,
-              );
-              if (cifra && m) {
-                const [, antes, entero, sep, dec, despues] = m;
-                const valor = Number(`${entero}.${dec}`);
-                const proxy = { n: 0 };
-                tl.to(
-                  proxy,
-                  {
-                    n: valor,
-                    duration: 1.1,
-                    onUpdate: () => {
-                      cifra.textContent = `${antes}${proxy.n.toFixed(dec.length).replace(".", sep)}${despues}`;
-                    },
-                  },
-                  0.3,
-                );
-              }
+              entrada(tl, gsap.utils.selector(celda));
             });
         },
       );
@@ -718,12 +654,14 @@ export function Bento({ surface }: { surface?: Surface }) {
               area: "",
               shape: "chica" as const,
             };
-            const { Dibujo, abajo } = vinetas[card.id] ?? vinetas.velocidad;
-            const ancha = diseño.shape === "ancha";
+            const { Dibujo, abajo, columna } =
+              vinetas[card.id] ?? vinetas.velocidad;
+            // En fila solo la ancha que no pidió columna.
+            const fila = diseño.shape === "ancha" && !columna;
             return (
               <article
                 key={card.id}
-                data-celda
+                data-celda={card.id}
                 className={cn(
                   "group relative overflow-hidden rounded-[var(--radius-celda)]",
                   "md:min-h-[24rem]",
@@ -748,10 +686,10 @@ export function Bento({ surface }: { surface?: Surface }) {
                 <div
                   className={cn(
                     "relative flex h-full flex-col p-6 md:p-7",
-                    ancha && "lg:flex-row lg:items-center lg:gap-6",
+                    fila && "lg:flex-row lg:items-center lg:gap-6",
                   )}
                 >
-                  <div className={cn(ancha && "lg:w-[46%] lg:shrink-0")}>
+                  <div className={cn(fila && "lg:w-[46%] lg:shrink-0")}>
                     <h3
                       className="text-[1.12rem] font-semibold leading-snug tracking-[-0.02em]"
                       style={{ color: TINTA }}
@@ -769,7 +707,7 @@ export function Bento({ surface }: { surface?: Surface }) {
                     className={cn(
                       "flex flex-1 justify-center pt-8 md:pt-6",
                       abajo ? "items-end" : "items-center",
-                      ancha && "lg:pt-0",
+                      fila && "lg:pt-0",
                     )}
                   >
                     <Dibujo tone={diseño.tone} f={bento.figures} />
