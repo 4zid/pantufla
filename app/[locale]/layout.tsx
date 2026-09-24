@@ -114,6 +114,20 @@ export default async function LocaleLayout({
     <html lang={locale}>
       <head>
         {/*
+          La fuente, pedida desde el arranque. El @font-face está en
+          globals.css; sin esto el navegador la descubre recién al terminar
+          de leer el CSS. crossOrigin va aunque sea del mismo origen: las
+          fuentes se piden siempre en modo anónimo y, si el preload no
+          coincide, se baja dos veces.
+        */}
+        <link
+          rel="preload"
+          href="/fonts/schibsted-grotesk-latin-v1.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
+        {/*
           Marca el documento antes del primer pintado para que el CSS pueda
           ocultar lo que se va a animar. Si el JS está desactivado la clase
           nunca se agrega y el contenido queda visible.

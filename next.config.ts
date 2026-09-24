@@ -29,6 +29,24 @@ const nextConfig: NextConfig = {
     remotePatterns: [{ protocol: "https", hostname: "cdn.sanity.io" }],
   },
   typedRoutes: false,
+  /*
+     Las fuentes van con la versión en el nombre (public/fonts/…-v1.woff2),
+     así que pueden quedarse en caché para siempre: si cambian, cambia el
+     nombre. Sin esto, public/ se sirve con revalidación en cada visita.
+  */
+  async headers() {
+    return [
+      {
+        source: "/fonts/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+    ];
+  },
   async redirects() {
     const pares: [string, string][] = [
       ["/contacto", "/#brief"],
