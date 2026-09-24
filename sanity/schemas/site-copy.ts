@@ -345,7 +345,7 @@ export const siteCopy = defineType({
           fields: [
             {
               name: "speedCaption",
-              title: "Epígrafe de velocidad",
+              title: "Rótulo de la regla de tiempo",
               type: "string",
             },
             {
@@ -361,15 +361,21 @@ export const siteCopy = defineType({
             },
             {
               name: "speedLabelOurs",
-              title: "Etiqueta de la barra nuestra",
+              title: "Etiqueta de la marca nuestra",
               type: "string",
             },
             {
               name: "speedLabelTheirs",
-              title: "Etiqueta de la barra de comparación",
+              title: "Etiqueta de la marca de comparación",
               type: "string",
             },
-            { name: "seoCaption", title: "Epígrafe del chat", type: "string" },
+            {
+              name: "seoCaption",
+              title: "Volanta de la respuesta",
+              type: "string",
+              description:
+                "Arriba de la respuesta. Por ejemplo: «Lo que contesta ChatGPT».",
+            },
             {
               name: "seoQuestion",
               title: "La pregunta",
@@ -379,23 +385,25 @@ export const siteCopy = defineType({
             },
             { name: "seoAnswer", title: "La respuesta", type: "text", rows: 2 },
             {
-              name: "screensCaption",
-              title: "Epígrafe de las pantallas",
+              name: "leadsCaption",
+              title: "Rótulo de las barras de consultas",
               type: "string",
             },
             {
-              name: "formCaption",
-              title: "Epígrafe del formulario",
+              name: "leadsStart",
+              title: "Extremo izquierdo del eje",
               type: "string",
+              description: "Por ejemplo: «Lanzamiento».",
             },
             {
-              name: "formButton",
-              title: "Botón del formulario dibujado",
+              name: "leadsEnd",
+              title: "Extremo derecho del eje",
               type: "string",
+              description: "Por ejemplo: «Hoy».",
             },
             {
               name: "formNotice",
-              title: "Aviso sobre el formulario",
+              title: "Aviso sobre las barras",
               type: "string",
               description: "Por ejemplo: «Nueva consulta».",
             },

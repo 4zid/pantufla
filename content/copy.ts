@@ -149,28 +149,27 @@ export type SiteCopy = {
      * como un relleno.
      */
     figures: {
-      /** El epígrafe del vidrio de velocidad. */
+      /** El rótulo de la regla de tiempo. */
       speedCaption: string;
-      /** Cuánto tarda un sitio nuestro. */
+      /** Cuánto tarda un sitio nuestro: va grande. */
       speedOurs: string;
       /** El número contra el que se compara. */
       speedTheirs: string;
-      /** Las etiquetas de las dos barras de la comparación. */
+      /** Las etiquetas de las dos marcas sobre la regla. */
       speedLabelOurs: string;
       speedLabelTheirs: string;
-      /** El epígrafe del vidrio del chat. */
+      /** La volanta de la tarjeta de adelante en la pila de respuestas. */
       seoCaption: string;
       /** Lo que alguien le escribe a un buscador o a un modelo. */
       seoQuestion: string;
       /** Lo que le contesta. */
       seoAnswer: string;
-      /** El epígrafe del vidrio de las pantallas. */
-      screensCaption: string;
-      /** El epígrafe del vidrio del formulario. */
-      formCaption: string;
-      /** El botón del formulario dibujado. */
-      formButton: string;
-      /** El aviso que flota sobre el formulario: llegó una consulta. */
+      /** El rótulo de las barras de consultas. */
+      leadsCaption: string;
+      /** Los dos extremos del eje de las barras: de cuándo a cuándo. */
+      leadsStart: string;
+      leadsEnd: string;
+      /** El aviso que flota sobre la última barra: llegó una consulta. */
       formNotice: string;
     };
   };
