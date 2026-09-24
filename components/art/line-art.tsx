@@ -35,11 +35,7 @@ const paths: Record<LineArtName, string[]> = {
     "M28 26l9 4-4 1.5-1.5 4Z",
   ],
   // Corchetes y una barra: el desarrollo.
-  desarrollo: [
-    "M17 15 7 24l10 9",
-    "M31 15l10 9-10 9",
-    "M27 11l-6 26",
-  ],
+  desarrollo: ["M17 15 7 24l10 9", "M31 15l10 9-10 9", "M27 11l-6 26"],
   // Llave: te entregamos las llaves del sitio.
   llaves: [
     "M17 26a8 8 0 1 1 0 16 8 8 0 0 1 0-16Z",
@@ -88,7 +84,7 @@ export function LineArt({
       strokeLinejoin="round"
     >
       {paths[name].map((d, i) => (
-        <path key={i} d={d} data-stroke />
+        <path key={i} d={d} data-stroke pathLength={1} />
       ))}
     </svg>
   );

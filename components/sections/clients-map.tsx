@@ -99,36 +99,35 @@ export function ClientsMap({ surface }: { surface?: Surface }) {
       mm.add("(prefers-reduced-motion: no-preference)", () => {
         const linea = gsap.utils.toArray<SVGPathElement>("[data-arco]", root);
 
-        // Cada línea se dibuja sola, de Buenos Aires hacia afuera. El largo lo
-        // mide el navegador y no una cuenta a mano: son curvas distintas y con
-        // un dash fijo las cortas terminarían antes de empezar.
-        linea.forEach((path) => {
-          const largo = path.getTotalLength();
-          gsap.set(path, { strokeDasharray: largo, strokeDashoffset: largo });
-        });
-
+        // Cada línea se dibuja sola, de Buenos Aires hacia afuera. Llevan
+        // pathLength="1", así el largo de todas es 1 sean cortas o largas, y
+        // el CSS las deja con el dash corrido entero (ver «Movimiento» en
+        // globals.css). Los tweens no escriben nada al crearse: solo miden.
         gsap.to(linea, {
           strokeDashoffset: 0,
           duration: 1.1,
           ease: "power2.inOut",
           stagger: 0.09,
+          immediateRender: false,
           scrollTrigger: { trigger: root, start: START, once: true },
         });
 
-        gsap.from(gsap.utils.toArray("[data-pin]", root), {
-          opacity: 0,
-          scale: 0.4,
+        gsap.to(gsap.utils.toArray("[data-pin]", root), {
+          opacity: 1,
+          scale: 1,
           duration: 0.5,
           ease,
           stagger: 0.09,
           delay: 0.55,
+          immediateRender: false,
           scrollTrigger: { trigger: root, start: START, once: true },
         });
 
-        gsap.from(root.querySelectorAll("[data-tierra]"), {
-          opacity: 0,
+        gsap.to(root.querySelectorAll("[data-tierra]"), {
+          opacity: 1,
           duration: 0.9,
           ease,
+          immediateRender: false,
           scrollTrigger: { trigger: root, start: START, once: true },
         });
       });
@@ -175,6 +174,7 @@ export function ClientsMap({ surface }: { surface?: Surface }) {
                   <path
                     key={c.city}
                     data-arco
+                    pathLength={1}
                     d={c.d}
                     className={cn(
                       "stroke-aqua-deep transition-opacity duration-300",

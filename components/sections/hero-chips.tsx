@@ -59,6 +59,10 @@ export function HeroChips() {
       const root = scope.current;
       if (!root) return;
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      // Los chips existen solo desde 1440 (abajo van display: none). Sin esto,
+      // tres tweens infinitos le pedían un cuadro por segundo al teléfono
+      // para mover algo que no se ve.
+      if (!window.matchMedia("(min-width: 1440px)").matches) return;
 
       gsap.utils
         .selector(root)("[data-chip]")

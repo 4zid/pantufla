@@ -53,12 +53,9 @@ export function Process({ surface = "deep" }: { surface?: Surface }) {
           const q = gsap.utils.selector(root);
           const pasos = q("[data-step]");
 
-          if (reduced) {
-            gsap.set(q("[data-progress]"), { scaleY: 1 });
-            gsap.set(q("[data-dot]"), { opacity: 1, scale: 1 });
-            gsap.set(q("[data-body]"), { opacity: 1, y: 0 });
-            return;
-          }
+          // Sin movimiento el CSS ya muestra todo (ver «Movimiento» en
+          // globals.css, donde también está el estado inicial de cada pieza).
+          if (reduced) return;
 
           // Cada tramo se llena solo, atado a la etapa que lo sigue: empieza
           // cuando esa etapa asoma y termina cuando llega a su lugar de
@@ -68,52 +65,43 @@ export function Process({ surface = "deep" }: { surface?: Surface }) {
             const tramo = paso.querySelector("[data-progress]");
             if (!tramo) return;
 
-            gsap.fromTo(
-              tramo,
-              { scaleY: 0 },
-              {
-                scaleY: 1,
-                ease: "none",
-                transformOrigin: "top",
-                scrollTrigger: {
-                  trigger: paso,
-                  start: "top 92%",
-                  end: "top 58%",
-                  scrub: 0.6,
-                  invalidateOnRefresh: true,
-                },
+            gsap.to(tramo, {
+              scaleY: 1,
+              ease: "none",
+              transformOrigin: "top",
+              immediateRender: false,
+              scrollTrigger: {
+                trigger: paso,
+                start: "top 92%",
+                end: "top 58%",
+                scrub: 0.6,
+                invalidateOnRefresh: true,
               },
-            );
+            });
           });
 
           pasos.forEach((paso) => {
             const dot = paso.querySelector("[data-dot]");
             const body = paso.querySelector("[data-body]");
 
-            gsap.fromTo(
-              dot,
-              { scale: 0.4, opacity: 0 },
-              {
-                scale: 1,
-                opacity: 1,
-                duration: 0.55,
-                ease: "back.out(2)",
-                scrollTrigger: { trigger: paso, start: "top 62%", once: true },
-              },
-            );
+            gsap.to(dot, {
+              scale: 1,
+              opacity: 1,
+              duration: 0.55,
+              ease: "back.out(2)",
+              immediateRender: false,
+              scrollTrigger: { trigger: paso, start: "top 62%", once: true },
+            });
 
-            gsap.fromTo(
-              body,
-              { opacity: 0, y: 22 },
-              {
-                opacity: 1,
-                y: 0,
-                duration: 0.7,
-                delay: 0.12,
-                ease: "power3.out",
-                scrollTrigger: { trigger: paso, start: "top 62%", once: true },
-              },
-            );
+            gsap.to(body, {
+              opacity: 1,
+              y: 0,
+              duration: 0.7,
+              delay: 0.12,
+              ease: "power3.out",
+              immediateRender: false,
+              scrollTrigger: { trigger: paso, start: "top 62%", once: true },
+            });
           });
         },
       );

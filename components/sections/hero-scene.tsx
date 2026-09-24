@@ -11,7 +11,9 @@ import {
 } from "@/components/sections/hero-panels";
 import { useCopy } from "@/components/copy-provider";
 import { HeroChips } from "@/components/sections/hero-chips";
-import { Draggable, ease, gsap, registerGsap } from "@/lib/motion";
+import type { Draggable as DraggableType } from "gsap/Draggable";
+
+import { ease, gsap, registerGsap } from "@/lib/motion";
 import { cn } from "@/lib/cn";
 
 /**
@@ -186,15 +188,23 @@ export function HeroScene() {
           });
 
           // Se pueden agarrar y mover. El arrastre vive en el hijo, así que no
-          // compite con el transform que usa el vuelo.
-          const draggables = cards.map((card) =>
-            Draggable.create(card.querySelector("[data-drag]"), {
-              type: "x,y",
-              inertia: false,
-              cursor: "grab",
-              activeCursor: "grabbing",
-            }),
-          );
+          // compite con el transform que usa el vuelo. El plugin se carga
+          // recién acá, en escritorio: en el teléfono nunca hay nada que
+          // arrastrar y no vale la pena bajarlo.
+          let vivo = true;
+          let draggables: DraggableType[] = [];
+          import("gsap/Draggable").then(({ Draggable }) => {
+            if (!vivo) return;
+            gsap.registerPlugin(Draggable);
+            draggables = cards.flatMap((card) =>
+              Draggable.create(card.querySelector("[data-drag]"), {
+                type: "x,y",
+                inertia: false,
+                cursor: "grab",
+                activeCursor: "grabbing",
+              }),
+            );
+          });
           gsap.from(cards, {
             opacity: 0,
             y: 34,
@@ -298,7 +308,8 @@ export function HeroScene() {
           });
 
           return () => {
-            draggables.flat().forEach((d) => d.kill());
+            vivo = false;
+            draggables.forEach((d) => d.kill());
             gsap.set(cards, { clearProps: "all" });
           };
         },

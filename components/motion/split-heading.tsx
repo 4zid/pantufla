@@ -120,26 +120,27 @@ export function SplitHeading({
           const mascaras = root.querySelectorAll<HTMLElement>("[data-mask]");
           const soltar = () => gsap.set(mascaras, { overflow: "visible" });
 
+          // Sin movimiento el CSS ya muestra todo; solo se suelta la máscara.
           if (reduced) {
-            gsap.set(unidades, { yPercent: 0, y: 0, opacity: 1 });
             soltar();
             return;
           }
 
-          gsap.fromTo(
-            unidades,
-            { yPercent: 108, opacity: 0 },
-            {
-              yPercent: 0,
-              opacity: 1,
-              duration: 1,
-              ease,
-              delay,
-              stagger: 0.055,
-              onComplete: soltar,
-              scrollTrigger: { trigger: root, start: START, once: true },
-            },
-          );
+          // Las palabras ya esperan abajo de la máscara por CSS (108% de su
+          // alto); GSAP lee ese corrimiento en píxeles y lo lleva a cero.
+          // immediateRender: false, para no escribir nada al crearse (ver
+          // «Movimiento» en globals.css).
+          gsap.to(unidades, {
+            y: 0,
+            opacity: 1,
+            duration: 1,
+            ease,
+            delay,
+            stagger: 0.055,
+            immediateRender: false,
+            onComplete: soltar,
+            scrollTrigger: { trigger: root, start: START, once: true },
+          });
         },
       );
 

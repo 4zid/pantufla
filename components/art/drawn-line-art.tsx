@@ -43,19 +43,15 @@ export function DrawnLineArt({
           const { reduced } = context.conditions as { reduced: boolean };
           if (reduced) return;
 
-          strokes.forEach((path) => {
-            const length = path.getTotalLength();
-            gsap.set(path, {
-              strokeDasharray: length,
-              strokeDashoffset: length,
-            });
-          });
-
+          // Los trazos llevan pathLength="1" y el CSS los deja con el dash
+          // corrido entero (ver «Movimiento» en globals.css): no hay que
+          // medir cada camino ni escribir nada antes de que se dispare.
           gsap.to(strokes, {
             strokeDashoffset: 0,
             duration: 0.7,
             ease: "power2.inOut",
             stagger: 0.12,
+            immediateRender: false,
             scrollTrigger: { trigger: root, start: START, once: true },
           });
         },

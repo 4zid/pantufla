@@ -54,7 +54,9 @@ import { cn } from "@/lib/cn";
  * barras crecen y el aviso salta. Todo por opacidad y transformación, con
  * cada pieza ya ocupando su lugar desde el primer pintado: nada cambia de
  * alto, ni siquiera cuando el «escribiendo» se vuelve respuesta, porque la
- * respuesta ya está ahí, invisible, y el «escribiendo» va encima. Y al pasar
+ * respuesta ya está ahí, invisible, y el «escribiendo» va encima. El estado
+ * inicial de cada pieza (invisible, encogida) es del CSS y no lo escribe
+ * GSAP al crearse: ver la nota «Movimiento» en globals.css. Y al pasar
  * el mouse, la lámina hace un zoom lento y una pieza de cada viñeta se mueve
  * un poco. El hover es CSS puro y va en un envoltorio aparte del elemento
  * que anima GSAP: los dos escriben transform, y en el mismo elemento se
@@ -622,9 +624,13 @@ export function Bento({ surface }: { surface?: Surface }) {
             .forEach((celda) => {
               const id = (celda as HTMLElement).dataset.celda ?? "";
               const entrada = (vinetas[id] ?? vinetas.velocidad).entrada;
+              // immediateRender: false en la línea de tiempo y en cada tween:
+              // al crearse no escriben nada, solo miden; el estado inicial de
+              // cada pieza está en CSS (ver «Movimiento» en globals.css).
               const tl = gsap.timeline({
+                immediateRender: false,
                 scrollTrigger: { trigger: celda, start: START, once: true },
-                defaults: { ease: "power3.out" },
+                defaults: { ease: "power3.out", immediateRender: false },
               });
               entrada(tl, gsap.utils.selector(celda));
             });

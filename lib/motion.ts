@@ -1,13 +1,18 @@
 import { gsap } from "gsap";
-import { Draggable } from "gsap/Draggable";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 let registered = false;
 
-/** Registra los plugins una sola vez, solo en el navegador. */
+/**
+ * Registra los plugins una sola vez, solo en el navegador.
+ *
+ * Draggable no va acá: lo usan solo las tarjetas del hero en escritorio, y
+ * lo carga ese componente cuando hace falta (components/sections/hero-scene),
+ * así el teléfono no lo baja ni lo evalúa.
+ */
 export function registerGsap() {
   if (registered || typeof window === "undefined") return;
-  gsap.registerPlugin(ScrollTrigger, Draggable);
+  gsap.registerPlugin(ScrollTrigger);
   /*
      En el teléfono la barra del navegador se esconde y aparece al hacer
      scroll, y eso cambia el alto de la ventana: sin esto ScrollTrigger lo
@@ -24,4 +29,4 @@ export const ease = "power3.out";
 /** Punto de disparo estándar: el elemento entra 85% abajo de la ventana. */
 export const START = "top 85%";
 
-export { Draggable, gsap, ScrollTrigger };
+export { gsap, ScrollTrigger };

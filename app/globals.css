@@ -441,23 +441,132 @@
    Los elementos animados se ocultan SOLO cuando <html> tiene .motion-ready,
    clase que pone un script inline antes del primer pintado. Con eso no hay
    destello de contenido, y si el JS nunca corre queda todo visible.
+
+   El estado inicial de cada animación de entrada está acá, en CSS, y no lo
+   escribe GSAP al crearse. Importa por el rendimiento: al hidratar, cada
+   componente crea sus tweens, y si cada uno escribe su estado inicial en
+   línea y el siguiente mide dónde está su trigger, el navegador recalcula
+   estilos y layout una vez por componente, en cadena (Lighthouse lo lista
+   como «forced reflow», y en un teléfono son cientos de milisegundos con el
+   hilo bloqueado). Con el estado inicial en CSS los tweens se crean con
+   immediateRender: false —solo miden— y escriben recién cuando se disparan,
+   ya con el scroll.
    ------------------------------------------------------------------ */
 
 .motion-ready [data-reveal],
 .motion-ready [data-reveal-group] > * {
   opacity: 0;
+  transform: translateY(var(--reveal-y, 24px));
 }
 
 .motion-ready [data-split] [data-word] {
   opacity: 0;
 }
 
+/* Con GSAP la palabra espera abajo de la máscara; con la entrada de CSS del
+   hero la mueve su propia animación (ver más abajo). */
+.motion-ready [data-split=""] [data-word] {
+  transform: translateY(108%);
+}
+
+/* El proceso: el tramo del riel vacío, el marcador chico y el texto abajo. */
+.motion-ready [data-progress] {
+  transform: scaleY(0);
+}
+
+.motion-ready [data-dot] {
+  opacity: 0;
+  transform: scale(0.4);
+}
+
+.motion-ready [data-body] {
+  opacity: 0;
+  transform: translateY(22px);
+}
+
+/* Los trazos dibujados: con pathLength="1" el largo de cualquier trazo es
+   1, así que el dash no depende de medir el camino. */
+.motion-ready [data-stroke],
+.motion-ready [data-arco] {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+
+/* El mapa: los pines chicos y la tierra apagada hasta que se dibuja. */
+.motion-ready [data-pin] {
+  opacity: 0;
+  transform: scale(0.4);
+}
+
+.motion-ready [data-tierra] {
+  opacity: 0;
+}
+
+/* Las piezas del bento (components/sections/bento.tsx). */
+.motion-ready
+  [data-celda]
+  :is(
+    [data-pieza],
+    [data-pop],
+    [data-ventana],
+    [data-telefono],
+    [data-tarjeta],
+    [data-pregunta],
+    [data-respuesta],
+    [data-avatar],
+    [data-escribiendo]
+  ) {
+  opacity: 0;
+}
+
+.motion-ready [data-celda] [data-barra] {
+  transform: scaleY(0);
+  transform-origin: 50% 100%;
+}
+
+.motion-ready [data-celda] [data-lleno] {
+  transform: scaleX(0);
+  transform-origin: 0% 50%;
+}
+
+.motion-ready [data-celda] [data-punto] {
+  transform: scale(0);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .motion-ready [data-reveal],
   .motion-ready [data-reveal-group] > *,
-  .motion-ready [data-split] [data-word] {
+  .motion-ready [data-split] [data-word],
+  .motion-ready [data-progress],
+  .motion-ready [data-dot],
+  .motion-ready [data-body],
+  .motion-ready [data-pin],
+  .motion-ready [data-tierra],
+  .motion-ready
+    [data-celda]
+    :is(
+      [data-pieza],
+      [data-pop],
+      [data-ventana],
+      [data-telefono],
+      [data-tarjeta],
+      [data-pregunta],
+      [data-respuesta],
+      [data-avatar],
+      [data-barra],
+      [data-lleno],
+      [data-punto]
+    ) {
     opacity: 1 !important;
     transform: none !important;
+  }
+  .motion-ready [data-stroke],
+  .motion-ready [data-arco] {
+    stroke-dashoffset: 0 !important;
+  }
+  /* El «escribiendo» del chat no existe sin movimiento: la respuesta ya está. */
+  .motion-ready [data-celda] [data-escribiendo] {
+    opacity: 0 !important;
   }
 }
 
