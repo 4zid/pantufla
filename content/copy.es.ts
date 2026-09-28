@@ -163,7 +163,7 @@ export const es: SiteCopy = {
       segments: [
         { text: "Mitad al reservar la fecha, mitad el día que se publica." },
         { text: "O todo al inicio, con" },
-        { text: "15% menos.", mark: "aqua" },
+        { text: "15% menos.", mark: "miel" },
       ],
       cta: { label: "Empezar un proyecto", href: "/#brief" },
     },

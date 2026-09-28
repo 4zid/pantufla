@@ -15,7 +15,7 @@ import { cn } from "@/lib/cn";
 /** Un tramo del titular. Sin `mark` es texto suelto; con `mark`, va resaltado. */
 export type Segment = {
   text: string;
-  mark?: "paper" | "ink" | "aqua" | "rosa";
+  mark?: "paper" | "ink" | "aqua" | "rosa" | "verde" | "miel";
 };
 
 type Props = {
@@ -42,6 +42,8 @@ const marks: Record<NonNullable<Segment["mark"]>, string> = {
   ink: "bg-ink text-paper",
   aqua: "bg-aqua-soft text-aqua-deep",
   rosa: "bg-rosa-soft text-rosa-deep",
+  verde: "bg-verde-soft text-verde-deep",
+  miel: "bg-miel-soft text-miel-deep",
 };
 
 /**

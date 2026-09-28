@@ -309,8 +309,40 @@
   initial-value: #eaedf8;
 }
 
+/*
+   Los cuatro tonos «vivos» del riel del proceso (components/sections/process):
+   sobre claro va la variante profunda de cada uno, que es la que tiene
+   contraste; sobre oscuro, la pastel. Registrados como color para que
+   acompañen la misma transición que el fondo y no cambien de golpe cuando la
+   sección toma el mando.
+*/
+@property --riel-aqua {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #166b67;
+}
+@property --riel-rosa {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #a3405a;
+}
+@property --riel-verde {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #456f35;
+}
+@property --riel-miel {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #8a5a12;
+}
+
 :root {
   --page-bg: #eaedf8;
+  --riel-aqua: #166b67;
+  --riel-rosa: #a3405a;
+  --riel-verde: #456f35;
+  --riel-miel: #8a5a12;
   /*
      600ms: alcanza para que se lea como un cambio y no como un parpadeo, y es
      corto de más para que alguien se quede mirando el gris del medio. La curva
@@ -325,6 +357,10 @@
     --color-line 600ms ease-in-out,
     --color-line-strong 600ms ease-in-out,
     --color-mist 600ms ease-in-out,
+    --riel-aqua 600ms ease-in-out,
+    --riel-rosa 600ms ease-in-out,
+    --riel-verde 600ms ease-in-out,
+    --riel-miel 600ms ease-in-out,
     /*
        La tinta no acompaña al fondo: se da vuelta sola, rápido y en el medio.
 
@@ -369,6 +405,10 @@
   --color-line: #2a2a2a;
   --color-line-strong: #3c3c3c;
   --color-mist: #14161f;
+  --riel-aqua: #6fcfca;
+  --riel-rosa: #f2a5b6;
+  --riel-verde: #a6cf95;
+  --riel-miel: #f4c87d;
 }
 
 @media (prefers-reduced-motion: reduce) {

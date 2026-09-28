@@ -485,9 +485,11 @@ export const siteCopy = defineType({
                       options: {
                         list: [
                           { title: "Sin resaltar", value: "" },
-                          { title: "Pastilla celeste", value: "aqua" },
                           { title: "Pastilla blanca", value: "paper" },
+                          { title: "Pastilla celeste", value: "aqua" },
                           { title: "Pastilla rosa", value: "rosa" },
+                          { title: "Pastilla verde", value: "verde" },
+                          { title: "Pastilla miel", value: "miel" },
                         ],
                       },
                     },

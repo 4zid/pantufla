@@ -25,15 +25,22 @@ import { cn } from "@/lib/cn";
  */
 
 /**
- * Un paso de color por etapa. Cada tramo del riel va del color de la etapa que
- * deja al de la que viene, así el degradé recorre la sección entera aunque
- * esté partido en pedazos sueltos.
+ * Un color por etapa: los cuatro del bento, en el mismo orden (aqua, rosa,
+ * verde, miel; content/site.ts). Cada tramo del riel va del color de la etapa
+ * que deja al de la que viene, así el degradé recorre la sección entera
+ * aunque esté partido en pedazos sueltos, y llega a cada número ya con su
+ * color terminado: el marcador es de un solo color, no de dos.
+ *
+ * Los colores son variables del tema (globals.css, --riel-*): sobre oscuro la
+ * pastel y sobre claro la profunda, y cambian con la misma transición que el
+ * fondo.
  */
-const STOPS = ["#166b67", "#2f9d97", "#6fcfca", "#a8e3df"] as const;
+const riel = (tone: string) => `var(--riel-${tone})`;
 
 export function Process({ surface = "deep" }: { surface?: Surface }) {
   const { process } = useCopy();
   const scope = useRef<HTMLDivElement>(null);
+  const ultimo = riel(process.steps[process.steps.length - 1]?.tone ?? "miel");
 
   useGSAP(
     () => {
@@ -119,7 +126,8 @@ export function Process({ surface = "deep" }: { surface?: Surface }) {
       overlay={
         /* El resplandor sube desde el piso y se apaga antes de la mitad.
            Centrado quedaría como una mancha; naciendo del piso se lee como si
-           la línea de tiempo fuera lo que lo enciende.
+           la línea de tiempo fuera lo que lo enciende. Por eso lleva el color
+           de la última etapa: es donde el riel termina.
 
            Ya no hace falta que se salga de la sección: el fondo entero cambia
            de color, así que no hay borde contra el que cortar. */
@@ -127,8 +135,7 @@ export function Process({ surface = "deep" }: { surface?: Surface }) {
           aria-hidden
           className="pointer-events-none absolute inset-x-0 bottom-0 h-[58%]"
           style={{
-            background:
-              "radial-gradient(120% 100% at 50% 118%, #6fcfca 0%, rgba(111,207,202,0.42) 26%, rgba(47,157,151,0.16) 48%, transparent 72%)",
+            background: `radial-gradient(120% 100% at 50% 118%, ${ultimo} 0%, color-mix(in srgb, ${ultimo} 42%, transparent) 26%, color-mix(in srgb, ${ultimo} 16%, transparent) 48%, transparent 72%)`,
           }}
         />
       }
@@ -143,89 +150,91 @@ export function Process({ surface = "deep" }: { surface?: Surface }) {
 
       <div ref={scope} className="relative mx-auto mt-20 max-w-xl md:mt-24">
         <ol className="relative flex flex-col">
-          {process.steps.map((step, i) => (
-            <li
-              key={step.number}
-              data-step
-              className={cn(
-                "relative flex flex-col items-center text-center",
-                i > 0 && "pt-20 md:pt-24",
-              )}
-            >
-              {/* El riel va por tramos, uno entre cada par de etapas, en vez de
+          {process.steps.map((step, i) => {
+            const color = riel(step.tone);
+            const anterior = riel(process.steps[i - 1]?.tone ?? step.tone);
+            return (
+              <li
+                key={step.number}
+                data-step
+                className={cn(
+                  "relative flex flex-col items-center text-center",
+                  i > 0 && "pt-20 md:pt-24",
+                )}
+              >
+                {/* El riel va por tramos, uno entre cada par de etapas, en vez de
                   una línea única detrás de todo. Con una línea entera había que
                   taparla con bloques opacos para que no cruzara el texto, y
                   esos bloques se recortaban como rectángulos oscuros sobre el
                   resplandor del fondo. Partido en tramos no hay nada que tapar. */}
-              {i > 0 ? (
+                {i > 0 ? (
+                  <span
+                    aria-hidden
+                    className="absolute left-1/2 top-0 h-20 w-[2px] -translate-x-1/2 overflow-hidden rounded-full bg-line md:h-24"
+                  >
+                    <span
+                      data-progress
+                      className="block h-full w-full origin-top"
+                      style={{
+                        background: `linear-gradient(to bottom, ${anterior}, ${color})`,
+                      }}
+                    />
+                  </span>
+                ) : null}
+                {/* El marcador tapa el riel con su propio fondo: por eso el
+                  círculo lleva el color de la sección y no es translúcido.
+                  El aro y el resplandor son del color de la etapa, entero:
+                  el degradé ya hizo su viaje en el tramo de arriba. */}
                 <span
-                  aria-hidden
-                  className="absolute left-1/2 top-0 h-20 w-[2px] -translate-x-1/2 overflow-hidden rounded-full bg-line md:h-24"
+                  data-dot
+                  className="relative grid h-14 w-14 place-items-center rounded-full bg-card"
                 >
                   <span
-                    data-progress
-                    className="block h-full w-full origin-top"
-                    style={{
-                      background: `linear-gradient(to bottom, ${STOPS[i - 1]}, ${STOPS[i]})`,
-                    }}
+                    aria-hidden
+                    className="absolute inset-0 rounded-full border-[1.5px]"
+                    style={{ borderColor: color }}
                   />
-                </span>
-              ) : null}
-              {/* El marcador tapa el riel con su propio fondo: por eso el
-                  círculo lleva el color de la sección y no es translúcido. */}
-              <span
-                data-dot
-                className="relative grid h-14 w-14 place-items-center rounded-full bg-card"
-              >
-                <span
-                  aria-hidden
-                  className="absolute inset-0 rounded-full p-[1.5px]"
-                  style={{
-                    background: `linear-gradient(140deg, ${STOPS[Math.max(0, i - 1)]}, ${STOPS[i]})`,
-                    WebkitMask:
-                      "linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)",
-                    WebkitMaskComposite: "xor",
-                    maskComposite: "exclude",
-                  }}
-                />
-                <span
-                  aria-hidden
-                  className="absolute inset-[5px] rounded-full opacity-25 blur-[6px]"
-                  style={{ background: STOPS[i] }}
-                />
-                <span className="relative text-[0.95rem] font-semibold tabular-nums text-ink">
-                  {step.number}
-                </span>
-              </span>
-
-              <div data-body className="mt-6">
-                <span className="rounded-full bg-paper-alt px-2.5 py-1 text-[0.72rem] font-medium text-ink-soft">
-                  {step.when}
+                  <span
+                    aria-hidden
+                    className="absolute inset-[5px] rounded-full opacity-25 blur-[6px]"
+                    style={{ background: color }}
+                  />
+                  <span className="relative text-[0.95rem] font-semibold tabular-nums text-ink">
+                    {step.number}
+                  </span>
                 </span>
 
-                <h3 className="mt-4 text-h3">{step.name}</h3>
+                <div data-body className="mt-6">
+                  <span className="rounded-full bg-paper-alt px-2.5 py-1 text-[0.72rem] font-medium text-ink-soft">
+                    {step.when}
+                  </span>
 
-                <p className="mx-auto mt-3 max-w-md text-[0.98rem] leading-relaxed text-ink-soft">
-                  {step.body}
-                </p>
+                  <h3 className="mt-4 text-h3">{step.name}</h3>
 
-                <dl className="mx-auto mt-6 grid max-w-sm grid-cols-2 gap-x-6 gap-y-2 border-t border-line pt-5 text-left text-[0.85rem]">
-                  <div>
-                    <dt className="text-ink-faint">
-                      {process.labels.deliverable}
-                    </dt>
-                    <dd className="mt-1 font-medium text-ink">
-                      {step.deliverable}
-                    </dd>
-                  </div>
-                  <div>
-                    <dt className="text-ink-faint">{process.labels.yours}</dt>
-                    <dd className="mt-1 font-medium text-ink">{step.yours}</dd>
-                  </div>
-                </dl>
-              </div>
-            </li>
-          ))}
+                  <p className="mx-auto mt-3 max-w-md text-[0.98rem] leading-relaxed text-ink-soft">
+                    {step.body}
+                  </p>
+
+                  <dl className="mx-auto mt-6 grid max-w-sm grid-cols-2 gap-x-6 gap-y-2 border-t border-line pt-5 text-left text-[0.85rem]">
+                    <div>
+                      <dt className="text-ink-faint">
+                        {process.labels.deliverable}
+                      </dt>
+                      <dd className="mt-1 font-medium text-ink">
+                        {step.deliverable}
+                      </dd>
+                    </div>
+                    <div>
+                      <dt className="text-ink-faint">{process.labels.yours}</dt>
+                      <dd className="mt-1 font-medium text-ink">
+                        {step.yours}
+                      </dd>
+                    </div>
+                  </dl>
+                </div>
+              </li>
+            );
+          })}
         </ol>
       </div>
 
@@ -236,15 +245,15 @@ export function Process({ surface = "deep" }: { surface?: Surface }) {
         adentro de otra—, justo en el punto de la página donde alguien terminó
         de leer cómo se trabaja y está decidiendo.
 
-        En tinta plena y no apagada: esta zona cae encima del resplandor
-        celeste del pie de la sección, que aclara el fondo bastante más que el
-        negro de arriba. La tinta apagada alcanza sobre el negro, pero sobre el
+        En tinta plena y no apagada: esta zona cae encima del resplandor del
+        pie de la sección, que aclara el fondo bastante más que el negro de
+        arriba. La tinta apagada alcanza sobre el negro, pero sobre el
         resplandor se despinta.
 
-        La pastilla es aqua y no blanca como en la portada. Acá el fondo es
-        oscuro: la blanca funciona igual, pero el celeste es el color con el
-        que la sección ya viene hablando —el riel, los números, el resplandor—
-        y sobre negro levanta más que el blanco, que compite con la tinta.
+        La pastilla es miel y no blanca como en la portada. Acá el fondo es
+        oscuro: la blanca funciona igual, pero la miel es el color en el que
+        el riel termina y el del resplandor sobre el que cae esta frase; y
+        sobre negro levanta más que el blanco, que compite con la tinta.
       */}
       <div className="mx-auto mt-20 max-w-2xl text-center md:mt-24">
         <SplitHeading

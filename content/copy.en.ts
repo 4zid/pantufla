@@ -156,7 +156,7 @@ export const en: SiteCopy = {
       segments: [
         { text: "Half to book the date, half the day it goes live." },
         { text: "Or all of it upfront, for" },
-        { text: "15% off.", mark: "aqua" },
+        { text: "15% off.", mark: "miel" },
       ],
       cta: { label: "Start a project", href: "/#brief" },
     },
