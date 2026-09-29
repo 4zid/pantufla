@@ -7,6 +7,7 @@ import { CopyProvider } from "@/components/copy-provider";
 import { JsonLd } from "@/components/json-ld";
 import { getCopy } from "@/content/get-copy";
 import { site } from "@/content/site";
+import { esProduccion } from "@/lib/entorno";
 import { isLocale, localeHref, locales, type Locale } from "@/lib/i18n";
 import { nodoEstudio, nodoSitio } from "@/lib/schema";
 import { siteUrl } from "@/lib/site-url";
@@ -69,17 +70,24 @@ export async function generateMetadata({
       límite y max-image-preview large habilita la imagen grande, que es la
       diferencia entre aparecer con una tarjeta o con una línea de texto.
     */
-    robots: {
-      index: true,
-      follow: true,
-      googleBot: {
-        index: true,
-        follow: true,
-        "max-snippet": -1,
-        "max-image-preview": "large",
-        "max-video-preview": -1,
-      },
-    },
+    robots: esProduccion
+      ? {
+          index: true,
+          follow: true,
+          googleBot: {
+            index: true,
+            follow: true,
+            "max-snippet": -1,
+            "max-image-preview": "large",
+            "max-video-preview": -1,
+          },
+        }
+      : // Staging y las demás vistas previas: que nadie las indexe (lib/entorno).
+        {
+          index: false,
+          follow: false,
+          googleBot: { index: false, follow: false },
+        },
     alternates: {
       canonical,
       // Cada página se declara a sí misma y a su par en el otro idioma. Sin
