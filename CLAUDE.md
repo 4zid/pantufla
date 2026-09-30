@@ -1,1 +1,72 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
 @AGENTS.md
+
+Pantufla is the site of a small web studio: a one-page home plus `/reunion`, project detail pages and an embedded Sanity Studio. Next.js 16 (App Router, Turbopack), React 19, Tailwind v4, Sanity, GSAP, Lenis, Resend, Vercel. Code comments, copy and most identifiers are in Spanish (Argentine voseo); comments explain the _why_ at length and new code should keep that style.
+
+## Commands
+
+```bash
+npm run dev          # development server
+npm run build        # production build
+npm run start        # serve the build (PORT=3350 npm run start)
+npm run typecheck    # tsc --noEmit
+npx prettier --write <files>   # formatting (Prettier defaults, no config file)
+```
+
+- There is no test suite and no linter: `npm run lint` calls `next lint`, which Next 16 no longer ships, and there is no ESLint config. Verify changes with `npm run typecheck`, `npm run build`, and by looking at the page in a browser (Playwright + Chromium are available in the cloud environment).
+- Build output is long: redirect it to a file instead of piping into `head`, which kills the build. Sanity fetch errors during a build (403, offline) are expected and harmless; every query falls back to local content.
+- For a clean check: `rm -rf .next && npm run build && PORT=3350 npm run start`.
+
+## Branches and deploys
+
+- Vercel's production branch is `claude/pantufla-agency-website-okqg2e` (the repo's default branch; there is no `main`). **Every push to it goes live** at www.pantufla.design.
+- New landing designs are tried on `staging`, which deploys as a preview at `pantufla-git-staging-kalada.vercel.app` (behind Vercel login). Merge `staging` into the production branch once approved, and merge production fixes back into `staging`.
+- Non-production deployments (`VERCEL_ENV=preview`) render `noindex` and a closed `robots.txt` via `lib/entorno.ts`.
+- Vercel does not build a branch whose head commit was already built on another branch; it needs its own commit.
+- Pages that were removed (`/contacto`, `/notas`, the `/proyectos` listing) redirect in `next.config.ts`.
+
+## Architecture
+
+### Routing and languages
+
+Every page lives under `app/[locale]`. Spanish is served at the root and English under `/en`: `middleware.ts` rewrites unprefixed paths to `/es/...`, redirects any public `/es/...` to the root, and picks a language for first visits from the Vercel country header, then `Accept-Language`, with the language cookie always winning. Route segments stay in Spanish in both languages. Hrefs in copy are written unprefixed and localized with `localeHref` / `useHref`.
+
+The `(site)` route group adds the header and footer through `components/site-chrome.tsx`; `/studio` sits outside it and mounts Sanity Studio (`sanity.config.ts`, basePath `/studio`).
+
+### Content comes in three layers
+
+1. **Text.** `content/copy.ts` declares the `SiteCopy` type explicitly, so a new field breaks compilation until both `content/copy.es.ts` and `content/copy.en.ts` have it. Those files are the fallback; the editable version is one Sanity `siteCopy` document per language (fixed ids `siteCopy.es` / `siteCopy.en`), deep-merged over the local copy in `content/get-copy.ts`, where null fields are skipped. Adding a copy field means updating the type, both locale files, and `sanity/schemas/site-copy.ts`.
+2. **Design data.** Colors, icons, step numbers and bento grid placement live in `content/site.ts`, keyed by the same ids as the copy, and are joined to the text in `content/resolve.ts`. Text never carries colors.
+3. **Sections.** `content/sections.ts` (`SECCIONES`) is the single list of home sections: it sets their order, the on/off switches in the Studio, and which anchors die with each one. The Sanity `siteSections` document stores `<id>` booleans and `<id>Fondo` (`claro` / `oscuro`). `app/[locale]/(site)/page.tsx` maps each id to a builder that receives its `surface`, and `pruneHrefs` rewrites links that point at a disabled section.
+
+`sanityFetch(query, params, fallback, tags)` in `sanity/client.ts` never throws; it returns the fallback. Projects and testimonials fall back to `content/fallback-content.ts` while the CMS is empty; that placeholder content is intentional. Cache tags are expired by the `/api/revalidate` webhook. The other API routes are `/api/brief` (form → Sanity + Resend) and `/api/reunion` (Cal.com webhook).
+
+### One page background, two themes
+
+Sections never paint a background. They declare `data-surface="mist" | "deep"`, and `components/theme-scroll.tsx` sets `data-tema="oscuro"` on `<html>` while a deep section covers the band at 45–55% of the viewport. All theme colors are custom properties registered with `@property` in `app/globals.css`, so they transition (600 ms; ink flips with a delay). Tailwind utilities resolve to those variables, which is what makes components theme-agnostic: use tokens, not hardcoded hex, for anything that must follow the theme.
+
+### Motion
+
+- GSAP and ScrollTrigger are registered through `lib/motion.ts` (`registerGsap`, `START`). Lenis (`components/smooth-scroll.tsx`) drives ScrollTrigger, handles same-page anchor clicks in the capture phase so Next's `Link` does not jump, and exposes its instance as `scrollSuave.actual`.
+- **Initial states of entrance animations live in CSS**, under `.motion-ready` (added by an inline script in `app/[locale]/layout.tsx`), and tweens are `gsap.to(..., { immediateRender: false, scrollTrigger })`. Do not use `from` / `fromTo` for scroll entrances: they write inline styles at creation, and across dozens of components that became a chain of forced reflows during hydration. A new animated `data-*` hook needs its initial state and a reduced-motion override in `globals.css`.
+- Every animation runs inside `gsap.matchMedia()` with a reduced-motion branch. With reduced motion or with JavaScript off, everything must be visible.
+- The hero entrance is pure CSS (`data-entra`, `SplitHeading immediate`) so the LCP does not wait for JavaScript.
+- The projects section (`components/sections/work.tsx` + `components/ui/project-stack.tsx`) is a pinned stepper on desktop: the section is `100vh + (n-1) × 50vh` tall (`.proyectos` in `globals.css`), each wheel gesture moves exactly one project, and on mobile it is a plain list.
+
+### Styling
+
+- Tokens are in `app/globals.css` (`@theme`). `cn()` in `lib/cn.ts` is a plain join, not tailwind-merge: when two utilities conflict, CSS order wins, not argument order.
+- Four brand colors (aqua, rosa, verde, miel), each with `-soft`, base and `-deep`. The base shade never carries small text on a light background. `lib/tones.ts` maps tones to full class names because Tailwind cannot build class names at runtime.
+- The font is a self-hosted subset of Schibsted Grotesk (weights 400–600, Latin) at `public/fonts/schibsted-grotesk-latin-v1.woff2`, preloaded by hand in the locale layout and declared in `globals.css` with metric-adjusted fallbacks. `next/font` did not emit its preload in this build. Weights above 600 do not exist; if the file changes, bump the `-vN` in its name, since `next.config.ts` serves it with an immutable cache header.
+- `experimental.inlineCss` is on: CSS ships inside the HTML.
+
+### SEO
+
+Canonical, hreflang, sitemap and JSON-LD all derive from `siteUrl` (`lib/site-url.ts`); the structured-data graph is built in `lib/schema.ts`. `app/llms.txt` describes the studio for answer engines.
+
+## README caveat
+
+`README.md` has the setup steps for Sanity (project `6zkp4mb1`, dataset `production`), Resend, Cal.com, the revalidation webhook and the Vercel environment variables. Some of its other sections predate the current code (for example `content/demo-content.ts`, the `Logo` in `icons.tsx`, and the "Dónde se edita cada cosa" table). Where they disagree, the code is the source of truth.
