@@ -67,9 +67,9 @@ Sections never paint a background. They declare `data-surface="mist" | "deep"`, 
 
 Canonical, hreflang, sitemap and JSON-LD all derive from `siteUrl` (`lib/site-url.ts`); the structured-data graph is built in `lib/schema.ts`. `app/llms.txt` describes the studio for answer engines.
 
-## Design skill vs. project decisions
+## Design skills vs. project decisions
 
-`.claude/skills/design-taste-frontend` (installed from `Leonxlnx/taste-skill`, tracked in `skills-lock.json`) is a general guide for new design work. Where it conflicts with this site, the site's existing decisions win; do not "fix" these to satisfy the skill:
+Two third-party skills live in `.claude/skills` (sources and hashes in `skills-lock.json`, update with `npx skills update`): `design-taste-frontend` (from `Leonxlnx/taste-skill`), a general guide for new design work, and `web-design-guidelines` (from `vercel-labs/agent-skills`), a UI audit that fetches Vercel's rule list at run time. Where either conflicts with this site, the site's existing decisions win; do not "fix" these to satisfy a skill:
 
 - Motion is GSAP + ScrollTrigger + Lenis, not Motion/Framer.
 - The page switches theme on scroll (Proceso, Proyectos and the form default to dark).
@@ -77,6 +77,8 @@ Canonical, hreflang, sitemap and JSON-LD all derive from `siteUrl` (`lib/site-ur
 - Icons (`components/ui/icons.tsx`), the brand mark and the bento vignettes are hand-made SVG/HTML.
 - Section labels use the `Tag` pill on most sections; social-proof clients are written as text, not logos.
 - Passive `scroll` listeners in `site-header.tsx`, `theme-scroll.tsx` and `project-stack.tsx` are intentional.
+- First-visit language comes from the Vercel country header before `Accept-Language` (`middleware.ts`), on purpose.
+- Copy is Spanish sentence case; English Title Case rules do not apply.
 
 Changing any of these is a design decision for the user, not a cleanup.
 
