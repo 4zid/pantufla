@@ -39,6 +39,14 @@ export type SiteCopy = {
     skip: string;
     closeMenu: string;
     language: string;
+    /**
+     * El botón que frena los rieles que se mueven solos (herramientas y
+     * clientes). No se ve: aparece al llegarle con el teclado. Con el mouse
+     * los rieles ya se frenan al pasar por encima, y en el teléfono con un
+     * toque.
+     */
+    pauseMotion: string;
+    resumeMotion: string;
   };
   hero: {
     titleSegments: Segment[];

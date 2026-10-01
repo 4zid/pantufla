@@ -121,6 +121,18 @@ export const siteCopy = defineType({
           type: "string",
         }),
         defineField({ name: "language", title: "Idioma", type: "string" }),
+        defineField({
+          name: "pauseMotion",
+          title: "Pausar los rieles",
+          type: "string",
+          description:
+            "Botón que aparece al llegar con el teclado a los rieles que se mueven solos.",
+        }),
+        defineField({
+          name: "resumeMotion",
+          title: "Reanudar los rieles",
+          type: "string",
+        }),
       ],
     }),
 

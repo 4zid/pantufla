@@ -23,7 +23,7 @@ export function SiteFooter() {
             >
               <Iso weight="heavy" className="h-4 w-auto" />
               <span className="text-[0.98rem] font-semibold uppercase tracking-[0.08em]">
-                {site.name}
+                <span translate="no">{site.name}</span>
               </span>
             </Link>
             <p className="mt-4 text-[0.95rem] leading-relaxed text-ink-soft">

@@ -9,6 +9,7 @@ import { Tag } from "@/components/ui/tag";
 import { SplitHeading } from "@/components/motion/split-heading";
 import { stackRows } from "@/content/site";
 import { useCopy } from "@/components/copy-provider";
+import { RielPausable } from "@/components/ui/riel-pausable";
 import { toneBg, type Tone } from "@/lib/tones";
 import { cn } from "@/lib/cn";
 
@@ -97,7 +98,7 @@ function Row({
                     )}
                   />
                 )}
-                {item.name}
+                <span translate="no">{item.name}</span>
               </span>
             </li>
           )),
@@ -127,9 +128,11 @@ export function StackTicker({ surface = "mist" }: { surface?: Surface }) {
         </div>
       </div>
 
-      <Reveal delay={0.2} className="mt-12 flex flex-col gap-3 md:mt-14">
-        <Row items={stackRows[0]} duration="32s" />
-        <Row items={stackRows[1]} duration="41s" reverse />
+      <Reveal delay={0.2} className="mt-12 md:mt-14">
+        <RielPausable className="flex flex-col gap-3">
+          <Row items={stackRows[0]} duration="32s" />
+          <Row items={stackRows[1]} duration="41s" reverse />
+        </RielPausable>
       </Reveal>
     </section>
   );

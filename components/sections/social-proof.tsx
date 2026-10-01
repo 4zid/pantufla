@@ -5,6 +5,7 @@ import type { Surface } from "@/components/ui/section";
 import { Reveal } from "@/components/motion/reveal";
 import { socialProof } from "@/content/site";
 import { useCopy } from "@/components/copy-provider";
+import { RielPausable } from "@/components/ui/riel-pausable";
 
 /**
  * Tira de prueba social, justo debajo del hero.
@@ -102,44 +103,47 @@ export function SocialProof({ surface = "mist" }: { surface?: Surface }) {
           las copias de más existen para que el empalme no se vea y van
           escondidas.
         */}
-        <div
-          className="ticker w-full min-w-0 flex-1 overflow-hidden"
-          style={{ "--ticker-fade": "3rem" } as React.CSSProperties}
-        >
-          <ul
-            className="ticker-track items-center"
-            style={{ "--ticker-duration": "34s" } as React.CSSProperties}
+        <RielPausable className="w-full min-w-0 flex-1">
+          <div
+            className="ticker w-full overflow-hidden"
+            style={{ "--ticker-fade": "3rem" } as React.CSSProperties}
           >
-            {Array.from({ length: REPES * 2 }).map((_, copia) =>
-              marcas.map((marca) => (
-                <li
-                  key={`${copia}-${marca.name}`}
-                  aria-hidden={copia > 0 || undefined}
-                  className="flex items-center whitespace-nowrap pr-12 text-[1.05rem] font-semibold tracking-[-0.03em] text-ink-soft"
-                >
-                  {marca.logo ? (
-                    <span
-                      role="img"
-                      aria-label={marca.name}
-                      className="logo-cliente"
-                      style={
-                        {
-                          ...medidas(
-                            marca.proporcion,
-                            "escala" in marca ? marca.escala : 1,
-                          ),
-                          "--logo": `url(${marca.logo})`,
-                        } as React.CSSProperties
-                      }
-                    />
-                  ) : (
-                    marca.name
-                  )}
-                </li>
-              )),
-            )}
-          </ul>
-        </div>
+            <ul
+              className="ticker-track items-center"
+              style={{ "--ticker-duration": "34s" } as React.CSSProperties}
+            >
+              {Array.from({ length: REPES * 2 }).map((_, copia) =>
+                marcas.map((marca) => (
+                  <li
+                    key={`${copia}-${marca.name}`}
+                    aria-hidden={copia > 0 || undefined}
+                    translate="no"
+                    className="flex items-center whitespace-nowrap pr-12 text-[1.05rem] font-semibold tracking-[-0.03em] text-ink-soft"
+                  >
+                    {marca.logo ? (
+                      <span
+                        role="img"
+                        aria-label={marca.name}
+                        className="logo-cliente"
+                        style={
+                          {
+                            ...medidas(
+                              marca.proporcion,
+                              "escala" in marca ? marca.escala : 1,
+                            ),
+                            "--logo": `url(${marca.logo})`,
+                          } as React.CSSProperties
+                        }
+                      />
+                    ) : (
+                      marca.name
+                    )}
+                  </li>
+                )),
+              )}
+            </ul>
+          </div>
+        </RielPausable>
       </Reveal>
     </section>
   );

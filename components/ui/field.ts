@@ -4,6 +4,6 @@
  * (components/ui/select.tsx), que tiene que verse como un campo más.
  */
 export const fieldClass =
-  "w-full rounded-xl border border-line-strong bg-card px-4 py-3 text-[0.98rem] text-ink transition-colors placeholder:text-ink-faint focus:border-ink focus:outline-none";
+  "w-full rounded-xl border border-line-strong bg-card px-4 py-3 text-[0.98rem] text-ink transition-colors placeholder:text-ink-faint focus:border-ink focus:outline-none focus:ring-[3px] focus:ring-ink/10";
 
 export const labelClass = "block text-[0.88rem] font-medium";

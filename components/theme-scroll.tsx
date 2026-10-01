@@ -47,6 +47,15 @@ import { useEffect } from "react";
 const BANDA_ARRIBA = 0.45;
 const BANDA_ABAJO = 0.55;
 
+/*
+   El color que el navegador del teléfono le da a su barra (theme-color). Son
+   los mismos dos valores de --page-bg en globals.css: el claro y el oscuro.
+   Van escritos acá y no leídos del CSS porque --page-bg transiciona, y leerlo
+   justo después del cambio devolvería un color a mitad de camino.
+*/
+const BARRA_CLARA = "#eaedf8";
+const BARRA_OSCURA = "#0e0e0e";
+
 export function ThemeScroll() {
   useEffect(() => {
     const raiz = document.documentElement;
@@ -80,6 +89,9 @@ export function ThemeScroll() {
       oscuro = quiereOscuro;
       if (oscuro) raiz.setAttribute("data-tema", "oscuro");
       else raiz.removeAttribute("data-tema");
+      document
+        .querySelector('meta[name="theme-color"]')
+        ?.setAttribute("content", oscuro ? BARRA_OSCURA : BARRA_CLARA);
     }
 
     function alScrollear() {
@@ -96,6 +108,9 @@ export function ThemeScroll() {
       window.removeEventListener("resize", alScrollear);
       if (pedido) cancelAnimationFrame(pedido);
       raiz.removeAttribute("data-tema");
+      document
+        .querySelector('meta[name="theme-color"]')
+        ?.setAttribute("content", BARRA_CLARA);
     };
   }, []);
 
