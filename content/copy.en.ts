@@ -37,6 +37,8 @@ export const en: SiteCopy = {
     openMenu: "Open menu",
     skip: "Skip to content",
     closeMenu: "Close menu",
+    pauseMotion: "Pause motion",
+    resumeMotion: "Resume motion",
     language: "Language",
   },
 
@@ -216,7 +218,7 @@ export const en: SiteCopy = {
     contact: {
       name: "Talk to us",
       summary: "Your project does not fit either of those.",
-      price: "Let's talk",
+      price: "Let’s talk",
       features: [
         "Booking and scheduling systems",
         "Integrations with what you already use",

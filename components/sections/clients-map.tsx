@@ -219,19 +219,17 @@ export function ClientsMap({ surface }: { surface?: Surface }) {
                   <span
                     aria-hidden
                     className={cn(
-                      "absolute rounded-full bg-aqua transition-all duration-300",
+                      "absolute h-[18px] w-[18px] rounded-full bg-aqua transition-[scale,opacity] duration-300 md:h-6 md:w-6",
                       encendido
-                        ? "h-[18px] w-[18px] opacity-45 md:h-6 md:w-6"
-                        : "h-3 w-3 opacity-30 md:h-[18px] md:w-[18px]",
+                        ? "opacity-45"
+                        : "scale-[0.67] opacity-30 md:scale-75",
                     )}
                   />
                   <span
                     aria-hidden
                     className={cn(
-                      "relative rounded-full bg-aqua-deep ring-2 ring-paper transition-all duration-300",
-                      encendido
-                        ? "h-2 w-2 md:h-[9px] md:w-[9px]"
-                        : "h-1.5 w-1.5 md:h-[7px] md:w-[7px]",
+                      "relative h-2 w-2 rounded-full bg-aqua-deep ring-2 ring-paper transition-[scale] duration-300 md:h-[9px] md:w-[9px]",
+                      !encendido && "scale-75 md:scale-[0.78]",
                     )}
                   />
                 </span>

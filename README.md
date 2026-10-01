@@ -367,6 +367,10 @@ con el scroll.
 Por eso los componentes usan siempre los tokens y no colores escritos a mano:
 lo que no sale de un token no se da vuelta con el tema.
 
+El cambio también le llega al navegador: la barra del teléfono (`theme-color`)
+toma el color del fondo, y en oscuro las barras de scroll y los controles
+nativos pasan a su versión oscura (`color-scheme`).
+
 ---
 
 ## Movimiento
@@ -398,6 +402,12 @@ CTA), con el margen justo para que el título no quede debajo del header.
    reduce` no se anima nada y todo aparece en su lugar final.
 4. La entrada del hero es CSS puro, para que el titular (el LCP) no espere al
    JavaScript.
+5. Lo que se mueve solo se puede frenar. Los rieles de herramientas y de
+   clientes paran al pasar el mouse, con el foco adentro, con un toque en el
+   teléfono y con un botón que aparece al llegar con el teclado
+   (`components/ui/riel-pausable.tsx`). Los testimonios rotan solos hasta que
+   se elige una cara, esperan mientras alguien los lee y no rotan con
+   movimiento reducido.
 
 ---
 

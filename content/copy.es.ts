@@ -44,6 +44,8 @@ export const es: SiteCopy = {
     openMenu: "Abrir menú",
     skip: "Ir al contenido",
     closeMenu: "Cerrar menú",
+    pauseMotion: "Pausar el movimiento",
+    resumeMotion: "Reanudar el movimiento",
     language: "Idioma",
   },
 

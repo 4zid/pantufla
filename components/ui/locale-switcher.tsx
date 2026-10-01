@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 
 import { useCopy, useLocale } from "@/components/copy-provider";
@@ -27,6 +28,10 @@ import { cn } from "@/lib/cn";
  * Cambia de idioma sin cambiar de página: se le saca el prefijo al camino
  * actual y se le pone el del idioma nuevo. Mandar a alguien al inicio por
  * cambiar de idioma es perderle la página que estaba leyendo.
+ *
+ * Son enlaces y no botones, porque lo que hacen es llevar a otra página: así
+ * se pueden abrir en otra pestaña y los buscadores los siguen. El clic común
+ * igual lo atiende el componente, para guardar la cookie antes de navegar.
  */
 export function LocaleSwitcher({ className }: { className?: string }) {
   const actual = useLocale();
@@ -34,25 +39,31 @@ export function LocaleSwitcher({ className }: { className?: string }) {
   const router = useRouter();
   const pathname = usePathname() || "/";
 
-  function cambiar(destino: Locale) {
+  // usePathname() devuelve la URL como la ve el visitante: en español no trae
+  // prefijo, en inglés sí. Se normaliza a la forma sin prefijo y después se
+  // le pone el del idioma destino.
+  const sinPrefijo =
+    pathname === `/${actual}` || pathname.startsWith(`/${actual}/`)
+      ? pathname.slice(actual.length + 1) || "/"
+      : pathname;
+
+  function rutaEn(destino: Locale) {
+    return destino === defaultLocale
+      ? sinPrefijo
+      : `/${destino}${sinPrefijo === "/" ? "" : sinPrefijo}`;
+  }
+
+  function cambiar(e: React.MouseEvent, destino: Locale) {
+    // Con una tecla apretada o la rueda, el navegador abre otra pestaña: eso
+    // es del navegador y no se toca.
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) {
+      return;
+    }
+    e.preventDefault();
     if (destino === actual) return;
 
     document.cookie = `${LOCALE_COOKIE}=${destino};path=/;max-age=${LOCALE_COOKIE_MAX_AGE};samesite=lax`;
-
-    // usePathname() devuelve la URL como la ve el visitante: en español no trae
-    // prefijo, en inglés sí. Se normaliza a la forma sin prefijo y después se
-    // le pone el del idioma destino.
-    const sinPrefijo =
-      pathname === `/${actual}` || pathname.startsWith(`/${actual}/`)
-        ? pathname.slice(actual.length + 1) || "/"
-        : pathname;
-
-    const destinoPath =
-      destino === defaultLocale
-        ? sinPrefijo
-        : `/${destino}${sinPrefijo === "/" ? "" : sinPrefijo}`;
-
-    router.push(destinoPath);
+    router.push(rutaEn(destino));
     router.refresh();
   }
 
@@ -75,12 +86,13 @@ export function LocaleSwitcher({ className }: { className?: string }) {
         }}
       />
       {locales.map((locale) => (
-        <button
+        <Link
           key={locale}
-          type="button"
-          onClick={() => cambiar(locale)}
+          href={rutaEn(locale)}
+          onClick={(e) => cambiar(e, locale)}
           aria-current={locale === actual}
           lang={locale}
+          hrefLang={locale}
           /* El after estira el area tocable a 44px de alto sin agrandar la
              pastilla. Medido en un telefono, el boton daba 32x26: pasa el
              minimo de WCAG 2.2 pero esta lejos de lo comodo, y es el primer
@@ -89,13 +101,15 @@ export function LocaleSwitcher({ className }: { className?: string }) {
              alto: los dos botones estan pegados, y estirarlos a lo ancho
              haria que cada uno invada al otro. */
           className={cn(
-            "relative z-10 w-9 rounded-full py-1.5 text-[0.76rem] font-semibold uppercase tracking-[0.04em] transition-colors duration-300",
+            "relative z-10 block w-9 rounded-full py-1.5 text-center text-[0.76rem] font-semibold uppercase tracking-[0.04em] transition-colors duration-300",
             "after:absolute after:inset-x-0 after:top-1/2 after:h-11 after:-translate-y-1/2 after:content-['']",
-            locale === actual ? "text-ink" : "text-ink-faint hover:text-ink-soft",
+            locale === actual
+              ? "text-ink"
+              : "text-ink-faint hover:text-ink-soft",
           )}
         >
           {locale}
-        </button>
+        </Link>
       ))}
     </div>
   );

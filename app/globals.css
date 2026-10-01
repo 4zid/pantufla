@@ -394,6 +394,9 @@
    píldora del menú, los botones sobre oscuro— pero ya no es el fondo de nada.
 */
 :root[data-tema="oscuro"] {
+  /* Que el navegador también lo sepa: barras de scroll, autocompletado y
+     controles nativos pasan a su versión oscura. */
+  color-scheme: dark;
   --page-bg: #0e0e0e;
   --color-paper: #0e0e0e;
   --color-paper-alt: #151515;
@@ -422,6 +425,20 @@
     scroll-behavior: smooth;
     scroll-padding-top: 6rem;
     -webkit-text-size-adjust: 100%;
+  }
+
+  a,
+  button,
+  input,
+  label,
+  select,
+  textarea,
+  [role="button"] {
+    touch-action: manipulation;
+  }
+
+  html {
+    -webkit-tap-highlight-color: transparent;
   }
 
   body {
@@ -902,8 +919,12 @@ html.lenis {
     animation-direction: reverse;
   }
 
-  /* Al pasar el cursor se frena, para poder leer qué dice cada uno. */
-  .ticker:hover .ticker-track {
+  /* Al pasar el cursor se frena, para poder leer qué dice cada uno. Y con
+     el foco adentro o pausado a mano (components/ui/riel-pausable.tsx),
+     también: el mouse no es la única forma de pedirle que pare. */
+  .ticker:hover .ticker-track,
+  [data-riel]:focus-within .ticker-track,
+  [data-riel][data-pausado] .ticker-track {
     animation-play-state: paused;
   }
 

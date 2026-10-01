@@ -213,7 +213,7 @@ export function SiteHeader() {
                     : "ml-2.5 max-w-[8rem] opacity-100",
                 )}
               >
-                {site.name}
+                <span translate="no">{site.name}</span>
               </span>
             </Link>
 
@@ -246,14 +246,14 @@ export function SiteHeader() {
               <span className="relative block h-3 w-5">
                 <span
                   className={cn(
-                    "absolute left-0 h-px w-full bg-ink transition-all duration-300",
-                    open ? "top-1.5 rotate-45" : "top-0",
+                    "absolute left-0 top-1.5 h-px w-full bg-ink transition-[translate,rotate] duration-300",
+                    open ? "rotate-45" : "-translate-y-1.5",
                   )}
                 />
                 <span
                   className={cn(
-                    "absolute left-0 h-px w-full bg-ink transition-all duration-300",
-                    open ? "top-1.5 -rotate-45" : "top-3",
+                    "absolute left-0 top-1.5 h-px w-full bg-ink transition-[translate,rotate] duration-300",
+                    open ? "-rotate-45" : "translate-y-1.5",
                   )}
                 />
               </span>

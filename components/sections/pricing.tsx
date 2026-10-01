@@ -68,10 +68,30 @@ export function Pricing({ surface }: { surface?: Surface }) {
         />
 
         <Reveal delay={0.2}>
+          {/*
+            Un grupo de dos opciones: se entra con Tab a la elegida y se
+            cambia con las flechas, como cualquier grupo de radios. Con dos
+            opciones cualquier flecha lleva a la otra.
+          */}
           <div
             ref={toggle}
             role="radiogroup"
             aria-label={pricing.groupLabel}
+            onKeyDown={(e) => {
+              if (
+                !["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(
+                  e.key,
+                )
+              ) {
+                return;
+              }
+              e.preventDefault();
+              const otra = mode === "once" ? "split" : "once";
+              setMode(otra);
+              toggle.current
+                ?.querySelector<HTMLElement>(`[data-value="${otra}"]`)
+                ?.focus();
+            }}
             className="relative flex w-full shrink-0 rounded-full border border-line-strong bg-card p-1 sm:w-auto"
           >
             {/* La pastilla que viaja. Va detrás de los botones y sin capturar
@@ -92,6 +112,7 @@ export function Pricing({ surface }: { surface?: Surface }) {
                   type="button"
                   role="radio"
                   aria-checked={active}
+                  tabIndex={active ? 0 : -1}
                   onClick={() => setMode(value)}
                   className={cn(
                     "relative z-10 flex flex-1 items-center justify-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-2 text-[0.8rem] font-medium transition-colors duration-300 sm:flex-none sm:gap-2 sm:px-4 sm:text-[0.88rem]",
@@ -115,6 +136,21 @@ export function Pricing({ surface }: { surface?: Surface }) {
               );
             })}
           </div>
+          {/*
+            Los precios cambian con una cifra que rueda, y eso el lector de
+            pantalla no lo anuncia. Acá va dicho de una vez, al cambiar de
+            modo: qué se eligió y cuánto queda cada plan.
+          */}
+          <p className="sr-only" aria-live="polite">
+            {pricing.toggle[mode].label}:{" "}
+            {pricing.plans
+              .map((plan) =>
+                mode === "once"
+                  ? `${plan.name} $${money.format(plan.price.once)}`
+                  : `${plan.name} $${money.format(plan.price.split)} × ${plan.price.splitCount}`,
+              )
+              .join(", ")}
+          </p>
         </Reveal>
       </div>
 

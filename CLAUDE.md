@@ -47,7 +47,7 @@ The `(site)` route group adds the header and footer through `components/site-chr
 
 ### One page background, two themes
 
-Sections never paint a background. They declare `data-surface="mist" | "deep"`, and `components/theme-scroll.tsx` sets `data-tema="oscuro"` on `<html>` while a deep section covers the band at 45–55% of the viewport. All theme colors are custom properties registered with `@property` in `app/globals.css`, so they transition (600 ms; ink flips with a delay). Tailwind utilities resolve to those variables, which is what makes components theme-agnostic: use tokens, not hardcoded hex, for anything that must follow the theme.
+Sections never paint a background. They declare `data-surface="mist" | "deep"`, and `components/theme-scroll.tsx` sets `data-tema="oscuro"` on `<html>` while a deep section covers the band at 45–55% of the viewport. All theme colors are custom properties registered with `@property` in `app/globals.css`, so they transition (600 ms; ink flips with a delay). The dark theme also sets `color-scheme: dark`, and `theme-scroll.tsx` swaps the `theme-color` meta between the two `--page-bg` values. Tailwind utilities resolve to those variables, which is what makes components theme-agnostic: use tokens, not hardcoded hex, for anything that must follow the theme.
 
 ### Motion
 
@@ -55,6 +55,7 @@ Sections never paint a background. They declare `data-surface="mist" | "deep"`, 
 - **Initial states of entrance animations live in CSS**, under `.motion-ready` (added by an inline script in `app/[locale]/layout.tsx`), and tweens are `gsap.to(..., { immediateRender: false, scrollTrigger })`. Do not use `from` / `fromTo` for scroll entrances: they write inline styles at creation, and across dozens of components that became a chain of forced reflows during hydration. A new animated `data-*` hook needs its initial state and a reduced-motion override in `globals.css`.
 - Every animation runs inside `gsap.matchMedia()` with a reduced-motion branch. With reduced motion or with JavaScript off, everything must be visible.
 - The hero entrance is pure CSS (`data-entra`, `SplitHeading immediate`) so the LCP does not wait for JavaScript.
+- Anything that moves on its own must be stoppable. Tickers are wrapped in `RielPausable` (`components/ui/riel-pausable.tsx`): they pause on hover, focus-within, a touch tap, and a keyboard-only button (`header.pauseMotion` / `resumeMotion` in the copy). Testimonials auto-rotate until a face is picked, pause while hovered or focused, never rotate under reduced motion, and only use `aria-live` after a manual pick.
 - The projects section (`components/sections/work.tsx` + `components/ui/project-stack.tsx`) scrolls freely. On desktop the heading is sticky at mid-height and the row crossing the viewport middle is highlighted. It used to be a pinned wheel-driven stepper; the user found it painful, so do not reintroduce scroll hijacking there.
 
 ### Styling

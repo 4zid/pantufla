@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { site } from "@/content/site";
 import { useCopy } from "@/components/copy-provider";
@@ -31,6 +31,17 @@ export function BriefForm() {
     "idle",
   );
   const [error, setError] = useState<string | null>(null);
+  const exito = useRef<HTMLHeadingElement>(null);
+
+  /*
+     Al enviar, el formulario desaparece y con él el botón que tenía el foco:
+     sin esto el foco cae al principio de la página y quien navega con
+     teclado o lector no se entera de que el brief llegó. Se lleva al título
+     del mensaje, que el lector lee en voz alta al recibirlo.
+  */
+  useEffect(() => {
+    if (status === "sent") exito.current?.focus();
+  }, [status]);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -61,11 +72,16 @@ export function BriefForm() {
 
   if (status === "sent") {
     return (
-      <div className="rounded-panel border border-line bg-card p-8 text-ink md:p-10">
+      <div
+        role="status"
+        className="rounded-panel border border-line bg-card p-8 text-ink md:p-10"
+      >
         <span className="flex h-11 w-11 items-center justify-center rounded-full bg-aqua-soft text-aqua-deep">
           <CheckIcon className="h-5 w-5" />
         </span>
-        <h2 className="mt-5 text-h3">{form.success.title}</h2>
+        <h2 ref={exito} tabIndex={-1} className="mt-5 text-h3">
+          {form.success.title}
+        </h2>
         <p className="mt-3 max-w-md text-[0.98rem] leading-relaxed text-ink-soft">
           {form.success.body}
         </p>
@@ -113,6 +129,7 @@ export function BriefForm() {
             type="email"
             required
             autoComplete="email"
+            spellCheck={false}
             placeholder={form.email.placeholder}
             className={`${fieldClass} mt-2`}
           />

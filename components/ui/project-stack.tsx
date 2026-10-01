@@ -102,7 +102,7 @@ export function ProjectStack({
                 href={destino}
                 target={externo ? "_blank" : undefined}
                 rel={externo ? "noreferrer" : undefined}
-                className="group/esfera relative block w-[7.5rem] shrink-0 rounded-full outline-none sm:w-[10rem] lg:w-[12rem]"
+                className="group/esfera relative block w-[7.5rem] shrink-0 rounded-full sm:w-[10rem] lg:w-[12rem]"
               >
                 <span className="sr-only">
                   {work.view}: {project.title}
@@ -113,7 +113,7 @@ export function ProjectStack({
                 />
                 <span
                   aria-hidden
-                  className="absolute inset-0 flex translate-y-1 items-center justify-center gap-1 pt-[32%] text-[0.82rem] font-semibold tracking-[-0.02em] text-white opacity-0 transition-all duration-300 ease-out group-hover/esfera:translate-y-0 group-hover/esfera:opacity-100 group-focus-visible/esfera:translate-y-0 group-focus-visible/esfera:opacity-100 sm:text-[0.95rem]"
+                  className="absolute inset-0 flex translate-y-1 items-center justify-center gap-1 pt-[32%] text-[0.82rem] font-semibold tracking-[-0.02em] text-white opacity-0 transition-[translate,opacity] duration-300 ease-out group-hover/esfera:translate-y-0 group-hover/esfera:opacity-100 group-focus-visible/esfera:translate-y-0 group-focus-visible/esfera:opacity-100 sm:text-[0.95rem]"
                 >
                   {work.view}
                   <ArrowUpRightIcon className="h-[0.9em] w-[0.9em]" />
@@ -121,7 +121,10 @@ export function ProjectStack({
               </Link>
 
               <div className="min-w-0 max-w-md">
-                <Titulo className="text-[1.35rem] font-semibold leading-tight tracking-[-0.03em] sm:text-[1.5rem]">
+                <Titulo
+                  translate="no"
+                  className="text-[1.35rem] font-semibold leading-tight tracking-[-0.03em] sm:text-[1.5rem]"
+                >
                   {project.title}
                 </Titulo>
                 {project.tagline ? (

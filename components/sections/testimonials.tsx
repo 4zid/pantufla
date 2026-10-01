@@ -41,6 +41,12 @@ import { cn } from "@/lib/cn";
  * Las caras rotan solas cada seis segundos hasta que el visitante toca una.
  * Ahí se corta para siempre: si alguien eligió a quién quiere leer, moverle el
  * texto abajo del ojo es de las peores cosas que puede hacer una interfaz.
+ *
+ * Mientras tanto la rotación espera si hay alguien leyendo —el mouse encima o
+ * el foco adentro—, y con movimiento reducido no arranca: la cita que cambia
+ * sola es movimiento, aunque no se deslice. El lector de pantalla solo anuncia
+ * la cita que el visitante eligió; las que pasan solas las anunciaría cada
+ * seis segundos, en medio de lo que sea que esté leyendo.
  */
 
 const tintes = [
@@ -90,18 +96,20 @@ export function Testimonials({
   const lista = items.slice(0, CARAS);
   const [activo, setActivo] = useState(0);
   const [manual, setManual] = useState(false);
+  const [leyendo, setLeyendo] = useState(false);
   const cita = useRef<HTMLDivElement>(null);
 
   // La rotación se arma con un intervalo y no con un tween encadenado: así
   // cortarla es dejar de agendar el próximo, y no perseguir una animación.
   useEffect(() => {
-    if (manual || lista.length < 2) return;
+    if (manual || leyendo || lista.length < 2) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const id = window.setInterval(
       () => setActivo((i) => (i + 1) % lista.length),
       ROTACION,
     );
     return () => window.clearInterval(id);
-  }, [manual, lista.length]);
+  }, [manual, leyendo, lista.length]);
 
   // El cambio de cita entra desde abajo y con opacidad. Es corto a propósito:
   // el visitante ya eligió, lo que quiere es leer, no ver una transición.
@@ -134,7 +142,19 @@ export function Testimonials({
           queda, callado. */}
       <h2 className="sr-only">{testimonials.title}</h2>
 
-      <div className="flex flex-col items-center text-center">
+      <div
+        className="flex flex-col items-center text-center"
+        onPointerEnter={(e) => {
+          if (e.pointerType === "mouse") setLeyendo(true);
+        }}
+        onPointerLeave={(e) => {
+          if (e.pointerType === "mouse") setLeyendo(false);
+        }}
+        onFocus={() => setLeyendo(true)}
+        onBlur={(e) => {
+          if (!e.currentTarget.contains(e.relatedTarget)) setLeyendo(false);
+        }}
+      >
         <Reveal>
           <Tag icon="cita">{testimonials.eyebrow}</Tag>
         </Reveal>
@@ -160,7 +180,7 @@ export function Testimonials({
                     aria-pressed={puesto}
                     aria-label={item.name}
                     className={cn(
-                      "relative block h-[68px] w-[68px] overflow-hidden rounded-[18px] transition-all duration-500 ease-out md:h-[82px] md:w-[82px]",
+                      "relative block h-[68px] w-[68px] overflow-hidden rounded-[18px] transition-[scale,opacity,box-shadow,filter] duration-500 ease-out md:h-[82px] md:w-[82px]",
                       puesto
                         ? "scale-105 opacity-100 shadow-[0_12px_28px_-12px_rgba(0,0,0,0.35)] ring-2 ring-ink/15"
                         : "opacity-45 grayscale hover:opacity-80 hover:grayscale-0",
@@ -202,7 +222,7 @@ export function Testimonials({
             hay que recorrer con la cabeza. */}
         <div
           ref={cita}
-          aria-live="polite"
+          aria-live={manual ? "polite" : "off"}
           className="mt-10 flex w-full max-w-3xl flex-col items-center"
         >
           <div data-fade>
@@ -238,12 +258,21 @@ export function Testimonials({
               </span>
             </blockquote>
 
+            {/* El nombre y la empresa no se traducen: el traductor del
+                navegador convierte «Lupa Studio» en una lupa. El cargo sí. */}
             <figcaption data-fade className="mt-7">
-              <span className="block text-[1.02rem] font-medium text-ink">
+              <span
+                translate="no"
+                className="block text-[1.02rem] font-medium text-ink"
+              >
                 {actual.name}
               </span>
               <span className="mt-1 block text-[0.92rem] text-ink-faint">
-                {[actual.role, actual.company].filter(Boolean).join(" · ")}
+                {actual.role}
+                {actual.role && actual.company ? " · " : null}
+                {actual.company ? (
+                  <span translate="no">{actual.company}</span>
+                ) : null}
               </span>
             </figcaption>
           </figure>
