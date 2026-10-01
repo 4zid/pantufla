@@ -89,14 +89,16 @@ export const fallbackProjects: SanityProject[] = [
     services: ["Diseño UI", "Desarrollo"],
   },
   {
-    // Sin bajada ni rubro: no los tengo. La tarjeta no los usa y la ficha
-    // resuelve sola lo que falta, así que antes que inventarle una
-    // descripción a un cliente real, va el nombre y el enlace.
     _id: "work-2mg",
     title: "2MG",
     slug: "2mg",
     art: "/proyectos/2mg.jpg",
     url: "https://2-mg.vercel.app/",
+    tagline:
+      "Sitio para una productora técnica de eventos corporativos: pantallas LED, mapping, audio y streaming en tres países.",
+    sector: "Eventos corporativos",
+    plan: "Sitio",
+    services: ["Diseño", "Desarrollo"],
   },
 ];
 

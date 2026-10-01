@@ -335,10 +335,10 @@ recién cuando hace falta, no en el primer paquete de JavaScript.
 
 ### Los proyectos
 
-En escritorio la sección queda clavada y funciona como un paso a paso: **cada
-gesto de la rueda o del trackpad avanza un proyecto**, con el título y el
-proyecto activo alineados. Al llegar al primero o al último, el gesto siguiente
-sale de la sección. En el teléfono es una lista normal.
+Se recorre con el scroll normal, sin trabar la rueda. En escritorio el título
+queda quieto a media altura mientras pasa la columna de proyectos, y se prende
+el que cruza esa altura; los demás quedan apagados pero a la vista. En el
+teléfono es una lista, con el mismo resaltado.
 
 ---
 

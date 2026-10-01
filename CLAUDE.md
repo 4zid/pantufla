@@ -50,11 +50,11 @@ Sections never paint a background. They declare `data-surface="mist" | "deep"`, 
 
 ### Motion
 
-- GSAP and ScrollTrigger are registered through `lib/motion.ts` (`registerGsap`, `START`). Lenis (`components/smooth-scroll.tsx`) drives ScrollTrigger, handles same-page anchor clicks in the capture phase so Next's `Link` does not jump, and exposes its instance as `scrollSuave.actual`.
+- GSAP and ScrollTrigger are registered through `lib/motion.ts` (`registerGsap`, `START`). Lenis (`components/smooth-scroll.tsx`) drives ScrollTrigger, and handles same-page anchor clicks in the capture phase so Next's `Link` does not jump.
 - **Initial states of entrance animations live in CSS**, under `.motion-ready` (added by an inline script in `app/[locale]/layout.tsx`), and tweens are `gsap.to(..., { immediateRender: false, scrollTrigger })`. Do not use `from` / `fromTo` for scroll entrances: they write inline styles at creation, and across dozens of components that became a chain of forced reflows during hydration. A new animated `data-*` hook needs its initial state and a reduced-motion override in `globals.css`.
 - Every animation runs inside `gsap.matchMedia()` with a reduced-motion branch. With reduced motion or with JavaScript off, everything must be visible.
 - The hero entrance is pure CSS (`data-entra`, `SplitHeading immediate`) so the LCP does not wait for JavaScript.
-- The projects section (`components/sections/work.tsx` + `components/ui/project-stack.tsx`) is a pinned stepper on desktop: the section is `100vh + (n-1) × 50vh` tall (`.proyectos` in `globals.css`), each wheel gesture moves exactly one project, and on mobile it is a plain list.
+- The projects section (`components/sections/work.tsx` + `components/ui/project-stack.tsx`) scrolls freely. On desktop the heading is sticky at mid-height and the row crossing the viewport middle is highlighted. It used to be a pinned wheel-driven stepper; the user found it painful, so do not reintroduce scroll hijacking there.
 
 ### Styling
 
