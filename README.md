@@ -3,24 +3,27 @@
 Sitio del estudio: diseño y desarrollo web con alcance cerrado, precio cerrado y
 fecha de entrega.
 
-Next.js (App Router) · Tailwind CSS v4 · Sanity · Resend · Vercel.
+Next.js 16 (App Router) · React 19 · Tailwind CSS v4 · Sanity · GSAP + Lenis ·
+Resend · Cal.com · Vercel.
+
+En vivo en [www.pantufla.design](https://www.pantufla.design), en español en la
+raíz y en inglés en `/en`.
 
 ---
 
-## Antes de publicar
+## Contenido de respaldo
 
-Tres cosas quedaron con contenido de relleno a propósito. Reemplazalas:
+El sitio arranca con contenido propio aunque el CMS esté vacío. Tres cosas
+conviene tener a mano:
 
-1. **Proyectos y testimonios.** Están en `content/demo-content.ts` con nombres
-   inventados. Se muestran **solo mientras el CMS esté vacío**: apenas cargues el
-   primer proyecto real en `/studio`, Sanity gana y el relleno desaparece. No
-   publiques el sitio con esos datos.
+1. **Proyectos y testimonios.** El respaldo está en
+   `content/fallback-content.ts`. Se muestra **solo mientras el CMS no tenga
+   ninguno**: apenas cargues el primer proyecto (o el primer testimonio) en
+   `/studio`, Sanity gana y el respaldo de ese tipo deja de verse.
 2. **Los países del mapa.** `content/site.ts` → `clients`. El pie de la sección
-   cuenta esa lista, así que el número siempre coincide con lo que se muestra:
-   sacá las ciudades donde todavía no hubo un proyecto y el texto se ajusta solo.
-3. **El logo.** `components/ui/icons.tsx` → `Logo`. Es una pantufla dibujada en
-   dos trazos, pensada como marca provisoria hasta que tengas la tuya.
-4. **Datos de contacto y redes.** `content/site.ts` → `site`.
+   cuenta esa lista, así que el número siempre coincide con lo que se muestra.
+3. **Datos de contacto y redes.** `content/site.ts` → `site` (mail, WhatsApp,
+   ubicación, redes).
 
 ---
 
@@ -32,18 +35,19 @@ cp .env.example .env.local   # completá las variables
 npm run dev
 ```
 
-El sitio arranca aunque no haya nada configurado: sin `NEXT_PUBLIC_SANITY_PROJECT_ID`
-las consultas devuelven vacío y se usa el contenido de muestra. `/studio` muestra
-una pantalla con los pasos que faltan en vez de romper.
+El sitio arranca aunque no haya nada configurado. El proyecto de Sanity viene
+por defecto, y si Sanity no responde cada consulta cae al texto y al contenido
+que ya están en el repositorio: el sitio nunca se rompe por el CMS.
 
 ### Sanity
 
 El proyecto ya existe: **`6zkp4mb1`**, dataset `production`. El ID vive en
 `sanity/env.ts` porque es público, así que leer contenido y abrir `/studio`
-funciona sin configurar nada.
+funciona sin configurar nada. Si algún día se vaciara, `/studio` muestra una
+pantalla con los pasos que faltan en vez de romper.
 
-Lo único que hace falta cargar es el token de escritura, que se usa **solo** para
-guardar los briefs que llegan del formulario:
+Lo único que hace falta cargar es el token de escritura, que se usa para guardar
+los briefs que llegan del formulario y las reuniones que llegan de Cal.com:
 
 1. En [sanity.io/manage](https://www.sanity.io/manage) → API → Tokens, creá uno
    con permiso *Editor*.
@@ -73,7 +77,7 @@ Variables a cargar en el panel de Vercel:
 
 | Variable | Para qué |
 | --- | --- |
-| `SANITY_API_WRITE_TOKEN` | guardar los briefs en el CMS |
+| `SANITY_API_WRITE_TOKEN` | guardar los briefs y las reuniones en el CMS |
 | `RESEND_API_KEY` | mandar el aviso por mail |
 | `BRIEF_NOTIFICATION_TO` | a qué casilla llega el brief |
 | `BRIEF_NOTIFICATION_FROM` | `brief@pantufla.design` (dominio verificado) |
@@ -90,13 +94,38 @@ apex está cargado como redirección 308 hacia él— y ese es el valor que usa
 hreflang, el sitemap y los `@id` del grafo de datos estructurados, así que
 apuntarlo a un host que no resuelve es peor que no tenerlo.
 
+### Producción y staging
+
+Producción se publica desde la rama `claude/pantufla-agency-website-okqg2e`
+(la rama principal del repo; no hay `main`): **todo lo que entra ahí sale en
+www.pantufla.design**. Los diseños nuevos se prueban antes en la rama `staging`.
+
+- Cada push a `staging` arma una vista previa en Vercel, siempre en la misma
+  dirección: `pantufla-git-staging-kalada.vercel.app`. Está detrás del login de
+  Vercel del equipo; para mostrársela a alguien de afuera se comparte un link
+  desde el panel del despliegue, o se le asigna un dominio propio
+  (`staging.pantufla.design`) en Settings → Domains, eligiendo la rama.
+- Las vistas previas no se indexan: `lib/entorno.ts` las reconoce por
+  `VERCEL_ENV` y el sitio sale con `noindex` y un robots.txt cerrado, aunque
+  tengan dominio propio.
+- Staging lee el mismo contenido de Sanity que producción: lo que se publica en
+  el Studio se ve en los dos.
+- Si las variables de Resend y Sanity están habilitadas para Preview en Vercel,
+  un brief enviado desde staging llega de verdad a la casilla y al Studio.
+- Cuando un diseño se aprueba, se mergea `staging` en la rama de producción.
+  Y cuando producción recibe un arreglo, se trae a `staging` con un merge para
+  que las dos no se separen.
+- Vercel no arma una rama cuyo último commit ya se construyó en otra: si
+  `staging` queda en el mismo commit que producción, no hay vista previa nueva
+  hasta que reciba un commit propio.
+
 ### Que publicar en Sanity se vea
 
 Cada consulta a Sanity sale etiquetada por tipo —`project`, `post`,
-`testimonial`, `siteCopy`— pero una etiqueta sola no se vence: hace falta que
-alguien avise. Ese alguien es `/api/revalidate`, y sin el webhook configurado un
-cambio publicado en el Studio tarda en aparecer o no aparece hasta el próximo
-deploy.
+`testimonial`, `siteCopy`, `siteSections`— pero una etiqueta sola no se vence:
+hace falta que alguien avise. Ese alguien es `/api/revalidate`, y sin el
+webhook configurado un cambio publicado en el Studio tarda en aparecer o no
+aparece hasta el próximo deploy.
 
 Se arma una vez, en dos lados, con **el mismo string**:
 
@@ -112,18 +141,23 @@ Se arma una vez, en dos lados, con **el mismo string**:
    | URL | `https://www.pantufla.design/api/revalidate` |
    | Dataset | `production` |
    | Trigger on | Create, Update, Delete |
-   | Filter | `!(_id in path("drafts.**")) && _type in ["project","post","testimonial","siteCopy"]` |
+   | Filter | `!(_id in path("drafts.**")) && _type in ["project","post","testimonial","siteCopy","siteSections"]` |
    | Projection | dejalo vacío |
    | HTTP method | `POST` |
    | Secret | el mismo del paso 1 |
+
+`siteSections` es el documento de los interruptores y fondos de la home. Si el
+webhook se armó antes con el filtro de cuatro tipos, hay que sumarlo: sin él,
+prender, apagar o cambiar de fondo una sección no se ve hasta que el caché se
+venza solo.
 
 La exclusión de borradores no es un detalle: Sanity guarda el draft mientras se
 escribe, así que sin ella el webhook dispara con cada tecla que se toca en el
 Studio. Con ella dispara solo al publicar.
 
 La proyección va vacía a propósito. Así Sanity manda el documento entero y el
-endpoint lee el `_type` para saber qué etiqueta vencer; con una proyección que
-no lo incluya se queda sin saber qué cambió.
+endpoint lee el `_type` para saber qué etiqueta vencer. Si llegara sin `_type`,
+el endpoint vence todas las etiquetas por las dudas.
 
 Para comprobar que quedó: `GET https://www.pantufla.design/api/revalidate`
 contesta `{"listo":true,...}` cuando la variable está cargada. Si dice
@@ -160,7 +194,8 @@ hay que pedirle nada a nadie para reprogramar:
    `CAL_WEBHOOK_SECRET`.
 
 Para comprobar que quedó: `GET https://www.pantufla.design/api/reunion` contesta
-`{"listo":true,"escribe":true,...}` cuando las dos variables están cargadas.
+`{"listo":true,"escribe":true,...}` cuando están cargados `CAL_WEBHOOK_SECRET`
+y `SANITY_API_WRITE_TOKEN`.
 
 Hasta que exista la cuenta, `/reunion` no se rompe: muestra una tarjeta con el
 mail para agendar a mano. Y las reuniones que entran quedan en el Studio como
@@ -176,70 +211,147 @@ frecuentes, que es donde alguien llega con una duda sin resolver.
 
 ## Dónde se edita cada cosa
 
+Casi todo se edita en `/studio`, sin tocar código:
+
 | Qué | Dónde |
 | --- | --- |
-| Precios, planes, descuento del toggle | `content/site.ts` → `pricing` |
-| Pasos del proceso y forma de pago | `content/site.ts` → `process` |
-| Preguntas frecuentes | `content/site.ts` → `faq` |
-| Textos del hero, problema y método | `content/site.ts` |
-| Proyectos, notas y testimonios | `/studio` (Sanity) |
+| Qué secciones de la home se muestran y si van en claro u oscuro | Studio → *Secciones de la home* |
+| Todo el texto del sitio: titulares, planes y precios, proceso, preguntas frecuentes, formulario | Studio → *Textos del sitio (ES)* y *(EN)* |
+| Proyectos y testimonios | Studio → *Proyectos*, *Testimonios* |
+| Briefs y reuniones que llegan | Studio → *Briefs recibidos*, *Reuniones agendadas* (solo lectura) |
+| Texto de respaldo, si el Studio no tiene nada cargado | `content/copy.es.ts` y `content/copy.en.ts` |
+| Colores, íconos y números de cada bloque, celdas del bento | `content/site.ts` |
+| Contacto, clientes del mapa, marcas de la prueba social, riel de herramientas | `content/site.ts` |
+| Orden de las secciones de la home | `content/sections.ts` |
 | Colores, tipografía y escala | `app/globals.css` → `@theme` |
 
-Cambiar un precio o agregar una pregunta no requiere tocar ningún componente.
+Los textos son un documento por idioma, y lo que no se carga cae al texto del
+repositorio, así que se puede pasar al Studio de a una sección. El texto y el
+diseño se cruzan por id: el color de un plan o el número de una etapa viven en
+`content/site.ts`, no en el Studio, y **cambiar un id en el Studio deja ese
+bloque sin su diseño**.
+
+Las *Notas* siguen en el Studio pero ya no se publican en el sitio. `/notas`,
+`/contacto` y el listado `/proyectos` se sacaron y redirigen a la home: a la
+portada, al formulario y a la sección de proyectos (`next.config.ts`). Las
+fichas de cada proyecto, en `/proyectos/<slug>`, siguen publicadas.
+
+Para sumar un campo de texto nuevo hay que tocar tres lugares: el tipo en
+`content/copy.ts`, los dos archivos de idioma y el esquema
+`sanity/schemas/site-copy.ts`. El tipo está escrito a mano a propósito: si a un
+idioma le falta el campo, el build no pasa.
 
 ---
 
-## Por qué la home está ordenada así
+## Idiomas
 
-El orden sigue el recorrido **problema → prueba → proceso → precio → objeciones**,
-que es el que mejor rinde en sitios de servicios:
+Español en la raíz, inglés en `/en`. Las rutas no se traducen: `/reunion` y
+`/en/reunion`. La primera visita elige idioma por el país (el encabezado de
+Vercel) y después por el idioma del navegador; si la persona ya eligió con el
+selector del header, gana su elección, que queda en una cookie. Todo eso pasa en
+`middleware.ts`.
 
-1. **Hero** — promesa concreta con plazo, propuesta de valor en menos de 30
-   palabras, un solo CTA primario y tres pruebas de respaldo.
-2. **Problema** — nombra las cuatro frustraciones típicas con las palabras del
-   cliente, antes de hablar de nosotros.
-3. **Método** — cómo se resuelve cada una.
-4. **Proceso** — cuatro etapas con fecha, entregable y qué pone el cliente. Baja
-   la ansiedad de "¿y esto cuánto tarda?".
-5. **Planes** — dos opciones y nada más: una página sola o el sitio completo.
-   El cliente que busca una web no siempre sabe lo que necesita, y tres niveles
-   con un "a medida" abierto lo obligan a decidir algo que todavía no puede.
-   La segunda va en oscuro y con la insignia de "más elegido"; debajo quedan la
-   garantía y una salida por escrito para lo que no entra en ninguno de los dos.
-6. **Proyectos y testimonios** — prueba social después del precio, no antes.
-7. **Preguntas frecuentes** — objeciones de compra: propiedad del sitio, costo de
-   mantenimiento, formas de pago, uso de IA.
-8. **Cierre** — un solo CTA.
+Los enlaces del texto se escriben sin el idioma adelante (`/#planes`,
+`/reunion`) y el sitio les agrega el prefijo que corresponda.
 
-El hero cuenta el resultado, no el proceso. Sobre un gradiente de los cuatro
-colores flotan cuatro paneles —el sitio publicado, las visitas subiendo, una
-venta nueva y la conversación de aprobación— y al bajar **convergen en el
-dashboard** que se arma debajo del título: es lo que el cliente tiene un mes
-después de la entrega.
+---
 
-El vuelo funciona así: cada hueco del dashboard mide **exactamente lo mismo** que
-su panel, así que converger es una traslación pura, sin escalado ni deformación.
-Los paneles y los huecos viven en el mismo contenedor, de modo que la diferencia
-entre sus rectángulos no depende del scroll y se puede recalcular en cada
-`refresh`. La colocación en la grilla va explícita (`col-start` / `row-start`):
-con colocación automática, los paneles que ocupan dos filas empujan al resto.
+## Cómo está armada la home
 
-Los cuatro paneles se reparten entre la zona media y la de abajo, siempre por
-debajo del título: arriba manda el titular y ahí no entra nada. Antes salían por los costados y el texto quedaba
-cortado contra el borde. Por eso además aparecen recién a partir de **1440px**,
-que es el ancho donde caben sin pisar el titular; abajo de eso el dashboard se
-muestra ya armado y no hay vuelo.
+El orden sale de `content/sections.ts`, que es la única lista: de ahí salen
+también los interruptores del Studio. Cada sección se puede apagar, y los
+enlaces que apuntaban a ella se reescriben solos (los del menú desaparecen; el
+resto pasa a llevar a `/reunion`, que no se puede apagar).
+
+| # | Sección | Ancla | Fondo de fábrica |
+| --- | --- | --- | --- |
+| 1 | Portada | — | claro |
+| 2 | Prueba social | — | claro |
+| 3 | Cómo lo resolvemos | `#metodo` | claro |
+| 4 | Capacidades (bento) | `#capacidades` | claro |
+| 5 | Proceso | `#proceso` | oscuro |
+| 6 | Con qué está hecho | `#stack` | claro |
+| 7 | Planes | `#planes` | claro |
+| 8 | Proyectos | `#proyectos` | oscuro |
+| 9 | Testimonios | `#testimonios` | claro |
+| 10 | Mapa de clientes | `#clientes` | claro |
+| 11 | Preguntas frecuentes | `#faq` | claro |
+| 12 | Formulario | `#brief` | oscuro |
+
+El recorrido sigue **promesa → cómo → prueba → precio → objeciones → contacto**:
+
+- **Portada.** El titular, un CTA principal al formulario, uno secundario a los
+  planes y tres respaldos cortos (precio cerrado, primera versión en 5 días, el
+  sitio queda a tu nombre). Cuenta el resultado, no el proceso: debajo del
+  titular se arma el tablero de *Tu sitio, un mes después*, con visitas,
+  conversión, velocidad y de dónde llegan.
+- **Cómo lo resolvemos.** Tres pilares: alcance cerrado, ritmo corto con fechas
+  visibles, y el sitio entregado andando.
+- **Capacidades.** Un bento de cuatro celdas, cada una con su viñeta animada:
+  velocidad de carga, que te encuentren (también en asistentes de IA), el
+  sitio en el teléfono, y las consultas que llegan.
+- **Proceso.** Cuatro etapas en quince días hábiles. El riel que las une lleva
+  los cuatro colores del bento en el mismo orden y llega a cada número con su
+  color ya hecho.
+- **Planes.** Dos opciones y nada más: una página sola o el sitio completo, más
+  un bloque para quien ya tiene un sitio en Webflow o Framer (administrarlo,
+  mejorarlo, rediseñarlo o un cambio puntual).
+- **Proyectos, testimonios y mapa.** La prueba va después del precio, no antes.
+- **Preguntas frecuentes.** Objeciones de compra: páginas de más, propiedad del
+  sitio, editar sin programar, costo mensual, uso de IA, formas de pago. Al pie
+  ofrece agendar una reunión.
+- **Formulario.** Un solo cierre, con el brief: plan, presupuesto y plazo van en
+  desplegables propios del sitio, no en el `<select>` del sistema.
 
 El toggle de precios no es mensual/anual, porque el estudio no vende una
-suscripción. Ofrece **pago único con 15% de descuento** contra **dos pagos**: la
-misma mecánica de descuento, aplicada a algo real, y alineada con cobrar rápido.
+suscripción. Ofrece **pago único con 15% de descuento** contra **dos pagos de
+50%**: la misma mecánica de descuento, aplicada a algo real, y alineada con
+cobrar rápido.
+
+### El vuelo del hero
+
+A partir de **1440px** el hero mide tres pantallas y el escenario queda fijo:
+los cuatro paneles arrancan dispersos alrededor del titular, con tres pastillas
+flotando en los huecos, y al bajar **convergen en el tablero**. Abajo de 1440
+no hay vuelo: el tablero se muestra ya armado.
+
+Cada hueco del tablero mide **exactamente lo mismo** que su panel, así que
+converger es una traslación pura, sin deformación. Los paneles y los huecos
+viven en el mismo contenedor, de modo que la diferencia entre sus rectángulos no
+depende del scroll y se puede recalcular en cada `refresh`.
+
+Los paneles además **se arrastran**. El arrastre vive en un hijo del marco que
+vuela, así los dos transforms no compiten por el mismo elemento; al empezar la
+convergencia, lo que se haya movido a mano vuelve a cero. `Draggable` se carga
+recién cuando hace falta, no en el primer paquete de JavaScript.
+
+### Los proyectos
+
+En escritorio la sección queda clavada y funciona como un paso a paso: **cada
+gesto de la rueda o del trackpad avanza un proyecto**, con el título y el
+proyecto activo alineados. Al llegar al primero o al último, el gesto siguiente
+sale de la sección. En el teléfono es una lista normal.
+
+---
+
+## Fondo y tema
+
+Las secciones no pintan fondo. Cada una declara si quiere la página clara u
+oscura, y `components/theme-scroll.tsx` cambia el tema de toda la página cuando
+una sección oscura ocupa la franja central de la pantalla. Los colores son
+variables registradas con `@property` en `app/globals.css`, así que el cambio
+es una transición (600 ms) y no un corte: el fondo es uno solo y va cambiando
+con el scroll.
+
+Por eso los componentes usan siempre los tokens y no colores escritos a mano:
+lo que no sale de un token no se da vuelta con el tema.
 
 ---
 
 ## Movimiento
 
-El sitio usa GSAP con ScrollTrigger. Las primitivas están en `components/motion/`
-y se combinan en las secciones:
+El sitio usa GSAP con ScrollTrigger, con Lenis para el scroll suave. Las
+primitivas están en `components/motion/` y se combinan en las secciones:
 
 | Componente | Qué hace |
 | --- | --- |
@@ -247,79 +359,75 @@ y se combinan en las secciones:
 | `SplitHeading` | Titular que sube palabra por palabra detrás de una máscara. |
 | `Counter` | Cifra que rueda hasta su valor. Se usa en los precios al cambiar el toggle. |
 | `Magnetic` | El botón sigue apenas al cursor. Solo con puntero fino. |
-| `DrawnLineArt` | Dibuja la ilustración trazo por trazo al entrar en pantalla. |
-| `ProjectStack` | Fichas de proyecto que se apilan con el scroll, una sobre otra. |
 
-Los paneles del hero además **se arrastran**. El arrastre vive en un hijo del
-marco que vuela, así los dos transforms no compiten por el mismo elemento; al
-empezar la convergencia, lo que se haya movido a mano vuelve a cero para que el
-panel aterrice donde corresponde.
+Lenis también resuelve los clics a anclas de la misma página (el menú, los
+CTA), con el margen justo para que el título no quede debajo del header.
 
-En `ProjectStack` la ficha que se va se achica pero **no baja su opacidad**: si
-se transparentara el elemento entero, su texto se leería a través de la que
-llega. El apagado lo hace un velo dentro de la propia ficha.
-
-**Dos reglas que sostienen todo esto:**
+**Las reglas que sostienen todo esto:**
 
 1. Nada se oculta desde CSS a secas. Un script inline agrega `.motion-ready` a
    `<html>` antes del primer pintado, y recién entonces el CSS oculta lo que se
    va a animar. Si el JS no corre, el sitio queda completo y visible.
-2. Cada animación pasa por `gsap.matchMedia()`. Con `prefers-reduced-motion:
+2. El estado inicial de cada entrada vive en el CSS, y las animaciones van con
+   `gsap.to(..., { immediateRender: false })`. Nada de `from` / `fromTo` en
+   las entradas: escriben estilos en el momento de crearse, y repartido en
+   decenas de componentes eso era una cadena de reflows forzados durante la
+   hidratación.
+3. Cada animación pasa por `gsap.matchMedia()`. Con `prefers-reduced-motion:
    reduce` no se anima nada y todo aparece en su lugar final.
-
-Las dos están verificadas: con reduced-motion y con JavaScript desactivado,
-cero elementos quedan invisibles.
+4. La entrada del hero es CSS puro, para que el titular (el LCP) no espere al
+   JavaScript.
 
 ---
 
 ## Decisiones de diseño
 
-- **Una sola familia tipográfica** (Schibsted Grotesk), trabajada por peso, tamaño
-  y color. Sin mono decorativa en etiquetas ni versalitas de relleno.
-- **Papel cálido de base y cuatro colores de marca** en pastel: aqua, rosa, verde
-  y miel. Un grano muy leve sobre el fondo para que no quede plano.
+- **Una sola familia tipográfica** (Schibsted Grotesk), trabajada por peso,
+  tamaño y color. Va alojada en el propio sitio, recortada a los pesos 400–600
+  y al alfabeto latino (40 KB), precargada y con un respaldo ajustado a sus
+  medidas para que el texto no salte cuando llega la fuente. Si se cambia el
+  archivo, hay que subir el `-vN` del nombre: se sirve con caché inmutable.
+- **Fondo de bruma** (`#eaedf8`) en claro y casi negro en oscuro, con un grano
+  muy leve para que no quede plano. El blanco queda para lo que se destaca: las
+  tarjetas, la píldora del menú, los botones sobre oscuro.
+- **Cuatro colores de marca** en pastel: aqua, rosa, verde y miel.
+- **La etiqueta de sección** es una pastilla con ícono y el texto en mayúsculas,
+  en gris neutro. Suelto sobre el fondo, ese tratamiento se lee a plantilla;
+  adentro de una pastilla se lee como un rótulo de sistema. El color lo ponen
+  el titular y el contenido.
+- Sin degradados en texto, sin vidrio esmerilado, sin emoji como íconos: los
+  íconos son SVG propios en `components/ui/icons.tsx`, y la marca (el iso de la
+  pantufla) está en `components/ui/brand.tsx`, copiada tal cual del kit.
 
 ### Cómo se usan los cuatro colores
 
 Cada color viene en tres pasos y cada paso tiene un uso fijo. La regla que los
-mantiene legibles: **el pastel base nunca lleva texto chico sobre papel** — no
-llega a 2:1. Para eso está la variante profunda, que pasa AA en los dos fondos
-claros.
+mantiene legibles: **el pastel base nunca lleva texto chico sobre fondo claro**.
+Para eso está la variante profunda.
 
-| Paso | Para qué | Contraste sobre papel |
-| --- | --- | --- |
-| `-soft` | fondo de pastillas y washes | — |
-| base | rellenos, formas, ilustración, y texto sobre la banda oscura | 9,6–11,9:1 en oscuro |
-| `-deep` | texto e iconos chicos sobre papel | 4,9–5,8:1 |
+| Paso | Para qué |
+| --- | --- |
+| `-soft` | fondo de pastillas y washes |
+| base | rellenos, formas, ilustración, y texto sobre fondo oscuro |
+| `-deep` | texto e íconos chicos sobre fondo claro |
 
 El color es taxonomía, no decoración: cada etapa del proceso, cada plan y cada
-pilar del método tiene su color asignado en `content/site.ts` y se resuelve con
+celda del bento tiene su color asignado en `content/site.ts` y se resuelve con
 los mapas de `lib/tones.ts`. Tailwind no arma nombres de clase en runtime, así
 que las variantes están escritas enteras ahí.
-- Bandas oscuras en Proceso y en el cierre para marcar el ritmo de lectura.
-- Sin degradados en texto, sin vidrio esmerilado, sin emoji como iconos: los
-  iconos son SVG propios en `components/ui/icons.tsx`.
-- **La volanta de sección no va en mayúsculas con tracking.** Ese tratamiento
-  está en medio internet y se lee a plantilla. Acá es una regla corta más el
-  texto en caja baja, en el color que le toca a esa sección: el color es lo que
-  la vuelve nuestra.
-- **Ninguna sección repite el patrón de grilla de tarjetas con borde.** Problema
-  y testimonios van con filetes y aire en vez de cajas, que es lo que les sacaba
-  personalidad.
-- Los assets son código, no imágenes: los blobs (`components/art/blob.tsx`) son
-  SVG con gradientes multi-stop y luz interna, sin `box-shadow`; la ilustración
-  (`components/art/line-art.tsx`) es un set de trazos con la misma mano.
-- Del ref se tomó el lenguaje, no la paleta: tipografía como imagen, movimiento,
-  contención suelta de las formas. El papel cálido se mantiene porque es lo que
-  distingue a Pantufla del resto de los estudios.
 
 ---
 
 ## Comandos
 
 ```bash
-npm run dev        # desarrollo
-npm run build      # build de producción
-npm run start      # servir el build
-npm run typecheck  # tsc --noEmit
+npm run dev          # desarrollo
+npm run build        # build de producción
+npm run start        # servir el build
+npm run typecheck    # tsc --noEmit
+npx prettier --write <archivos>   # formato
 ```
+
+No hay tests ni linter configurado: `npm run lint` llama a `next lint`, que
+Next 16 ya no trae. Los cambios se verifican con `npm run typecheck`,
+`npm run build` y mirando la página.
