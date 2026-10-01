@@ -936,4 +936,18 @@ html.lenis {
       transform: none;
     }
   }
+
+  /*
+     Un logo de cliente: el archivo hace de máscara y el color lo pone la
+     tinta. Así todos salen en el mismo tono y se dan vuelta con el tema sin
+     una segunda versión de cada archivo. El ancho y el alto los pone la tira,
+     que es la que reparte la superficie entre los logos.
+  */
+  .logo-cliente {
+    display: block;
+    flex-shrink: 0;
+    background-color: currentColor;
+    -webkit-mask: var(--logo) center / contain no-repeat;
+    mask: var(--logo) center / contain no-repeat;
+  }
 }

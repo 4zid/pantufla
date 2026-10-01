@@ -22,21 +22,45 @@ import { useCopy } from "@/components/copy-provider";
  * A la izquierda va quién hace el trabajo y a la derecha para quién se hizo.
  * La frase no cuenta clientes: ver por qué en content/site.ts.
  *
- * Los nombres corren en un riel y no quietos en fila. Son cinco: quietos
+ * Las marcas corren en un riel y no quietas en fila. Son cinco: quietas
  * ocupaban media tira y dejaban un hueco al final que pedía un sexto cliente
  * que no existe. Moviéndose, la tira no tiene largo fijo —siempre está llena—
  * y además se lee como una lista que sigue, que es exactamente lo que se
  * quiere decir. La mecánica del empalme está explicada en globals.css.
+ *
+ * Los logos no son <img>: son una máscara pintada con currentColor (ver
+ * .logo-cliente en globals.css). Una imagen guarda su color y quedaría igual
+ * cuando la página pasa a oscuro; la máscara toma la tinta del tema y cambia
+ * con ella, igual que el texto que reemplaza.
  */
 
 /**
  * Cuántas veces se repite la lista en cada mitad de la pista.
  *
- * Cinco nombres miden unos 700px. Con una sola pasada por mitad, a mitad de la
+ * Cinco marcas miden unos 700px. Con una sola pasada por mitad, a mitad de la
  * animación el final de la pista entra en pantalla y queda un hueco. Tres
  * pasadas dan 2100px por mitad, que tapa el hueco hasta en pantallas de 2560.
  */
 const REPES = 3;
+
+/**
+ * Cuánta superficie ocupa cada logo, en píxeles cuadrados, y hasta qué alto.
+ *
+ * Igualar la altura deja una palabra larga enorme al lado de una marca
+ * cuadrada que casi no se ve; igualar la superficie los pone a pesar parecido.
+ * El tope existe para la cuadrada: con la misma superficie que una palabra
+ * mediría el doble de alto que el resto de la tira.
+ */
+const SUPERFICIE = 2600;
+const ALTO_MAXIMO = 30;
+
+function medidas(proporcion: number, escala = 1) {
+  const alto = Math.min(
+    ALTO_MAXIMO,
+    Math.sqrt((SUPERFICIE * escala) / proporcion),
+  );
+  return { width: Math.round(alto * proporcion), height: Math.round(alto) };
+}
 
 export function SocialProof({ surface = "mist" }: { surface?: Surface }) {
   const copy = useCopy();
@@ -83,17 +107,34 @@ export function SocialProof({ surface = "mist" }: { surface?: Surface }) {
           style={{ "--ticker-fade": "3rem" } as React.CSSProperties}
         >
           <ul
-            className="ticker-track"
+            className="ticker-track items-center"
             style={{ "--ticker-duration": "34s" } as React.CSSProperties}
           >
             {Array.from({ length: REPES * 2 }).map((_, copia) =>
               marcas.map((marca) => (
                 <li
-                  key={`${copia}-${marca}`}
+                  key={`${copia}-${marca.name}`}
                   aria-hidden={copia > 0 || undefined}
-                  className="whitespace-nowrap pr-10 text-[1.05rem] font-semibold tracking-[-0.03em] text-ink-soft"
+                  className="flex items-center whitespace-nowrap pr-12 text-[1.05rem] font-semibold tracking-[-0.03em] text-ink-soft"
                 >
-                  {marca}
+                  {marca.logo ? (
+                    <span
+                      role="img"
+                      aria-label={marca.name}
+                      className="logo-cliente"
+                      style={
+                        {
+                          ...medidas(
+                            marca.proporcion,
+                            "escala" in marca ? marca.escala : 1,
+                          ),
+                          "--logo": `url(${marca.logo})`,
+                        } as React.CSSProperties
+                      }
+                    />
+                  ) : (
+                    marca.name
+                  )}
                 </li>
               )),
             )}

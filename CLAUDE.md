@@ -62,6 +62,7 @@ Sections never paint a background. They declare `data-surface="mist" | "deep"`, 
 - Four brand colors (aqua, rosa, verde, miel), each with `-soft`, base and `-deep`. The base shade never carries small text on a light background. `lib/tones.ts` maps tones to full class names because Tailwind cannot build class names at runtime.
 - The font is a self-hosted subset of Schibsted Grotesk (weights 400–600, Latin) at `public/fonts/schibsted-grotesk-latin-v1.woff2`, preloaded by hand in the locale layout and declared in `globals.css` with metric-adjusted fallbacks. `next/font` did not emit its preload in this build. Weights above 600 do not exist; if the file changes, bump the `-vN` in its name, since `next.config.ts` serves it with an immutable cache header.
 - `experimental.inlineCss` is on: CSS ships inside the HTML.
+- Client logos (`public/logos/clientes`) are black on transparent and drawn as CSS masks filled with `currentColor` (`.logo-cliente`), so they follow the theme. Each entry in `socialProof.brands` (`content/site.ts`) carries its width/height `proporcion`; the strip gives every logo the same area, and `escala` nudges one that still reads light. A client without a file falls back to its name as text.
 
 ### SEO
 
@@ -75,7 +76,8 @@ Two third-party skills live in `.claude/skills` (sources and hashes in `skills-l
 - The page switches theme on scroll (Proceso, Proyectos and the form default to dark).
 - The hero keeps its three proof items and the HTML dashboard that the panels converge into.
 - Icons (`components/ui/icons.tsx`), the brand mark and the bento vignettes are hand-made SVG/HTML.
-- Section labels use the `Tag` pill on most sections; social-proof clients are written as text, not logos.
+- Section labels use the `Tag` pill on most sections.
+- Client logos in the social-proof strip are one color (the theme ink), not their brand colors.
 - Passive `scroll` listeners in `site-header.tsx`, `theme-scroll.tsx` and `project-stack.tsx` are intentional.
 - First-visit language comes from the Vercel country header before `Accept-Language` (`middleware.ts`), on purpose.
 - Copy is Spanish sentence case; English Title Case rules do not apply.

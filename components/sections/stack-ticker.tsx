@@ -26,7 +26,8 @@ import { cn } from "@/lib/cn";
  * lee como quieto. A 32s son 84px por segundo, que se ve andar sin apurar la
  * lectura de los nombres.
  *
- * Los nombres van en tipografía, no en logos: ver la nota en content/site.ts.
+ * Cada herramienta lleva su nombre escrito; la marca, cuando la hay, lo
+ * acompaña.
  */
 /**
  * Cuántas veces se repite la lista en cada mitad de la pista.

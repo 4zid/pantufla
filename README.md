@@ -223,6 +223,7 @@ Casi todo se edita en `/studio`, sin tocar código:
 | Texto de respaldo, si el Studio no tiene nada cargado | `content/copy.es.ts` y `content/copy.en.ts` |
 | Colores, íconos y números de cada bloque, celdas del bento | `content/site.ts` |
 | Contacto, clientes del mapa, marcas de la prueba social, riel de herramientas | `content/site.ts` |
+| Logos de los clientes de la tira | `public/logos/clientes` + `content/site.ts` → `socialProof` |
 | Orden de las secciones de la home | `content/sections.ts` |
 | Colores, tipografía y escala | `app/globals.css` → `@theme` |
 
@@ -236,6 +237,12 @@ bloque sin su diseño**.
 home: a la portada, al formulario y a la sección de proyectos
 (`next.config.ts`). Las notas también salieron del Studio. Las fichas de cada
 proyecto, en `/proyectos/<slug>`, siguen publicadas.
+
+Para sumar el logo de un cliente: el archivo va en `public/logos/clientes`, en
+negro sobre transparente (SVG con `viewBox`, o PNG), y en `content/site.ts` →
+`socialProof.brands` se le carga la ruta y la proporción (ancho / alto). La tira
+lo pinta con la tinta del tema, así que el color del archivo no importa: solo
+cuenta la forma. Un cliente sin logo sale con el nombre escrito.
 
 Para sumar un campo de texto nuevo hay que tocar tres lugares: el tipo en
 `content/copy.ts`, los dos archivos de idioma y el esquema

@@ -113,9 +113,22 @@ export const platformDesign: Record<
  * La frase de esta tira no dice cuántos clientes hay, y es a propósito: ver la
  * nota larga en copy.es.ts.
  *
- * Las marcas son los clientes reales, escritos en tipografía y no en logos:
- * mismo criterio que el riel del stack. Dibujarles un símbolo a mano sería
- * inventarles una identidad que no tienen, que es peor que no poner ninguna.
+ * Las marcas son los clientes reales, con el logo que mandó cada uno. Están
+ * en public/logos/clientes en negro sobre transparente: la tira los pinta con
+ * la tinta del tema a través de una máscara, así que de cada archivo solo
+ * cuenta la forma. Por eso van todos en un color, aunque el original sea
+ * naranja o azul: cinco paletas distintas en una tira angosta se pelean, y un
+ * logo pintado no se daría vuelta con el fondo oscuro.
+ *
+ * Un cliente sin logo va con el nombre escrito. Dibujarle un símbolo a mano
+ * sería inventarle una identidad que no tiene.
+ *
+ * `proporcion` es ancho sobre alto del archivo: con eso la tira le da a cada
+ * logo la misma superficie, que es lo que hace que una marca cuadrada y una
+ * palabra larga pesen parecido.
+ * `escala` corrige a ojo el que igual queda liviano: Remmy tiene la palabra
+ * fina y el círculo se lleva la altura, así que con la misma superficie que
+ * los demás la palabra se lee chica.
  *
  * Es la misma lista que fallbackProjects, a mano y no importada: aquello es el
  * respaldo del CMS y esto es el contenido de la tira. Si se suma un cliente,
@@ -127,7 +140,26 @@ export const socialProof = {
     { initials: "RL", from: "#f2a5b6", to: "#a3405a" },
     { initials: "DF", from: "#f4c87d", to: "#8a5a12" },
   ],
-  brands: ["Lupa Studio", "Remmy", "Acacia", "Rostar", "2MG"],
+  brands: [
+    {
+      name: "Lupa Studio",
+      logo: "/logos/clientes/lupa-studio.svg",
+      proporcion: 180 / 32,
+    },
+    {
+      name: "Remmy",
+      logo: "/logos/clientes/remmy.svg",
+      proporcion: 404 / 100,
+      escala: 1.3,
+    },
+    { name: "Acacia", logo: null, proporcion: null },
+    {
+      name: "Rostar",
+      logo: "/logos/clientes/rostar.png",
+      proporcion: 411 / 102,
+    },
+    { name: "2MG", logo: "/logos/clientes/2mg.png", proporcion: 178 / 181 },
+  ],
 } as const;
 
 /**
