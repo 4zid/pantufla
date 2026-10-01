@@ -28,6 +28,19 @@ import type { SanityProject, SanityTestimonial } from "@/sanity/types";
 
 export const fallbackProjects: SanityProject[] = [
   {
+    // El más nuevo va primero, igual que en Sanity (order 0). Todavía no
+    // tiene fondo propio en /public/proyectos: la tarjeta no lo usa y la
+    // ficha cae al degradé de la paleta.
+    _id: "work-tierras-argentinas",
+    title: "Tierras Argentinas",
+    slug: "tierras-argentinas",
+    url: "https://www.tierrasargentinas.org/",
+    tagline:
+      "Atlas interactivo de la tierra argentina en manos extranjeras: mapa por provincia y casos con fuentes públicas.",
+    sector: "Datos abiertos",
+    services: ["Diseño", "Desarrollo"],
+  },
+  {
     _id: "work-lupa",
     title: "Lupa Studio",
     slug: "lupa-studio",
