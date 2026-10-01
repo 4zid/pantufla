@@ -5,7 +5,7 @@ import { revalidateTag } from "next/cache";
  * Le avisa al sitio que cambió algo en Sanity.
  *
  * Sin esto, publicar en el Studio no se veía. Cada consulta a Sanity queda
- * cacheada con una etiqueta —project, post, testimonial, siteCopy— y sin nadie
+ * cacheada con una etiqueta —project, testimonial, siteCopy, siteSections— y sin nadie
  * que las invalide lo único que las vence es el tiempo. O sea que un cambio
  * tardaba en aparecer, y si la página ya estaba servida desde el borde podía no
  * aparecer nunca hasta el próximo deploy. Que es exactamente lo que pasaba.
@@ -17,7 +17,7 @@ import { revalidateTag } from "next/cache";
  *
  * Se invalida por tipo y no la página entera porque las etiquetas ya están
  * puestas en cada consulta. Publicar un proyecto no tiene por qué tirar el
- * caché de las notas.
+ * caché de los testimonios.
  *
  * La firma no es opcional. Este endpoint es público —tiene que serlo, lo llama
  * Sanity desde afuera— así que sin verificar quién golpea, cualquiera puede
@@ -29,7 +29,7 @@ import { revalidateTag } from "next/cache";
 export const runtime = "nodejs";
 
 /** Los tipos que el sitio consulta con etiqueta. El resto se ignora. */
-const TIPOS = new Set(["project", "post", "testimonial", "siteCopy", "siteSections"]);
+const TIPOS = new Set(["project", "testimonial", "siteCopy", "siteSections"]);
 
 export async function POST(request: Request) {
   const secreto = process.env.SANITY_REVALIDATE_SECRET;

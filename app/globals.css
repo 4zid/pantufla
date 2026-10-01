@@ -588,9 +588,8 @@
   transform: translateY(22px);
 }
 
-/* Los trazos dibujados: con pathLength="1" el largo de cualquier trazo es
+/* Los arcos del mapa: con pathLength="1" el largo de cualquier trazo es
    1, así que el dash no depende de medir el camino. */
-.motion-ready [data-stroke],
 .motion-ready [data-arco] {
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
@@ -664,7 +663,6 @@
     opacity: 1 !important;
     transform: none !important;
   }
-  .motion-ready [data-stroke],
   .motion-ready [data-arco] {
     stroke-dashoffset: 0 !important;
   }

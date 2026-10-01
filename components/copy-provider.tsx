@@ -49,7 +49,7 @@ export function useLocale(): Locale {
 }
 
 /**
- * Para los enlaces que no salen del copy: los slugs de proyectos y notas, el
+ * Para los enlaces que no salen del copy: los slugs de proyectos, el
  * logo, el pie. Los del copy ya vienen con el prefijo puesto.
  */
 export function useHref() {

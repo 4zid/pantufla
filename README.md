@@ -121,9 +121,9 @@ www.pantufla.design**. Los diseños nuevos se prueban antes en la rama `staging`
 
 ### Que publicar en Sanity se vea
 
-Cada consulta a Sanity sale etiquetada por tipo —`project`, `post`,
-`testimonial`, `siteCopy`, `siteSections`— pero una etiqueta sola no se vence:
-hace falta que alguien avise. Ese alguien es `/api/revalidate`, y sin el
+Cada consulta a Sanity sale etiquetada por tipo —`project`, `testimonial`,
+`siteCopy`, `siteSections`— pero una etiqueta sola no se vence: hace falta que
+alguien avise. Ese alguien es `/api/revalidate`, y sin el
 webhook configurado un cambio publicado en el Studio tarda en aparecer o no
 aparece hasta el próximo deploy.
 
@@ -141,15 +141,16 @@ Se arma una vez, en dos lados, con **el mismo string**:
    | URL | `https://www.pantufla.design/api/revalidate` |
    | Dataset | `production` |
    | Trigger on | Create, Update, Delete |
-   | Filter | `!(_id in path("drafts.**")) && _type in ["project","post","testimonial","siteCopy","siteSections"]` |
+   | Filter | `!(_id in path("drafts.**")) && _type in ["project","testimonial","siteCopy","siteSections"]` |
    | Projection | dejalo vacío |
    | HTTP method | `POST` |
    | Secret | el mismo del paso 1 |
 
 `siteSections` es el documento de los interruptores y fondos de la home. Si el
-webhook se armó antes con el filtro de cuatro tipos, hay que sumarlo: sin él,
+webhook se armó antes con un filtro que no lo incluía, hay que sumarlo: sin él,
 prender, apagar o cambiar de fondo una sección no se ve hasta que el caché se
-venza solo.
+venza solo. Un filtro viejo que todavía nombre `post` no rompe nada: ese tipo
+ya no existe y el endpoint lo ignora.
 
 La exclusión de borradores no es un detalle: Sanity guarda el draft mientras se
 escribe, así que sin ella el webhook dispara con cada tecla que se toca en el
@@ -231,10 +232,10 @@ diseño se cruzan por id: el color de un plan o el número de una etapa viven en
 `content/site.ts`, no en el Studio, y **cambiar un id en el Studio deja ese
 bloque sin su diseño**.
 
-Las *Notas* siguen en el Studio pero ya no se publican en el sitio. `/notas`,
-`/contacto` y el listado `/proyectos` se sacaron y redirigen a la home: a la
-portada, al formulario y a la sección de proyectos (`next.config.ts`). Las
-fichas de cada proyecto, en `/proyectos/<slug>`, siguen publicadas.
+`/notas`, `/contacto` y el listado `/proyectos` se sacaron y redirigen a la
+home: a la portada, al formulario y a la sección de proyectos
+(`next.config.ts`). Las notas también salieron del Studio. Las fichas de cada
+proyecto, en `/proyectos/<slug>`, siguen publicadas.
 
 Para sumar un campo de texto nuevo hay que tocar tres lugares: el tipo en
 `content/copy.ts`, los dos archivos de idioma y el esquema

@@ -92,8 +92,8 @@ export function nodoSitio(copy: ResolvedCopy, locale: Locale) {
 }
 
 /**
- * Una página. El tipo cambia según qué sea: la de contacto es ContactPage, una
- * nota es Article, y lo demás WebPage.
+ * Una página. Hoy todas son WebPage; el tipo queda como parámetro para la que
+ * necesite otro (una ContactPage, un Article).
  */
 export function nodoPagina({
   locale,

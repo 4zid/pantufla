@@ -25,17 +25,6 @@ export type SanityProject = {
   body?: PortableTextBlock[];
 };
 
-export type SanityPost = {
-  _id: string;
-  title: string;
-  slug: string;
-  excerpt?: string;
-  publishedAt: string;
-  topic?: string;
-  cover?: Image & { alt?: string };
-  body?: PortableTextBlock[];
-};
-
 export type SanityTestimonial = {
   _id: string;
   quote: string;

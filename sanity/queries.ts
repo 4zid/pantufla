@@ -48,28 +48,6 @@ export const projectSlugsQuery = groq`
   *[_type == "project" && defined(slug.current)][].slug.current
 `;
 
-const postFields = `
-  _id,
-  title,
-  "slug": slug.current,
-  excerpt,
-  publishedAt,
-  topic,
-  cover
-`;
-
-export const allPostsQuery = groq`
-  *[_type == "post" && ${enIdioma}] | order(publishedAt desc) { ${postFields} }
-`;
-
-export const postBySlugQuery = groq`
-  *[_type == "post" && slug.current == $slug][0] { ${postFields}, body }
-`;
-
-export const postSlugsQuery = groq`
-  *[_type == "post" && defined(slug.current)][].slug.current
-`;
-
 /**
  * El texto del sitio, un documento por idioma.
  *

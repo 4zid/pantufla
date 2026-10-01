@@ -49,7 +49,6 @@ export default defineConfig({
               .child(S.document().schemaType("siteCopy").documentId("siteCopy.en")),
             S.divider(),
             S.documentTypeListItem("project").title("Proyectos"),
-            S.documentTypeListItem("post").title("Notas"),
             S.documentTypeListItem("testimonial").title("Testimonios"),
             S.divider(),
             S.documentTypeListItem("brief").title("Briefs recibidos"),
