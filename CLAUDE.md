@@ -85,6 +85,6 @@ Two third-party skills live in `.claude/skills` (sources and hashes in `skills-l
 
 Changing any of these is a design decision for the user, not a cleanup.
 
-## README caveat
+## README
 
-`README.md` has the setup steps for Sanity (project `6zkp4mb1`, dataset `production`), Resend, Cal.com, the revalidation webhook and the Vercel environment variables. Some of its other sections predate the current code (for example `content/demo-content.ts`, the `Logo` in `icons.tsx`, and the "Dónde se edita cada cosa" table). Where they disagree, the code is the source of truth.
+`README.md` is written in Spanish for the user and is current. It covers setup for Sanity (project `6zkp4mb1`, dataset `production`), Resend, Cal.com, the revalidation webhook and the Vercel environment variables, plus the branch flow, where each thing is edited, how the home is put together, motion rules and design decisions. When a change touches any of those, update the README in the same branch.
