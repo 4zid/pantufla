@@ -94,17 +94,33 @@ apex está cargado como redirección 308 hacia él— y ese es el valor que usa
 hreflang, el sitemap y los `@id` del grafo de datos estructurados, así que
 apuntarlo a un host que no resuelve es peor que no tenerlo.
 
-### Producción y staging
+### Ramas: main, staging y una por cambio
 
-Producción se publica desde la rama `claude/pantufla-agency-website-okqg2e`
-(la rama principal del repo; no hay `main`): **todo lo que entra ahí sale en
-www.pantufla.design**. Los diseños nuevos se prueban antes en la rama `staging`.
+| Rama | Qué es |
+| --- | --- |
+| `main` | Producción. **Todo lo que entra acá sale en www.pantufla.design.** Es la rama principal del repo. |
+| `staging` | Vista previa, para probar diseños antes de publicarlos. |
+| `feat/<tema>` | Un cambio nuevo: una sección, una página, un rediseño. |
+| `fix/<tema>` | Un arreglo puntual. |
+
+El recorrido de un cambio:
+
+1. Se abre una rama desde `main`: `feat/hero-nuevo`, `fix/menu-movil`. El
+   nombre en minúsculas y con guiones, diciendo de qué se trata.
+2. Se mergea en `staging` para verlo en la vista previa.
+3. Cuando está aprobado, se mergea en `main` (con un pull request, así queda
+   registrado qué entró y cuándo) y sale a producción.
+4. La rama del cambio se borra. Si `main` recibió algo que `staging` no
+   tiene, se trae con un merge para que las dos no se separen.
+
+Sobre la vista previa:
 
 - Cada push a `staging` arma una vista previa en Vercel, siempre en la misma
-  dirección: `pantufla-git-staging-kalada.vercel.app`. Está detrás del login de
-  Vercel del equipo; para mostrársela a alguien de afuera se comparte un link
-  desde el panel del despliegue, o se le asigna un dominio propio
-  (`staging.pantufla.design`) en Settings → Domains, eligiendo la rama.
+  dirección: `pantufla-git-staging-kalada.vercel.app`. Las ramas `feat/` y
+  `fix/` también tienen la suya. Están detrás del login de Vercel del equipo;
+  para mostrársela a alguien de afuera se comparte un link desde el panel del
+  despliegue, o se le asigna un dominio propio (`staging.pantufla.design`) en
+  Settings → Domains, eligiendo la rama.
 - Las vistas previas no se indexan: `lib/entorno.ts` las reconoce por
   `VERCEL_ENV` y el sitio sale con `noindex` y un robots.txt cerrado, aunque
   tengan dominio propio.
@@ -112,11 +128,8 @@ www.pantufla.design**. Los diseños nuevos se prueban antes en la rama `staging`
   el Studio se ve en los dos.
 - Si las variables de Resend y Sanity están habilitadas para Preview en Vercel,
   un brief enviado desde staging llega de verdad a la casilla y al Studio.
-- Cuando un diseño se aprueba, se mergea `staging` en la rama de producción.
-  Y cuando producción recibe un arreglo, se trae a `staging` con un merge para
-  que las dos no se separen.
 - Vercel no arma una rama cuyo último commit ya se construyó en otra: si
-  `staging` queda en el mismo commit que producción, no hay vista previa nueva
+  `staging` queda en el mismo commit que `main`, no hay vista previa nueva
   hasta que reciba un commit propio.
 
 ### Que publicar en Sanity se vea
