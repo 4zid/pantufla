@@ -8,7 +8,11 @@ import { HeroScene } from "@/components/sections/hero-scene";
  * que da el recorrido en el que los paneles convergen en el dashboard. Eran
  * dos y el vuelo entero entraba en dos vueltas de rueda; con 200vh de
  * recorrido en vez de 120 hay lugar para que se vea venir.
- * En mobile es una sección normal, con el dashboard ya armado abajo del título.
+ * En mobile es una sección normal, con el dashboard ya armado abajo del título
+ * y cortado igual que en escritorio: se ve la cabecera y el arranque de las
+ * tarjetas, y el piso lo disuelve. Entero, el tablero eran seiscientos
+ * píxeles de gráficos antes de llegar a nada más; cortado se lee como lo que
+ * es, una muestra de lo que hay abajo.
  *
  * El titular queda centrado en la pantalla, con las tarjetas flanqueándolo.
  *
@@ -32,10 +36,7 @@ import { HeroScene } from "@/components/sections/hero-scene";
  */
 export function Hero({ surface = "mist" }: { surface?: Surface }) {
   return (
-    <section
-      data-surface={surface}
-      className="relative max-[1439px]:pb-16 min-[1440px]:h-[300vh]"
-    >
+    <section data-surface={surface} className="relative min-[1440px]:h-[300vh]">
       <div className="relative overflow-hidden min-[1440px]:sticky min-[1440px]:top-0 min-[1440px]:flex min-[1440px]:h-screen min-[1440px]:flex-col">
         <HeroAurora />
         <div className="max-[1439px]:pt-28 min-[1440px]:flex min-[1440px]:min-h-0 min-[1440px]:flex-1 min-[1440px]:items-center min-[1440px]:pt-[calc(var(--hero-reserve)-40px)]">
@@ -53,10 +54,13 @@ export function Hero({ surface = "mist" }: { surface?: Surface }) {
           El desenfoque va con máscara para que crezca de arriba hacia abajo:
           aplicado parejo, emborronaría también la parte que sí se tiene que
           leer.
+
+          En el teléfono está igual, un poco más corto: el tablero también se
+          corta ahí.
         */}
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-x-0 bottom-0 z-30 hidden h-[130px] min-[1440px]:block"
+          className="pointer-events-none absolute inset-x-0 bottom-0 z-30 h-[110px] min-[1440px]:h-[130px]"
         >
           <div
             className="absolute inset-0 backdrop-blur-[6px]"
