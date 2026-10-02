@@ -28,7 +28,11 @@ import { cn } from "@/lib/cn";
  * de la escala a 1, y nada se deforma al aterrizar. Como los dos elementos
  * viven en el mismo contenedor, esa diferencia tampoco depende del scroll.
  *
- * Abajo de lg no hay vuelo: el dashboard se muestra ya armado.
+ * Las tres pastillas siguen la misma lógica: arrancan sueltas y al bajar se
+ * acomodan en la cabecera del tablero (ver aterrizaje, más abajo).
+ *
+ * Abajo de 1440 no hay vuelo: el dashboard se muestra ya armado, cortado por
+ * el mismo piso que en escritorio.
  */
 
 /**
@@ -55,8 +59,9 @@ const SLOT = { w: 400, h: 380, sw: 192, sh: 176, mw: 400, mh: 188 };
  * Las medidas de escritorio puestas en una columna daban 1098px de tarjetas:
  * dos pantallas enteras de gráficos antes de llegar a nada más. Acá las dos
  * chicas van a la par, las dos anchas ocupan el ancho completo y cada una mide
- * lo que necesita su contenido y ni un pixel más. El tablero pasa a ~600px:
- * sigue siendo la prueba de lo que el sitio entrega, pero cabe de un vistazo.
+ * lo que necesita su contenido y ni un pixel más. El tablero pasa a ~600px,
+ * y de eso se ve la primera parte: el marco lo corta a 19rem, igual que en
+ * escritorio, y el piso difuminado de hero.tsx disuelve el corte.
  */
 const FONO: Record<string, { h: number; area: string }> = {
   visitas: { h: 268, area: "col-span-2" },
@@ -106,6 +111,22 @@ const panels = [
 ] as const;
 
 const SCATTER_SCALE = 1.18;
+
+/**
+ * Cómo se acomodan las pastillas en la cabecera del tablero.
+ *
+ * Van en fila en el hueco entre el título y el rango de fechas. Ese hueco
+ * mide unos 500px y las tres pastillas, a su tamaño de sueltas, unos 580: no
+ * entran. Por eso aterrizan achicadas, y cuánto sale de medir el hueco y las
+ * pastillas en el momento, no de un número fijo: el texto se edita en el
+ * Studio y en inglés las frases miden otra cosa.
+ *
+ * El tope es 0,82. Achicadas a eso miden lo mismo de alto que la pastilla del
+ * rango y la letra queda cerca de la del resto de la cabecera: se leen como
+ * parte del tablero, no como algo que se cayó encima. Si entran más grandes,
+ * igual quedan en 0,82.
+ */
+const PASTILLAS = { margen: 16, separacion: 8, escalaMaxima: 0.82 };
 
 /**
  * Dónde arranca cada panel antes de converger.
@@ -175,9 +196,42 @@ export function HeroScene() {
         (context) => {
           const { desktop } = context.conditions as { desktop: boolean };
           const cards = gsap.utils.toArray<HTMLElement>("[data-card]", root);
+          const chips = gsap.utils.toArray<HTMLElement>("[data-chip]", root);
+          const flotas = chips.map((chip) =>
+            chip.querySelector<HTMLElement>("[data-flota]"),
+          );
           const frame = root.querySelector<HTMLElement>("[data-dashboard]");
 
           if (!desktop) return;
+
+          /*
+             El vaivén de las pastillas sueltas: cada una sube y baja unos
+             píxeles a su ritmo, en bucle. Es lo que las hace leerse como
+             objetos que están ahí y no como texto pegado en el fondo. Vive en
+             la caja de adentro, así el vuelo puede mover la de afuera.
+          */
+          let vaivenes: gsap.core.Tween[] = [];
+          const mecer = () => {
+            gsap.killTweensOf(flotas);
+            vaivenes = flotas.map((flota, i) =>
+              gsap.to(flota, {
+                y: i % 2 === 0 ? 6 : -6,
+                duration: 2.8 + i * 0.5,
+                ease: "sine.inOut",
+                yoyo: true,
+                repeat: -1,
+              }),
+            );
+          };
+          // Apenas empieza el vuelo se quedan quietas: una pastilla que se
+          // mece mientras viaja no aterriza nunca derecha.
+          const aquietar = () => {
+            vaivenes.forEach((t) => t.kill());
+            vaivenes = [];
+            gsap.to(flotas, { y: 0, duration: 0.35, ease: "power2.out" });
+          };
+          mecer();
+          gsap.set(chips, { transformOrigin: "0 0" });
 
           gsap.set(cards, {
             rotate: (i) => panels[i].tilt.rotate,
@@ -244,6 +298,62 @@ export function HeroScene() {
             return { x: s.left - c.left, y: s.top - c.top };
           };
 
+          /**
+           * Dónde aterriza cada pastilla.
+           *
+           * Mismo criterio que flight(): se miden las pastillas sin
+           * transformar y el hueco de la cabecera, y el vuelo es la
+           * diferencia. Como las tres comparten la escala, se calculan las
+           * tres juntas. Se guarda un momento para que los tres valores de
+           * cada pastilla —x, y y escala— no midan tres veces lo mismo.
+           */
+          let medido: { x: number; y: number; scale: number }[] | null = null;
+          let medidoEn = 0;
+          const aterrizaje = (i: number) => {
+            const ahora = performance.now();
+            if (medido && ahora - medidoEn < 50) return medido[i];
+
+            const titulo = root.querySelector("[data-cabecera-titulo]");
+            const rango = root.querySelector("[data-cabecera-rango]");
+            if (!titulo || !rango) return { x: 0, y: 0, scale: 1 };
+
+            const guardado = chips.map((chip) => ({
+              x: gsap.getProperty(chip, "x") as number,
+              y: gsap.getProperty(chip, "y") as number,
+              scale: gsap.getProperty(chip, "scaleX") as number,
+            }));
+            gsap.set(chips, { x: 0, y: 0, scale: 1 });
+            const cajas = chips.map((chip) => chip.getBoundingClientRect());
+            chips.forEach((chip, j) => gsap.set(chip, guardado[j]));
+
+            const a = titulo.getBoundingClientRect();
+            const b = rango.getBoundingClientRect();
+            const desde = a.right + PASTILLAS.margen;
+            const hasta = b.left - PASTILLAS.margen;
+            const separaciones = PASTILLAS.separacion * (chips.length - 1);
+            const anchos = cajas.reduce((suma, caja) => suma + caja.width, 0);
+            const k = Math.min(
+              PASTILLAS.escalaMaxima,
+              (hasta - desde - separaciones) / anchos,
+            );
+            const fila = anchos * k + separaciones;
+            const centro = (b.top + b.bottom) / 2;
+
+            let x = desde + (hasta - desde - fila) / 2;
+            medido = cajas.map((caja) => {
+              const destino = {
+                x: x - caja.left,
+                y: centro - (caja.height * k) / 2 - caja.top,
+                scale: k,
+              };
+              x += caja.width * k + PASTILLAS.separacion;
+              return destino;
+            });
+            medidoEn = ahora;
+            return medido[i];
+          };
+
+          let enVuelo = false;
           const tl = gsap.timeline({
             scrollTrigger: {
               trigger: root.closest("section"),
@@ -251,6 +361,13 @@ export function HeroScene() {
               end: "bottom bottom",
               scrub: 0.8,
               invalidateOnRefresh: true,
+              onUpdate: (self) => {
+                const volando = self.progress > 0.005;
+                if (volando === enVuelo) return;
+                enVuelo = volando;
+                if (volando) aquietar();
+                else mecer();
+              },
             },
           });
 
@@ -307,10 +424,35 @@ export function HeroScene() {
             );
           });
 
+          /*
+             Las pastillas salen un poco después que las primeras tarjetas y
+             llegan antes que la última: la cabecera queda armada mientras
+             el tablero termina de llenarse, que es el orden en que se lee.
+             La opacidad es para la de la derecha, que en pantallas bajas
+             arranca invisible (ver hero-chips); en las demás ya está en 1.
+          */
+          chips.forEach((chip, i) => {
+            tl.to(
+              chip,
+              {
+                x: () => aterrizaje(i).x,
+                y: () => aterrizaje(i).y,
+                scale: () => aterrizaje(i).scale,
+                opacity: 1,
+                ease: "power2.inOut",
+                duration: 0.5,
+              },
+              0.15 + i * 0.1,
+            );
+          });
+
           return () => {
             vivo = false;
             draggables.forEach((d) => d.kill());
+            vaivenes.forEach((t) => t.kill());
             gsap.set(cards, { clearProps: "all" });
+            gsap.set(chips, { clearProps: "all" });
+            gsap.set(flotas, { clearProps: "all" });
           };
         },
       );
@@ -379,7 +521,7 @@ export function HeroScene() {
           posición, así que el degradé que apaga la bruma contra el pie le
           pasaba por encima y se tragaba la cabecera del tablero. Se veían
           las tarjetas —van en z-20— flotando sobre nada. */}
-      <div className="relative z-10 mt-12 min-[1440px]:mt-0 min-[1440px]:h-[var(--hero-reserve)] min-[1440px]:overflow-visible">
+      <div className="relative z-10 mt-12 h-[19rem] min-[1440px]:mt-0 min-[1440px]:h-[var(--hero-reserve)] min-[1440px]:overflow-visible">
         <div className="shell">
           <div
             data-dashboard
@@ -388,7 +530,8 @@ export function HeroScene() {
             {/* Cabecera del tablero, no de un navegador: lo que se muestra es
                 el panel del sitio, no una captura de pantalla. */}
             <div className="flex items-center justify-between gap-4 px-4 pb-2 pt-4 min-[1440px]:gap-6 min-[1440px]:px-6 min-[1440px]:pt-5">
-              <div>
+              {/* Entre estos dos aterrizan las pastillas (ver aterrizaje). */}
+              <div data-cabecera-titulo>
                 <p className="text-[0.95rem] font-semibold tracking-[-0.02em] min-[1440px]:text-[1.05rem]">
                   {dashboard.title}
                 </p>
@@ -397,7 +540,10 @@ export function HeroScene() {
                   {dashboard.status}
                 </p>
               </div>
-              <span className="shrink-0 rounded-full bg-card px-3.5 py-2 text-[0.72rem] font-medium">
+              <span
+                data-cabecera-rango
+                className="shrink-0 rounded-full bg-card px-3.5 py-2 text-[0.72rem] font-medium"
+              >
                 {dashboard.range}
               </span>
             </div>

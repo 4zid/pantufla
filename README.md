@@ -333,8 +333,15 @@ cobrar rápido.
 
 A partir de **1440px** el hero mide tres pantallas y el escenario queda fijo:
 los cuatro paneles arrancan dispersos alrededor del titular, con tres pastillas
-flotando en los huecos, y al bajar **convergen en el tablero**. Abajo de 1440
-no hay vuelo: el tablero se muestra ya armado.
+flotando en los huecos, y al bajar **convergen en el tablero**. Las pastillas
+hacen lo mismo: dejan de mecerse apenas empieza el scroll y se acomodan en fila
+en la cabecera del tablero, entre «Tu sitio, un mes después» y «Últimos 30
+días». Aterrizan achicadas para entrar en ese hueco, y cuánto se calcula en el
+momento: si el texto cambia en el Studio, la fila se reacomoda sola.
+
+Abajo de 1440 no hay vuelo: el tablero se muestra ya armado y **cortado igual
+que en escritorio**. Se ve la cabecera y el arranque de las tarjetas, y el piso
+difuminado del hero disuelve el resto.
 
 Cada hueco del tablero mide **exactamente lo mismo** que su panel, así que
 converger es una traslación pura, sin deformación. Los paneles y los huecos
