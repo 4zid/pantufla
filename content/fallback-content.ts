@@ -170,7 +170,7 @@ const testimoniosEs: SanityTestimonial[] = [
   {
     _id: "demo-t1",
     quote:
-      "Cargo contenido todas las semanas y nunca se me rompió nada. Dejó el sitio armado para que lo use alguien que no es diseñador.",
+      "Subo contenido casi todas las semanas y es muy simple. Nunca tuve que pedir ayuda.",
     name: "Flor",
     role: "Content Manager",
     company: "2MG",
@@ -178,7 +178,7 @@ const testimoniosEs: SanityTestimonial[] = [
   {
     _id: "demo-t2",
     quote:
-      "Soy diseñador y aun así encargué mi propio sitio acá. Es todo lo que puedo decir sobre el criterio.",
+      "Trabajamos juntos hace bastante. Es rápido, prolijo y no hace falta estar encima.",
     name: "Damián",
     role: "CEO",
     company: "Lupa Studio",
@@ -186,7 +186,7 @@ const testimoniosEs: SanityTestimonial[] = [
   {
     _id: "demo-t3",
     quote:
-      "Le llevé una idea que venía dando vueltas hacía meses y me la devolvió en una pantalla que se entiende en diez segundos.",
+      "Entiende rápido lo que necesitás y lo resuelve sin vueltas. Es fácil trabajar con él.",
     name: "Nico",
     role: "CEO",
     company: "Simplify",
@@ -194,7 +194,7 @@ const testimoniosEs: SanityTestimonial[] = [
   {
     _id: "demo-t4",
     quote:
-      "Dos rondas y estaba. No tuve que explicar lo mismo tres veces ni discutir un tamaño de letra.",
+      "Fue todo simple. Respondía rápido, cumplió con los tiempos y el sitio quedó como queríamos.",
     name: "Vicky",
     role: "CEO",
     company: "HOLD",
@@ -205,7 +205,7 @@ const testimoniosEn: SanityTestimonial[] = [
   {
     _id: "demo-t1",
     quote:
-      "I load content every week and nothing has ever broken. The site was built so that someone who is not a designer can run it.",
+      "I update the site almost every week and it’s easy. I’ve never needed help.",
     name: "Flor",
     role: "Content Manager",
     company: "2MG",
@@ -213,7 +213,7 @@ const testimoniosEn: SanityTestimonial[] = [
   {
     _id: "demo-t2",
     quote:
-      "I am a designer myself and I still had my own site made here. That is everything I can say about the eye behind it.",
+      "We’ve worked together for a while. He’s fast, careful, and you don’t have to chase him.",
     name: "Damián",
     role: "CEO",
     company: "Lupa Studio",
@@ -221,7 +221,7 @@ const testimoniosEn: SanityTestimonial[] = [
   {
     _id: "demo-t3",
     quote:
-      "I brought in an idea I had been circling for months and got it back as a screen you understand in ten seconds.",
+      "He picks up quickly on what you need and gets it done. Easy to work with.",
     name: "Nico",
     role: "CEO",
     company: "Simplify",
@@ -229,7 +229,7 @@ const testimoniosEn: SanityTestimonial[] = [
   {
     _id: "demo-t4",
     quote:
-      "Two rounds and it was done. I never had to explain the same thing three times or argue about a font size.",
+      "It was all straightforward. Quick replies, deadlines met, and the site turned out the way we wanted.",
     name: "Vicky",
     role: "CEO",
     company: "HOLD",
