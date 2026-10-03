@@ -14,15 +14,24 @@ type Size = "sm" | "md" | "lg";
    dibujando el grande. Con un tamaño más en la tabla no hay conflicto que
    resolver.
 */
+/*
+   sigue-tema: durante un cambio de tema el botón no suaviza sus colores por
+   su cuenta (ver globals.css). Y translate y no transform: en Tailwind 4 el
+   translate-y del active es su propia propiedad, y con transform en la lista
+   el hundido del clic no transicionaba.
+*/
 const base =
-  "inline-flex items-center justify-center gap-2 rounded-full font-medium transition-[background-color,color,border-color,transform] duration-200 active:translate-y-px disabled:pointer-events-none disabled:opacity-50";
+  "sigue-tema inline-flex items-center justify-center gap-2 rounded-full font-medium transition-[background-color,color,border-color,translate] duration-200 active:translate-y-px disabled:pointer-events-none disabled:opacity-50";
 
 const variants: Record<Variant, string> = {
-  primary: "bg-ink text-paper hover:bg-ink-hover",
+  primary: "bg-ink text-on-ink hover:bg-ink-hover",
   secondary:
     "border border-line-strong bg-card text-ink hover:border-ink hover:bg-paper-alt",
   ghost: "text-ink hover:bg-paper-alt",
-  onDark: "bg-paper text-ink hover:bg-white",
+  /* Va sobre la tarjeta destacada de planes, que es oscura en los dos temas,
+     así que sus colores son fijos. Con tokens, en el tema oscuro el papel se
+     volvía negro y el botón desaparecía sobre la tarjeta. */
+  onDark: "bg-white text-[#121212] hover:bg-[#ebebe8]",
 };
 
 const sizes: Record<Size, string> = {
@@ -46,7 +55,10 @@ export function Button({
   ...props
 }: Props & Omit<ComponentProps<"button">, "children" | "className">) {
   return (
-    <button className={cn(base, variants[variant], sizes[size], className)} {...props}>
+    <button
+      className={cn(base, variants[variant], sizes[size], className)}
+      {...props}
+    >
       {children}
     </button>
   );

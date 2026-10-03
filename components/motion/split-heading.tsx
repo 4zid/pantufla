@@ -39,7 +39,7 @@ type Props = {
 
 const marks: Record<NonNullable<Segment["mark"]>, string> = {
   paper: "bg-card text-ink shadow-[0_2px_10px_-4px_rgba(0,0,0,0.25)]",
-  ink: "bg-ink text-paper",
+  ink: "bg-ink text-on-ink",
   aqua: "bg-aqua-soft text-aqua-deep",
   rosa: "bg-rosa-soft text-rosa-deep",
   verde: "bg-verde-soft text-verde-deep",
