@@ -4,6 +4,7 @@ import Lenis from "lenis";
 import { useEffect } from "react";
 
 import { gsap, registerGsap, ScrollTrigger } from "@/lib/motion";
+import { empezarSalto, registrarLenis, terminarSalto } from "@/lib/scroll";
 
 /**
  * El scroll suave de todo el sitio.
@@ -26,6 +27,12 @@ import { gsap, registerGsap, ScrollTrigger } from "@/lib/motion";
  * 2. Los enlaces a un ancla de la misma página los lleva Lenis, con el mismo
  *    margen de la barra que tenía el scroll-padding. Sin esto, con el
  *    scroll-behavior de CSS apagado (ver globals.css), saltaban de golpe.
+ *    Y los que van a la misma página sin ancla —la marca, estando en la
+ *    home— suben con Lenis en vez de saltar arriba de un golpe.
+ *
+ * Los saltos se le avisan a la barra (lib/scroll.ts), para que no se esconda
+ * mientras la página baja hacia donde el visitante pidió ir. Cualquier gesto
+ * propio —rueda, dedo— corta el aviso: desde ahí vuelve a estar leyendo.
  */
 
 /** Lo que tapa la barra: el mismo 6rem del scroll-padding-top. */
@@ -35,6 +42,7 @@ export function SmoothScroll() {
   useEffect(() => {
     registerGsap();
     const lenis = new Lenis({ lerp: 0.1 });
+    registrarLenis(lenis);
 
     lenis.on("scroll", () => ScrollTrigger.update());
     const tick = (time: number) => lenis.raf(time * 1000);
@@ -48,14 +56,29 @@ export function SmoothScroll() {
       }
       const enlace = (e.target as Element | null)?.closest("a[href]");
       if (!(enlace instanceof HTMLAnchorElement)) return;
+      if (enlace.target && enlace.target !== "_self") return;
       const destino = new URL(enlace.href, location.href);
       if (
         destino.origin !== location.origin ||
-        destino.pathname !== location.pathname ||
-        !destino.hash
+        destino.pathname !== location.pathname
       ) {
         return;
       }
+
+      // Con el menú del teléfono abierto Lenis está frenado (lib/scroll.ts) y
+      // no se movería. El menú se cierra con este mismo clic; lo que falta es
+      // que el salto no se pierda en el medio.
+      if (lenis.isStopped) lenis.start();
+
+      // La misma página sin ancla: la marca, estando en la home. Sube.
+      if (!destino.hash) {
+        if (destino.search !== location.search) return;
+        e.preventDefault();
+        empezarSalto();
+        lenis.scrollTo(0, { onComplete: terminarSalto });
+        return;
+      }
+
       const seccion = document.getElementById(
         decodeURIComponent(destino.hash.slice(1)),
       );
@@ -69,8 +92,13 @@ export function SmoothScroll() {
       // para que Lenis no le sume además el scroll-padding.
       const y =
         seccion.getBoundingClientRect().top + window.scrollY - MARGEN_BARRA;
-      lenis.scrollTo(y);
+      empezarSalto();
+      lenis.scrollTo(y, { onComplete: terminarSalto });
     }
+
+    /* Un gesto propio en medio de un salto lo convierte en lectura. */
+    window.addEventListener("wheel", terminarSalto, { passive: true });
+    window.addEventListener("touchstart", terminarSalto, { passive: true });
     // En captura, para llegar antes que el Link de Next: si ve el clic
     // prevenido no navega él, y el ancla queda para Lenis. Si no, el salto
     // es de Next, instantáneo, y el scroll suave se pierde justo ahí.
@@ -78,7 +106,10 @@ export function SmoothScroll() {
 
     return () => {
       document.removeEventListener("click", alClic, true);
+      window.removeEventListener("wheel", terminarSalto);
+      window.removeEventListener("touchstart", terminarSalto);
       gsap.ticker.remove(tick);
+      registrarLenis(null);
       lenis.destroy();
     };
   }, []);

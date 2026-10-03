@@ -58,7 +58,7 @@ function Signo({ open }: { open: boolean }) {
   return (
     <span
       aria-hidden
-      className="relative grid h-7 w-7 shrink-0 place-items-center rounded-full bg-ink text-paper transition-transform duration-300 group-hover:scale-110"
+      className="relative grid h-7 w-7 shrink-0 place-items-center rounded-full bg-ink text-on-ink transition-transform duration-300 group-hover:scale-110"
     >
       <span className="absolute h-[1.5px] w-2.5 rounded-full bg-current" />
       <span

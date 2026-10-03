@@ -116,7 +116,7 @@ export function Pricing({ surface }: { surface?: Surface }) {
                   onClick={() => setMode(value)}
                   className={cn(
                     "relative z-10 flex flex-1 items-center justify-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-2 text-[0.8rem] font-medium transition-colors duration-300 sm:flex-none sm:gap-2 sm:px-4 sm:text-[0.88rem]",
-                    active ? "text-white" : "text-ink-soft hover:text-ink",
+                    active ? "text-on-ink" : "text-ink-soft hover:text-ink",
                   )}
                 >
                   {option.label}
@@ -125,7 +125,7 @@ export function Pricing({ surface }: { surface?: Surface }) {
                       "rounded-full px-2 py-0.5 text-[0.7rem] font-semibold tabular-nums",
                       "transition-colors duration-300",
                       active
-                        ? "bg-white/15 text-white"
+                        ? "bg-on-ink/15 text-on-ink"
                         : "bg-verde-soft text-verde-deep",
                     )}
                   >

@@ -48,7 +48,7 @@ function Badge({
     <span
       className={
         variant === "solid"
-          ? "shrink-0 rounded-full bg-ink px-2.5 py-1 text-[0.66rem] font-semibold text-paper"
+          ? "shrink-0 rounded-full bg-ink px-2.5 py-1 text-[0.66rem] font-semibold text-on-ink"
           : "shrink-0 rounded-full bg-verde-soft px-2.5 py-1 text-[0.66rem] font-semibold text-verde-deep"
       }
     >

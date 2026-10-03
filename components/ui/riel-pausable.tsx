@@ -46,7 +46,7 @@ export function RielPausable({
       <button
         type="button"
         onClick={() => setPausado((v) => !v)}
-        className="pointer-events-none absolute right-4 top-1/2 z-10 -translate-y-1/2 rounded-full bg-ink px-4 py-2 text-[0.85rem] font-medium text-paper opacity-0 focus-visible:pointer-events-auto focus-visible:opacity-100"
+        className="pointer-events-none absolute right-4 top-1/2 z-10 -translate-y-1/2 rounded-full bg-ink px-4 py-2 text-[0.85rem] font-medium text-on-ink opacity-0 focus-visible:pointer-events-auto focus-visible:opacity-100"
       >
         {pausado ? header.resumeMotion : header.pauseMotion}
       </button>
