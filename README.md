@@ -404,6 +404,19 @@ resultados), sumarlos en el Studio. El respaldo local de esos textos está en
 `content/casos.ts`. Para escribir otro alcanza con llenar «Caso completo» en el
 Studio: el enlace, el sitemap y el índice se acomodan solos.
 
+Las imágenes de una ficha salen de tres campos del proyecto en el Studio:
+
+| Campo | Dónde se ve |
+| --- | --- |
+| Imagen de portada | Arriba de la ficha, recortada a 16:10 |
+| Galería | Abajo del caso, enteras, a todo el ancho y en orden |
+| Imagen para redes | Al compartir el link (WhatsApp, LinkedIn, X), recortada a 1200×630; si falta, se usa la portada |
+
+Están pensadas como mockups de 16:10 (2560×1600 es el doble de 1280×800). Los
+originales de lo que ya está subido quedan en `assets/proyectos/`, con una
+tabla de qué archivo va en qué campo. Tierras Argentinas es el primer caso con
+las tres: portada, tres imágenes de galería y una para redes.
+
 ---
 
 ## Fondo y tema
