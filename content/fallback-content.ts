@@ -178,7 +178,7 @@ const testimoniosEs: SanityTestimonial[] = [
   {
     _id: "demo-t2",
     quote:
-      "Somos un estudio de diseño, así que fuimos clientes difíciles. Nos discutieron lo que había que discutir, y la mayoría de las veces tenían razón.",
+      "Trabajamos juntos hace tiempo. Le pasás algo a la mañana y a la tarde ya tenés una versión para mirar, casi siempre mejor resuelta de lo que la habías pedido.",
     name: "Damián",
     role: "CEO",
     company: "Lupa Studio",
@@ -186,7 +186,7 @@ const testimoniosEs: SanityTestimonial[] = [
   {
     _id: "demo-t3",
     quote:
-      "Hacía meses que no podía explicar la idea sin dar mil vueltas. Hoy mando el link y no tengo que agregar nada.",
+      "Da gusto trabajar así. Entiende rápido lo que necesitás, propone sin que se lo pidas y cuando te querés acordar ya está online.",
     name: "Nico",
     role: "CEO",
     company: "Simplify",
@@ -194,7 +194,7 @@ const testimoniosEs: SanityTestimonial[] = [
   {
     _id: "demo-t4",
     quote:
-      "Venía de una mala experiencia con otra agencia y entré con la guardia alta. Acá siempre supe en qué etapa estábamos y qué me tocaba mandar a mí.",
+      "Nos entendimos desde la primera charla. Yo esperaba semanas de idas y vueltas y a los pocos días ya estábamos puliendo detalles.",
     name: "Vicky",
     role: "CEO",
     company: "HOLD",
@@ -205,7 +205,7 @@ const testimoniosEn: SanityTestimonial[] = [
   {
     _id: "demo-t1",
     quote:
-      "At first I was scared I would touch something and break the site. Now I add new events almost every week and I have never had to ask anyone for help.",
+      "At first I was scared I’d touch something and break the site. Now I add new events almost every week and I’ve never had to ask anyone for help.",
     name: "Flor",
     role: "Content Manager",
     company: "2MG",
@@ -213,7 +213,7 @@ const testimoniosEn: SanityTestimonial[] = [
   {
     _id: "demo-t2",
     quote:
-      "We are a design studio, so we were difficult clients. They pushed back where it mattered, and most of the time they were right.",
+      "We’ve worked together for a while. You send something over in the morning and by the afternoon there’s a version to look at, usually better solved than what you asked for.",
     name: "Damián",
     role: "CEO",
     company: "Lupa Studio",
@@ -221,7 +221,7 @@ const testimoniosEn: SanityTestimonial[] = [
   {
     _id: "demo-t3",
     quote:
-      "For months I could not explain the idea without going around in circles. Now I just send the link and do not have to add anything.",
+      "Working like this is a pleasure. He gets what you need fast, suggests things before you ask, and before you know it, it’s live.",
     name: "Nico",
     role: "CEO",
     company: "Simplify",
@@ -229,7 +229,7 @@ const testimoniosEn: SanityTestimonial[] = [
   {
     _id: "demo-t4",
     quote:
-      "I had a bad experience with another agency and came in with my guard up. Here I always knew what stage we were at and what I had to send.",
+      "We clicked from the first call. I was expecting weeks of back and forth, and a few days later we were already polishing details.",
     name: "Vicky",
     role: "CEO",
     company: "HOLD",
