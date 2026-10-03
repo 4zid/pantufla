@@ -47,16 +47,16 @@ export async function GET() {
       `- **${plan.name}** — USD ${plan.price.once}. ${sinPunto(plan.summary)}. Entrega: ${sinPunto(plan.delivery)}. Ideal para: ${sinPunto(plan.bestFor)}.`,
   );
 
-  const preguntas = copy.faq.items.map(
-    (item) => `### ${item.q}\n${item.a}`,
-  );
+  const preguntas = copy.faq.items.map((item) => `### ${item.q}\n${item.a}`);
 
   const proyectos = fallbackProjects.map(
-    (p) => `- **${p.title}**${p.url ? ` — ${p.url}` : ""}${p.tagline ? `: ${p.tagline}` : ""}`,
+    (p) =>
+      `- **${p.title}**${p.url ? ` — ${p.url}` : ""}${p.tagline ? `: ${p.tagline}` : ""}${p.body?.length ? ` [Caso](${absoluta(`/proyectos/${p.slug}`)})` : ""}`,
   );
 
   /** Un bloque del archivo, o nada si su sección está apagada. */
-  const bloque = (prendida: boolean, cuerpo: string) => (prendida ? cuerpo : "");
+  const bloque = (prendida: boolean, cuerpo: string) =>
+    prendida ? cuerpo : "";
 
   const texto = `# ${site.legalName}
 
@@ -107,15 +107,16 @@ ${preguntas.join("\n\n")}
 - [Agendar una llamada](${absoluta("/reunion")}): ${copy.meeting.metaDescription}
 - [Versión en inglés](${siteUrl}/en)
 
-El sitio es una sola página: el proceso, los planes, los proyectos, los
-testimonios y el formulario viven todos en el inicio. Cada proyecto tiene
-además su ficha en /proyectos/<slug>.
+El sitio es una sola página: los proyectos, el proceso, los planes, los
+testimonios y el formulario viven todos en el inicio. Los proyectos con el
+caso escrito tienen además su ficha en /proyectos/<slug>.
 `;
 
   return new Response(texto, {
     headers: {
       "Content-Type": "text/plain; charset=utf-8",
-      "Cache-Control": "public, max-age=0, s-maxage=3600, stale-while-revalidate=86400",
+      "Cache-Control":
+        "public, max-age=0, s-maxage=3600, stale-while-revalidate=86400",
     },
   });
 }

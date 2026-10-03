@@ -13,14 +13,16 @@ import {
 /**
  * Qué secciones de la home están prendidas.
  *
- * Lo que no está cargado cuenta como prendido, y es a propósito. Una sección
- * nueva que todavía no tiene interruptor en el documento de Sanity —porque el
- * documento se creó antes de que la sección existiera— tiene que aparecer, no
- * esconderse sola. El apagado es siempre una decisión explícita: alguien tocó
- * el interruptor.
+ * Lo que no está cargado sale como viene de fábrica (content/sections.ts),
+ * que para casi todas es prendida, y es a propósito. Una sección nueva que
+ * todavía no tiene interruptor en el documento de Sanity —porque el documento
+ * se creó antes de que la sección existiera— tiene que aparecer, no
+ * esconderse sola.
  *
- * Solo false apaga. Un null, un undefined o un campo que no está son «todavía
- * no dijeron nada», que no es lo mismo que «no».
+ * Solo un sí o un no explícitos cambian algo. Un null, un undefined o un campo
+ * que no está son «todavía no dijeron nada», que no es lo mismo que «no». El
+ * sí hace falta para las que salen apagadas de fábrica, como el stack: es la
+ * forma de volver a prenderlas desde el panel.
  */
 export async function getSections(): Promise<Secciones> {
   const remoto = await sanityFetch<Record<string, unknown> | null>(
@@ -34,7 +36,8 @@ export async function getSections(): Promise<Secciones> {
 
   const salida = { ...SECCIONES_POR_DEFECTO };
   for (const { id } of SECCIONES) {
-    if (remoto[id] === false) salida[id as SeccionId] = false;
+    const valor = remoto[id];
+    if (typeof valor === "boolean") salida[id as SeccionId] = valor;
   }
   return salida;
 }

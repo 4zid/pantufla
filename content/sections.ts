@@ -40,6 +40,8 @@ export type Seccion = {
   ancla?: string;
   /** El fondo con el que sale de fábrica; el panel puede cambiarlo. */
   fondo: Fondo;
+  /** Si sale de fábrica apagada. Las que no lo dicen salen prendidas. */
+  apagada?: boolean;
 };
 
 export const SECCIONES: Seccion[] = [
@@ -61,6 +63,13 @@ export const SECCIONES: Seccion[] = [
     ancla: "metodo",
   },
   {
+    id: "work",
+    fondo: "oscuro",
+    titulo: "Proyectos",
+    nota: "Las fichas de cada proyecto siguen publicadas y accesibles; lo que se apaga es la fila de la home.",
+    ancla: "proyectos",
+  },
+  {
     id: "bento",
     fondo: "claro",
     titulo: "Capacidades",
@@ -77,7 +86,9 @@ export const SECCIONES: Seccion[] = [
     id: "stackTicker",
     fondo: "claro",
     titulo: "Con qué trabajamos",
+    nota: "Sale apagada: cortaba el paso del proceso a los planes, y lo que decía —herramientas conocidas, que no te atan a nadie— ahora es una pregunta frecuente.",
     ancla: "stack",
+    apagada: true,
   },
   {
     id: "pricing",
@@ -87,22 +98,17 @@ export const SECCIONES: Seccion[] = [
     ancla: "planes",
   },
   {
-    id: "work",
-    fondo: "oscuro",
-    titulo: "Proyectos",
-    nota: "Las fichas de cada proyecto siguen publicadas y accesibles; lo que se apaga es la fila de la home.",
-    ancla: "proyectos",
-  },
-  {
     id: "testimonials",
     fondo: "claro",
     titulo: "Testimonios",
+    nota: "Con el mapa prendido van juntos, en una sola sección: la cita arriba y el mapa abajo, con el fondo de esta.",
     ancla: "testimonios",
   },
   {
     id: "clientsMap",
     fondo: "claro",
     titulo: "Mapa de clientes",
+    nota: "Si los testimonios están prendidos, el mapa va adentro de esa sección y su fondo no cuenta.",
     ancla: "clientes",
   },
   {
@@ -121,9 +127,10 @@ export const SECCIONES: Seccion[] = [
   },
 ];
 
-/** Todas prendidas: lo que rige mientras el panel no diga otra cosa. */
+/** Lo que rige mientras el panel no diga otra cosa: prendidas, salvo las
+    que salen de fábrica apagadas. */
 export const SECCIONES_POR_DEFECTO: Record<SeccionId, boolean> =
-  Object.fromEntries(SECCIONES.map((s) => [s.id, true])) as Record<
+  Object.fromEntries(SECCIONES.map((s) => [s.id, !s.apagada])) as Record<
     SeccionId,
     boolean
   >;

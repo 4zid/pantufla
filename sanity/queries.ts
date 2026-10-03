@@ -25,7 +25,8 @@ const projectFields = `
   cover,
   services,
   results,
-  url
+  url,
+  "conCaso": count(body) > 0
 `;
 
 export const featuredProjectsQuery = groq`
@@ -46,6 +47,18 @@ export const projectBySlugQuery = groq`
 
 export const projectSlugsQuery = groq`
   *[_type == "project" && defined(slug.current)][].slug.current
+`;
+
+/**
+ * Las fichas que van al sitemap: las que tienen el caso escrito.
+ *
+ * Sin caso, una ficha es el nombre, una bajada y dos datos, y la home ni la
+ * enlaza (la esfera lleva al sitio publicado). Mandarla al buscador es pedirle
+ * que indexe una página flaca. Siguen existiendo y se pueden abrir; van con
+ * noindex y entran solas apenas se escribe el caso.
+ */
+export const projectCaseSlugsQuery = groq`
+  *[_type == "project" && defined(slug.current) && count(body) > 0][].slug.current
 `;
 
 /**

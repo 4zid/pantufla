@@ -742,6 +742,11 @@ export const siteCopy = defineType({
         defineField({ name: "title", title: "Título", type: "string" }),
         texto("lead", "Bajada", 2),
         defineField({ name: "view", title: "Palabra «ver»", type: "string" }),
+        defineField({
+          name: "readCase",
+          title: "Enlace al caso escrito",
+          type: "string",
+        }),
       ],
     }),
     defineField({
@@ -1023,6 +1028,19 @@ export const siteCopy = defineType({
             { name: "eyebrow", title: "Etiqueta", type: "string" },
             { name: "title", title: "Título", type: "string" },
             { name: "lead", title: "Bajada", type: "text", rows: 2 },
+          ],
+        }),
+        defineField({
+          name: "proyecto",
+          title: "Ficha de cada proyecto",
+          type: "object",
+          fields: [
+            { name: "viewSite", title: "Enlace al sitio", type: "string" },
+            { name: "sector", title: "Rótulo «Rubro»", type: "string" },
+            { name: "plan", title: "Rótulo «Plan»", type: "string" },
+            { name: "delivery", title: "Rótulo «Entrega»", type: "string" },
+            { name: "year", title: "Rótulo «Año»", type: "string" },
+            { name: "services", title: "Rótulo «Qué hicimos»", type: "string" },
           ],
         }),
       ],

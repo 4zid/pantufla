@@ -76,6 +76,14 @@ export default async function HomePage({
      de la home, la lista de interruptores del panel y la poda de enlaces sean
      todos la misma lista y no tres que hay que mantener iguales a mano.
   */
+  /*
+     Testimonios y mapa van juntos cuando están los dos: el mapa entra abajo
+     de la cita, en la misma sección y con el fondo de los testimonios. Cada
+     uno sigue teniendo su interruptor; con uno solo prendido, ese sale solo.
+  */
+  const juntos =
+    secciones.testimonials && secciones.clientsMap && testimonials.length > 0;
+
   const piezas: Record<SeccionId, (surface: Surface) => React.ReactNode> = {
     hero: (surface) => <Hero surface={surface} />,
     socialProof: (surface) => <SocialProof surface={surface} />,
@@ -86,9 +94,11 @@ export default async function HomePage({
     pricing: (surface) => <Pricing surface={surface} />,
     work: (surface) => <Work projects={projects} surface={surface} />,
     testimonials: (surface) => (
-      <Testimonials items={testimonials} surface={surface} />
+      <Testimonials items={testimonials} surface={surface}>
+        {juntos ? <ClientsMap embedded /> : null}
+      </Testimonials>
     ),
-    clientsMap: (surface) => <ClientsMap surface={surface} />,
+    clientsMap: (surface) => (juntos ? null : <ClientsMap surface={surface} />),
     faq: (surface) => <Faq surface={surface} />,
     finalCta: (surface) => <FinalCta withForm surface={surface} />,
   };

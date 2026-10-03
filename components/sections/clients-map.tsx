@@ -8,6 +8,7 @@ import { useCopy, useLocale } from "@/components/copy-provider";
 import { fill } from "@/content/copy";
 import { nombrePais } from "@/content/countries";
 import { Reveal } from "@/components/motion/reveal";
+import { SplitHeading } from "@/components/motion/split-heading";
 import { Section, SectionHead, type Surface } from "@/components/ui/section";
 import {
   TIERRA,
@@ -40,6 +41,12 @@ import { cn } from "@/lib/cn";
  * y la lista de al lado dice los nombres, que es lo que se puede leer sin
  * entrecerrar los ojos. Pasar por una fila enciende sus ciudades en el mapa y
  * al revés: son dos vistas de lo mismo, no un mapa con una leyenda.
+ *
+ * Con los testimonios prendidos va adentro de esa sección (embedded): eran
+ * dos bloques de prueba seguidos, cada uno con su etiqueta y su titular, y se
+ * leían como dos veces lo mismo. Juntos son una sola: lo que dicen y desde
+ * dónde. Ahí el titular baja a h3 y se centra, para colgar de la cita y no
+ * abrir una sección nueva.
  */
 
 /** Cuánto se arquea una línea, como fracción de su propio largo. */
@@ -72,7 +79,14 @@ const destinos = clients
   .filter((c) => c.city !== studio.city)
   .map((c) => ({ ...c, d: arco(casa.x, casa.y, aX(c.lon), aY(c.lat)) }));
 
-export function ClientsMap({ surface }: { surface?: Surface }) {
+export function ClientsMap({
+  surface,
+  embedded = false,
+}: {
+  surface?: Surface;
+  /** Adentro de los testimonios: sin sección propia ni etiqueta. */
+  embedded?: boolean;
+}) {
   const { clientsMap } = useCopy();
   const locale = useLocale();
   const scope = useRef<HTMLDivElement>(null);
@@ -137,14 +151,25 @@ export function ClientsMap({ surface }: { surface?: Surface }) {
     { scope },
   );
 
-  return (
-    <Section id="clientes" surface={surface}>
-      <SectionHead
-        icon="globo"
-        eyebrow={clientsMap.eyebrow}
-        title={clientsMap.title}
-        lead={fill(clientsMap.note, { count: paises.length })}
-      />
+  const bajada = fill(clientsMap.note, { count: paises.length });
+
+  const cuerpo = (
+    <>
+      {embedded ? (
+        <div className="mx-auto max-w-2xl text-center">
+          <SplitHeading as="h3" text={clientsMap.title} className="text-h3" />
+          <Reveal delay={0.1}>
+            <p className="mt-4 text-lead text-ink-soft">{bajada}</p>
+          </Reveal>
+        </div>
+      ) : (
+        <SectionHead
+          icon="globo"
+          eyebrow={clientsMap.eyebrow}
+          title={clientsMap.title}
+          lead={bajada}
+        />
+      )}
 
       <div
         ref={scope}
@@ -318,6 +343,16 @@ export function ClientsMap({ surface }: { surface?: Surface }) {
           </ul>
         </Reveal>
       </div>
+    </>
+  );
+
+  return embedded ? (
+    <div id="clientes" className="mt-24 md:mt-32">
+      {cuerpo}
+    </div>
+  ) : (
+    <Section id="clientes" surface={surface}>
+      {cuerpo}
     </Section>
   );
 }
