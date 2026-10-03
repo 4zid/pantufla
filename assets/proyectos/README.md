@@ -25,9 +25,13 @@ colores), exportados marco por marco.
 ## 2MG
 
 Salen de los mockups de 2MG, cuatro marcos de 4:3 exportados uno por uno. La
-de redes no es un marco: es la portada entera, centrada sobre el mismo beige
-del fondo hasta llegar a 1,91:1 (2400×1260), para que el recorte de las redes
-no le corte ni el navegador ni el teléfono.
+de redes no es un marco: es la portada entera, con el fondo estirado hacia
+los costados hasta llegar a 1,91:1 (2400×1260), para que el recorte de las
+redes no le corte ni el navegador ni el teléfono.
+
+Los marcos tienen sombras de 130px de difuminado. Chromium las pinta de a
+mosaicos de 256px y, exportadas así, quedaban en bloques; se exportan con
+`--default-tile-width=4096 --default-tile-height=4096`.
 
 | Archivo | En Sanity | Qué muestra |
 | --- | --- | --- |
