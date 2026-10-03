@@ -61,7 +61,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
  * Primero lo que trae la consulta (metadata del asset). Si no está —el
  * respaldo local no pasa por la consulta— sale de la referencia, que en
  * Sanity siempre lleva las medidas: image-<hash>-2560x1600-jpg. Y si tampoco,
- * 16:10, que es el formato de las imágenes de los casos.
+ * 16:10, que es el formato más común de los mockups de los casos.
  */
 function medidas(imagen: {
   asset?: { _ref?: string };
@@ -83,7 +83,16 @@ export default async function ProjectPage({ params }: Params) {
   ]);
   if (!project) notFound();
 
-  const cover = urlForImage(project.cover)?.width(1600).height(1000).url();
+  /*
+     La portada va entera, con su proporción, como la galería. Iba recortada
+     a 16:10, que servía mientras todos los mockups eran 16:10; los de 2MG son
+     4:3 y el recorte se comía el pie del teléfono.
+  */
+  const portadaUrl = urlForImage(project.cover)?.width(2400).url();
+  const portada =
+    portadaUrl && project.cover
+      ? { url: portadaUrl, ...medidas(project.cover) }
+      : null;
   const textos = pages.proyecto;
   /*
      Sin el caso escrito, la ficha es una cabecera: nombre, bajada, enlace y
@@ -185,18 +194,17 @@ export default async function ProjectPage({ params }: Params) {
           </div>
         </div>
 
-        {cover ? (
+        {portada ? (
           <div className="shell">
-            <div className="relative aspect-[16/10] overflow-hidden rounded-panel border border-line bg-paper-alt">
-              <Image
-                src={cover}
-                alt={project.cover?.alt || project.title}
-                fill
-                priority
-                sizes="(max-width: 1200px) 100vw, 1200px"
-                className="object-cover"
-              />
-            </div>
+            <Image
+              src={portada.url}
+              alt={project.cover?.alt || project.title}
+              width={portada.ancho}
+              height={portada.alto}
+              priority
+              sizes="(max-width: 1200px) 100vw, 1200px"
+              className="h-auto w-full rounded-panel border border-line bg-paper-alt"
+            />
           </div>
         ) : null}
 
