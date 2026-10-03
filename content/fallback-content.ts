@@ -165,6 +165,17 @@ export const fallbackProjects: SanityProject[] = [
     body: casos["2mg"],
     conCaso: true,
   },
+  {
+    _id: "work-block-desarrollos",
+    title: "Block Desarrollos",
+    slug: "block-desarrollos",
+    url: "https://blockdesarrollos.com/",
+    tagline:
+      "Sitio para una desarrolladora inmobiliaria de Buenos Aires que construye edificios de vivienda.",
+    sector: "Desarrollo inmobiliario",
+    plan: "Sitio",
+    services: ["Diseño", "Desarrollo"],
+  },
 ];
 
 /**

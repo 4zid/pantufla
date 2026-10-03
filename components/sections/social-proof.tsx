@@ -23,9 +23,9 @@ import { RielPausable } from "@/components/ui/riel-pausable";
  * A la izquierda va quién hace el trabajo y a la derecha para quién se hizo.
  * La frase no cuenta clientes: ver por qué en content/site.ts.
  *
- * Las marcas corren en un riel y no quietas en fila. Son cinco: quietas
- * ocupaban media tira y dejaban un hueco al final que pedía un sexto cliente
- * que no existe. Moviéndose, la tira no tiene largo fijo —siempre está llena—
+ * Las marcas corren en un riel y no quietas en fila. Quietas, la fila mide
+ * lo que suman los logos y deja un hueco al final que cambia con cada cliente
+ * que se suma. Moviéndose, la tira no tiene largo fijo —siempre está llena—
  * y además se lee como una lista que sigue, que es exactamente lo que se
  * quiere decir. La mecánica del empalme está explicada en globals.css.
  *
@@ -38,11 +38,23 @@ import { RielPausable } from "@/components/ui/riel-pausable";
 /**
  * Cuántas veces se repite la lista en cada mitad de la pista.
  *
- * Cinco marcas miden unos 700px. Con una sola pasada por mitad, a mitad de la
+ * Seis marcas miden unos 810px. Con una sola pasada por mitad, a mitad de la
  * animación el final de la pista entra en pantalla y queda un hueco. Tres
- * pasadas dan 2100px por mitad, que tapa el hueco hasta en pantallas de 2560.
+ * pasadas dan unos 2400px por mitad, que tapa el hueco hasta en pantallas de
+ * 2560.
  */
 const REPES = 3;
+
+/**
+ * Cuánto tarda la pista en correr media vuelta.
+ *
+ * La animación mueve la mitad de la pista en este tiempo, así que cada marca
+ * nueva la alarga y, con el mismo tiempo, la acelera. Con cinco marcas eran
+ * 34s; con seis la pista es un 22% más larga y el tiempo crece igual, para
+ * que el riel siga a unos 58px por segundo. Si se suma otra, la cuenta es la
+ * misma: el ancho de una pasada sobre 58, por tres.
+ */
+const DURACION = "42s";
 
 /**
  * Cuánta superficie ocupa cada logo, en píxeles cuadrados, y hasta qué alto.
@@ -110,7 +122,7 @@ export function SocialProof({ surface = "mist" }: { surface?: Surface }) {
           >
             <ul
               className="ticker-track items-center"
-              style={{ "--ticker-duration": "34s" } as React.CSSProperties}
+              style={{ "--ticker-duration": DURACION } as React.CSSProperties}
             >
               {Array.from({ length: REPES * 2 }).map((_, copia) =>
                 marcas.map((marca) => (
