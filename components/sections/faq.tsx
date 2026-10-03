@@ -3,8 +3,10 @@
 import { useGSAP } from "@gsap/react";
 import { useId, useRef, useState } from "react";
 
-import { socialProof } from "@/content/site";
+import { site, socialProof } from "@/content/site";
+import { fill } from "@/content/copy";
 import { useCopy } from "@/components/copy-provider";
+import { calendarioConectado } from "@/lib/calendario";
 import { Reveal } from "@/components/motion/reveal";
 import { SplitHeading } from "@/components/motion/split-heading";
 import { ButtonLink } from "@/components/ui/button";
@@ -70,7 +72,7 @@ function Signo({ open }: { open: boolean }) {
 }
 
 export function Faq({ surface }: { surface?: Surface }) {
-  const { faq } = useCopy();
+  const { faq, finalCta } = useCopy();
   const [open, setOpen] = useState<number | null>(null);
   const scope = useRef<HTMLDivElement>(null);
   /** La pregunta que se acaba de tocar, para dejarla quieta mientras se abre. */
@@ -249,9 +251,18 @@ export function Faq({ surface }: { surface?: Surface }) {
           <p className="mt-4 text-[1.08rem] font-medium tracking-[-0.02em]">
             {faq.cta.claim}
           </p>
-          <ButtonLink href={faq.cta.href} className="mt-3.5">
-            {faq.cta.label}
-          </ButtonLink>
+          {/* Sin calendario conectado el botón no promete agendar: lleva al
+              mail, que es lo que ofrece /reunion en ese estado de todos
+              modos (ver lib/calendario.ts). */}
+          {calendarioConectado ? (
+            <ButtonLink href={faq.cta.href} className="mt-3.5">
+              {faq.cta.label}
+            </ButtonLink>
+          ) : (
+            <ButtonLink href={`mailto:${site.email}`} className="mt-3.5">
+              {fill(finalCta.secondaryLabel, { email: site.email })}
+            </ButtonLink>
+          )}
         </div>
       </Reveal>
     </Section>

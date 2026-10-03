@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef } from "react";
 
-import { ArrowUpRightIcon } from "@/components/ui/icons";
+import { ArrowIcon, ArrowUpRightIcon } from "@/components/ui/icons";
 import { Sphere } from "@/components/ui/sphere";
 import type { SanityProject } from "@/sanity/types";
 import type { Tone } from "@/lib/tones";
@@ -33,6 +33,10 @@ import { useCopy, useHref } from "@/components/copy-provider";
  * enlace, y eso es lo que lo dice. En una pantalla táctil no hay mouse que
  * pase, así que ahí lo lleva siempre la fila prendida: sin eso, nada decía
  * que la esfera se podía tocar.
+ *
+ * Los proyectos con el caso escrito suman abajo de la bajada un enlace a su
+ * ficha. La esfera sigue yendo al sitio: es lo que la mayoría quiere ver, y
+ * el caso es para quien quiere saber cómo se pensó.
  */
 
 /** El tono de cada esfera, por posición: dos vecinas nunca del mismo color. */
@@ -147,6 +151,16 @@ export function ProjectStack({
                   <p className="mt-2 text-[1rem] leading-relaxed text-ink-soft">
                     {project.tagline}
                   </p>
+                ) : null}
+                {project.conCaso ? (
+                  <Link
+                    href={href(`/proyectos/${project.slug}`)}
+                    className="group/caso mt-3 inline-flex items-center gap-1.5 text-[0.92rem] font-medium text-ink underline decoration-line-strong underline-offset-4 transition-colors hover:decoration-ink"
+                  >
+                    {work.readCase}
+                    <span className="sr-only">: {project.title}</span>
+                    <ArrowIcon className="h-3.5 w-3.5 transition-transform duration-200 group-hover/caso:translate-x-0.5" />
+                  </Link>
                 ) : null}
               </div>
             </article>

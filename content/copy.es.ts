@@ -33,9 +33,9 @@ export const es: SiteCopy = {
   },
 
   nav: [
+    { label: "Proyectos", href: "/#proyectos" },
     { label: "Proceso", href: "/#proceso" },
     { label: "Planes", href: "/#planes" },
-    { label: "Proyectos", href: "/#proyectos" },
   ],
 
   header: {
@@ -51,16 +51,15 @@ export const es: SiteCopy = {
 
   hero: {
     titleSegments: [
-      { text: "Construimos" },
-      { text: "sitios web", mark: "paper" },
-      { text: "que convierten visitantes en" },
-      { text: "clientes.", mark: "ink" },
+      { text: "Sitios web", mark: "paper" },
+      { text: "con precio cerrado y" },
+      { text: "fecha de entrega.", mark: "ink" },
     ],
     lead: "Diseño, textos y desarrollo para que la gente que entra entienda qué hacés en diez segundos y termine escribiéndote.",
     primary: { label: "Empezar un proyecto", href: "/#brief" },
     secondary: { label: "Ver planes y precios", href: "/#planes" },
     proof: [
-      "Precio cerrado",
+      "Garantía de devolución",
       "Primera versión en 5 días",
       "El sitio queda a tu nombre",
     ],
@@ -124,8 +123,8 @@ export const es: SiteCopy = {
 
   process: {
     eyebrow: "El proceso",
-    title: "Cuatro etapas. Quince días hábiles.",
-    lead: "El mismo camino para todos los proyectos. Cambia el tamaño, no el método.",
+    title: "Cuatro etapas, cada una con fecha.",
+    lead: "Un Sitio lleva quince días hábiles; una Landing hace el mismo camino en una semana.",
     labels: { deliverable: "Te entregamos", yours: "Ponés vos" },
     steps: [
       {
@@ -173,7 +172,7 @@ export const es: SiteCopy = {
 
   stack: {
     eyebrow: "Herramientas",
-    title: "Con qué está hecho esto.",
+    title: "Herramientas que vas a poder seguir usando.",
     lead: "Nada exótico y nada casero: herramientas conocidas, que vas a poder seguir usando con cualquier otro estudio.",
   },
 
@@ -223,7 +222,7 @@ export const es: SiteCopy = {
       },
     ],
     contact: {
-      name: "Contactanos",
+      name: "A medida",
       summary: "Tu proyecto no entra en ninguno de los dos.",
       price: "A convenir",
       features: [
@@ -296,12 +295,12 @@ export const es: SiteCopy = {
       {
         id: "velocidad",
         title: "Carga antes de que decidan irse",
-        body: "La mitad se va si un sitio tarda más de tres segundos. El tuyo carga en menos de uno.",
+        body: "La mitad de la gente se va si un sitio tarda más de tres segundos. Al tuyo lo medimos en un teléfono antes de publicarlo: el objetivo es que cargue en menos de dos.",
       },
       {
         id: "seo",
         title: "Te encuentran, y no solo en Google",
-        body: "Metadatos, sitemap y un archivo que le explica a ChatGPT qué hacés. Cada vez más gente pregunta ahí.",
+        body: "Metadatos, sitemap y datos estructurados para que Google y los asistentes de IA entiendan qué hacés.",
       },
       {
         id: "pantallas",
@@ -315,12 +314,12 @@ export const es: SiteCopy = {
       },
     ],
     figures: {
-      speedCaption: "Tiempo de carga",
-      speedOurs: "0,9 s",
+      speedCaption: "Objetivo en un teléfono",
+      speedOurs: "2 s",
       speedTheirs: "3 s",
       speedLabelOurs: "Tu sitio",
-      speedLabelTheirs: "Promedio",
-      seoCaption: "Lo que contesta ChatGPT",
+      speedLabelTheirs: "La mitad se va",
+      seoCaption: "Lo que puede contestar una IA",
       seoQuestion: "¿quién hace sitios web en Buenos Aires?",
       seoAnswer: "Pantufla, un estudio chico que trabaja con precio cerrado.",
       leadsCaption: "Consultas recibidas",
@@ -335,6 +334,7 @@ export const es: SiteCopy = {
     title: "Algunos sitios que salieron de acá.",
     lead: "Distintos rubros, distintos tamaños, el mismo método.",
     view: "Ver sitio",
+    readCase: "Leer el caso",
   },
 
   testimonials: {
@@ -351,7 +351,7 @@ export const es: SiteCopy = {
 
   faq: {
     eyebrow: "Preguntas",
-    title: "Acá están las respuestas.",
+    title: "Lo que nos preguntan antes de empezar.",
     cta: {
       claim: "¿Te quedó alguna duda?",
       label: "Agendar 20 minutos",
@@ -369,6 +369,10 @@ export const es: SiteCopy = {
       {
         q: "¿Puedo editar el contenido sin saber programar?",
         a: "Sí, en el plan Sitio. Entrás a un panel, cambiás textos, subís fotos, publicás una nota nueva y el sitio se actualiza solo. Te dejamos un video corto explicando cada parte.",
+      },
+      {
+        q: "¿Con qué herramientas trabajan?",
+        a: "Diseñamos en Figma y construimos en Webflow, Framer o Next.js, según lo que necesite el sitio. El contenido se edita en el panel de la plataforma o en Sanity, y los sitios a medida se publican en Vercel. Son herramientas conocidas: si mañana querés seguir con otro estudio, cualquiera las puede tomar.",
       },
       {
         q: "¿Cuánto sale mantenerlo por mes?",
@@ -422,13 +426,13 @@ export const es: SiteCopy = {
     fallback:
       "El calendario todavía no está conectado. Escribinos y lo agendamos a mano:",
     preferWrite: "¿Preferís escribirlo y que te respondamos por mail?",
-    write: { label: "Completar el brief", href: "/#brief" },
+    write: { label: "Empezar un proyecto", href: "/#brief" },
   },
 
   finalCta: {
     title: "Contanos qué necesitás.",
     lead: "Cinco minutos de formulario. En 24 horas te respondemos con alcance, precio y fecha, o te decimos con franqueza que no somos los indicados.",
-    primary: { label: "Completar el brief", href: "/#brief" },
+    primary: { label: "Empezar un proyecto", href: "/#brief" },
     expectationsTitle: "Qué pasa después",
     expectations: [
       "Leemos el brief el mismo día que llega.",

@@ -26,9 +26,9 @@ export const en: SiteCopy = {
   },
 
   nav: [
+    { label: "Work", href: "/#proyectos" },
     { label: "Process", href: "/#proceso" },
     { label: "Pricing", href: "/#planes" },
-    { label: "Work", href: "/#proyectos" },
   ],
 
   header: {
@@ -44,16 +44,15 @@ export const en: SiteCopy = {
 
   hero: {
     titleSegments: [
-      { text: "We build" },
-      { text: "websites", mark: "paper" },
-      { text: "that turn visitors into" },
-      { text: "clients.", mark: "ink" },
+      { text: "Websites", mark: "paper" },
+      { text: "with a fixed price and a" },
+      { text: "delivery date.", mark: "ink" },
     ],
     lead: "Design, copy and development, so that whoever lands on your site knows what you do in ten seconds and ends up writing to you.",
     primary: { label: "Start a project", href: "/#brief" },
     secondary: { label: "See plans and pricing", href: "/#planes" },
     proof: [
-      "Fixed price",
+      "Money-back guarantee",
       "First version in 5 days",
       "The site stays in your name",
     ],
@@ -117,8 +116,8 @@ export const en: SiteCopy = {
 
   process: {
     eyebrow: "The process",
-    title: "Four stages. Fifteen working days.",
-    lead: "The same path for every project. The size changes, the method does not.",
+    title: "Four stages, each with a date.",
+    lead: "A Site takes fifteen working days; a Landing walks the same path in a week.",
     labels: { deliverable: "You get", yours: "You bring" },
     steps: [
       {
@@ -166,7 +165,7 @@ export const en: SiteCopy = {
 
   stack: {
     eyebrow: "Tools",
-    title: "What this is built with.",
+    title: "Tools you can keep using.",
     lead: "Nothing exotic and nothing homemade: tools you already know, that you will be able to keep using with any other studio.",
   },
 
@@ -216,7 +215,7 @@ export const en: SiteCopy = {
       },
     ],
     contact: {
-      name: "Talk to us",
+      name: "Custom",
       summary: "Your project does not fit either of those.",
       price: "Let’s talk",
       features: [
@@ -289,12 +288,12 @@ export const en: SiteCopy = {
       {
         id: "velocidad",
         title: "Loads before they decide to leave",
-        body: "Half of all visitors leave if a site takes over three seconds. Yours loads in under one.",
+        body: "Half of all visitors leave if a site takes over three seconds. We measure yours on a phone before it goes live: the goal is under two.",
       },
       {
         id: "seo",
         title: "People find you, and not only on Google",
-        body: "Metadata, sitemap, and a file that tells ChatGPT what you do. More and more people ask there first.",
+        body: "Metadata, sitemap and structured data, so Google and AI assistants understand what you do.",
       },
       {
         id: "pantallas",
@@ -308,12 +307,12 @@ export const en: SiteCopy = {
       },
     ],
     figures: {
-      speedCaption: "Load time",
-      speedOurs: "0.9s",
+      speedCaption: "Target on a phone",
+      speedOurs: "2s",
       speedTheirs: "3s",
       speedLabelOurs: "Your site",
-      speedLabelTheirs: "Average",
-      seoCaption: "What ChatGPT answers",
+      speedLabelTheirs: "Half leave",
+      seoCaption: "What an AI can answer",
       seoQuestion: "who builds websites in Buenos Aires?",
       seoAnswer: "Pantufla, a small studio that works at a closed price.",
       leadsCaption: "Inquiries received",
@@ -328,6 +327,7 @@ export const en: SiteCopy = {
     title: "Some of the sites that came out of here.",
     lead: "Different industries, different sizes, the same method.",
     view: "Visit site",
+    readCase: "Read the case study",
   },
 
   testimonials: {
@@ -344,7 +344,7 @@ export const en: SiteCopy = {
 
   faq: {
     eyebrow: "Questions",
-    title: "Here are the answers.",
+    title: "What people ask us before starting.",
     cta: {
       claim: "Still not sure about something?",
       label: "Book 20 minutes",
@@ -362,6 +362,10 @@ export const en: SiteCopy = {
       {
         q: "Can I edit the content without knowing how to code?",
         a: "Yes, on the Site plan. You log into a panel, change copy, upload photos, publish a new post and the site updates itself. We leave you a short video explaining each part.",
+      },
+      {
+        q: "What tools do you work with?",
+        a: "We design in Figma and build in Webflow, Framer or Next.js, depending on what the site needs. Content is edited in the platform’s own panel or in Sanity, and custom sites are published on Vercel. They are well-known tools: if you ever want to move to another studio, anyone can pick them up.",
       },
       {
         q: "What does it cost to keep it running each month?",
@@ -415,13 +419,13 @@ export const en: SiteCopy = {
     fallback:
       "The calendar is not connected yet. Write to us and we will book it by hand:",
     preferWrite: "Would you rather write it out and get an answer by email?",
-    write: { label: "Fill in the brief", href: "/#brief" },
+    write: { label: "Start a project", href: "/#brief" },
   },
 
   finalCta: {
     title: "Tell us what you need.",
     lead: "Five minutes of form. Within 24 hours we come back with scope, price and date, or we tell you straight that we are not the right people.",
-    primary: { label: "Fill in the brief", href: "/#brief" },
+    primary: { label: "Start a project", href: "/#brief" },
     expectationsTitle: "What happens next",
     expectations: [
       "We read the brief the same day it arrives.",

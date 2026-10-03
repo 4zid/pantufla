@@ -4,7 +4,7 @@ import { fallbackProjects } from "@/content/fallback-content";
 import { localeHref, locales } from "@/lib/i18n";
 import { siteUrl } from "@/lib/site-url";
 import { sanityFetch } from "@/sanity/client";
-import { projectSlugsQuery } from "@/sanity/queries";
+import { projectCaseSlugsQuery } from "@/sanity/queries";
 
 /**
  * Cada página aparece una vez por idioma, y cada entrada declara a su par.
@@ -19,16 +19,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // meterlo en el sitemap en el momento. Sin etiqueta el webhook de
   // /api/revalidate no lo alcanza y la ficha nueva queda fuera hasta que venza
   // sola.
-  const projectSlugs = await sanityFetch<string[]>(
-    projectSlugsQuery,
+  /*
+     Solo las fichas con caso escrito: las otras van con noindex (ver
+     projectCaseSlugsQuery). El respaldo hace lo mismo con lo local.
+  */
+  const projectSlugs = await sanityFetch<string[] | null>(
+    projectCaseSlugsQuery,
     {},
-    [],
+    null,
     ["project"],
   );
 
-  const projects = projectSlugs.length
-    ? projectSlugs
-    : fallbackProjects.map((p) => p.slug);
+  const projects =
+    projectSlugs ??
+    fallbackProjects.filter((p) => p.body?.length).map((p) => p.slug);
 
   const now = new Date();
 

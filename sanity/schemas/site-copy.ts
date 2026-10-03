@@ -742,6 +742,11 @@ export const siteCopy = defineType({
         defineField({ name: "title", title: "Título", type: "string" }),
         texto("lead", "Bajada", 2),
         defineField({ name: "view", title: "Palabra «ver»", type: "string" }),
+        defineField({
+          name: "readCase",
+          title: "Enlace al caso escrito",
+          type: "string",
+        }),
       ],
     }),
     defineField({

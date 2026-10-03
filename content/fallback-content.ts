@@ -13,8 +13,9 @@
  * poner los de verdad alcanza con pisar el archivo con el mismo nombre; no hay
  * que tocar código. Desde Sanity el fondo entra por cover y le gana a este. No llevan métricas ni fecha de entrega porque no las
  * tengo; poner números inventados sobre clientes reales sería mentir en la
- * home. Las fichas de /proyectos resuelven solo lo que falta: sin imagen
- * muestran un degradé de la paleta y sin resultados no dibujan el bloque.
+ * home. Las fichas de /proyectos resuelven solo lo que falta: sin portada,
+ * sin resultados o sin caso, ese bloque no se dibuja. Los casos que ya están
+ * escritos vienen de content/casos.ts.
  *
  * TESTIMONIOS: los nombres, los cargos y las empresas son de clientes reales;
  * la redacción de cada cita es un borrador escrito acá, no algo que esa
@@ -25,6 +26,8 @@
  */
 
 import type { SanityProject, SanityTestimonial } from "@/sanity/types";
+
+import { casos } from "./casos";
 
 export const fallbackProjects: SanityProject[] = [
   {
@@ -39,6 +42,8 @@ export const fallbackProjects: SanityProject[] = [
       "Atlas interactivo de la tierra argentina en manos extranjeras: mapa por provincia y casos con fuentes públicas.",
     sector: "Datos abiertos",
     services: ["Diseño", "Desarrollo"],
+    body: casos["tierras-argentinas"],
+    conCaso: true,
   },
   {
     _id: "work-lupa",
@@ -99,6 +104,8 @@ export const fallbackProjects: SanityProject[] = [
     sector: "Eventos corporativos",
     plan: "Sitio",
     services: ["Diseño", "Desarrollo"],
+    body: casos["2mg"],
+    conCaso: true,
   },
 ];
 

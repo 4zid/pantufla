@@ -49,6 +49,13 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   return {
     title: project.title,
     description: project.tagline,
+    /*
+       Sin el caso escrito la ficha queda fuera del índice: es una página
+       flaca, la home no la enlaza y tampoco está en el sitemap. Se sigue
+       pudiendo abrir, y los enlaces de adentro se siguen. Apenas se carga el
+       caso en el Studio, la ficha se indexa sola.
+    */
+    ...(project.body?.length ? {} : { robots: { index: false, follow: true } }),
     alternates: {
       canonical: localeHref(ruta, locale),
       languages: Object.fromEntries(

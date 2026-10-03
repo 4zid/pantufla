@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useGSAP } from "@gsap/react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 
 import { Reveal } from "@/components/motion/reveal";
 import { useCopy } from "@/components/copy-provider";
@@ -88,9 +88,12 @@ function iniciales(nombre: string) {
 export function Testimonials({
   items,
   surface,
+  children,
 }: {
   items: SanityTestimonial[];
   surface?: Surface;
+  /** Lo que va abajo de la cita en la misma sección: el mapa de clientes. */
+  children?: ReactNode;
 }) {
   const { testimonials } = useCopy();
   const lista = items.slice(0, CARAS);
@@ -278,6 +281,8 @@ export function Testimonials({
           </figure>
         </div>
       </div>
+
+      {children}
     </Section>
   );
 }

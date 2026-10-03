@@ -212,7 +212,10 @@ Para comprobar que quedó: `GET https://www.pantufla.design/api/reunion` contest
 y `SANITY_API_WRITE_TOKEN`.
 
 Hasta que exista la cuenta, `/reunion` no se rompe: muestra una tarjeta con el
-mail para agendar a mano. Y las reuniones que entran quedan en el Studio como
+mail para agendar a mano. Y los botones que prometen agendar (el de las
+preguntas frecuentes) ofrecen el mail en su lugar, para no llevar a nadie a un
+calendario que no está (`lib/calendario.ts`). Como la variable es
+`NEXT_PUBLIC_`, el sitio se entera recién en el próximo deploy. Y las reuniones que entran quedan en el Studio como
 *Reunión agendada*, al lado de los briefs, de solo lectura —el calendario de
 verdad es el de Cal, y editar acá una fecha solo lograría que los dos digan
 cosas distintas.
@@ -282,45 +285,64 @@ Los enlaces del texto se escriben sin el idioma adelante (`/#planes`,
 El orden sale de `content/sections.ts`, que es la única lista: de ahí salen
 también los interruptores del Studio. Cada sección se puede apagar, y los
 enlaces que apuntaban a ella se reescriben solos (los del menú desaparecen; el
-resto pasa a llevar a `/reunion`, que no se puede apagar).
+resto pasa a llevar a `/reunion`, que no se puede apagar). Lo que el Studio no
+dice sale como viene de fábrica: prendida, salvo el stack.
 
-| # | Sección | Ancla | Fondo de fábrica |
+| # | Sección | Ancla | De fábrica |
 | --- | --- | --- | --- |
 | 1 | Portada | — | claro |
 | 2 | Prueba social | — | claro |
 | 3 | Cómo lo resolvemos | `#metodo` | claro |
-| 4 | Capacidades (bento) | `#capacidades` | claro |
-| 5 | Proceso | `#proceso` | oscuro |
-| 6 | Con qué está hecho | `#stack` | claro |
-| 7 | Planes | `#planes` | claro |
-| 8 | Proyectos | `#proyectos` | oscuro |
+| 4 | Proyectos | `#proyectos` | oscuro |
+| 5 | Capacidades (bento) | `#capacidades` | claro |
+| 6 | Proceso | `#proceso` | oscuro |
+| 7 | Con qué está hecho | `#stack` | claro, **apagada** |
+| 8 | Planes | `#planes` | claro |
 | 9 | Testimonios | `#testimonios` | claro |
 | 10 | Mapa de clientes | `#clientes` | claro |
 | 11 | Preguntas frecuentes | `#faq` | claro |
 | 12 | Formulario | `#brief` | oscuro |
 
-El recorrido sigue **promesa → cómo → prueba → precio → objeciones → contacto**:
+El recorrido sigue **promesa → prueba → qué incluye → cómo → precio →
+objeciones → contacto**:
 
-- **Portada.** El titular, un CTA principal al formulario, uno secundario a los
-  planes y tres respaldos cortos (precio cerrado, primera versión en 5 días, el
-  sitio queda a tu nombre). Cuenta el resultado, no el proceso: debajo del
-  titular se arma el tablero de *Tu sitio, un mes después*, con visitas,
-  conversión, velocidad y de dónde llegan.
+- **Portada.** El titular dice lo que diferencia al estudio —sitios con precio
+  cerrado y fecha de entrega—, la bajada dice para qué sirve el sitio, y hay un
+  CTA principal al formulario, uno secundario a los planes y tres respaldos
+  cortos (garantía de devolución, primera versión en 5 días, el sitio queda a
+  tu nombre). Debajo del titular se arma el tablero de *Tu sitio, un mes
+  después*, con visitas, conversión, velocidad y de dónde llegan.
 - **Cómo lo resolvemos.** Tres pilares: alcance cerrado, ritmo corto con fechas
   visibles, y el sitio entregado andando.
+- **Proyectos.** Justo después de la promesa: el trabajo se ve antes que el
+  precio. Iba después de los planes, a la mitad de la página en el teléfono, y
+  quien quería ver qué hace el estudio tenía que pasar por todo lo demás.
+  Los que tienen el caso escrito suman «Leer el caso» (ver *Los proyectos*).
 - **Capacidades.** Un bento de cuatro celdas, cada una con su viñeta animada:
   velocidad de carga, que te encuentren (también en asistentes de IA), el
-  sitio en el teléfono, y las consultas que llegan.
-- **Proceso.** Cuatro etapas en quince días hábiles. El riel que las une lleva
+  sitio en el teléfono, y las consultas que llegan. Las promesas son las que
+  se pueden sostener: el objetivo de carga es de menos de dos segundos en un
+  teléfono, y la viñeta de la IA muestra lo que puede contestar, no lo que
+  contesta seguro.
+- **Proceso.** Cuatro etapas, cada una con fecha: quince días hábiles un
+  Sitio, una semana una Landing. El riel que las une lleva
   los cuatro colores del bento en el mismo orden y llega a cada número con su
   color ya hecho.
 - **Planes.** Dos opciones y nada más: una página sola o el sitio completo, más
   un bloque para quien ya tiene un sitio en Webflow o Framer (administrarlo,
   mejorarlo, rediseñarlo o un cambio puntual).
-- **Proyectos, testimonios y mapa.** La prueba va después del precio, no antes.
+- **Con qué está hecho.** Sale apagada: cortaba el paso del proceso a los
+  planes. Lo que decía —herramientas conocidas, que no te atan a nadie— es
+  ahora una pregunta frecuente. Se prende desde el Studio si se la quiere de
+  vuelta.
+- **Testimonios y mapa.** Con los dos prendidos van en una sola sección: la
+  cita arriba y, abajo, el mapa con su titular en chico. Eran dos bloques de
+  prueba seguidos, cada uno con etiqueta y título, y se leían como dos veces lo
+  mismo. Con uno solo prendido, ese sale solo, como antes.
 - **Preguntas frecuentes.** Objeciones de compra: páginas de más, propiedad del
-  sitio, editar sin programar, costo mensual, uso de IA, formas de pago. Al pie
-  ofrece agendar una reunión.
+  sitio, editar sin programar, con qué herramientas, costo mensual, uso de IA,
+  formas de pago. Al pie ofrece agendar una reunión, o el mail mientras el
+  calendario no esté conectado.
 - **Formulario.** Un solo cierre, con el brief: plan, presupuesto y plazo van en
   desplegables propios del sitio, no en el `<select>` del sistema.
 
@@ -366,6 +388,21 @@ Cada proyecto tiene además su ficha en `/proyectos/<slug>`. Lo que muestra sale
 del Studio: si el proyecto no tiene portada ni caso escrito («Caso completo»),
 la ficha es una cabecera con el nombre, la bajada, el enlace y los datos; la
 portada y el caso aparecen solos cuando se cargan.
+
+El caso escrito es lo que decide si la ficha existe para afuera:
+
+- **Con caso**, la fila de la home suma «Leer el caso», la ficha va al sitemap
+  y se indexa.
+- **Sin caso**, la ficha se puede abrir pero va con `noindex`, fuera del
+  sitemap, y la home no la enlaza (la esfera lleva al sitio publicado). Es una
+  página flaca y no tiene sentido mandarla a Google.
+
+Hoy tienen caso **Tierras Argentinas**, **2MG** y **247WC**. Están escritos a
+partir de lo que muestra cada sitio, sin métricas ni plazos porque no los
+tenemos: conviene revisarlos y, si hay datos reales (tiempo de entrega,
+resultados), sumarlos en el Studio. El respaldo local de esos textos está en
+`content/casos.ts`. Para escribir otro alcanza con llenar «Caso completo» en el
+Studio: el enlace, el sitemap y el índice se acomodan solos.
 
 ---
 

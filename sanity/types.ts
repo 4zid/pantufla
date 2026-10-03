@@ -23,6 +23,8 @@ export type SanityProject = {
    */
   art?: string;
   body?: PortableTextBlock[];
+  /** Si tiene el caso escrito. La home lo usa para enlazar la ficha. */
+  conCaso?: boolean;
 };
 
 export type SanityTestimonial = {

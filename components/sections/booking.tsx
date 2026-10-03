@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 
 import { site } from "@/content/site";
 import { useCopy } from "@/components/copy-provider";
+import { ENLACE_CAL as ENLACE } from "@/lib/calendario";
 
 /**
  * El calendario de reservas.
@@ -31,9 +32,6 @@ import { useCopy } from "@/components/copy-provider";
  * cree la cuenta, y una página de reservas que explota porque falta una
  * variable es peor que una que te da una dirección.
  */
-
-/** El identificador del evento en Cal, del estilo "pantufla/20min". */
-const ENLACE = process.env.NEXT_PUBLIC_CAL_LINK;
 
 export function Booking() {
   const { meeting } = useCopy();

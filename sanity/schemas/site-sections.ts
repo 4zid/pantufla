@@ -42,7 +42,7 @@ export const siteSections = defineType({
       name: seccion.id,
       title: "Se muestra",
       type: "boolean",
-      initialValue: true,
+      initialValue: !seccion.apagada,
       description: seccion.nota,
       options: { layout: "switch" },
       fieldset: seccion.id,

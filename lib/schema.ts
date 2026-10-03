@@ -126,7 +126,10 @@ export function nodoPagina({
  * esto es lo que le dice al buscador dónde cuelga cada página, y es de donde
  * salen los rastros que se ven debajo del título en los resultados.
  */
-export function migas(locale: Locale, tramos: { name: string; path: string }[]) {
+export function migas(
+  locale: Locale,
+  tramos: { name: string; path: string }[],
+) {
   return {
     "@type": "BreadcrumbList",
     itemListElement: tramos.map((tramo, i) => ({
@@ -160,7 +163,13 @@ export function nodoFaq(copy: ResolvedCopy, locale: Locale) {
  * lupastudio.co lo hizo este estudio.
  */
 export function nodoProyectos(
-  proyectos: { title: string; slug: string; tagline?: string; url?: string }[],
+  proyectos: {
+    title: string;
+    slug: string;
+    tagline?: string;
+    url?: string;
+    conCaso?: boolean;
+  }[],
   locale: Locale,
   nombre: string,
 ) {
@@ -176,7 +185,11 @@ export function nodoProyectos(
         name: p.title,
         ...(p.tagline ? { description: p.tagline } : {}),
         creator: { "@id": ID_ESTUDIO },
-        mainEntityOfPage: absoluta(`/proyectos/${p.slug}`, locale),
+        // La ficha solo cuando tiene caso: las otras van con noindex y no
+        // tiene sentido señalarle al buscador una página que no va a indexar.
+        ...(p.conCaso
+          ? { mainEntityOfPage: absoluta(`/proyectos/${p.slug}`, locale) }
+          : {}),
       },
     })),
   };
