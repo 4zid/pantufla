@@ -24,8 +24,9 @@ import { useCopy, useHref } from "@/components/copy-provider";
  * el nombre y la bajada quedaban en dos a uno de contraste: en el teléfono,
  * donde la fila del medio cambia a cada rato, la lista se leía como
  * deshabilitada. Ahora la esfera baja al 35% —es lo grande, y es la que
- * marca el foco— y el texto al 75%, que en el tema oscuro sigue pasando el
- * 4,5 a uno de AA con la bajada.
+ * marca el foco— y el texto apenas, al 90%: es lo que deja la bajada arriba
+ * del 4,5 a uno de AA en los dos temas, y hacen falta los dos porque el
+ * fondo de la sección se elige en el panel.
  *
  * El nombre y la descripción van a la derecha de la esfera, afuera. Adentro
  * solo aparece «ver sitio» con la flecha, al pasar el mouse: la esfera es el
@@ -135,7 +136,7 @@ export function ProjectStack({
                 </span>
               </Link>
 
-              <div className="min-w-0 max-w-md transition-opacity duration-500 ease-out group-data-[estado=apagada]/fila:opacity-75">
+              <div className="min-w-0 max-w-md transition-opacity duration-500 ease-out group-data-[estado=apagada]/fila:opacity-90">
                 <Titulo
                   translate="no"
                   className="text-[1.35rem] font-semibold leading-tight tracking-[-0.03em] sm:text-[1.5rem]"
