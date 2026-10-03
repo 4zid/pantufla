@@ -258,7 +258,11 @@ Para sumar el logo de un cliente: el archivo va en `public/logos/clientes`, en
 negro sobre transparente (SVG con `viewBox`, o PNG), y en `content/site.ts` →
 `socialProof.brands` se le carga la ruta y la proporción (ancho / alto). La tira
 lo pinta con la tinta del tema, así que el color del archivo no importa: solo
-cuenta la forma. Un cliente sin logo sale con el nombre escrito.
+cuenta la forma. Un cliente sin logo sale con el nombre escrito. Cada logo
+alarga el riel, y con el mismo tiempo de vuelta lo acelera: hay que subir
+`DURACION` en `components/sections/social-proof.tsx` en la misma proporción
+(la cuenta está ahí). El cliente también va como proyecto, en el Studio y en
+`content/fallback-content.ts`.
 
 Para sumar un campo de texto nuevo hay que tocar tres lugares: el tipo en
 `content/copy.ts`, los dos archivos de idioma y el esquema
