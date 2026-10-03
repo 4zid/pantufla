@@ -38,7 +38,7 @@ export const casos: Record<string, PortableTextBlock[]> = {
       "normal",
       "Los datos sobre tierra rural en manos extranjeras existen: el Registro Nacional de Tierras Rurales, fallos judiciales, notas de prensa. Pero están desparramados y escritos para especialistas. La idea fue juntarlos en un solo lugar que cualquiera pudiera recorrer, y que cada número se pudiera verificar.",
     ],
-    ["h2", "Qué hicimos"],
+    ["h2", "Lo que tiene el sitio"],
     [
       "li",
       "Un mapa de la Argentina, provincia por provincia, con el porcentaje de tierra extranjerizada según el RNTR y el tope del 15% de la Ley de Tierras como referencia.",
@@ -71,7 +71,7 @@ export const casos: Record<string, PortableTextBlock[]> = {
       "normal",
       "2MG es una productora técnica con veinte años en eventos corporativos en Argentina, Chile y Uruguay: pantallas LED, proyección, audio, streaming y traducción simultánea, con equipamiento propio. Ofrecen mucho, y el riesgo de un sitio así es que se lea como un catálogo de equipos. Quien contrata un evento quiere saber otra cosa: si van a estar a la altura el día que importa.",
     ],
-    ["h2", "Qué hicimos"],
+    ["h2", "Cómo lo armamos"],
     [
       "li",
       "Presentamos la oferta en tres áreas —creatividad, puesta en marcha y equipamiento— en vez de una lista larga de servicios.",
@@ -100,7 +100,7 @@ export const casos: Record<string, PortableTextBlock[]> = {
       "normal",
       "Buscar un baño en la calle es una búsqueda con apuro, y las apps de mapas no están pensadas para eso: muestran todo, piden cuenta o hay que instalar algo. 247WC hace una sola cosa: te dice cuál es el baño público más cercano y te lleva caminando.",
     ],
-    ["h2", "Qué hicimos"],
+    ["h2", "Lo que tiene la app"],
     [
       "li",
       "La app web: un botón busca los baños públicos a menos de 3 km, con datos abiertos de OpenStreetMap, y los ordena por distancia.",

@@ -10,7 +10,12 @@ export type SanityProject = {
   plan?: string;
   deliveredIn?: string;
   cover?: Image & { alt?: string };
-  gallery?: (Image & { alt?: string })[];
+  gallery?: (Image & {
+    alt?: string;
+    dimensiones?: { width: number; height: number };
+  })[];
+  /** La imagen para cuando se comparte el link de la ficha. */
+  social?: Image & { alt?: string };
   services?: string[];
   results?: { value: string; label: string }[];
   url?: string;
