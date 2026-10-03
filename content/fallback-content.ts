@@ -29,6 +29,22 @@ import type { SanityProject, SanityTestimonial } from "@/sanity/types";
 
 import { casos } from "./casos";
 
+/**
+ * Una imagen que ya está subida a Sanity, para el respaldo.
+ *
+ * El CDN de imágenes de Sanity es aparte de la API: si la consulta falla, la
+ * imagen igual se sirve. Así la ficha de un caso no pierde su portada ni su
+ * galería cuando el CMS no contesta. Los originales de estos archivos están
+ * en assets/proyectos.
+ */
+function enSanity(ref: string, alt?: string) {
+  return {
+    _type: "image",
+    asset: { _type: "reference", _ref: ref },
+    ...(alt ? { alt } : {}),
+  };
+}
+
 export const fallbackProjects: SanityProject[] = [
   {
     // El más nuevo va primero, igual que en Sanity (order 0). Todavía no
@@ -42,6 +58,27 @@ export const fallbackProjects: SanityProject[] = [
       "Atlas interactivo de la tierra argentina en manos extranjeras: mapa por provincia y casos con fuentes públicas.",
     sector: "Datos abiertos",
     services: ["Diseño", "Desarrollo"],
+    cover: enSanity(
+      "image-59a9137d6a6bea3685c10049e2ce1e6eeeab45c5-2560x1600-jpg",
+      "El sitio de Tierras Argentinas en escritorio: el titular «¿De quién es la tierra argentina?» con la grilla que muestra la proporción en manos extranjeras, y abajo el mapa provincia por provincia.",
+    ),
+    gallery: [
+      enSanity(
+        "image-24a65cdfe06e5e77191f3713c92da40af462f41c-2560x1600-jpg",
+        "La sección «Caso por caso»: el caso más grande del registro destacado en negro, con sus 900.000 hectáreas, y abajo las fichas de cada compra con su país, su superficie y su estado.",
+      ),
+      enSanity(
+        "image-70a2cf5d788b1bcce290601959cb9e281d4976a7-2560x1600-jpg",
+        "«El Senado, banca por banca»: el proyecto de ley en tratamiento y el hemiciclo con cada banca coloreada según su bloque.",
+      ),
+      enSanity(
+        "image-d099e02cf3560a09f2a7b837bba5227d46c99b26-2560x1600-jpg",
+        "Tres pantallas del sitio en el teléfono: la portada con la grilla, el caso por caso y el Senado.",
+      ),
+    ],
+    social: enSanity(
+      "image-020f7821626d6d368139e78138c1b2323a52332f-2560x1600-jpg",
+    ),
     body: casos["tierras-argentinas"],
     conCaso: true,
   },

@@ -10,26 +10,16 @@ import { JsonLd } from "@/components/json-ld";
 import { fallbackProjects } from "@/content/fallback-content";
 import { site } from "@/content/site";
 import { getCopy } from "@/content/get-copy";
+import { getProject } from "@/content/get-project";
 import { localeHref, locales, type Locale } from "@/lib/i18n";
 import { ID_ESTUDIO, absoluta, migas, nodoPagina } from "@/lib/schema";
 import { sanityFetch } from "@/sanity/client";
 import { urlForImage } from "@/sanity/image";
-import { projectBySlugQuery, projectSlugsQuery } from "@/sanity/queries";
-import type { SanityProject } from "@/sanity/types";
+import { projectSlugsQuery } from "@/sanity/queries";
 
 export const revalidate = 60;
 
 type Params = { params: Promise<{ locale: Locale; slug: string }> };
-
-async function getProject(slug: string) {
-  const fromCms = await sanityFetch<SanityProject | null>(
-    projectBySlugQuery,
-    { slug },
-    null,
-    ["project"],
-  );
-  return fromCms ?? fallbackProjects.find((p) => p.slug === slug) ?? null;
-}
 
 export async function generateStaticParams() {
   const slugs = await sanityFetch<string[]>(projectSlugsQuery, {}, []);
@@ -65,6 +55,26 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   };
 }
 
+/**
+ * El ancho y el alto de una imagen de Sanity.
+ *
+ * Primero lo que trae la consulta (metadata del asset). Si no está —el
+ * respaldo local no pasa por la consulta— sale de la referencia, que en
+ * Sanity siempre lleva las medidas: image-<hash>-2560x1600-jpg. Y si tampoco,
+ * 16:10, que es el formato de las imágenes de los casos.
+ */
+function medidas(imagen: {
+  asset?: { _ref?: string };
+  dimensiones?: { width: number; height: number };
+}) {
+  if (imagen.dimensiones) {
+    return { ancho: imagen.dimensiones.width, alto: imagen.dimensiones.height };
+  }
+  const enRef = imagen.asset?._ref?.match(/-(\d+)x(\d+)-/);
+  if (enRef) return { ancho: Number(enRef[1]), alto: Number(enRef[2]) };
+  return { ancho: 1600, alto: 1000 };
+}
+
 export default async function ProjectPage({ params }: Params) {
   const { locale, slug } = await params;
   const [project, { pages }] = await Promise.all([
@@ -82,7 +92,22 @@ export default async function ProjectPage({ params }: Params) {
      escribiera —una nota que veía cualquiera que entrara—, y la portada
      faltante dejaba una caja beige del ancho de la página.
   */
-  const conCaso = Boolean(project.body?.length || project.gallery?.length);
+  const conCaso = Boolean(project.body?.length);
+
+  /*
+     La galería va a todo el ancho y sin recorte, debajo del caso. Eran
+     miniaturas de 900×700 en dos columnas adentro de la columna del texto, y
+     las imágenes que se cargan son mockups de 16:10 con el navegador
+     dibujado: recortadas a 9:7 perdían los bordes del navegador, y a 400px de
+     ancho las capturas no se leían. Cada una lleva sus medidas reales para
+     que el lugar quede reservado antes de que llegue.
+  */
+  const galeria = (project.gallery ?? []).flatMap((imagen) => {
+    const url = urlForImage(imagen)?.width(2400).url();
+    if (!url) return [];
+    const { ancho, alto } = medidas(imagen);
+    return [{ url, ancho, alto, alt: imagen.alt || "" }];
+  });
 
   return (
     <>
@@ -215,31 +240,28 @@ export default async function ProjectPage({ params }: Params) {
 
               <div>
                 {project.body?.length ? <Prose value={project.body} /> : null}
-
-                {project.gallery?.length ? (
-                  <div className="mt-12 grid gap-5 sm:grid-cols-2">
-                    {project.gallery.map((image, i) => {
-                      const url = urlForImage(image)
-                        ?.width(900)
-                        .height(700)
-                        .url();
-                      if (!url) return null;
-                      return (
-                        <Image
-                          key={i}
-                          src={url}
-                          alt={image.alt || ""}
-                          width={900}
-                          height={700}
-                          sizes="(max-width: 768px) 100vw, 400px"
-                          className="rounded-card border border-line object-cover"
-                        />
-                      );
-                    })}
-                  </div>
-                ) : null}
               </div>
             </div>
+          </div>
+        ) : null}
+
+        {galeria.length ? (
+          <div
+            className={`shell space-y-6 md:space-y-8 ${
+              conCaso ? "pb-16 md:pb-20" : "py-16 md:py-20"
+            }`}
+          >
+            {galeria.map((imagen) => (
+              <Image
+                key={imagen.url}
+                src={imagen.url}
+                alt={imagen.alt}
+                width={imagen.ancho}
+                height={imagen.alto}
+                sizes="(max-width: 1200px) 100vw, 1200px"
+                className="h-auto w-full rounded-panel border border-line"
+              />
+            ))}
           </div>
         ) : null}
       </article>

@@ -37,10 +37,16 @@ export const allProjectsQuery = groq`
   *[_type == "project" && ${enIdioma}] | order(order asc) { ${projectFields} }
 `;
 
+/*
+   La galería trae las medidas de cada imagen: se muestra entera, sin recorte,
+   y sin el alto el navegador no le puede reservar el lugar antes de que
+   llegue (la página saltaría al cargar).
+*/
 export const projectBySlugQuery = groq`
   *[_type == "project" && slug.current == $slug][0] {
     ${projectFields},
-    gallery,
+    gallery[]{ ..., "dimensiones": asset->metadata.dimensions{ width, height } },
+    social,
     body
   }
 `;

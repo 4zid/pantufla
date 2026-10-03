@@ -77,6 +77,8 @@ export const project = defineType({
     defineField({
       name: "gallery",
       title: "Galería",
+      description:
+        "Se muestran enteras, a todo el ancho y en este orden, abajo del caso. Pensadas en 16:10, como los mockups.",
       type: "array",
       of: [
         {
@@ -85,6 +87,14 @@ export const project = defineType({
           fields: [{ name: "alt", type: "string", title: "Texto alternativo" }],
         },
       ],
+    }),
+    defineField({
+      name: "social",
+      title: "Imagen para redes",
+      description:
+        "La que aparece al compartir el link de la ficha (WhatsApp, LinkedIn, X). Se recorta a 1200×630 desde el centro. Si queda vacía, se usa la portada.",
+      type: "image",
+      options: { hotspot: true },
     }),
     defineField({
       name: "services",
