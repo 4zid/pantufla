@@ -117,7 +117,7 @@ export const platformDesign: Record<
  * en public/logos/clientes en negro sobre transparente: la tira los pinta con
  * la tinta del tema a través de una máscara, así que de cada archivo solo
  * cuenta la forma. Por eso van todos en un color, aunque el original sea
- * naranja o azul: cinco paletas distintas en una tira angosta se pelean, y un
+ * naranja o azul: seis paletas distintas en una tira angosta se pelean, y un
  * logo pintado no se daría vuelta con el fondo oscuro.
  *
  * Un cliente sin logo va con el nombre escrito. Dibujarle un símbolo a mano
@@ -159,6 +159,11 @@ export const socialProof = {
       proporcion: 411 / 102,
     },
     { name: "2MG", logo: "/logos/clientes/2mg.png", proporcion: 178 / 181 },
+    {
+      name: "Block Desarrollos",
+      logo: "/logos/clientes/block.png",
+      proporcion: 300 / 80,
+    },
   ],
 } as const;
 
