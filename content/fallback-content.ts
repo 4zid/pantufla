@@ -170,7 +170,7 @@ const testimoniosEs: SanityTestimonial[] = [
   {
     _id: "demo-t1",
     quote:
-      "Al principio me daba miedo tocar algo y romper el sitio. Hoy subo los eventos nuevos casi todas las semanas y nunca tuve que pedirle ayuda a nadie.",
+      "Subo contenido casi todas las semanas y es muy simple. Nunca tuve que pedir ayuda.",
     name: "Flor",
     role: "Content Manager",
     company: "2MG",
@@ -178,7 +178,7 @@ const testimoniosEs: SanityTestimonial[] = [
   {
     _id: "demo-t2",
     quote:
-      "Trabajamos juntos hace tiempo. Le pasás algo a la mañana y a la tarde ya tenés una versión para mirar, casi siempre mejor resuelta de lo que la habías pedido.",
+      "Trabajamos juntos hace bastante. Es rápido, prolijo y no hace falta estar encima.",
     name: "Damián",
     role: "CEO",
     company: "Lupa Studio",
@@ -186,7 +186,7 @@ const testimoniosEs: SanityTestimonial[] = [
   {
     _id: "demo-t3",
     quote:
-      "Da gusto trabajar así. Entiende rápido lo que necesitás, propone sin que se lo pidas y cuando te querés acordar ya está online.",
+      "Entiende rápido lo que necesitás y lo resuelve sin vueltas. Es fácil trabajar con él.",
     name: "Nico",
     role: "CEO",
     company: "Simplify",
@@ -194,7 +194,7 @@ const testimoniosEs: SanityTestimonial[] = [
   {
     _id: "demo-t4",
     quote:
-      "Nos entendimos desde la primera charla. Yo esperaba semanas de idas y vueltas y a los pocos días ya estábamos puliendo detalles.",
+      "Fue todo simple. Respondía rápido, cumplió con los tiempos y el sitio quedó como queríamos.",
     name: "Vicky",
     role: "CEO",
     company: "HOLD",
@@ -205,7 +205,7 @@ const testimoniosEn: SanityTestimonial[] = [
   {
     _id: "demo-t1",
     quote:
-      "At first I was scared I’d touch something and break the site. Now I add new events almost every week and I’ve never had to ask anyone for help.",
+      "I update the site almost every week and it’s easy. I’ve never needed help.",
     name: "Flor",
     role: "Content Manager",
     company: "2MG",
@@ -213,7 +213,7 @@ const testimoniosEn: SanityTestimonial[] = [
   {
     _id: "demo-t2",
     quote:
-      "We’ve worked together for a while. You send something over in the morning and by the afternoon there’s a version to look at, usually better solved than what you asked for.",
+      "We’ve worked together for a while. He’s fast, careful, and you don’t have to chase him.",
     name: "Damián",
     role: "CEO",
     company: "Lupa Studio",
@@ -221,7 +221,7 @@ const testimoniosEn: SanityTestimonial[] = [
   {
     _id: "demo-t3",
     quote:
-      "Working like this is a pleasure. He gets what you need fast, suggests things before you ask, and before you know it, it’s live.",
+      "He picks up quickly on what you need and gets it done. Easy to work with.",
     name: "Nico",
     role: "CEO",
     company: "Simplify",
@@ -229,7 +229,7 @@ const testimoniosEn: SanityTestimonial[] = [
   {
     _id: "demo-t4",
     quote:
-      "We clicked from the first call. I was expecting weeks of back and forth, and a few days later we were already polishing details.",
+      "It was all straightforward. Quick replies, deadlines met, and the site turned out the way we wanted.",
     name: "Vicky",
     role: "CEO",
     company: "HOLD",
