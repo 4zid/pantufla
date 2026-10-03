@@ -374,9 +374,45 @@ con el scroll.
 Por eso los componentes usan siempre los tokens y no colores escritos a mano:
 lo que no sale de un token no se da vuelta con el tema.
 
+El fondo funde en 600 ms, pero la tinta no: el texto salta de oscuro a claro
+de una vez, a los 300 ms, que es el punto del fundido en el que las dos tintas
+se leen igual (4 a uno). Un fundido de la tinta cruzándose con el del fondo
+pasaba por un cuadro de gris sobre gris. Lo escrito sobre la tinta —el texto de
+los botones negros— usa su propio token, `on-ink` (`text-on-ink`), que salta
+en el mismo cuadro: botón y texto se dan vuelta juntos. Mientras dura el
+cambio, los elementos no le suman su propia transición de color (el fade de
+hover de un botón, por ejemplo), así nada queda atrasado.
+
+**Regla:** algo con fondo `bg-ink` lleva el texto en `text-on-ink`, no en
+`text-paper` ni en blanco.
+
 El cambio también le llega al navegador: la barra del teléfono (`theme-color`)
 toma el color del fondo, y en oscuro las barras de scroll y los controles
 nativos pasan a su versión oscura (`color-scheme`).
+
+---
+
+## La barra
+
+`components/site-header.tsx`. Una píldora flotante que se compacta al bajar y
+se esconde mientras se lee; vuelve apenas se sube.
+
+- **Se queda a la vista** cuando bajar no es leer: en un salto desde el menú
+  (la página va a «Planes», no se está leyendo), con el foco del teclado
+  adentro, y con el menú del teléfono abierto. El salto lo avisa el scroll
+  suave por `lib/scroll.ts`; cualquier gesto propio en el medio lo corta.
+- **Marca la sección en curso.** Una pastilla se corre detrás del enlace de la
+  sección que cruza la pantalla (y en el menú del teléfono, un punto). El
+  enlace lleva `aria-current="location"`.
+- **No se anima al cargar.** Si la página abre a mitad de camino (recargar, un
+  enlace a `/#planes`), la barra sale compacta de entrada en vez de achicarse a
+  la vista.
+- **El botón tiene un solo tamaño.** Cambiaba de golpe al compactar mientras la
+  barra se achicaba suave.
+- **El menú del teléfono** frena el scroll de verdad (Lenis también, no solo el
+  body), deja la página de atrás `inert`, se cierra con Escape devolviendo el
+  foco al botón, y se cierra solo si la ventana pasa a escritorio.
+- **La marca**, estando en la home, sube arriba de todo con el scroll suave.
 
 ---
 

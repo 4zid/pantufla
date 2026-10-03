@@ -87,6 +87,10 @@
   --color-paper-alt: #f5f5f4;
   --color-card: #ffffff;
   --color-ink: #121212;
+  /* El texto sobre la tinta: botones negros, la marca negra de un titular,
+     el selector de pago. Es el papel, pero con su propio tiempo de cambio
+     (ver la transición de :root). */
+  --color-on-ink: #ffffff;
   --color-ink-soft: #565656;
   /*
      Sobre blanco #767676 daba 4.6:1 y pasaba, pero la mitad de las secciones
@@ -278,6 +282,11 @@
   inherits: true;
   initial-value: #121212;
 }
+@property --color-on-ink {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #ffffff;
+}
 @property --color-ink-soft {
   syntax: "<color>";
   inherits: true;
@@ -362,7 +371,8 @@
     --riel-verde 600ms ease-in-out,
     --riel-miel 600ms ease-in-out,
     /*
-       La tinta no acompaña al fondo: se da vuelta sola, rápido y en el medio.
+       La tinta no acompaña al fondo: se da vuelta sola, de golpe y en el
+       medio.
 
        Las superficies tardan 600ms en ir de blanco a negro, así que en el
        camino pasan por un gris medio. Si la tinta hiciera el mismo viaje al
@@ -372,14 +382,27 @@
        Hay un punto del recorrido donde da exactamente lo mismo tener la tinta
        oscura o la clara: cuando el fondo llega a una luminancia de 0.18
        —rgb(118)— las dos dan 4.08:1. Con la curva de arriba eso cae cerca de
-       los 300ms. Así que la tinta espera 220ms, cruza en 160 y llega antes de
-       que el fondo termine: sale de un lado con contraste de sobra y entra del
-       otro igual, y el cruce feo dura lo que tarda en pasar por el medio.
+       los 300ms. Ahí se da vuelta, sin fundido: antes es la oscura sobre un
+       fondo que se acerca a ese gris, después la clara sobre uno que se aleja.
+       El texto no baja nunca de ese 4 a uno.
+
+       Cruzaba en 160ms (de 220 a 380), y medido no alcanzaba: en esos 160ms
+       la tinta también pasa por el gris, y cuando el fondo está cerca, el
+       texto bajaba a 1,4 a uno. Un fundido entre dos colores que se cruzan
+       con otro fundido siempre tiene un cuadro de gris sobre gris. Un salto
+       en el punto justo, no.
+
+       Y lo que va escrito sobre la tinta —el texto de los botones negros, la
+       marca negra de un titular— salta en el mismo cuadro (--color-on-ink):
+       fondo y texto se dan vuelta juntos y el botón no pasa por ningún gris.
+       Con el papel, que funde en 600ms, el texto del botón de la barra
+       desaparecía 100ms en cada cambio.
     */
-    --color-ink 160ms ease-in-out 220ms,
-    --color-ink-soft 160ms ease-in-out 220ms,
-    --color-ink-faint 160ms ease-in-out 220ms,
-    --color-ink-hover 160ms ease-in-out 220ms;
+    --color-ink 0s linear 300ms,
+    --color-ink-soft 0s linear 300ms,
+    --color-ink-faint 0s linear 300ms,
+    --color-ink-hover 0s linear 300ms,
+    --color-on-ink 0s linear 300ms;
 }
 
 /*
@@ -402,6 +425,7 @@
   --color-paper-alt: #151515;
   --color-card: #1b1b1b;
   --color-ink: #f4f4f2;
+  --color-on-ink: #0e0e0e;
   --color-ink-soft: #a6a6a2;
   --color-ink-faint: #90908b;
   --color-ink-hover: #dcdcd6;
@@ -412,6 +436,23 @@
   --riel-rosa: #f2a5b6;
   --riel-verde: #a6cf95;
   --riel-miel: #f4c87d;
+}
+
+/*
+   Mientras el tema cambia, los elementos no le suman su propia transición de
+   color. Un botón negro con un fade de hover de 200ms recibía el cambio de
+   la tinta y lo volvía a suavizar, con 200ms de atraso: el fondo y el texto
+   terminaban cruzándose en el mismo gris aunque los tokens estuvieran bien
+   coordinados. Durante el cambio, cada elemento sigue al token cuadro a
+   cuadro, que es lo que la coreografía de :root necesita. Lo marca
+   components/theme-scroll.tsx y dura lo que dura el cambio.
+
+   .sigue-tema es la marca para lo que transiciona colores sin la utilidad de
+   Tailwind (los botones, que nombran sus propiedades una por una).
+*/
+:root[data-tema-cambiando] .transition-colors,
+:root[data-tema-cambiando] .sigue-tema {
+  transition-duration: 0s !important;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -840,6 +881,14 @@ html.lenis {
 
 .lenis.lenis-smooth iframe {
   pointer-events: none;
+}
+
+/* La barra arranca quieta: hasta su primer cálculo no transiciona nada, así
+   una página que abre a mitad de camino la muestra compacta de entrada en vez
+   de achicarla medio segundo a la vista (ver components/site-header.tsx). */
+header[data-quieta],
+header[data-quieta] * {
+  transition: none !important;
 }
 
 /* Deriva lenta de los blobs. Se apaga sola con reduced-motion (ver abajo). */

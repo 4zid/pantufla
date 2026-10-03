@@ -56,12 +56,22 @@ const BANDA_ABAJO = 0.55;
 const BARRA_CLARA = "#eaedf8";
 const BARRA_OSCURA = "#0e0e0e";
 
+/*
+   Lo que dura el cambio, con un margen: los 600ms del fondo y un poco más.
+   Mientras dura, <html> lleva data-tema-cambiando y las transiciones de color
+   propias de cada elemento quedan en suspenso (ver globals.css): un botón con
+   su fade de hover de 200ms seguía el tema con 200ms de atraso, y fondo y
+   texto se cruzaban en el mismo gris aunque los tokens estuvieran bien.
+*/
+const CAMBIO = 650;
+
 export function ThemeScroll() {
   useEffect(() => {
     const raiz = document.documentElement;
 
     let pedido = 0;
     let oscuro = false;
+    let cambiando = 0;
 
     function decidir() {
       pedido = 0;
@@ -87,6 +97,12 @@ export function ThemeScroll() {
       if (quiereOscuro === oscuro) return;
 
       oscuro = quiereOscuro;
+      raiz.setAttribute("data-tema-cambiando", "");
+      window.clearTimeout(cambiando);
+      cambiando = window.setTimeout(
+        () => raiz.removeAttribute("data-tema-cambiando"),
+        CAMBIO,
+      );
       if (oscuro) raiz.setAttribute("data-tema", "oscuro");
       else raiz.removeAttribute("data-tema");
       document
@@ -107,6 +123,8 @@ export function ThemeScroll() {
       window.removeEventListener("scroll", alScrollear);
       window.removeEventListener("resize", alScrollear);
       if (pedido) cancelAnimationFrame(pedido);
+      window.clearTimeout(cambiando);
+      raiz.removeAttribute("data-tema-cambiando");
       raiz.removeAttribute("data-tema");
       document
         .querySelector('meta[name="theme-color"]')
