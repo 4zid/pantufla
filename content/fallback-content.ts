@@ -141,6 +141,27 @@ export const fallbackProjects: SanityProject[] = [
     sector: "Eventos corporativos",
     plan: "Sitio",
     services: ["Diseño", "Desarrollo"],
+    cover: enSanity(
+      "image-9148913396ddc8e6c64eff638ef53e8d7731fdaf-3200x2400-jpg",
+      "El sitio de 2MG en escritorio y en el teléfono: el titular «Tecnología que potencia cada mensaje», los botones de WhatsApp y de propuesta, y abajo las etiquetas con todo lo que hacen, de pantallas LED a hologramas.",
+    ),
+    gallery: [
+      enSanity(
+        "image-6be071817fb656710a7a0e90a4a0efe47b388e63-3200x2400-jpg",
+        "Dos secciones del sitio: los servicios en tres tarjetas —creatividad, puesta en marcha y equipamiento— y el proceso de un evento en cuatro pasos, de la idea a la postproducción.",
+      ),
+      enSanity(
+        "image-c133e5f03fd48b4bae9a75e422f0f189cc887a6d-3200x2400-jpg",
+        "Tres pantallas del sitio en el teléfono: el proceso paso a paso, la portada con los dos botones de contacto y las preguntas frecuentes.",
+      ),
+      enSanity(
+        "image-33b5c56b48d1e13d7673cbab0e19609b099a3f28-3200x2400-jpg",
+        "Piezas sueltas del sitio: una tarjeta de servicio, los botones de contacto, una pregunta frecuente abierta, un paso del proceso, las etiquetas de servicios y el aviso del chat.",
+      ),
+    ],
+    social: enSanity(
+      "image-4f3fac338a783d678a53e5927ef032f95d5b7e6d-2400x1260-jpg",
+    ),
     body: casos["2mg"],
     conCaso: true,
   },

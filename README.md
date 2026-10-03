@@ -408,14 +408,16 @@ Las imágenes de una ficha salen de tres campos del proyecto en el Studio:
 
 | Campo | Dónde se ve |
 | --- | --- |
-| Imagen de portada | Arriba de la ficha, recortada a 16:10 |
+| Imagen de portada | Arriba de la ficha, entera |
 | Galería | Abajo del caso, enteras, a todo el ancho y en orden |
 | Imagen para redes | Al compartir el link (WhatsApp, LinkedIn, X), recortada a 1200×630; si falta, se usa la portada |
 
-Están pensadas como mockups de 16:10 (2560×1600 es el doble de 1280×800). Los
-originales de lo que ya está subido quedan en `assets/proyectos/`, con una
-tabla de qué archivo va en qué campo. Tierras Argentinas es el primer caso con
-las tres: portada, tres imágenes de galería y una para redes.
+La portada y la galería se muestran con su proporción, sin recorte: sirven
+mockups de 16:10 (como los de Tierras Argentinas) o de 4:3 (como los de 2MG).
+Conviene subirlas al doble del tamaño del mockup. Los originales de lo que ya
+está subido quedan en `assets/proyectos/`, con una tabla de qué archivo va en
+qué campo. Tierras Argentinas y 2MG tienen las tres: portada, tres imágenes de
+galería y una para redes.
 
 ---
 
