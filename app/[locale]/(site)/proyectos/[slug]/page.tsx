@@ -67,11 +67,23 @@ export default async function ProjectPage({ params }: Params) {
   if (!project) notFound();
 
   const cover = urlForImage(project.cover)?.width(1600).height(1000).url();
+  const textos = pages.proyecto;
+  /*
+     Sin el caso escrito, la ficha es una cabecera: nombre, bajada, enlace y
+     datos. Lo que hicimos pasa a los datos, y el bloque del caso no se arma.
+     Antes se armaba igual, con una nota que le pedía al editor que lo
+     escribiera —una nota que veía cualquiera que entrara—, y la portada
+     faltante dejaba una caja beige del ancho de la página.
+  */
+  const conCaso = Boolean(project.body?.length || project.gallery?.length);
 
   return (
     <>
       <article>
-        <div className="shell pb-14 pt-12 md:pt-16">
+        {/* El aire de arriba es el de las otras páginas internas
+            (PageHeader): con menos, el header fijo tapaba el enlace de
+            volver. */}
+        <div className="shell pb-14 pt-32 md:pt-40">
           {/* Vuelve a la sección de la home y no a un listado: ese listado ya
               no existe, y el ancla deja a la persona parada justo en la fila
               de proyectos, no arriba de todo para que scrollee de nuevo. */}
@@ -98,7 +110,7 @@ export default async function ProjectPage({ params }: Params) {
                   rel="noreferrer"
                   className="group mt-6 inline-flex items-center gap-2 text-[0.95rem] font-medium"
                 >
-                  Ver el sitio publicado
+                  {textos.viewSite}
                   <ArrowUpRightIcon className="h-4 w-4 text-ink-faint transition-colors group-hover:text-aqua-deep" />
                 </a>
               ) : null}
@@ -107,35 +119,43 @@ export default async function ProjectPage({ params }: Params) {
             <dl className="grid grid-cols-2 gap-x-6 gap-y-5 border-t border-line pt-6 text-[0.9rem] sm:grid-cols-4 lg:grid-cols-2">
               {project.sector ? (
                 <div>
-                  <dt className="text-ink-faint">Rubro</dt>
+                  <dt className="text-ink-faint">{textos.sector}</dt>
                   <dd className="mt-1 font-medium">{project.sector}</dd>
                 </div>
               ) : null}
               {project.plan ? (
                 <div>
-                  <dt className="text-ink-faint">Plan</dt>
+                  <dt className="text-ink-faint">{textos.plan}</dt>
                   <dd className="mt-1 font-medium">{project.plan}</dd>
                 </div>
               ) : null}
               {project.deliveredIn ? (
                 <div>
-                  <dt className="text-ink-faint">Entrega</dt>
+                  <dt className="text-ink-faint">{textos.delivery}</dt>
                   <dd className="mt-1 font-medium">{project.deliveredIn}</dd>
                 </div>
               ) : null}
               {project.year ? (
                 <div>
-                  <dt className="text-ink-faint">Año</dt>
+                  <dt className="text-ink-faint">{textos.year}</dt>
                   <dd className="mt-1 font-medium">{project.year}</dd>
+                </div>
+              ) : null}
+              {!conCaso && project.services?.length ? (
+                <div>
+                  <dt className="text-ink-faint">{textos.services}</dt>
+                  <dd className="mt-1 font-medium">
+                    {project.services.join(" · ")}
+                  </dd>
                 </div>
               ) : null}
             </dl>
           </div>
         </div>
 
-        <div className="shell">
-          <div className="relative aspect-[16/10] overflow-hidden rounded-panel border border-line bg-paper-alt">
-            {cover ? (
+        {cover ? (
+          <div className="shell">
+            <div className="relative aspect-[16/10] overflow-hidden rounded-panel border border-line bg-paper-alt">
               <Image
                 src={cover}
                 alt={project.cover?.alt || project.title}
@@ -144,17 +164,9 @@ export default async function ProjectPage({ params }: Params) {
                 sizes="(max-width: 1200px) 100vw, 1200px"
                 className="object-cover"
               />
-            ) : (
-              <div
-                className="h-full w-full"
-                style={{
-                  background:
-                    "linear-gradient(150deg, #e9dfd2 0%, #c9b8a3 100%)",
-                }}
-              />
-            )}
+            </div>
           </div>
-        </div>
+        ) : null}
 
         {project.results?.length ? (
           <div className="shell mt-14">
@@ -173,55 +185,56 @@ export default async function ProjectPage({ params }: Params) {
           </div>
         ) : null}
 
-        <div className="shell py-16 md:py-20">
-          <div className="grid gap-12 lg:grid-cols-[1fr_2fr] lg:gap-16">
-            {project.services?.length ? (
-              <div className="lg:sticky lg:top-28 lg:self-start">
-                <p className="eyebrow">Qué hicimos</p>
-                <ul className="mt-5 space-y-2.5">
-                  {project.services.map((service) => (
-                    <li key={service} className="text-[0.95rem] text-ink-soft">
-                      {service}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ) : (
-              <div />
-            )}
-
-            <div>
-              {project.body?.length ? (
-                <Prose value={project.body} />
+        {conCaso ? (
+          <div className="shell py-16 md:py-20">
+            <div className="grid gap-12 lg:grid-cols-[1fr_2fr] lg:gap-16">
+              {project.services?.length ? (
+                <div className="lg:sticky lg:top-28 lg:self-start">
+                  <p className="eyebrow">{textos.services}</p>
+                  <ul className="mt-5 space-y-2.5">
+                    {project.services.map((service) => (
+                      <li
+                        key={service}
+                        className="text-[0.95rem] text-ink-soft"
+                      >
+                        {service}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               ) : (
-                <p className="text-[1.02rem] leading-[1.7] text-ink-soft">
-                  El detalle de este caso todavía no está cargado. Podés escribirlo
-                  desde el panel de contenido, en el campo “Caso completo”.
-                </p>
+                <div />
               )}
 
-              {project.gallery?.length ? (
-                <div className="mt-12 grid gap-5 sm:grid-cols-2">
-                  {project.gallery.map((image, i) => {
-                    const url = urlForImage(image)?.width(900).height(700).url();
-                    if (!url) return null;
-                    return (
-                      <Image
-                        key={i}
-                        src={url}
-                        alt={image.alt || ""}
-                        width={900}
-                        height={700}
-                        sizes="(max-width: 768px) 100vw, 400px"
-                        className="rounded-card border border-line object-cover"
-                      />
-                    );
-                  })}
-                </div>
-              ) : null}
+              <div>
+                {project.body?.length ? <Prose value={project.body} /> : null}
+
+                {project.gallery?.length ? (
+                  <div className="mt-12 grid gap-5 sm:grid-cols-2">
+                    {project.gallery.map((image, i) => {
+                      const url = urlForImage(image)
+                        ?.width(900)
+                        .height(700)
+                        .url();
+                      if (!url) return null;
+                      return (
+                        <Image
+                          key={i}
+                          src={url}
+                          alt={image.alt || ""}
+                          width={900}
+                          height={700}
+                          sizes="(max-width: 768px) 100vw, 400px"
+                          className="rounded-card border border-line object-cover"
+                        />
+                      );
+                    })}
+                  </div>
+                ) : null}
+              </div>
             </div>
           </div>
-        </div>
+        ) : null}
       </article>
 
       <FinalCta />

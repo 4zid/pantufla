@@ -492,6 +492,14 @@ export const en: SiteCopy = {
       title: "Sites that came out of here.",
       lead: "From single-page landings to full sites with a content panel.",
     },
+    proyecto: {
+      viewSite: "See the live site",
+      sector: "Industry",
+      plan: "Plan",
+      delivery: "Delivery",
+      year: "Year",
+      services: "What we did",
+    },
   },
 
   notFound: {

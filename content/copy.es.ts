@@ -496,6 +496,14 @@ export const es: SiteCopy = {
       title: "Sitios que salieron de acá.",
       lead: "Entre landings de una sola página y sitios completos con panel de carga.",
     },
+    proyecto: {
+      viewSite: "Ver el sitio publicado",
+      sector: "Rubro",
+      plan: "Plan",
+      delivery: "Entrega",
+      year: "Año",
+      services: "Qué hicimos",
+    },
   },
 
   notFound: {

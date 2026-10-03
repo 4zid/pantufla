@@ -357,8 +357,15 @@ recién cuando hace falta, no en el primer paquete de JavaScript.
 
 Se recorre con el scroll normal, sin trabar la rueda. En escritorio el título
 queda quieto a media altura mientras pasa la columna de proyectos, y se prende
-el que cruza esa altura; los demás quedan apagados pero a la vista. En el
-teléfono es una lista, con el mismo resaltado.
+el que cruza esa altura; en los demás se apaga la esfera y el texto baja un
+poco, sin dejar de leerse. En el teléfono es una lista, con el mismo resaltado,
+y la esfera prendida muestra «Ver sitio», porque ahí no hay mouse que lo
+descubra.
+
+Cada proyecto tiene además su ficha en `/proyectos/<slug>`. Lo que muestra sale
+del Studio: si el proyecto no tiene portada ni caso escrito («Caso completo»),
+la ficha es una cabecera con el nombre, la bajada, el enlace y los datos; la
+portada y el caso aparecen solos cuando se cargan.
 
 ---
 

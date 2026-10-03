@@ -248,6 +248,15 @@ export type SiteCopy = {
       title: string;
       lead: string;
     };
+    /** La ficha de cada proyecto: el enlace al sitio y los rótulos de los datos. */
+    proyecto: {
+      viewSite: string;
+      sector: string;
+      plan: string;
+      delivery: string;
+      year: string;
+      services: string;
+    };
   };
   notFound: {
     eyebrow: string;
