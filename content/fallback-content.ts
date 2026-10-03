@@ -170,7 +170,7 @@ const testimoniosEs: SanityTestimonial[] = [
   {
     _id: "demo-t1",
     quote:
-      "Cargo contenido todas las semanas y nunca se me rompió nada. Dejó el sitio armado para que lo use alguien que no es diseñador.",
+      "Al principio me daba miedo tocar algo y romper el sitio. Hoy subo los eventos nuevos casi todas las semanas y nunca tuve que pedirle ayuda a nadie.",
     name: "Flor",
     role: "Content Manager",
     company: "2MG",
@@ -178,7 +178,7 @@ const testimoniosEs: SanityTestimonial[] = [
   {
     _id: "demo-t2",
     quote:
-      "Soy diseñador y aun así encargué mi propio sitio acá. Es todo lo que puedo decir sobre el criterio.",
+      "Somos un estudio de diseño, así que fuimos clientes difíciles. Nos discutieron lo que había que discutir, y la mayoría de las veces tenían razón.",
     name: "Damián",
     role: "CEO",
     company: "Lupa Studio",
@@ -186,7 +186,7 @@ const testimoniosEs: SanityTestimonial[] = [
   {
     _id: "demo-t3",
     quote:
-      "Le llevé una idea que venía dando vueltas hacía meses y me la devolvió en una pantalla que se entiende en diez segundos.",
+      "Hacía meses que no podía explicar la idea sin dar mil vueltas. Hoy mando el link y no tengo que agregar nada.",
     name: "Nico",
     role: "CEO",
     company: "Simplify",
@@ -194,7 +194,7 @@ const testimoniosEs: SanityTestimonial[] = [
   {
     _id: "demo-t4",
     quote:
-      "Dos rondas y estaba. No tuve que explicar lo mismo tres veces ni discutir un tamaño de letra.",
+      "Venía de una mala experiencia con otra agencia y entré con la guardia alta. Acá siempre supe en qué etapa estábamos y qué me tocaba mandar a mí.",
     name: "Vicky",
     role: "CEO",
     company: "HOLD",
@@ -205,7 +205,7 @@ const testimoniosEn: SanityTestimonial[] = [
   {
     _id: "demo-t1",
     quote:
-      "I load content every week and nothing has ever broken. The site was built so that someone who is not a designer can run it.",
+      "At first I was scared I would touch something and break the site. Now I add new events almost every week and I have never had to ask anyone for help.",
     name: "Flor",
     role: "Content Manager",
     company: "2MG",
@@ -213,7 +213,7 @@ const testimoniosEn: SanityTestimonial[] = [
   {
     _id: "demo-t2",
     quote:
-      "I am a designer myself and I still had my own site made here. That is everything I can say about the eye behind it.",
+      "We are a design studio, so we were difficult clients. They pushed back where it mattered, and most of the time they were right.",
     name: "Damián",
     role: "CEO",
     company: "Lupa Studio",
@@ -221,7 +221,7 @@ const testimoniosEn: SanityTestimonial[] = [
   {
     _id: "demo-t3",
     quote:
-      "I brought in an idea I had been circling for months and got it back as a screen you understand in ten seconds.",
+      "For months I could not explain the idea without going around in circles. Now I just send the link and do not have to add anything.",
     name: "Nico",
     role: "CEO",
     company: "Simplify",
@@ -229,7 +229,7 @@ const testimoniosEn: SanityTestimonial[] = [
   {
     _id: "demo-t4",
     quote:
-      "Two rounds and it was done. I never had to explain the same thing three times or argue about a font size.",
+      "I had a bad experience with another agency and came in with my guard up. Here I always knew what stage we were at and what I had to send.",
     name: "Vicky",
     role: "CEO",
     company: "HOLD",
