@@ -135,38 +135,55 @@ export const platformDesign: Record<
  * cuyo trabajo se muestra va en los dos lados. Numia es la excepción a
  * propósito: es cliente, pero su trabajo no va en la lista de proyectos.
  */
+
+/**
+ * Una marca de la tira. El tipo va escrito porque hoy todas tienen logo: sin
+ * él, TypeScript deduce que nunca falta y el caso del nombre escrito deja de
+ * compilar, aunque siga haciendo falta para el próximo cliente que no mande
+ * archivo.
+ */
+type MarcaCliente =
+  | { name: string; logo: string; proporcion: number; escala?: number }
+  | { name: string; logo: null };
+
+const marcasClientes: MarcaCliente[] = [
+  {
+    name: "Lupa Studio",
+    logo: "/logos/clientes/lupa-studio.svg",
+    proporcion: 180 / 32,
+  },
+  {
+    name: "Remmy",
+    logo: "/logos/clientes/remmy.svg",
+    proporcion: 404 / 100,
+    escala: 1.3,
+  },
+  {
+    name: "Acacia",
+    logo: "/logos/clientes/acacia.png",
+    proporcion: 259 / 63,
+  },
+  {
+    name: "Rostar",
+    logo: "/logos/clientes/rostar.png",
+    proporcion: 411 / 102,
+  },
+  { name: "2MG", logo: "/logos/clientes/2mg.png", proporcion: 178 / 181 },
+  {
+    name: "Block Desarrollos",
+    logo: "/logos/clientes/block.png",
+    proporcion: 300 / 80,
+  },
+  { name: "Numia", logo: "/logos/clientes/numia.png", proporcion: 512 / 123 },
+];
+
 export const socialProof = {
   faces: [
     { initials: "MP", from: "#6fcfca", to: "#166b67" },
     { initials: "RL", from: "#f2a5b6", to: "#a3405a" },
     { initials: "DF", from: "#f4c87d", to: "#8a5a12" },
   ],
-  brands: [
-    {
-      name: "Lupa Studio",
-      logo: "/logos/clientes/lupa-studio.svg",
-      proporcion: 180 / 32,
-    },
-    {
-      name: "Remmy",
-      logo: "/logos/clientes/remmy.svg",
-      proporcion: 404 / 100,
-      escala: 1.3,
-    },
-    { name: "Acacia", logo: null, proporcion: null },
-    {
-      name: "Rostar",
-      logo: "/logos/clientes/rostar.png",
-      proporcion: 411 / 102,
-    },
-    { name: "2MG", logo: "/logos/clientes/2mg.png", proporcion: 178 / 181 },
-    {
-      name: "Block Desarrollos",
-      logo: "/logos/clientes/block.png",
-      proporcion: 300 / 80,
-    },
-    { name: "Numia", logo: "/logos/clientes/numia.png", proporcion: 512 / 123 },
-  ],
+  brands: marcasClientes,
 } as const;
 
 /**
