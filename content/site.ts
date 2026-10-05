@@ -117,7 +117,7 @@ export const platformDesign: Record<
  * en public/logos/clientes en negro sobre transparente: la tira los pinta con
  * la tinta del tema a través de una máscara, así que de cada archivo solo
  * cuenta la forma. Por eso van todos en un color, aunque el original sea
- * naranja o azul: seis paletas distintas en una tira angosta se pelean, y un
+ * naranja o azul: siete paletas distintas en una tira angosta se pelean, y un
  * logo pintado no se daría vuelta con el fondo oscuro.
  *
  * Un cliente sin logo va con el nombre escrito. Dibujarle un símbolo a mano
@@ -130,9 +130,10 @@ export const platformDesign: Record<
  * fina y el círculo se lleva la altura, así que con la misma superficie que
  * los demás la palabra se lee chica.
  *
- * Es la misma lista que fallbackProjects, a mano y no importada: aquello es el
- * respaldo del CMS y esto es el contenido de la tira. Si se suma un cliente,
- * va en los dos lados.
+ * Casi todos están también en fallbackProjects, a mano y no importados:
+ * aquello es el respaldo del CMS y esto es el contenido de la tira. Un cliente
+ * cuyo trabajo se muestra va en los dos lados. Numia es la excepción a
+ * propósito: es cliente, pero su trabajo no va en la lista de proyectos.
  */
 export const socialProof = {
   faces: [
@@ -164,6 +165,7 @@ export const socialProof = {
       logo: "/logos/clientes/block.png",
       proporcion: 300 / 80,
     },
+    { name: "Numia", logo: "/logos/clientes/numia.png", proporcion: 512 / 123 },
   ],
 } as const;
 

@@ -38,9 +38,9 @@ import { RielPausable } from "@/components/ui/riel-pausable";
 /**
  * Cuántas veces se repite la lista en cada mitad de la pista.
  *
- * Seis marcas miden unos 810px. Con una sola pasada por mitad, a mitad de la
+ * Siete marcas miden unos 960px. Con una sola pasada por mitad, a mitad de la
  * animación el final de la pista entra en pantalla y queda un hueco. Tres
- * pasadas dan unos 2400px por mitad, que tapa el hueco hasta en pantallas de
+ * pasadas dan unos 2900px por mitad, que tapa el hueco hasta en pantallas de
  * 2560.
  */
 const REPES = 3;
@@ -49,12 +49,12 @@ const REPES = 3;
  * Cuánto tarda la pista en correr media vuelta.
  *
  * La animación mueve la mitad de la pista en este tiempo, así que cada marca
- * nueva la alarga y, con el mismo tiempo, la acelera. Con cinco marcas eran
- * 34s; con seis la pista es un 22% más larga y el tiempo crece igual, para
- * que el riel siga a unos 58px por segundo. Si se suma otra, la cuenta es la
- * misma: el ancho de una pasada sobre 58, por tres.
+ * nueva la alarga y, con el mismo tiempo, la acelera. El tiempo crece con la
+ * pista para que el riel vaya siempre a unos 58px por segundo: con cinco
+ * marcas eran 34s, con seis 42s y con siete (963px por pasada) 50s. Si se
+ * suma otra, la cuenta es la misma: el ancho de una pasada sobre 58, por tres.
  */
-const DURACION = "42s";
+const DURACION = "50s";
 
 /**
  * Cuánta superficie ocupa cada logo, en píxeles cuadrados, y hasta qué alto.
