@@ -38,9 +38,9 @@ import { RielPausable } from "@/components/ui/riel-pausable";
 /**
  * Cuántas veces se repite la lista en cada mitad de la pista.
  *
- * Siete marcas miden unos 960px. Con una sola pasada por mitad, a mitad de la
- * animación el final de la pista entra en pantalla y queda un hueco. Tres
- * pasadas dan unos 2900px por mitad, que tapa el hueco hasta en pantallas de
+ * Siete marcas miden unos 1010px. Con una sola pasada por mitad, a mitad de
+ * la animación el final de la pista entra en pantalla y queda un hueco. Tres
+ * pasadas dan unos 3000px por mitad, que tapa el hueco hasta en pantallas de
  * 2560.
  */
 const REPES = 3;
@@ -51,10 +51,12 @@ const REPES = 3;
  * La animación mueve la mitad de la pista en este tiempo, así que cada marca
  * nueva la alarga y, con el mismo tiempo, la acelera. El tiempo crece con la
  * pista para que el riel vaya siempre a unos 58px por segundo: con cinco
- * marcas eran 34s, con seis 42s y con siete (963px por pasada) 50s. Si se
- * suma otra, la cuenta es la misma: el ancho de una pasada sobre 58, por tres.
+ * marcas eran 34s, con seis 42s y con siete, ya con el logo de Acacia en vez
+ * de su nombre escrito (1012px por pasada), 52s. Si se suma otra marca o se
+ * cambia un logo, la cuenta es la misma: el ancho de una pasada sobre 58, por
+ * tres.
  */
-const DURACION = "50s";
+const DURACION = "52s";
 
 /**
  * Cuánta superficie ocupa cada logo, en píxeles cuadrados, y hasta qué alto.
@@ -139,10 +141,7 @@ export function SocialProof({ surface = "mist" }: { surface?: Surface }) {
                         className="logo-cliente"
                         style={
                           {
-                            ...medidas(
-                              marca.proporcion,
-                              "escala" in marca ? marca.escala : 1,
-                            ),
+                            ...medidas(marca.proporcion, marca.escala),
                             "--logo": `url(${marca.logo})`,
                           } as React.CSSProperties
                         }
