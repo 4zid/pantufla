@@ -261,8 +261,9 @@ lo pinta con la tinta del tema, así que el color del archivo no importa: solo
 cuenta la forma. Un cliente sin logo sale con el nombre escrito. Cada logo
 alarga el riel, y con el mismo tiempo de vuelta lo acelera: hay que subir
 `DURACION` en `components/sections/social-proof.tsx` en la misma proporción
-(la cuenta está ahí). El cliente también va como proyecto, en el Studio y en
-`content/fallback-content.ts`.
+(la cuenta está ahí). Si su trabajo se muestra, el cliente también va como
+proyecto, en el Studio y en `content/fallback-content.ts`; si no (como Numia),
+va solo en la tira.
 
 Para sumar un campo de texto nuevo hay que tocar tres lugares: el tipo en
 `content/copy.ts`, los dos archivos de idioma y el esquema
