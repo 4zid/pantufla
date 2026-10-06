@@ -363,9 +363,11 @@ titular arriba a la izquierda, la bajada con los botones abajo a la izquierda y
 el carrusel abajo a la derecha. Abajo de 1280 las dos mitades de abajo van una
 debajo de la otra, y en el teléfono todo corre seguido.
 
-- **La cinta del fondo** es un shader de WebGL, el mismo del diseño, con los
-  valores que quedaron en su panel de ajustes (paleta miel, rosa y aqua). Se
-  corre un poco hacia el cursor. Arranca cuando el navegador está libre, se
+- **La cinta del fondo** es un shader de WebGL, el mismo del diseño, en un
+  degradé de blanco al verde profundo de la marca (`#166B67`) que va y viene
+  a lo largo de la cinta, siempre con los dos colores a la vista. Es más
+  angosta que en el diseño, que la tenía en miel, rosa y aqua. Se corre un
+  poco hacia el cursor. Arranca cuando el navegador está libre, se
   para cuando el hero sale de pantalla y, con movimiento reducido, queda quieta
   en un cuadro. Sin placa de video no se dibuja: calculada por el procesador
   cada cuadro trababa la página casi medio segundo. Si con placa igual va
