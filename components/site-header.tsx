@@ -332,7 +332,7 @@ export function SiteHeader() {
       >
         <div
           className={cn(
-            "pointer-events-auto w-full border backdrop-blur-xl transition-[max-width,padding,background-color,border-color,box-shadow] duration-500 ease-out",
+            "pointer-events-auto w-full border transition-[max-width,padding,background-color,border-color,box-shadow] duration-500 ease-out",
             // Cerrada es una píldora. Abierta no puede serlo: rounded-full sobre
             // una caja de 344px de alto no redondea las esquinas, dibuja un
             // círculo, y con el desenfoque atrás el menú se veía como una mancha
@@ -352,19 +352,34 @@ export function SiteHeader() {
                declarados, contra 17 del lado del logo. Esa asimetría es lo que
                se lee como «pegado». Sigue siendo un achique claro contra los
                6xl de la barra expandida. */
+            /* Arriba de todo no hay barra (el hero de Claude Design): el logo,
+               el menú en su propia pastilla de vidrio y los botones flotan
+               sueltos, con el mismo margen que el contenido del hero —64px a
+               1440, hasta 1440 de ancho—, así el logo cae justo encima de la
+               pastilla de «Disponibles». Los rellenos suman ese margen con
+               los 16px del header: 4 en el teléfono (20), 16 desde md (32) y
+               48 desde xl (64). Al bajar se arma la barra compacta de
+               siempre, y el ancho y el relleno se animan entre los dos. */
             compact || open
-              ? "max-w-4xl border-line px-3 shadow-[0_8px_30px_-12px_rgba(35,28,18,0.25)] sm:px-4"
-              : "max-w-6xl border-transparent px-4 sm:px-6",
-            // Cerrada es translúcida a propósito: flota sobre el contenido y deja
-            // ver que hay algo abajo. Abierta no: es un panel, y con el fondo a
-            // medias el titular del hero se leía por detrás de los enlaces como
-            // una mancha. Un menú tiene que tapar lo que hay atrás.
-            open ? "bg-paper" : compact ? "bg-paper/80" : "bg-paper/40",
+              ? "max-w-4xl border-line px-3 shadow-[0_8px_30px_-12px_rgba(35,28,18,0.25)] backdrop-blur-xl sm:px-4"
+              : "max-w-[90rem] border-transparent px-1 md:px-4 xl:px-12",
+            // Compacta es translúcida a propósito: flota sobre el contenido y
+            // deja ver que hay algo abajo. Abierta no: es un panel, y con el
+            // fondo a medias el titular del hero se leía por detrás de los
+            // enlaces como una mancha. Un menú tiene que tapar lo que hay atrás.
+            open ? "bg-paper" : compact ? "bg-paper/80" : "bg-transparent",
           )}
         >
           <div
             className={cn(
-              "flex items-center justify-between gap-5 transition-[height] duration-500 ease-out",
+              /* Tres columnas y no un flex con espacio entre: así el menú
+                 queda en el centro de la barra aunque el logo y los botones
+                 midan distinto, que es como está en el diseño. Las de los
+                 costados no bajan de lo que mide su contenido: en una tablet
+                 no entran tres columnas iguales, y con 1fr pelado el botón de
+                 la derecha se partía en tres renglones. Así, si no hay lugar,
+                 el menú se corre un poco en vez de aplastar al botón. */
+              "grid grid-cols-[minmax(max-content,1fr)_auto_minmax(max-content,1fr)] items-center gap-5 transition-[height] duration-500 ease-out",
               compact || open ? "h-12 sm:h-14" : "h-14 sm:h-16",
             )}
           >
@@ -382,7 +397,7 @@ export function SiteHeader() {
             <Link
               href={href("/")}
               onClick={() => setOpen(false)}
-              className="flex shrink-0 items-center text-ink"
+              className="flex shrink-0 items-center justify-self-start text-ink"
             >
               <Iso weight="heavy" className="h-[14px] w-auto shrink-0" />
               <span
@@ -397,9 +412,17 @@ export function SiteHeader() {
               </span>
             </Link>
 
+            {/* Sin barra, el menú lleva su propia pastilla de vidrio, como en
+                el diseño. Con la barra compacta la pastilla es la barra, y
+                una adentro de la otra sobraría: se apaga. */}
             <nav
               ref={menu}
-              className="relative hidden items-center gap-1 md:flex"
+              className={cn(
+                "relative hidden items-center gap-1 rounded-full border p-1 transition-[background-color,border-color,box-shadow] duration-500 ease-out md:flex",
+                compact
+                  ? "border-transparent"
+                  : "border-white/70 bg-white/55 shadow-[0_1px_2px_rgba(17,24,60,0.04),0_12px_32px_-18px_rgba(17,24,60,0.25)] backdrop-blur-[20px]",
+              )}
             >
               {/* La pastilla de la sección en curso. La tinta al 7% y no un
                   gris: la tinta se da vuelta con el tema, así que sobre la
@@ -436,7 +459,7 @@ export function SiteHeader() {
                 y como el tamaño no transiciona cambiaba de golpe mientras la
                 barra se achicaba en medio segundo: un salto adentro de un
                 movimiento. En la barra compacta, de 56px, el md entra con aire. */}
-            <div className="hidden shrink-0 items-center gap-4 md:flex">
+            <div className="col-start-3 hidden shrink-0 items-center gap-4 justify-self-end md:flex">
               <LocaleSwitcher />
               <ButtonLink href={header.ctaHref}>{header.cta}</ButtonLink>
             </div>
@@ -448,7 +471,7 @@ export function SiteHeader() {
               aria-label={open ? header.closeMenu : header.openMenu}
               aria-expanded={open}
               aria-controls={panelId}
-              className="-mr-1 flex h-10 w-10 items-center justify-center rounded-full md:hidden"
+              className="col-start-3 -mr-1 flex h-10 w-10 items-center justify-center justify-self-end rounded-full md:hidden"
             >
               <span className="relative block h-3 w-5">
                 <span

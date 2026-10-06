@@ -143,11 +143,12 @@ export const siteCopy = defineType({
       type: "object",
       options: { collapsible: true, collapsed: true },
       fields: [
+        texto("eyebrow", "Pastilla de arriba"),
         defineField({
-          name: "titleSegments",
+          name: "headline",
           title: "Titular por tramos",
           description:
-            "Cada tramo es una parte del titular. Los que llevan resaltado salen en pastilla.",
+            "Cada tramo es una parte del titular. Los que van en itálica salen en la letra de acento, en gris.",
           type: "array",
           of: [
             {
@@ -156,13 +157,12 @@ export const siteCopy = defineType({
                 { name: "text", title: "Texto", type: "string" },
                 {
                   name: "mark",
-                  title: "Resaltado",
+                  title: "Estilo",
                   type: "string",
                   options: {
                     list: [
-                      { title: "Sin resaltar", value: "" },
-                      { title: "Pastilla blanca", value: "paper" },
-                      { title: "Pastilla negra", value: "ink" },
+                      { title: "Normal", value: "" },
+                      { title: "Itálica gris", value: "serif" },
                     ],
                   },
                 },
@@ -175,87 +175,16 @@ export const siteCopy = defineType({
         link("primary", "Botón principal"),
         link("secondary", "Botón secundario"),
         defineField({
-          name: "proof",
-          title: "Línea de garantías",
-          type: "array",
-          of: [{ type: "string" }],
-        }),
-        defineField({
-          name: "dashboard",
-          title: "Tablero de la portada",
+          name: "carousel",
+          title: "Carrusel de proyectos",
+          description:
+            "Muestra los proyectos con caso escrito; acá van solo sus textos para el lector de pantalla.",
           type: "object",
           options: { collapsible: true, collapsed: true },
           fields: [
-            defineField({ name: "title", title: "Título", type: "string" }),
-            defineField({ name: "status", title: "Estado", type: "string" }),
-            defineField({ name: "range", title: "Período", type: "string" }),
-            defineField({
-              name: "visits",
-              title: "Visitas",
-              type: "object",
-              fields: [
-                { name: "title", title: "Título", type: "string" },
-                { name: "badge", title: "Variación", type: "string" },
-                { name: "value", title: "Número", type: "string" },
-              ],
-            }),
-            defineField({
-              name: "visitsStats",
-              title: "Pie de visitas",
-              type: "array",
-              of: [
-                {
-                  type: "object",
-                  fields: [
-                    { name: "key", title: "Etiqueta", type: "string" },
-                    { name: "value", title: "Valor", type: "string" },
-                  ],
-                  preview: { select: { title: "key", subtitle: "value" } },
-                },
-              ],
-            }),
-            defineField({
-              name: "visitsAxis",
-              title: "Fechas del gráfico",
-              type: "array",
-              of: [{ type: "string" }],
-            }),
-            defineField({
-              name: "conversion",
-              title: "Conversión",
-              type: "object",
-              fields: [
-                { name: "title", title: "Título", type: "string" },
-                { name: "badge", title: "Variación", type: "string" },
-                { name: "note", title: "Aclaración", type: "string" },
-              ],
-            }),
-            defineField({
-              name: "speed",
-              title: "Velocidad",
-              type: "object",
-              fields: [
-                { name: "title", title: "Título", type: "string" },
-                { name: "badge", title: "Variación", type: "string" },
-                { name: "mobile", title: "Móvil", type: "string" },
-                { name: "desktop", title: "Escritorio", type: "string" },
-              ],
-            }),
-            defineField({
-              name: "traffic",
-              title: "Tráfico",
-              type: "object",
-              fields: [
-                { name: "title", title: "Título", type: "string" },
-                { name: "note", title: "Período", type: "string" },
-                {
-                  name: "channels",
-                  title: "Canales",
-                  type: "array",
-                  of: [{ type: "string" }],
-                },
-              ],
-            }),
+            texto("label", "Nombre del carrusel"),
+            texto("prev", "Flecha anterior"),
+            texto("next", "Flecha siguiente"),
           ],
         }),
       ],

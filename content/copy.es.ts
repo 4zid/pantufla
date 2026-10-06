@@ -50,46 +50,20 @@ export const es: SiteCopy = {
   },
 
   hero: {
-    titleSegments: [
-      { text: "Sitios web", mark: "paper" },
-      { text: "con precio cerrado y" },
-      { text: "fecha de entrega.", mark: "ink" },
+    eyebrow: "Disponibles para nuevos proyectos",
+    headline: [
+      { text: "Sitios que convierten" },
+      { text: "visitantes", mark: "serif" },
+      { text: "en" },
+      { text: "clientes.", mark: "serif" },
     ],
     lead: "Diseño, textos y desarrollo para que la gente que entra entienda qué hacés en diez segundos y termine escribiéndote.",
     primary: { label: "Empezar un proyecto", href: "/#brief" },
     secondary: { label: "Ver planes y precios", href: "/#planes" },
-    proof: [
-      "Garantía de devolución",
-      "Primera versión en 5 días",
-      "El sitio queda a tu nombre",
-    ],
-    dashboard: {
-      title: "Tu sitio, un mes después",
-      status: "Todo funcionando",
-      range: "Últimos 30 días",
-      visits: { title: "Visitas del sitio", badge: "+18%", value: "12.480" },
-      visitsStats: [
-        { key: "Pico", value: "16:30" },
-        { key: "Rebote", value: "32%" },
-        { key: "Consultas", value: "24" },
-      ],
-      visitsAxis: ["1 dic", "7 dic", "14 dic", "21 dic", "28 dic"],
-      conversion: {
-        title: "Conversión",
-        badge: "+12%",
-        note: "Visitas que escriben",
-      },
-      speed: {
-        title: "Velocidad",
-        badge: "+6",
-        mobile: "Móvil",
-        desktop: "Escritorio",
-      },
-      traffic: {
-        title: "De dónde llegan",
-        note: "Últimos 30 días",
-        channels: ["Búsqueda en Google", "Directo", "Redes sociales", "Otros"],
-      },
+    carousel: {
+      label: "Proyectos",
+      prev: "Proyecto anterior",
+      next: "Proyecto siguiente",
     },
   },
 

@@ -43,46 +43,20 @@ export const en: SiteCopy = {
   },
 
   hero: {
-    titleSegments: [
-      { text: "Websites", mark: "paper" },
-      { text: "with a fixed price and a" },
-      { text: "delivery date.", mark: "ink" },
+    eyebrow: "Available for new projects",
+    headline: [
+      { text: "Websites that turn" },
+      { text: "visitors", mark: "serif" },
+      { text: "into" },
+      { text: "clients.", mark: "serif" },
     ],
     lead: "Design, copy and development, so that whoever lands on your site knows what you do in ten seconds and ends up writing to you.",
     primary: { label: "Start a project", href: "/#brief" },
     secondary: { label: "See plans and pricing", href: "/#planes" },
-    proof: [
-      "Money-back guarantee",
-      "First version in 5 days",
-      "The site stays in your name",
-    ],
-    dashboard: {
-      title: "Your site, one month in",
-      status: "Everything running",
-      range: "Last 30 days",
-      visits: { title: "Site visits", badge: "+18%", value: "12,480" },
-      visitsStats: [
-        { key: "Peak", value: "16:30" },
-        { key: "Bounce", value: "32%" },
-        { key: "Enquiries", value: "24" },
-      ],
-      visitsAxis: ["Dec 1", "Dec 7", "Dec 14", "Dec 21", "Dec 28"],
-      conversion: {
-        title: "Conversion",
-        badge: "+12%",
-        note: "Visitors who write",
-      },
-      speed: {
-        title: "Speed",
-        badge: "+6",
-        mobile: "Mobile",
-        desktop: "Desktop",
-      },
-      traffic: {
-        title: "Where they come from",
-        note: "Last 30 days",
-        channels: ["Google search", "Direct", "Social", "Other"],
-      },
+    carousel: {
+      label: "Projects",
+      prev: "Previous project",
+      next: "Next project",
     },
   },
 
