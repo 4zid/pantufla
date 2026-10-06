@@ -15,10 +15,9 @@ import { RielPausable } from "@/components/ui/riel-pausable";
  * centímetros del hero.
  *
  * Comparte el color del hero a propósito. Con un fondo propio quedaba una
- * banda distinta justo debajo del tablero y se leía como que el hero terminaba
- * de golpe; con el mismo, el tablero se hunde en la tira y lo que separa las
- * dos cosas es el aire, no una línea de color. Las reglas sobraban por lo
- * mismo.
+ * banda distinta justo debajo y se leía como que el hero terminaba de golpe;
+ * con el mismo, el hero se hunde en la tira y lo que separa las dos cosas es
+ * el aire, no una línea de color. Las reglas sobraban por lo mismo.
  *
  * A la izquierda va quién hace el trabajo y a la derecha para quién se hizo.
  * La frase no cuenta clientes: ver por qué en content/site.ts.

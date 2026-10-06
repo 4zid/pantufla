@@ -311,12 +311,11 @@ dice sale como viene de fábrica: prendida, salvo el stack.
 El recorrido sigue **promesa → prueba → qué incluye → cómo → precio →
 objeciones → contacto**:
 
-- **Portada.** El titular dice lo que diferencia al estudio —sitios con precio
-  cerrado y fecha de entrega—, la bajada dice para qué sirve el sitio, y hay un
-  CTA principal al formulario, uno secundario a los planes y tres respaldos
-  cortos (garantía de devolución, primera versión en 5 días, el sitio queda a
-  tu nombre). Debajo del titular se arma el tablero de *Tu sitio, un mes
-  después*, con visitas, conversión, velocidad y de dónde llegan.
+- **Portada.** Sale de Claude Design (ver *El hero*). Una pastilla dice que el
+  estudio toma proyectos, el titular dice para qué sirve el sitio —«Sitios que
+  convierten *visitantes* en *clientes*»—, la bajada lo cuenta, hay un CTA
+  principal al formulario y uno secundario a los planes, y abajo a la derecha
+  corre un carrusel con los proyectos que tienen caso.
 - **Cómo lo resolvemos.** Tres pilares: alcance cerrado, ritmo corto con fechas
   visibles, y el sitio entregado andando.
 - **Proyectos.** Justo después de la promesa: el trabajo se ve antes que el
@@ -356,29 +355,35 @@ suscripción. Ofrece **pago único con 15% de descuento** contra **dos pagos de
 50%**: la misma mecánica de descuento, aplicada a algo real, y alineada con
 cobrar rápido.
 
-### El vuelo del hero
+### El hero
 
-A partir de **1440px** el hero mide tres pantallas y el escenario queda fijo:
-los cuatro paneles arrancan dispersos alrededor del titular, con tres pastillas
-flotando en los huecos, y al bajar **convergen en el tablero**. Las pastillas
-hacen lo mismo: dejan de mecerse apenas empieza el scroll y se acomodan en fila
-en la cabecera del tablero, entre «Tu sitio, un mes después» y «Últimos 30
-días». Aterrizan achicadas para entrar en ese hueco, y cuánto se calcula en el
-momento: si el texto cambia en el Studio, la fila se reacomoda sola.
+Viene de un diseño de Claude Design (`Pantufla_Hero.html`), pasado a los
+componentes del sitio. En escritorio ocupa una pantalla: la pastilla y el
+titular arriba a la izquierda, la bajada con los botones abajo a la izquierda y
+el carrusel abajo a la derecha. Abajo de 1280 las dos mitades de abajo van una
+debajo de la otra, y en el teléfono todo corre seguido.
 
-Abajo de 1440 no hay vuelo: el tablero se muestra ya armado y **cortado igual
-que en escritorio**. Se ve la cabecera y el arranque de las tarjetas, y el piso
-difuminado del hero disuelve el resto.
-
-Cada hueco del tablero mide **exactamente lo mismo** que su panel, así que
-converger es una traslación pura, sin deformación. Los paneles y los huecos
-viven en el mismo contenedor, de modo que la diferencia entre sus rectángulos no
-depende del scroll y se puede recalcular en cada `refresh`.
-
-Los paneles además **se arrastran**. El arrastre vive en un hijo del marco que
-vuela, así los dos transforms no compiten por el mismo elemento; al empezar la
-convergencia, lo que se haya movido a mano vuelve a cero. `Draggable` se carga
-recién cuando hace falta, no en el primer paquete de JavaScript.
+- **La cinta del fondo** es un shader de WebGL, el mismo del diseño, en un
+  degradé de blanco al verde profundo de la marca (`#166B67`) que va y viene
+  a lo largo de la cinta, siempre con los dos colores a la vista. Es más
+  angosta que en el diseño, que la tenía en miel, rosa y aqua. Se corre un
+  poco hacia el cursor. Arranca cuando el navegador está libre, se
+  para cuando el hero sale de pantalla y, con movimiento reducido, queda quieta
+  en un cuadro. Sin placa de video no se dibuja: calculada por el procesador
+  cada cuadro trababa la página casi medio segundo. Si con placa igual va
+  lenta, baja la resolución y, si hace falta, se queda quieta. En los tres
+  casos el hero se ve igual, con el fondo de bruma.
+- **El titular** lleva dos palabras en la itálica de Newsreader, en gris. Es
+  la única otra letra del sitio y solo se baja en la home. En el Studio son
+  los tramos con estilo «Itálica gris».
+- **El carrusel** muestra los proyectos con caso escrito, que son los que
+  tienen mockups de verdad (hoy 2MG y Tierras Argentinas); cada tarjeta lleva a
+  su caso. Usa la imagen para redes del proyecto, o la portada si no tiene.
+  Avanza solo cada 4,5 segundos, se frena con el mouse encima o con el foco
+  adentro, y deja de avanzar solo cuando alguien usa las flechas.
+- **La barra de arriba**, en el tope de la página, no tiene fondo: el logo, el
+  menú en su pastilla de vidrio y los botones flotan con el mismo margen que el
+  hero. Al bajar se arma la barra compacta de siempre.
 
 ### Los proyectos
 
@@ -514,17 +519,22 @@ CTA), con el margen justo para que el título no quede debajo del header.
    teléfono y con un botón que aparece al llegar con el teclado
    (`components/ui/riel-pausable.tsx`). Los testimonios rotan solos hasta que
    se elige una cara, esperan mientras alguien los lee y no rotan con
-   movimiento reducido.
+   movimiento reducido. El carrusel del hero, igual: se frena con el mouse o
+   el foco, deja de avanzar solo cuando se usan las flechas y no avanza con
+   movimiento reducido. La cinta del hero se para fuera de pantalla.
 
 ---
 
 ## Decisiones de diseño
 
-- **Una sola familia tipográfica** (Schibsted Grotesk), trabajada por peso,
+- **Una familia tipográfica** (Schibsted Grotesk), trabajada por peso,
   tamaño y color. Va alojada en el propio sitio, recortada a los pesos 400–600
   y al alfabeto latino (40 KB), precargada y con un respaldo ajustado a sus
   medidas para que el texto no salte cuando llega la fuente. Si se cambia el
   archivo, hay que subir el `-vN` del nombre: se sirve con caché inmutable.
+  Y una itálica de acento, Newsreader, solo para las palabras en gris del
+  titular del hero: fijada en un peso y un tamaño óptico y recortada al latino
+  (19 KB).
 - **Fondo de bruma** (`#eaedf8`) en claro y casi negro en oscuro, con un grano
   muy leve para que no quede plano. El blanco queda para lo que se destaca: las
   tarjetas, la píldora del menú, los botones sobre oscuro.
@@ -533,9 +543,10 @@ CTA), con el margen justo para que el título no quede debajo del header.
   en gris neutro. Suelto sobre el fondo, ese tratamiento se lee a plantilla;
   adentro de una pastilla se lee como un rótulo de sistema. El color lo ponen
   el titular y el contenido.
-- Sin degradados en texto, sin vidrio esmerilado, sin emoji como íconos: los
-  íconos son SVG propios en `components/ui/icons.tsx`, y la marca (el iso de la
-  pantufla) está en `components/ui/brand.tsx`, copiada tal cual del kit.
+- Sin degradados en texto ni emoji como íconos, y el vidrio esmerilado solo
+  en la barra de arriba y en la pastilla del hero. Los íconos son SVG propios
+  en `components/ui/icons.tsx`, y la marca (el iso de la pantufla) está en
+  `components/ui/brand.tsx`, copiada tal cual del kit.
 
 ### Cómo se usan los cuatro colores
 
