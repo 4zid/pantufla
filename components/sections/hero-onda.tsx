@@ -3,17 +3,17 @@
 import { useEffect, useRef } from "react";
 
 /**
- * La cinta del fondo del hero: una banda de los colores de marca que cruza la
- * pantalla, se da vuelta sobre sí misma y se corre un poco hacia el cursor.
+ * La cinta del fondo del hero: una banda en degradé de blanco a verde
+ * profundo (#166B67) que cruza la pantalla, se da vuelta sobre sí misma y se
+ * corre un poco hacia el cursor.
  *
  * Viene de Claude Design (Pantufla_Hero.html). El shader es el mismo; lo que
  * cambia es todo lo que lo rodea:
  *
- * - Los valores son los que se veían en el diseño. El archivo traía dos
- *   juegos: los del panel de ajustes (paleta «marca», 5,2 giros, capa de
- *   atrás entera) y otros escritos en el código («bruma», 7 giros…). El
- *   panel pisa al código, así que lo que se ve en Claude Design son los del
- *   panel, y son esos los que van acá.
+ * - Los valores salen del panel de ajustes del diseño (5,2 giros, capa de
+ *   atrás entera…), salvo el color y el ancho, que se cambiaron después a
+ *   pedido: el diseño la tenía en miel, rosa y aqua, y más ancha. Ver
+ *   PALETA y AJUSTES.
  * - Un solo lienzo. El diseño tenía uno por marco (escritorio y teléfono) con
  *   un recorrido distinto para cada uno; acá se elige el recorrido según la
  *   forma del lienzo: apaisado, el de escritorio; vertical, el del teléfono.
@@ -65,12 +65,9 @@ float snoise(vec2 v){
   vec3 g;g.x=a0.x*x0.x+h.x*x0.y;g.yz=a0.yz*x12.xz+h.yz*x12.yw;return 130.0*dot(m,g);
 }
 float hash(vec2 p){return fract(sin(dot(p,vec2(12.9898,78.233)))*43758.5453);}
-uniform vec3 uA;uniform vec3 uB;uniform vec3 uC;
+uniform vec3 uA;uniform vec3 uB;
 vec3 pal(float k){
-  float s=fract(k)*3.0;
-  if(s<1.0) return mix(uA,uB,smoothstep(0.0,1.0,s));
-  if(s<2.0) return mix(uB,uC,smoothstep(0.0,1.0,s-1.0));
-  return mix(uC,uA,smoothstep(0.0,1.0,s-2.0));
+  return mix(uA,uB,0.5-0.5*cos(6.2831853*k));
 }
 uniform vec4 uP01;uniform vec4 uP23;
 vec2 P0,P1,P2,P3;
@@ -149,20 +146,35 @@ const hex = (h: string) =>
     number,
   ];
 
-/** Miel, rosa y aqua: la paleta «marca» del diseño. */
-const PALETA = ["#f4c87d", "#f2a5b6", "#6fcfca"].map(hex);
+/**
+ * Los dos extremos del degradé: blanco y el verde profundo de la marca
+ * (aqua-deep). El diseño traía tres colores que se recorrían en ciclo, y con
+ * dos así quedaba casi toda la cinta blanca y el verde en un tramo corto al
+ * final. Ahora el color va y viene entre los dos con un coseno (ver pal en
+ * el shader): sin saltos ni mesetas, y siempre con los dos a la vista.
+ */
+const PALETA = ["#ffffff", "#166b67"].map(hex);
 
-/** Los ajustes del panel de Claude Design, tal como quedaron. */
+/**
+ * Los ajustes del panel de Claude Design. Tres cambiaron después, junto con el
+ * color:
+ * - grosor, de 1 a 0,6: la cinta, más angosta;
+ * - escalaGradiente, de 0,55 a 1: el degradé hace el recorrido entero (blanco,
+ *   verde, blanco) a lo largo de la cinta, así en cualquier momento se ven los
+ *   dos colores, y no media cinta blanca o media verde según el momento;
+ * - pliegues, de 0,85 a 0,5: en cada vuelta la cinta se aclaraba hacia el
+ *   blanco, y con el blanco ya en la paleta lavaba el verde.
+ */
 const AJUSTES = {
-  escalaGradiente: 0.55,
+  escalaGradiente: 1,
   velGradiente: 1,
   saturacion: 1,
   brillo: 0.45,
-  pliegues: 0.85,
+  pliegues: 0.5,
   resplandor: 0,
   opacidad: 1,
   nitidez: 0.97,
-  grosor: 1,
+  grosor: 0.6,
   giros: 5.2,
   amplitud: 1,
   opacidadTrasera: 1,
@@ -200,7 +212,6 @@ const UNIFORMES = [
   "uCursor",
   "uA",
   "uB",
-  "uC",
   "uP01",
   "uP23",
   "uK1",
@@ -297,7 +308,6 @@ function montar(canvas: HTMLCanvasElement, hero: HTMLElement) {
   );
   gl.uniform3fv(loc.uA, PALETA[0]);
   gl.uniform3fv(loc.uB, PALETA[1]);
-  gl.uniform3fv(loc.uC, PALETA[2]);
 
   const quieta = window.matchMedia("(prefers-reduced-motion: reduce)");
   /* El punto de la animación en que arranca, distinto en cada visita. */
