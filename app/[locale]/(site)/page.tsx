@@ -85,7 +85,7 @@ export default async function HomePage({
     secciones.testimonials && secciones.clientsMap && testimonials.length > 0;
 
   const piezas: Record<SeccionId, (surface: Surface) => React.ReactNode> = {
-    hero: (surface) => <Hero surface={surface} />,
+    hero: (surface) => <Hero surface={surface} projects={projects} />,
     socialProof: (surface) => <SocialProof surface={surface} />,
     approach: (surface) => <Approach surface={surface} />,
     bento: (surface) => <Bento surface={surface} />,

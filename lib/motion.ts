@@ -3,13 +3,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 let registered = false;
 
-/**
- * Registra los plugins una sola vez, solo en el navegador.
- *
- * Draggable no va acá: lo usan solo las tarjetas del hero en escritorio, y
- * lo carga ese componente cuando hace falta (components/sections/hero-scene),
- * así el teléfono no lo baja ni lo evalúa.
- */
+/** Registra los plugins una sola vez, solo en el navegador. */
 export function registerGsap() {
   if (registered || typeof window === "undefined") return;
   gsap.registerPlugin(ScrollTrigger);

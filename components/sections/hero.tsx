@@ -1,83 +1,108 @@
+import { preload } from "react-dom";
+
 import type { Surface } from "@/components/ui/section";
-import { HeroAurora } from "@/components/sections/hero-aurora";
-import { HeroIntro } from "@/components/sections/hero-intro";
-import { HeroScene } from "@/components/sections/hero-scene";
+import { HeroBajada, HeroTitular } from "@/components/sections/hero-intro";
+import {
+  HeroCarrusel,
+  type Diapositiva,
+} from "@/components/sections/hero-carrusel";
+import { HeroOnda } from "@/components/sections/hero-onda";
+import { urlForImage } from "@/sanity/image";
+import type { SanityProject } from "@/sanity/types";
 
 /**
- * En desktop el hero mide tres pantallas y el escenario queda fijo: eso es lo
- * que da el recorrido en el que los paneles convergen en el dashboard. Eran
- * dos y el vuelo entero entraba en dos vueltas de rueda; con 200vh de
- * recorrido en vez de 120 hay lugar para que se vea venir.
- * En mobile es una sección normal, con el dashboard ya armado abajo del título
- * y cortado igual que en escritorio: se ve la cabecera y el arranque de las
- * tarjetas, y el piso lo disuelve. Entero, el tablero eran seiscientos
- * píxeles de gráficos antes de llegar a nada más; cortado se lee como lo que
- * es, una muestra de lo que hay abajo.
- *
- * El titular queda centrado en la pantalla, con las tarjetas flanqueándolo.
- *
- * Para que el centro sea el de la pantalla y no el del espacio sobrante, el
- * aire de arriba hace de contrapeso de lo que el tablero reserva abajo (ver
- * hero-scene). Sin ese contrapeso el bloque se centra en lo que queda después
- * del tablero y termina unos 50px alto.
- *
- * Va cuarenta pixeles por debajo de la reserva, y eso deja el titular unos
- * veinte arriba del centro exacto. Es a propósito: el
- * centro óptico de un bloque de texto está un poco más alto que el
- * geométrico, y esos 40px son los que le hacen falta al titular para no
- * apretarse cuando el tablero se lleva más pantalla.
- *
- * El aire de arriba en mobile va acotado a menos de 1440 (max-[1439px]), que
- * es lo que lo mantiene lejos del valor de escritorio: los dos viven en el
- * mismo elemento pero nunca se pisan, porque no hay ancho donde los dos
- * apliquen. Y va adentro del marco, no en la sección: puesto afuera, esos
- * 112px quedaban arriba del fondo, que arranca donde arranca el marco, y en el
- * teléfono se veía una banda blanca con un corte recto contra la bruma.
+ * El grano de arriba de la cinta, como en el diseño: ruido fractal en gris,
+ * casi invisible (2%), que le saca el brillo plástico al degradé. Va como
+ * una baldosa de SVG de fondo y no como un filtro sobre toda la sección: un
+ * filtro de 1440×900 se vuelve a calcular cada vez que algo se mueve encima,
+ * y la baldosa se dibuja una vez y se repite.
  */
-export function Hero({ surface = "mist" }: { surface?: Surface }) {
+const GRANO = `url("data:image/svg+xml,${encodeURIComponent(
+  '<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><filter id="g"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter><rect width="100%" height="100%" filter="url(#g)"/></svg>',
+)}")`;
+
+/**
+ * La portada, del diseño de Claude Design (Pantufla_Hero.html).
+ *
+ * Una pantalla entera en escritorio: la pastilla y el titular arriba a la
+ * izquierda, la bajada con los botones abajo a la izquierda y el carrusel de
+ * proyectos abajo a la derecha. Atrás, la cinta de colores (hero-onda), un
+ * brillo blanco desde arriba y el grano.
+ *
+ * El marco mide hasta 1440 y deja 64px a cada lado, que es el margen del
+ * diseño; la barra de arriba usa el mismo (ver site-header), así el logo cae
+ * justo encima de la pastilla.
+ *
+ * Abajo de xl las dos mitades de abajo no entran una al lado de la otra
+ * (necesitan 1124px) y van apiladas: la bajada y, debajo, el carrusel. En el
+ * teléfono todo corre seguido, sin repartir la pantalla, como en el marco de
+ * 390 del diseño.
+ *
+ * Entra sin JavaScript: la pastilla, el titular, la bajada y los botones
+ * tienen su entrada de CSS (ver globals.css). La cinta y el carrusel llegan
+ * con el JS; la cinta con un fundido, para no aparecer de golpe.
+ */
+export function Hero({
+  surface = "mist",
+  projects,
+}: {
+  surface?: Surface;
+  projects: SanityProject[];
+}) {
+  /* La itálica solo existe acá, así que la precarga la pide el hero y no el
+     layout: las demás páginas no la bajan. */
+  preload("/fonts/newsreader-italic-latin-v1.woff2", {
+    as: "font",
+    type: "font/woff2",
+    crossOrigin: "anonymous",
+  });
+
+  /*
+     Las tarjetas: los proyectos con caso. La imagen es la de redes si hay
+     (está pensada para un recorte apaisado y la tarjeta es de 16:10) y si
+     no, la portada.
+  */
+  const diapositivas: Diapositiva[] = projects
+    .filter((p) => p.conCaso)
+    .flatMap((p) => {
+      const imagen = urlForImage(p.social ?? p.cover)
+        ?.width(1200)
+        .url();
+      return imagen
+        ? [{ id: p._id, titulo: p.title, slug: p.slug, imagen }]
+        : [];
+    });
+
   return (
-    <section data-surface={surface} className="relative min-[1440px]:h-[300vh]">
-      <div className="relative overflow-hidden min-[1440px]:sticky min-[1440px]:top-0 min-[1440px]:flex min-[1440px]:h-screen min-[1440px]:flex-col">
-        <HeroAurora />
-        <div className="max-[1439px]:pt-28 min-[1440px]:flex min-[1440px]:min-h-0 min-[1440px]:flex-1 min-[1440px]:items-center min-[1440px]:pt-[calc(var(--hero-reserve)-40px)]">
-          <HeroIntro />
-        </div>
-        <HeroScene />
+    <section
+      data-surface={surface}
+      className="relative isolate overflow-hidden"
+    >
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 -z-20 bg-[radial-gradient(140%_60%_at_50%_0%,rgba(255,255,255,0.75)_0%,transparent_55%)] md:bg-[radial-gradient(120%_80%_at_50%_0%,rgba(255,255,255,0.75)_0%,transparent_55%)]"
+      />
+      <HeroOnda />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 -z-[5] opacity-[0.0225]"
+        style={{ backgroundImage: GRANO, backgroundSize: "200px 200px" }}
+      />
 
-        {/*
-          El piso. El marco mide una pantalla y corta el tablero por la mitad
-          con una línea recta, que es lo que delata que hay algo escondido.
-          Acá esa línea se disuelve: lo último que se ve entra en desenfoque y
-          se funde con el color del fondo, así el corte pasa a ser una
-          profundidad de campo.
+      <div className="mx-auto flex w-full max-w-[90rem] flex-col px-5 pb-6 pt-[104px] md:min-h-svh md:px-8 md:pb-12 md:pt-[150px] xl:px-16 xl:pb-16">
+        <HeroTitular />
 
-          El desenfoque va con máscara para que crezca de arriba hacia abajo:
-          aplicado parejo, emborronaría también la parte que sí se tiene que
-          leer.
-
-          En el teléfono está igual, un poco más corto: el tablero también se
-          corta ahí.
-        */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-x-0 bottom-0 z-30 h-[110px] min-[1440px]:h-[130px]"
-        >
-          <div
-            className="absolute inset-0 backdrop-blur-[6px]"
-            style={{
-              maskImage:
-                "linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.5) 45%, #000 100%)",
-              WebkitMaskImage:
-                "linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.5) 45%, #000 100%)",
-            }}
-          />
-          <div
-            className="absolute inset-0"
-            style={{
-              background:
-                "linear-gradient(to bottom, rgba(234,237,248,0) 0%, rgba(234,237,248,0.55) 55%, var(--color-mist) 100%)",
-            }}
-          />
+        <div className="mt-5 flex flex-col gap-9 md:mt-auto md:gap-12 md:pt-14 xl:flex-row xl:items-end xl:justify-between">
+          <HeroBajada />
+          {diapositivas.length ? (
+            <div
+              data-entra
+              style={{ "--entra": "0.6s" } as React.CSSProperties}
+              className="w-full xl:w-auto"
+            >
+              <HeroCarrusel diapositivas={diapositivas} />
+            </div>
+          ) : null}
         </div>
       </div>
     </section>

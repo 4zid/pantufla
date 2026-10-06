@@ -49,22 +49,22 @@ export type SiteCopy = {
     resumeMotion: string;
   };
   hero: {
-    titleSegments: Segment[];
+    /** La pastilla de arriba del titular: si el estudio toma trabajo. */
+    eyebrow: string;
+    /**
+     * El titular por tramos. Los de `mark: "serif"` salen en la itálica gris
+     * («visitantes», «clientes»); el resto, en la letra del sitio.
+     *
+     * Es un campo nuevo y no el `titleSegments` de antes a propósito: el
+     * titular viejo sigue cargado en Sanity, y con el mismo nombre le habría
+     * ganado al nuevo (los arreglos de Sanity reemplazan al local entero).
+     */
+    headline: Segment[];
     lead: string;
     primary: Link;
     secondary: Link;
-    proof: string[];
-    dashboard: {
-      title: string;
-      status: string;
-      range: string;
-      visits: { title: string; badge: string; value: string };
-      visitsStats: { key: string; value: string }[];
-      visitsAxis: string[];
-      conversion: { title: string; badge: string; note: string };
-      speed: { title: string; badge: string; mobile: string; desktop: string };
-      traffic: { title: string; note: string; channels: string[] };
-    };
+    /** El carrusel de proyectos del hero: su nombre y las dos flechas. */
+    carousel: { label: string; prev: string; next: string };
   };
   socialProof: { label: string; claim: string };
   approach: {

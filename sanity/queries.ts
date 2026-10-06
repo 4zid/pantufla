@@ -23,6 +23,7 @@ const projectFields = `
   plan,
   deliveredIn,
   cover,
+  social,
   services,
   results,
   url,
@@ -46,7 +47,6 @@ export const projectBySlugQuery = groq`
   *[_type == "project" && slug.current == $slug][0] {
     ${projectFields},
     gallery[]{ ..., "dimensiones": asset->metadata.dimensions{ width, height } },
-    social,
     body
   }
 `;

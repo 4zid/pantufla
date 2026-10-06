@@ -12,11 +12,18 @@ import {
 import { ease, gsap, registerGsap, START } from "@/lib/motion";
 import { cn } from "@/lib/cn";
 
-/** Un tramo del titular. Sin `mark` es texto suelto; con `mark`, va resaltado. */
+/**
+ * Un tramo del titular. Sin `mark` es texto suelto; con `mark`, va resaltado.
+ *
+ * `serif` no es una pastilla: son palabras en la itálica de Newsreader, en
+ * gris (el titular del hero). Suben palabra por palabra como el texto suelto.
+ */
 export type Segment = {
   text: string;
-  mark?: "paper" | "ink" | "aqua" | "rosa" | "verde" | "miel";
+  mark?: "paper" | "ink" | "aqua" | "rosa" | "verde" | "miel" | "serif";
 };
+
+type Pastilla = Exclude<NonNullable<Segment["mark"]>, "serif">;
 
 type Props = {
   /** Titular plano. Mutuamente excluyente con `segments`. */
@@ -37,7 +44,7 @@ type Props = {
   immediate?: boolean;
 };
 
-const marks: Record<NonNullable<Segment["mark"]>, string> = {
+const marks: Record<Pastilla, string> = {
   paper: "bg-card text-ink shadow-[0_2px_10px_-4px_rgba(0,0,0,0.25)]",
   ink: "bg-ink text-on-ink",
   aqua: "bg-aqua-soft text-aqua-deep",
@@ -162,7 +169,7 @@ export function SplitHeading({
     immediate ? ({ "--i": unidades.length } as CSSProperties) : undefined;
 
   partes.forEach((parte, p) => {
-    if (parte.mark) {
+    if (parte.mark && parte.mark !== "serif") {
       unidades.push(
         <span
           key={`m-${p}`}
@@ -179,6 +186,23 @@ export function SplitHeading({
       return;
     }
 
+    /*
+       La itálica se sale de su caja por la derecha (la cola de la s de
+       «clientes» cae afuera), y la máscara se la comería mientras la palabra
+       sube. El relleno a la derecha agranda la máscara y el margen negativo
+       lo devuelve, así el renglón no se corre.
+
+       Y lleva su propio interlineado para quedar en la misma línea de base
+       que las otras palabras. Una máscara con overflow hidden se alinea por
+       su borde de abajo, no por la línea de base, y la Newsreader, más
+       grande (1,08em) y con más descendente que la Schibsted, dejaba su
+       línea de base 17px más arriba: «en» se veía caído entre «visitantes»
+       y «clientes». Con 0,712 lo que la itálica ocupa debajo de la línea de
+       base es lo mismo que ocupa la Schibsted con el 0,98 del titular, y los
+       bordes de abajo vuelven a coincidir. Está calculado para ese 0,98: en
+       un titular con otro interlineado hay que volver a hacer la cuenta.
+    */
+    const serif = parte.mark === "serif";
     parte.text
       .split(" ")
       .filter(Boolean)
@@ -188,9 +212,19 @@ export function SplitHeading({
             key={`w-${p}-${i}`}
             data-mask
             style={indice()}
-            className="inline-block overflow-hidden align-bottom"
+            className={cn(
+              "inline-block overflow-hidden align-bottom",
+              serif && "-mr-[0.12em] pr-[0.12em]",
+            )}
           >
-            <span data-word className="inline-block">
+            <span
+              data-word
+              className={cn(
+                "inline-block",
+                serif &&
+                  "font-serif text-[1.08em] font-normal italic leading-[0.712] tracking-[-0.03em] text-ink-soft",
+              )}
+            >
               {palabra}
             </span>
           </span>,
