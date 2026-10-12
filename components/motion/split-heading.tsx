@@ -15,8 +15,9 @@ import { cn } from "@/lib/cn";
 /**
  * Un tramo del titular. Sin `mark` es texto suelto; con `mark`, va resaltado.
  *
- * `serif` no es una pastilla: son palabras en la itálica de Newsreader, en
- * gris (el titular del hero). Suben palabra por palabra como el texto suelto.
+ * `serif` no es una pastilla: son palabras en la itálica de Newsreader, del
+ * mismo color que el resto (el titular del hero). Suben palabra por palabra
+ * como el texto suelto.
  */
 export type Segment = {
   text: string;
@@ -222,7 +223,7 @@ export function SplitHeading({
               className={cn(
                 "inline-block",
                 serif &&
-                  "font-serif text-[1.08em] font-normal italic leading-[0.712] tracking-[-0.03em] text-ink-soft",
+                  "font-serif text-[1.08em] font-normal italic leading-[0.712] tracking-[-0.03em]",
               )}
             >
               {palabra}

@@ -78,8 +78,8 @@
 }
 
 /*
-   La segunda familia: Newsreader itálica, solo para las palabras en gris del
-   titular del hero («visitantes», «clientes»). Viene del diseño de Claude
+   La segunda familia: Newsreader itálica, solo para las palabras de acento
+   del titular del hero («visitantes», «clientes»). Viene del diseño de Claude
    Design, que la tomaba de Google Fonts.
 
    Es una variable con dos ejes, peso y tamaño óptico, y el archivo de Google
@@ -595,26 +595,16 @@
 
      Antes iba en mayúsculas con tracking abierto, que es exactamente el
      patrón de plantilla que hay en medio internet. Ahora va en caja baja,
-     sin tracking y acompañada de una regla corta del color de la sección:
-     se lee como una entradilla editorial y no como una etiqueta pegada.
+     sin tracking y en el gris del texto secundario: se lee como una
+     entradilla editorial y no como una etiqueta pegada. Tuvo una regla corta
+     adelante y se sacó: con el gris y el peso alcanza para separarla de lo
+     que encabeza, y la rayita era un adorno más compitiendo con el texto.
   */
   .eyebrow {
-    display: flex;
-    align-items: center;
-    gap: 0.7rem;
     font-size: 0.9rem;
     font-weight: 500;
     letter-spacing: -0.01em;
     color: var(--color-ink-soft);
-  }
-
-  .eyebrow::before {
-    content: "";
-    width: 1.75rem;
-    height: 1px;
-    flex: none;
-    background-color: currentColor;
-    opacity: 0.45;
   }
 
   .rule {
