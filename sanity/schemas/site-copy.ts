@@ -148,7 +148,7 @@ export const siteCopy = defineType({
           name: "headline",
           title: "Titular por tramos",
           description:
-            "Cada tramo es una parte del titular. Los que van en itálica salen en la letra de acento, en gris.",
+            "Cada tramo es una parte del titular. Los que van en itálica salen en la letra de acento.",
           type: "array",
           of: [
             {
@@ -162,7 +162,7 @@ export const siteCopy = defineType({
                   options: {
                     list: [
                       { title: "Normal", value: "" },
-                      { title: "Itálica gris", value: "serif" },
+                      { title: "Itálica", value: "serif" },
                     ],
                   },
                 },
