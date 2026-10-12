@@ -373,9 +373,9 @@ debajo de la otra, y en el teléfono todo corre seguido.
   cada cuadro trababa la página casi medio segundo. Si con placa igual va
   lenta, baja la resolución y, si hace falta, se queda quieta. En los tres
   casos el hero se ve igual, con el fondo de bruma.
-- **El titular** lleva dos palabras en la itálica de Newsreader, en gris. Es
-  la única otra letra del sitio y solo se baja en la home. En el Studio son
-  los tramos con estilo «Itálica gris».
+- **El titular** lleva dos palabras en la itálica de Newsreader, en el mismo
+  negro que el resto. Es la única otra letra del sitio y solo se baja en la
+  home. En el Studio son los tramos con estilo «Itálica».
 - **El carrusel** muestra los proyectos con caso escrito, que son los que
   tienen mockups de verdad (hoy 2MG y Tierras Argentinas); cada tarjeta lleva a
   su caso. Usa la imagen para redes del proyecto, o la portada si no tiene.
@@ -532,9 +532,9 @@ CTA), con el margen justo para que el título no quede debajo del header.
   y al alfabeto latino (40 KB), precargada y con un respaldo ajustado a sus
   medidas para que el texto no salte cuando llega la fuente. Si se cambia el
   archivo, hay que subir el `-vN` del nombre: se sirve con caché inmutable.
-  Y una itálica de acento, Newsreader, solo para las palabras en gris del
-  titular del hero: fijada en un peso y un tamaño óptico y recortada al latino
-  (19 KB).
+  Y una itálica de acento, Newsreader, solo para las dos palabras en itálica
+  del titular del hero: fijada en un peso y un tamaño óptico y recortada al
+  latino (19 KB).
 - **Fondo de bruma** (`#eaedf8`) en claro y casi negro en oscuro, con un grano
   muy leve para que no quede plano. El blanco queda para lo que se destaca: las
   tarjetas, la píldora del menú, los botones sobre oscuro.
