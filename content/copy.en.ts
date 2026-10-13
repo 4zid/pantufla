@@ -321,7 +321,7 @@ export const en: SiteCopy = {
     title: "What people ask us before starting.",
     cta: {
       claim: "Still not sure about something?",
-      label: "Book 20 minutes",
+      label: "Book 15 minutes",
       href: "/reunion",
     },
     items: [
@@ -367,11 +367,11 @@ export const en: SiteCopy = {
   meeting: {
     metaTitle: "Book a call",
     metaDescription:
-      "Twenty minutes to clear up your questions and see whether the project fits. Pick a day and the invite lands in your inbox.",
+      "Fifteen minutes to clear up your questions and see whether the project fits. Pick a day and the invite lands in your inbox.",
     eyebrow: "Book",
-    title: "Twenty minutes and you leave knowing.",
+    title: "Fifteen minutes and you leave knowing.",
     lead: "Pick whichever day suits you. The invite arrives by email with the link, and if something comes up you can reschedule from there.",
-    expectTitle: "What happens in those twenty minutes",
+    expectTitle: "What happens in those fifteen minutes",
     expect: [
       {
         title: "You tell us what you need",
