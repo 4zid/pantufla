@@ -1,4 +1,4 @@
-import { NextResponse, type NextRequest } from "next/server";
+import { NextResponse, userAgent, type NextRequest } from "next/server";
 
 import {
   LOCALE_COOKIE,
@@ -56,15 +56,29 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL(`${limpia}${search}`, request.url));
   }
 
+  /*
+     Los buscadores no eligen idioma: cada URL es la página en su idioma y
+     nada más. Googlebot rastrea casi siempre desde Estados Unidos y sin
+     cookie, así que con la detección por país todas las URLs en español le
+     devolvían una redirección a /en: no podía leer ni una página en
+     español, y Search Console las marcaba como «Página con redirección» en
+     vez de indexarlas. El hreflang ya le dice qué URL es de qué idioma.
+
+     Vale también para las vistas previas de los links (WhatsApp, LinkedIn,
+     Slack): un link a la raíz muestra la página en español, que es lo que
+     dice la URL, y no la versión en inglés de un servidor en otro país.
+  */
   const elegido = request.cookies.get(LOCALE_COOKIE)?.value;
   const idioma = isLocale(elegido)
     ? elegido
-    : detectLocale({
-        country:
-          request.headers.get("x-vercel-ip-country") ??
-          request.headers.get("cf-ipcountry"),
-        acceptLanguage: request.headers.get("accept-language"),
-      });
+    : userAgent(request).isBot
+      ? defaultLocale
+      : detectLocale({
+          country:
+            request.headers.get("x-vercel-ip-country") ??
+            request.headers.get("cf-ipcountry"),
+          acceptLanguage: request.headers.get("accept-language"),
+        });
 
   if (idioma === "en") {
     return NextResponse.redirect(
@@ -97,7 +111,9 @@ function conIdioma(request: NextRequest, idioma: string) {
 }
 
 function seguir(request: NextRequest, idioma: string) {
-  return NextResponse.next({ request: { headers: conIdioma(request, idioma) } });
+  return NextResponse.next({
+    request: { headers: conIdioma(request, idioma) },
+  });
 }
 
 export const config = {

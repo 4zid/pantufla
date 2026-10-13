@@ -277,8 +277,10 @@ idioma le falta el campo, el build no pasa.
 Español en la raíz, inglés en `/en`. Las rutas no se traducen: `/reunion` y
 `/en/reunion`. La primera visita elige idioma por el país (el encabezado de
 Vercel) y después por el idioma del navegador; si la persona ya eligió con el
-selector del header, gana su elección, que queda en una cookie. Todo eso pasa en
-`middleware.ts`.
+selector del header, gana su elección, que queda en una cookie. Los buscadores
+y las vistas previas de links no pasan por esa detección: cada URL les muestra su
+idioma, sin redirigir (Google rastrea desde Estados Unidos y, si no, nunca vería
+las páginas en español). Todo eso pasa en `middleware.ts`.
 
 Los enlaces del texto se escriben sin el idioma adelante (`/#planes`,
 `/reunion`) y el sitio les agrega el prefijo que corresponda.

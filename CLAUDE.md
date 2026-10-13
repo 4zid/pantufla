@@ -33,7 +33,7 @@ npx prettier --write <files>   # formatting (Prettier defaults, no config file)
 
 ### Routing and languages
 
-Every page lives under `app/[locale]`. Spanish is served at the root and English under `/en`: `middleware.ts` rewrites unprefixed paths to `/es/...`, redirects any public `/es/...` to the root, and picks a language for first visits from the Vercel country header, then `Accept-Language`, with the language cookie always winning. Route segments stay in Spanish in both languages. Hrefs in copy are written unprefixed and localized with `localeHref` / `useHref`.
+Every page lives under `app/[locale]`. Spanish is served at the root and English under `/en`: `middleware.ts` rewrites unprefixed paths to `/es/...`, redirects any public `/es/...` to the root, and picks a language for first visits from the Vercel country header, then `Accept-Language`, with the language cookie always winning. Crawlers and link-preview bots (`userAgent(request).isBot`) skip that detection and get each URL in its own language with no redirect: Googlebot crawls from the US, and the redirect to `/en` kept it from ever reading a Spanish page. Route segments stay in Spanish in both languages. Hrefs in copy are written unprefixed and localized with `localeHref` / `useHref`.
 
 The `(site)` route group adds the header and footer through `components/site-chrome.tsx`; `/studio` sits outside it and mounts Sanity Studio (`sanity.config.ts`, basePath `/studio`).
 
