@@ -328,7 +328,7 @@ export const es: SiteCopy = {
     title: "Lo que nos preguntan antes de empezar.",
     cta: {
       claim: "¿Te quedó alguna duda?",
-      label: "Agendar 20 minutos",
+      label: "Agendar 15 minutos",
       href: "/reunion",
     },
     items: [
@@ -374,11 +374,11 @@ export const es: SiteCopy = {
   meeting: {
     metaTitle: "Agendar una llamada",
     metaDescription:
-      "Veinte minutos para sacarte las dudas y ver si el proyecto encaja. Elegís el día y te llega la invitación por mail.",
+      "Quince minutos para sacarte las dudas y ver si el proyecto encaja. Elegís el día y te llega la invitación por mail.",
     eyebrow: "Agendar",
-    title: "Veinte minutos y salís sabiendo si te sirve.",
+    title: "Quince minutos y salís sabiendo si te sirve.",
     lead: "Elegí el día que te venga bien. Te llega la invitación con el link por mail, y si después no podés, se reprograma desde ahí mismo.",
-    expectTitle: "Qué pasa en esos veinte minutos",
+    expectTitle: "Qué pasa en esos quince minutos",
     expect: [
       {
         title: "Contás qué necesitás",

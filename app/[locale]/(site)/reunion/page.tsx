@@ -35,7 +35,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
  * columna de texto obliga a scrollear dentro del embed, que es de las peores
  * cosas que le podés hacer a alguien en un teléfono.
  *
- * Arriba tienen otra ventaja: se leen antes de elegir. Nadie reserva veinte
+ * Arriba tienen otra ventaja: se leen antes de elegir. Nadie reserva quince
  * minutos de su semana sin saber qué va a pasar en ellos, y si la respuesta
  * está al costado del calendario llega tarde.
  */
