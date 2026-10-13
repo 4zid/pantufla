@@ -195,12 +195,20 @@ hay que pedirle nada a nadie para reprogramar:
 1. Crear la cuenta en [cal.com](https://cal.com) (el plan gratis alcanza) y
    conectar ahí su Google Calendar. Desde ese momento no se puede reservar
    encima de algo que ya tenga.
-2. Crear un tipo de evento de **20 minutos**.
+2. Crear un tipo de evento de **15 minutos** (el sitio dice «15 minutos» en el
+   botón de las preguntas frecuentes y en `/reunion`; si cambia la duración,
+   hay que cambiar esos textos en el Studio).
 3. En **Limits & buffers** de ese evento, en *booking frequency*, poner `1` y
    elegir `day`. Eso es lo que hace que entre una sola reunión por día: cuando
    alguien reserva, el día queda cerrado para el resto.
-4. Copiar el identificador del link. De `https://cal.com/pantufla/20min` va
-   `pantufla/20min`, y se carga en Vercel como `NEXT_PUBLIC_CAL_LINK`.
+4. Copiar el identificador del link: de
+   `https://cal.com/lautaro-lacaze-wi4kmc/15min` va
+   `lautaro-lacaze-wi4kmc/15min` (si se pega el link entero, el sitio le saca
+   el dominio solo, en `lib/calendario.ts`). Se carga en Vercel como
+   `NEXT_PUBLIC_CAL_LINK`, de tipo **Config** y no Secret: lleva el prefijo
+   `NEXT_PUBLIC_` porque el calendario se arma en el navegador, y Vercel no
+   deja guardar como secreta una variable que el navegador va a ver. No hay
+   nada que esconder: es el mismo link que abre cualquiera para reservar.
 5. En **Settings → Developer → Webhooks**, crear uno que apunte a
    `https://www.pantufla.design/api/reunion`, con los eventos *Booking created*,
    *rescheduled* y *cancelled*, y un secreto generado con
