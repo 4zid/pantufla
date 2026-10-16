@@ -97,22 +97,22 @@ export const pantallasDeRespaldo: Pantalla[] = [
     5,
     "mobile",
     [639, 1404],
-    "El inicio de Kine en el teléfono: pacientes en tratamiento, sesiones de la semana y dolor promedio",
+    "La portada de Kine en el teléfono: «Tus pacientes, ordenados. Su evolución, a la vista.»",
   ),
 
   pantalla(
     "daily",
     1,
     "desktop",
-    [990, 642],
-    "La portada de Daily: «Llegá a cada sesión sabiendo cómo fue la semana de tu paciente.»",
+    [990, 468],
+    "El gráfico de Daily con el placer y el control de cada día de la semana",
   ),
   pantalla(
     "daily",
     2,
     "desktop",
-    [990, 468],
-    "El gráfico de Daily con el placer y el control de cada día de la semana",
+    [990, 555],
+    "El día en Daily: el ánimo del jueves y la reflexión del paciente",
   ),
   pantalla(
     "daily",
