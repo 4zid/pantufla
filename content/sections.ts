@@ -77,6 +77,13 @@ export const SECCIONES: Seccion[] = [
     ancla: "capacidades",
   },
   {
+    id: "lugar",
+    fondo: "claro",
+    titulo: "Pase (banner)",
+    nota: "Es donde aterriza, acostado, el pase que vuela desde la portada, con el formulario de nombre y mail. Va a la mitad de la home para que el vuelo no acompañe la página entera. Apagada, el pase se queda en la portada y no vuela.",
+    ancla: "lugar",
+  },
+  {
     id: "process",
     fondo: "oscuro",
     titulo: "Proceso",
@@ -125,13 +132,6 @@ export const SECCIONES: Seccion[] = [
     titulo: "Formulario de contacto",
     nota: "Es adonde apuntan casi todos los botones del sitio. Apagándola pasan a llevar a la página de reunión, que es el otro camino para escribirnos.",
     ancla: "brief",
-  },
-  {
-    id: "lugar",
-    fondo: "claro",
-    titulo: "Pase (cierre)",
-    nota: "Es donde aterriza el pase que vuela desde la portada. Apagada, el pase se queda en la portada y no vuela.",
-    ancla: "lugar",
   },
 ];
 

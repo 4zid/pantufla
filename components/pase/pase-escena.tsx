@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 
 import { useCopy, useLocale } from "@/components/copy-provider";
 import { GIROS } from "@/components/pase/pase-lugar";
-import type { ControlPase } from "@/components/pase/pase-3d";
+import type { ControlPase, SelloPase } from "@/components/pase/pase-3d";
 import { usePase } from "@/lib/pase";
 
 /**
@@ -56,7 +56,7 @@ function sePuede(): { si: boolean; forzado: boolean } {
  * pedido no arranca y quedan las imágenes.
  *
  * `volar` lo decide la home: hace falta el lugar de la portada y el del
- * cierre. Igual en el teléfono no vuela: ahí el pase se queda en el lugar que
+ * banner. Igual en el teléfono no vuela: ahí el pase se queda en el lugar que
  * se ve, porque volando taparía media pantalla de texto.
  */
 export function PaseEscena({ volar }: { volar: boolean }) {
@@ -65,11 +65,14 @@ export function PaseEscena({ volar }: { volar: boolean }) {
   const estado = usePase();
   const lienzo = useRef<HTMLCanvasElement>(null);
   const control = useRef<ControlPase | null>(null);
-  const sello = useRef<string | null>(null);
+  const sello = useRef<SelloPase | null>(null);
   const [activo, setActivo] = useState(false);
   const [vuelta, setVuelta] = useState(0);
 
-  sello.current = estado.fase === "reservado" ? estado.email : null;
+  sello.current =
+    estado.fase === "reservado"
+      ? { email: estado.email, nombre: estado.nombre }
+      : null;
 
   useEffect(() => {
     const reducido = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -111,8 +114,8 @@ export function PaseEscena({ volar }: { volar: boolean }) {
         if (!vivo) return;
         const ctl = await montarPase({
           canvas,
-          lugares: { hero: lugar("hero"), cierre: lugar("cierre") },
-          zonas: { hero: zona("hero"), cierre: zona("cierre") },
+          lugares: { hero: lugar("hero"), banner: lugar("banner") },
+          zonas: { hero: zona("hero"), banner: zona("banner") },
           idioma: locale,
           volar: volar && window.matchMedia("(min-width: 768px)").matches,
           textos: { titular: pase.titular, reservado: pase.reservado },
@@ -153,7 +156,11 @@ export function PaseEscena({ volar }: { volar: boolean }) {
   }, [locale, volar, pase.titular, pase.reservado, vuelta]);
 
   useEffect(() => {
-    control.current?.sellar(estado.fase === "reservado" ? estado.email : null);
+    control.current?.sellar(
+      estado.fase === "reservado"
+        ? { email: estado.email, nombre: estado.nombre }
+        : null,
+    );
   }, [estado]);
 
   return (

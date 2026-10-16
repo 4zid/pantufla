@@ -80,17 +80,23 @@ export const es: SiteCopy = {
     },
     titular: "Titular",
     reservado: "Reservado",
+    nombre: {
+      label: "Tu nombre",
+      placeholder: "Cómo te llamás",
+      missing: "Falta tu nombre.",
+    },
   },
 
   lugar: {
     eyebrow: "Próximo cupo",
-    title: "Guardate un lugar en la agenda.",
-    lead: "Tomamos pocos proyectos por mes para hacerlos enteros nosotros. Dejá tu mail y te escribimos primero cuando se libere el próximo cupo, antes de anunciarlo.",
+    title: "El próximo lugar es tuyo.",
+    lead: "Tomamos pocos proyectos por mes para hacerlos enteros nosotros. Dejanos tu nombre y tu mail y te escribimos primero cuando se libere un cupo, antes de anunciarlo.",
     points: [
       "Te avisamos antes que a nadie.",
       "Un solo mail: no es un newsletter.",
       "Sin compromiso. Si no te sirve, lo dejás pasar.",
     ],
+    hueco: "Tu pase va acá",
   },
 
   socialProof: {

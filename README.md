@@ -312,14 +312,14 @@ dice sale como viene de fábrica: prendida, salvo el stack.
 | 3 | Cómo lo resolvemos | `#metodo` | claro |
 | 4 | Proyectos | `#proyectos` | oscuro |
 | 5 | Capacidades (bento) | `#capacidades` | claro |
-| 6 | Proceso | `#proceso` | oscuro |
-| 7 | Con qué está hecho | `#stack` | claro, **apagada** |
-| 8 | Planes | `#planes` | claro |
-| 9 | Testimonios | `#testimonios` | claro |
-| 10 | Mapa de clientes | `#clientes` | claro |
-| 11 | Preguntas frecuentes | `#faq` | claro |
-| 12 | Formulario | `#brief` | oscuro |
-| 13 | Pase (cierre) | `#lugar` | claro |
+| 6 | Pase (banner) | `#lugar` | claro |
+| 7 | Proceso | `#proceso` | oscuro |
+| 8 | Con qué está hecho | `#stack` | claro, **apagada** |
+| 9 | Planes | `#planes` | claro |
+| 10 | Testimonios | `#testimonios` | claro |
+| 11 | Mapa de clientes | `#clientes` | claro |
+| 12 | Preguntas frecuentes | `#faq` | claro |
+| 13 | Formulario | `#brief` | oscuro |
 
 El recorrido sigue **promesa → prueba → qué incluye → cómo → precio →
 objeciones → contacto**:
@@ -347,6 +347,16 @@ objeciones → contacto**:
   se pueden sostener: el objetivo de carga es de menos de dos segundos en un
   teléfono, y la viñeta de la IA muestra lo que puede contestar, no lo que
   contesta seguro.
+- **Pase (banner).** A la mitad de la home, después de ver el trabajo y lo
+  que incluye: el camino corto, nombre y mail para guardarse un lugar en el
+  próximo cupo. La sección está armada alrededor de un hueco: una tarjeta en
+  la tinta del tema con una tira de cupones punteados, y al del medio le
+  falta el suyo. El hueco tiene la forma exacta del pase acostado —las
+  esquinas y dos pestañas que entran en las muescas del talón—, una línea de
+  corte con su tijera y un halo de los colores del pase. El pase que vino
+  volando desde la portada se acuesta y calza ahí, como la pieza que faltaba.
+  Antes era la última sección y el pase acompañaba la página entera, que era
+  demasiado.
 - **Proceso.** Cuatro etapas, cada una con fecha: quince días hábiles un
   Sitio, una semana una Landing. El riel que las une lleva
   los cuatro colores del bento en el mismo orden y llega a cada número con su
@@ -368,10 +378,6 @@ objeciones → contacto**:
   calendario no esté conectado.
 - **Formulario.** El brief: plan, presupuesto y plazo van en desplegables
   propios del sitio, no en el `<select>` del sistema.
-- **Pase (cierre).** La última sección, después del brief: el camino corto
-  para quien llegó al final sin escribirlo. Deja solo el mail y se guarda un
-  lugar para el próximo cupo. Ahí aterriza el pase que vino volando desde la
-  portada.
 
 El toggle de precios no es mensual/anual, porque el estudio no vende una
 suscripción. Ofrece **pago único con 15% de descuento** contra **dos pagos de
@@ -399,19 +405,25 @@ seguido.
 - **El vuelo.** Cuando el pase de la portada llega arriba de la pantalla, se
   despega curvándose, se achica y acompaña el scroll cruzando la página de un
   costado al otro en el tercio de abajo de la ventana, dando vueltas (a mitad
-  de cada cruce se ve el dorso). Antes de la última sección baja, crece y se
-  apoya exactamente en el lugar de ahí. Lo mueven el scroll y el puntero:
-  cuando el papel se asienta, deja de dibujar. Si alguien está escribiendo su
-  mail, el pase se queda en ese lugar. En el teléfono no vuela: se queda en el
-  lugar que se ve. Con movimiento reducido, sin placa de video o sin
-  JavaScript se ve la imagen del pase, quieta.
-- **El formulario** va debajo del pase, no adentro: un campo tiene que
-  quedarse quieto para que alguien escriba. El mail va a `/api/lugar`, que lo
-  guarda en el Studio como *Lugar reservado* (una sola fila por mail) y avisa
-  por mail con las mismas variables de Resend que el brief. Al reservar, el
-  pase imprime el mail en su cara con la etiqueta «Reservado», y el navegador
-  lo recuerda: quien vuelve ve su pase con su mail, y un enlace para usar
-  otro. Los textos del formulario están en el Studio, en *Pase*.
+  de cada cruce se ve el dorso). Al llegar al banner de la mitad de la home
+  baja, se acuesta un cuarto de vuelta, crece y calza exactamente en el hueco
+  de ahí (llega cuando el hueco está en el medio de la pantalla). Lo mueven el
+  scroll y el puntero: cuando el papel se asienta, deja de dibujar. Si alguien
+  está escribiendo en uno de los formularios, el pase se queda en ese lugar.
+  En el teléfono no vuela: se queda en el lugar que se ve, también acostado en
+  el banner. Con movimiento reducido, sin placa de video o sin JavaScript se
+  ve la imagen del pase, quieta, en los dos lugares.
+- **Los formularios** van debajo del pase, no adentro: un campo tiene que
+  quedarse quieto para que alguien escriba. El de la portada pide el mail
+  solo; el del banner, nombre y mail. Van a `/api/lugar`, que los guarda en
+  el Studio como *Lugar reservado* (una sola fila por mail; si alguien dejó
+  primero el mail solo y después vuelve con su nombre, el nombre se suma) y
+  avisa por mail con las mismas variables de Resend que el brief. Al
+  reservar, el pase imprime en su cara el nombre (y el mail abajo, en chico)
+  con la etiqueta «Reservado», y el navegador lo recuerda: quien vuelve ve su
+  pase con sus datos, y un enlace para usar otro mail. Reservar en uno deja
+  reservado al otro. Los textos de los formularios están en el Studio, en
+  *Pase*; los del banner, en *Banner del pase*.
 - **El dibujo del pase** son imágenes en `public/pase` (la cara en español y
   en inglés, el dorso y un mapa de qué es holográfico, satinado o mate). Se
   generan con `node scripts/generar-pase.mjs`, que las dibuja en HTML: para

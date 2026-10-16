@@ -125,7 +125,7 @@ export default async function HomePage({
         <Fragment key={id}>{piezas[id](superficie(fondos[id]))}</Fragment>
       ))}
 
-      {/* El pase 3D. Vuela de la portada al cierre si están los dos lugares;
+      {/* El pase 3D. Vuela de la portada al banner si están los dos lugares;
           con uno solo se queda quieto en ese. */}
       {secciones.hero || secciones.lugar ? (
         <PaseEscena volar={secciones.hero && secciones.lugar} />

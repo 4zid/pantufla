@@ -6,7 +6,8 @@ import { z } from "zod";
 import { getWriteClient } from "@/sanity/client";
 
 /**
- * Recibe el mail del pase: alguien que quiere su lugar en la agenda.
+ * Recibe el pase: alguien que quiere su lugar en la agenda. Desde la portada
+ * deja el mail solo; desde el banner de la mitad de la home, nombre y mail.
  *
  * Sigue el camino del brief (api/brief): se guarda en Sanity, para que quede
  * en el Studio como «Lugar reservado», y se avisa por mail con las mismas
@@ -17,7 +18,8 @@ import { getWriteClient } from "@/sanity/client";
 
 const esquema = z.object({
   email: z.email("Revisá el mail").max(200),
-  origen: z.enum(["hero", "cierre"]).catch("hero"),
+  nombre: z.string().trim().max(80).optional(),
+  origen: z.enum(["hero", "banner"]).catch("hero"),
   idioma: z.enum(["es", "en"]).catch("es"),
   /** Campo trampa, como en el brief: las personas no lo ven. */
   website: z.string().optional(),
@@ -48,6 +50,7 @@ export async function POST(request: Request) {
   }
 
   const { website, email, origen, idioma } = parsed.data;
+  const nombre = parsed.data.nombre || undefined;
   // Trampa activada: OK para no darle pistas al bot.
   if (website) return NextResponse.json({ ok: true });
 
@@ -61,6 +64,10 @@ export async function POST(request: Request) {
      createIfNotExists queda la primera, que es la que dice desde cuándo
      espera. Va con hash y no con el mail a la vista porque los ids de Sanity
      solo aceptan letras, números, puntos, guiones y guiones bajos.
+
+     El nombre es la excepción: si la primera vez dejó solo el mail (desde la
+     portada) y después vuelve con su nombre (desde el banner), se suma, sin
+     pisar uno que ya estuviera.
   */
   const id = `lugar.${createHash("sha256")
     .update(email.toLowerCase())
@@ -74,10 +81,14 @@ export async function POST(request: Request) {
         _id: id,
         _type: "lugar",
         email,
+        ...(nombre ? { nombre } : {}),
         origen,
         idioma,
         receivedAt,
       });
+      if (nombre) {
+        await writeClient.patch(id).setIfMissing({ nombre }).commit();
+      }
       stored = true;
     } catch (error) {
       console.error("[lugar] no se pudo guardar en Sanity:", error);
@@ -96,14 +107,17 @@ export async function POST(request: Request) {
         from,
         to,
         replyTo: email,
-        subject: `Lugar reservado — ${email}`,
+        subject: `Lugar reservado — ${nombre ?? email}`,
         html: `
           <div style="font-family:-apple-system,Segoe UI,Roboto,sans-serif;color:#17150f;max-width:560px">
             <h2 style="margin:0 0 12px;font-size:20px">Alguien reservó su lugar</h2>
-            <p style="margin:0 0 16px;font-size:14px;line-height:1.6">Dejó el mail en el pase ${
-              origen === "cierre" ? "del final de la home" : "de la portada"
+            <p style="margin:0 0 16px;font-size:14px;line-height:1.6">Dejó sus datos en el pase ${
+              origen === "banner"
+                ? "del banner de la mitad de la home"
+                : "de la portada"
             } y quiere que le escriban cuando se abra el próximo cupo.</p>
-            <p style="margin:0;font-size:16px;font-weight:600">${escapeHtml(email)}</p>
+            ${nombre ? `<p style="margin:0 0 4px;font-size:16px;font-weight:600">${escapeHtml(nombre)}</p>` : ""}
+            <p style="margin:0;font-size:${nombre ? "14px;color:#4a463d" : "16px;font-weight:600"}">${escapeHtml(email)}</p>
             <p style="margin:16px 0 0;color:#8d8779;font-size:13px">Idioma: ${idioma}</p>
           </div>
         `,

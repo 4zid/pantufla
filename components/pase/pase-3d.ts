@@ -42,12 +42,12 @@ import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
  * apagan y el resorte del lugar se endurece: queda plano y quieto, donde
  * está su lugar en la página.
  *
- * El recorrido sale de la portada y llega al cierre, y en el camino se transforma:
- * se achica al despegar, da vueltas sobre sí mismo mostrando el dorso, se
- * inclina hacia donde va y crece de nuevo al aterrizar en el lugar del
- * cierre. Todo sale de la posición del scroll; el papel solo sigue
- * moviéndose lo que tarda en asentarse, y después la escena se duerme y deja
- * de dibujar.
+ * El recorrido sale de la portada y llega al banner de la mitad de la home,
+ * y en el camino se transforma: se achica al despegar, da vueltas sobre sí
+ * mismo mostrando el dorso, se inclina hacia donde va y, al bajar, se acuesta
+ * y crece hasta calzar en el hueco del banner. Todo sale de la posición del
+ * scroll; el papel solo sigue moviéndose lo que tarda en asentarse, y
+ * después la escena se duerme y deja de dibujar.
  *
  * Coordenadas: una unidad del mundo es un píxel CSS, el origen es el centro
  * de la ventana y la y crece hacia arriba. La cámara está a la distancia
@@ -55,7 +55,12 @@ import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
  * z = 0 cae exactamente sobre el rectángulo de su lugar en la página.
  */
 
-export type LugarPase = "hero" | "cierre";
+export type LugarPase = "hero" | "banner";
+
+const LUGARES: LugarPase[] = ["hero", "banner"];
+
+/** Lo que el pase imprime en su cara al reservar. */
+export type SelloPase = { email: string; nombre?: string };
 
 export type TextosPase = {
   titular: string;
@@ -74,7 +79,11 @@ export type OpcionesPase = {
   /** Si vuela de un lugar al otro. Si no, se queda en el que se ve. */
   volar: boolean;
   textos: TextosPase;
-  /** Inclinación de reposo de cada lugar, en grados. */
+  /**
+   * Inclinación de reposo de cada lugar, en grados de CSS (positivo es el
+   * sentido de las agujas del reloj), los mismos que usa la imagen de
+   * respaldo. Un lugar más ancho que alto es un pase acostado: -90.
+   */
   giros: Record<LugarPase, number>;
   /**
    * Si los cuadros caros lo apagan. Se apaga en las pruebas forzadas con
@@ -86,7 +95,7 @@ export type OpcionesPase = {
 };
 
 export type ControlPase = {
-  sellar: (email: string | null) => void;
+  sellar: (sello: SelloPase | null) => void;
   destruir: () => void;
 };
 
@@ -262,7 +271,7 @@ export async function montarPase(o: OpcionesPase): Promise<ControlPase> {
   texCapas.colorSpace = NoColorSpace;
   texCapas.needsUpdate = true;
 
-  let sello: string | null = null;
+  let sello: SelloPase | null = null;
   const dibujarCara = async () => {
     pincel.clearRect(0, 0, TEX_W, TEX_H);
     pincel.drawImage(cara, 0, 0, TEX_W, TEX_H);
@@ -288,15 +297,27 @@ export async function montarPase(o: OpcionesPase): Promise<ControlPase> {
       pincel.fill();
       pincel.fillStyle = "#fffdf9";
       pincel.fillText(etiqueta, x + w - 44 - ancho + 22, y + 76);
-      // El mail, tan grande como entre en el panel.
+      // Lo principal, tan grande como entre en el panel: el nombre si lo
+      // dejó, y si no el mail. Con nombre, el mail va chico abajo.
+      const principal = sello.nombre || sello.email;
       pincel.letterSpacing = "-2px";
       pincel.fillStyle = "#121212";
       let tam = 84;
       do {
         pincel.font = `600 ${tam}px "Schibsted Grotesk", sans-serif`;
         tam -= 4;
-      } while (pincel.measureText(sello).width > w - 112 && tam > 30);
-      pincel.fillText(sello, x + 56, y + 200);
+      } while (pincel.measureText(principal).width > w - 112 && tam > 30);
+      pincel.fillText(principal, x + 56, y + (sello.nombre ? 178 : 200));
+      if (sello.nombre) {
+        pincel.letterSpacing = "0px";
+        pincel.fillStyle = "#565656";
+        tam = 34;
+        do {
+          pincel.font = `500 ${tam}px "Schibsted Grotesk", sans-serif`;
+          tam -= 2;
+        } while (pincel.measureText(sello.email).width > w - 112 && tam > 20);
+        pincel.fillText(sello.email, x + 56, y + 244);
+      }
       pincel.letterSpacing = "0px";
     }
     texCara.needsUpdate = true;
@@ -399,7 +420,9 @@ export async function montarPase(o: OpcionesPase): Promise<ControlPase> {
 
   /* Las medidas de la página. Se toman al arrancar y cuando algo cambia de
      tamaño, nunca en cada cuadro. */
-  type Caja = { x: number; y: number; w: number; h: number };
+  /* acostado: el lugar es más ancho que alto, así que el pase se apoya
+     girado un cuarto de vuelta y su ancho es el alto del lugar. */
+  type Caja = { x: number; y: number; w: number; h: number; acostado: boolean };
   const cajas: Partial<Record<LugarPase, Caja>> = {};
   let vw = window.innerWidth;
   let vh = window.innerHeight;
@@ -409,7 +432,7 @@ export async function montarPase(o: OpcionesPase): Promise<ControlPase> {
     vw = window.innerWidth;
     vh = window.innerHeight;
     const sy = window.scrollY;
-    for (const lugar of ["hero", "cierre"] as LugarPase[]) {
+    for (const lugar of LUGARES) {
       const el = o.lugares[lugar];
       if (!el) continue;
       const r = el.getBoundingClientRect();
@@ -418,15 +441,19 @@ export async function montarPase(o: OpcionesPase): Promise<ControlPase> {
         y: r.top + sy + r.height / 2,
         w: r.width,
         h: r.height,
+        acostado: r.width > r.height,
       };
     }
     maxScroll = Math.max(
       0,
       document.documentElement.scrollHeight - window.innerHeight,
     );
-    const base = cajas.hero ?? cajas.cierre;
-    if (base && Math.abs(base.w - W0) > 0.5) {
-      W0 = base.w;
+    // El tamaño de reposo es el del pase de la portada; sin portada, el del
+    // banner, que acostado mide de ancho lo que su lugar de alto.
+    const base = cajas.hero ?? cajas.banner;
+    const ancho = base ? (base.acostado ? base.h : base.w) : 0;
+    if (base && Math.abs(ancho - W0) > 0.5) {
+      W0 = ancho;
       H0 = W0 * (1000 / 640);
       armarReposo();
       armarResortes();
@@ -446,17 +473,19 @@ export async function montarPase(o: OpcionesPase): Promise<ControlPase> {
     return {
       x: c.x,
       y: c.y - sy,
-      s: c.w / W0,
+      s: (c.acostado ? c.h : c.w) / W0,
       rx: 0,
       ry: 0,
-      rz: o.giros[lugar] * RAD,
+      // CSS gira a favor de las agujas y acá la y crece hacia arriba: el
+      // mismo giro va con el signo dado vuelta.
+      rz: -o.giros[lugar] * RAD,
       apoyo: 1,
     };
   };
 
   const etapas = () => {
     const a = cajas.hero!;
-    const b = cajas.cierre!;
+    const b = cajas.banner!;
     const salida = Math.max(0, a.y - vh * 0.15);
     const despegue = salida + vh * 0.6;
     const llegada = Math.min(b.y - vh * 0.5, maxScroll - 1);
@@ -485,14 +514,14 @@ export async function montarPase(o: OpcionesPase): Promise<ControlPase> {
 
   const pose = (sy: number): Pose | null => {
     const activo = document.activeElement;
-    for (const lugar of ["hero", "cierre"] as LugarPase[]) {
+    for (const lugar of LUGARES) {
       if (activo && o.zonas[lugar]?.contains(activo)) {
         return apoyado(lugar, sy);
       }
     }
-    if (!o.volar || !cajas.hero || !cajas.cierre) {
+    if (!o.volar || !cajas.hero || !cajas.banner) {
       // Sin vuelo: el pase se queda en el lugar que se ve.
-      for (const lugar of ["hero", "cierre"] as LugarPase[]) {
+      for (const lugar of LUGARES) {
         const c = cajas[lugar];
         if (!c) continue;
         const arriba = c.y - c.h / 2 - sy;
@@ -502,7 +531,7 @@ export async function montarPase(o: OpcionesPase): Promise<ControlPase> {
     }
     const e = etapas();
     if (sy < e.salida) return apoyado("hero", sy);
-    if (sy >= e.llegada) return apoyado("cierre", sy);
+    if (sy >= e.llegada) return apoyado("banner", sy);
     if (sy < e.despegue) {
       const t = suave((sy - e.salida) / (e.despegue - e.salida));
       return mezclar(apoyado("hero", sy)!, seguir(sy, e), t);
@@ -512,7 +541,7 @@ export async function montarPase(o: OpcionesPase): Promise<ControlPase> {
       acotar((sy - e.descenso) / Math.max(1, e.llegada - e.descenso)),
     );
     const desde = seguir(sy, e);
-    const hasta = apoyado("cierre", sy)!;
+    const hasta = apoyado("banner", sy)!;
     // Que termine de frente: la vuelta más cercana, no volver a cero.
     hasta.ry = Math.round(desde.ry / (2 * Math.PI)) * 2 * Math.PI;
     const p = mezclar(desde, hasta, t);
@@ -538,7 +567,7 @@ export async function montarPase(o: OpcionesPase): Promise<ControlPase> {
     despertar();
   };
   const oyentes: [HTMLElement, string, EventListener][] = [];
-  for (const lugar of ["hero", "cierre"] as LugarPase[]) {
+  for (const lugar of LUGARES) {
     const el = o.lugares[lugar];
     if (!el) continue;
     const mover = alMover(lugar) as EventListener;
@@ -606,8 +635,20 @@ export async function montarPase(o: OpcionesPase): Promise<ControlPase> {
     const pasos = Math.min(3, Math.max(1, Math.round(dtCuadro / PASO)));
     const viento = 1 - apoyo;
     const pk = puntero && apoyo > 0.5 ? puntero : null;
-    const px = pk ? (pk.u - 0.5) * W0 : 0;
-    const py = pk ? (0.5 - pk.v) * H0 : 0;
+    /* Dónde hunde el dedo, en las medidas del pase sin girar: el puntero se
+       mide sobre el lugar en la pantalla, y en el banner el pase está
+       acostado, así que hay que deshacer el giro. */
+    let px = 0;
+    let py = 0;
+    const cp = pk ? cajas[pk.lugar] : undefined;
+    if (pk && cp) {
+      const sx = (pk.u - 0.5) * cp.w;
+      const sy = (0.5 - pk.v) * cp.h;
+      const cos = Math.cos(p.rz);
+      const sin = Math.sin(p.rz);
+      px = (cos * sx + sin * sy) / p.s;
+      py = (-sin * sx + cos * sy) / p.s;
+    }
     const radio = W0 * 0.42;
 
     for (let s = 0; s < pasos; s++) {
@@ -788,9 +829,11 @@ export async function montarPase(o: OpcionesPase): Promise<ControlPase> {
   medir();
 
   return {
-    sellar: (email) => {
-      if (email === sello) return;
-      sello = email;
+    sellar: (nuevo) => {
+      if (nuevo?.email === sello?.email && nuevo?.nombre === sello?.nombre) {
+        return;
+      }
+      sello = nuevo;
       void dibujarCara();
     },
     destruir: () => {
