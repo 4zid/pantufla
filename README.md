@@ -244,7 +244,7 @@ Casi todo se edita en `/studio`, sin tocar código:
 | Qué secciones de la home se muestran y si van en claro u oscuro | Studio → *Secciones de la home* |
 | Todo el texto del sitio: titulares, planes y precios, proceso, preguntas frecuentes, formulario | Studio → *Textos del sitio (ES)* y *(EN)* |
 | Proyectos y testimonios | Studio → *Proyectos*, *Testimonios* |
-| Las pantallas que corren abajo del hero | Studio → *Pantallas del hero* (vacío, salen las de relleno de `content/hero-galeria.ts`) |
+| Las pantallas que corren abajo del hero | Studio → *Proyectos* → cada proyecto, en *Pantallas para la portada* |
 | Briefs, reuniones y lugares reservados que llegan | Studio → *Briefs recibidos*, *Reuniones agendadas*, *Lugares reservados* (solo lectura) |
 | Texto de respaldo, si el Studio no tiene nada cargado | `content/copy.es.ts` y `content/copy.en.ts` |
 | Colores, íconos y números de cada bloque, celdas del bento | `content/site.ts` |
@@ -338,6 +338,9 @@ objeciones → contacto**:
   precio. Iba después de los planes, a la mitad de la página en el teléfono, y
   quien quería ver qué hace el estudio tenía que pasar por todo lo demás.
   Los que tienen el caso escrito suman «Leer el caso» (ver *Los proyectos*).
+  Van en el orden del campo *Orden* de cada proyecto: los cuatro primeros, los
+  principales, son Kine, Daily, Tierras Argentinas y 2MG. El mismo orden manda
+  en la galería del hero.
 - **Capacidades.** Un bento de cuatro celdas, cada una con su viñeta animada:
   velocidad de carga, que te encuentren (también en asistentes de IA), el
   sitio en el teléfono, y las consultas que llegan. Las promesas son las que
@@ -414,15 +417,30 @@ seguido.
   generan con `node scripts/generar-pase.mjs`, que las dibuja en HTML: para
   cambiar un texto o un color del pase se edita ese archivo y se vuelve a
   correr.
-- **La galería** son capturas de sitios, de escritorio y de teléfono, en
-  columnas tipo masonry: dos de escritorio apiladas, un teléfono de alto
+- **La galería** son capturas de los proyectos, de escritorio y de teléfono,
+  en columnas tipo masonry: dos de escritorio apiladas, un teléfono de alto
   entero, o una de escritorio grande cuando queda sola antes de un teléfono.
-  Corre como los otros rieles y se frena igual. Las capturas se cargan en el
-  Studio, en *Pantallas del hero*: el orden arma las columnas, cada una dice si
-  es de escritorio o de teléfono, y si se le asigna un proyecto con caso
-  escrito, la pantalla lleva al caso. Mientras el documento está vacío salen
-  unas de relleno (sitios inventados, en `public/hero/pantallas`); apenas hay
-  una real, se usan solo las del Studio.
+  Corre como los otros rieles y se frena igual. **Se arma sola**: no tiene
+  lista propia, son las pantallas que cada proyecto carga en el Studio, en
+  *Pantallas para la portada*, una atrás de la otra en el orden de los
+  proyectos. Para sumar un proyecto a la galería alcanza con cargarle
+  pantallas; para sacarlo, con borrárselas.
+  - Cada pantalla es una captura suelta, **sin marco**: el navegador y el
+    teléfono los dibuja la galería. Dice si es de escritorio o de teléfono y
+    qué se ve (para quien no ve la imagen).
+  - El orden dentro del proyecto arma sus columnas: dos de escritorio
+    seguidas van apiladas, y una de escritorio sola antes de un teléfono va
+    grande. Las columnas no mezclan proyectos.
+  - Cada columna toma el ancho que piden sus capturas, así se ven enteras:
+    una captura de escritorio de proporción común (16:10, 16:9) entra justa;
+    una muy rara se recorta. Los teléfonos miden todos lo mismo; una captura
+    de teléfono más corta que la pantalla se recorta abajo.
+  - Si el proyecto tiene el caso escrito, sus pantallas llevan al caso.
+  - Si ningún proyecto tiene pantallas, o Sanity no contesta, salen las del
+    respaldo (`content/hero-galeria.ts`, archivos en `public/hero/pantallas`),
+    que son las mismas capturas de Kine, Daily, Tierras Argentinas y 2MG.
+    Las tres primeras salen de sus HTML de Claude Design, recortadas pantalla
+    por pantalla; las de 2MG, de sus mockups en `assets/proyectos/2mg`.
 - **La barra de arriba**, en el tope de la página, no tiene fondo: el logo, el
   menú en su pastilla de vidrio y los botones flotan con el mismo margen que el
   hero. Al bajar se arma la barra compacta de siempre.
