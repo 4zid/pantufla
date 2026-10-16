@@ -129,8 +129,8 @@ export const SECCIONES: Seccion[] = [
   {
     id: "lugar",
     fondo: "claro",
-    titulo: "Boleto dorado (cierre)",
-    nota: "Es donde aterriza el boleto que vuela desde la portada. Apagada, el boleto de la portada se queda quieto en su lugar y no vuela.",
+    titulo: "Pase (cierre)",
+    nota: "Es donde aterriza el pase que vuela desde la portada. Apagada, el pase se queda en la portada y no vuela.",
     ancla: "lugar",
   },
 ];

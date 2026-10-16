@@ -184,35 +184,22 @@ export const siteCopy = defineType({
       ],
     }),
 
-    /* --- Boleto dorado --- */
+    /* --- Pase --- */
     defineField({
-      name: "boleto",
-      title: "Boleto dorado",
+      name: "pase",
+      title: "Pase",
       description:
-        "El boleto de la portada, el que vuela con el scroll y el que aterriza al final son el mismo: estos textos van en los tres.",
+        "El pase de la portada, el que vuela con el scroll y el del cierre son el mismo. El dibujo es una imagen; acá van los textos del formulario y lo que el pase imprime al reservar.",
       type: "object",
       options: { collapsible: true, collapsed: true },
       fields: [
         defineField({
-          name: "kicker",
-          title: "Arriba a la izquierda",
+          name: "alt",
+          title: "Qué muestra el pase",
           type: "string",
+          description: "Para quien no ve la imagen.",
         }),
-        defineField({
-          name: "serial",
-          title: "Número de serie",
-          type: "string",
-          description: "Es de adorno: el mismo para todos.",
-        }),
-        defineField({ name: "title", title: "Título", type: "string" }),
-        defineField({
-          name: "titleAccent",
-          title: "Título, parte en itálica",
-          type: "string",
-          description: "Va pegada después del título, en la letra de acento.",
-        }),
-        texto("body", "Bajada"),
-        defineField({ name: "stub", title: "Texto del talón", type: "string" }),
+        texto("body", "Línea de arriba del formulario"),
         defineField({
           name: "label",
           title: "Etiqueta del campo",
@@ -259,6 +246,19 @@ export const siteCopy = defineType({
               type: "string",
             }),
           ],
+        }),
+        defineField({
+          name: "titular",
+          title: "Etiqueta del panel",
+          type: "string",
+          description:
+            "Lo que el pase imprime arriba del mail cuando se reserva.",
+        }),
+        defineField({
+          name: "reservado",
+          title: "Estado al reservar",
+          type: "string",
+          description: "La etiqueta que el pase imprime al lado del mail.",
         }),
       ],
     }),
@@ -904,10 +904,10 @@ export const siteCopy = defineType({
       ],
     }),
 
-    /* --- Último lugar: donde aterriza el boleto --- */
+    /* --- Último lugar: donde aterriza el pase --- */
     defineField({
       name: "lugar",
-      title: "Cierre del boleto",
+      title: "Cierre del pase",
       description: "La última sección de la home, después del formulario.",
       type: "object",
       options: { collapsible: true, collapsed: true },

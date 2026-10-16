@@ -24,7 +24,7 @@ export const entra = (s: number) => ({ "--entra": `${s}s` }) as CSSProperties;
  *
  * El titular tiene un tope en em y no en píxeles para que corte siempre en
  * el mismo lugar con el tamaño que sea. «Sitios que convierten» mide 9,2em:
- * con el tope de 84px entra en una línea al lado del boleto a 1440, y el
+ * con el tope de 84px entra en una línea al lado del pase a 1440, y el
  * titular queda en dos («Sitios que convierten / visitantes en clientes.»),
  * que deja ver más de la galería sin scrollear. Más angosto pasa a tres.
  * Con balance, en el teléfono reparte las líneas parejas en vez de dejar una

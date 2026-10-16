@@ -67,23 +67,18 @@ export type SiteCopy = {
     gallery: string;
   };
   /**
-   * El boleto dorado: el del hero, el que vuela con el scroll y el que
-   * aterriza en la última sección son el mismo, con estos textos.
+   * El pase: el de la portada, el que vuela con el scroll y el del cierre son
+   * el mismo. El dibujo es una imagen (public/pase); acá van los textos del
+   * formulario de abajo y lo que el pase imprime en su cara cuando se reserva.
    *
    * Reserva un lugar en la agenda: quien deja el mail pide que le escriban
    * primero cuando se abra el próximo cupo.
    */
-  boleto: {
-    /** Arriba a la izquierda, en versalitas. */
-    kicker: string;
-    /** El número de serie de adorno, arriba a la derecha. */
-    serial: string;
-    /** El título va en dos partes: la segunda sale en la itálica. */
-    title: string;
-    titleAccent: string;
+  pase: {
+    /** Lo que muestra el dibujo, para quien no lo ve. */
+    alt: string;
+    /** La línea de arriba del formulario. */
     body: string;
-    /** El talón: el texto vertical del costado. */
-    stub: string;
     label: string;
     placeholder: string;
     submit: string;
@@ -100,8 +95,12 @@ export type SiteCopy = {
       body: string;
       reset: string;
     };
+    /** La etiqueta del panel del pase, arriba del mail impreso. */
+    titular: string;
+    /** El estado que imprime al lado del mail. */
+    reservado: string;
   };
-  /** La última sección de la home, donde aterriza el boleto. */
+  /** La última sección de la home, donde aterriza el pase. */
   lugar: {
     eyebrow: string;
     title: string;

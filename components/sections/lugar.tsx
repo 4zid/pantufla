@@ -1,23 +1,24 @@
 "use client";
 
-import { BoletoDorado } from "@/components/boleto/boleto-dorado";
 import { useCopy } from "@/components/copy-provider";
 import { Reveal } from "@/components/motion/reveal";
 import { SplitHeading } from "@/components/motion/split-heading";
 import { CheckIcon } from "@/components/ui/icons";
 import { Section, type Surface } from "@/components/ui/section";
 import { Tag } from "@/components/ui/tag";
+import { PaseFormulario } from "@/components/pase/pase-formulario";
+import { PaseLugar } from "@/components/pase/pase-lugar";
 
 /**
- * La última sección de la home: donde aterriza el boleto dorado.
+ * La última sección de la home: donde aterriza el pase.
  *
  * Va después del formulario de brief y es el otro camino, el corto: quien
  * llegó hasta el final sin escribir el brief puede dejar solo el mail y
- * guardarse un lugar en la agenda. El boleto que lo acompañó volando desde la
- * portada (boleto-vuelo.tsx) se acomoda en el lugar de la derecha, que tiene
- * el boleto de verdad.
+ * guardarse un lugar en la agenda. El pase que lo acompañó volando desde la
+ * portada (components/pase) se apoya en el lugar de la derecha, arriba del
+ * formulario.
  *
- * El boleto no lleva Reveal a propósito: su entrada es el aterrizaje. Sin el
+ * El pase no lleva Reveal a propósito: su entrada es el aterrizaje. Sin el
  * vuelo —en el teléfono, con menos movimiento pedido o si la portada está
  * apagada— está ahí desde el principio.
  */
@@ -48,10 +49,14 @@ export function Lugar({ surface = "mist" }: { surface?: Surface }) {
         </div>
 
         <div
-          data-boleto-lugar="cierre"
-          className="w-full max-w-[29rem] justify-self-center lg:w-[29rem] lg:justify-self-end"
+          data-pase-zona="cierre"
+          className="w-full max-w-[23rem] justify-self-center lg:w-[23rem] lg:justify-self-end"
         >
-          <BoletoDorado origen="cierre" />
+          <PaseLugar
+            origen="cierre"
+            className="mx-auto w-[15.5rem] sm:w-[16rem] xl:w-[17.5rem]"
+          />
+          <PaseFormulario origen="cierre" className="mt-7" />
         </div>
       </div>
     </Section>

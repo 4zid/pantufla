@@ -48,7 +48,7 @@ pantalla con los pasos que faltan en vez de romper.
 
 Lo único que hace falta cargar es el token de escritura, que se usa para guardar
 los briefs que llegan del formulario, las reuniones que llegan de Cal.com y los
-lugares que se reservan con el boleto dorado:
+lugares que se reservan con el pase:
 
 1. En [sanity.io/manage](https://www.sanity.io/manage) → API → Tokens, creá uno
    con permiso *Editor*.
@@ -319,7 +319,7 @@ dice sale como viene de fábrica: prendida, salvo el stack.
 | 10 | Mapa de clientes | `#clientes` | claro |
 | 11 | Preguntas frecuentes | `#faq` | claro |
 | 12 | Formulario | `#brief` | oscuro |
-| 13 | Boleto dorado (cierre) | `#lugar` | claro |
+| 13 | Pase (cierre) | `#lugar` | claro |
 
 El recorrido sigue **promesa → prueba → qué incluye → cómo → precio →
 objeciones → contacto**:
@@ -327,9 +327,9 @@ objeciones → contacto**:
 - **Portada.** Todo el texto alineado a la izquierda: una pastilla dice que el
   estudio toma proyectos, el titular dice para qué sirve el sitio —«Sitios que
   convierten *visitantes* en *clientes*»—, la bajada lo cuenta, y hay un CTA
-  principal al formulario y uno secundario a los planes. A la derecha, el
-  boleto dorado para reservar un lugar en la agenda; abajo, de punta a punta,
-  la galería de pantallas (ver *El hero*).
+  principal al formulario y uno secundario a los planes. A la derecha, el pase
+  de Pantufla con el formulario para reservar un lugar en la agenda; abajo, de
+  punta a punta, la galería de pantallas (ver *El hero*).
 - **Prueba social.** Solo los logos de los clientes, corriendo de punta a punta
   de la pantalla.
 - **Cómo lo resolvemos.** Tres pilares: alcance cerrado, ritmo corto con fechas
@@ -365,9 +365,9 @@ objeciones → contacto**:
   calendario no esté conectado.
 - **Formulario.** El brief: plan, presupuesto y plazo van en desplegables
   propios del sitio, no en el `<select>` del sistema.
-- **Boleto dorado.** La última sección, después del brief: el camino corto
+- **Pase (cierre).** La última sección, después del brief: el camino corto
   para quien llegó al final sin escribirlo. Deja solo el mail y se guarda un
-  lugar para el próximo cupo. Ahí aterriza el boleto que vino volando desde la
+  lugar para el próximo cupo. Ahí aterriza el pase que vino volando desde la
   portada.
 
 El toggle de precios no es mensual/anual, porque el estudio no vende una
@@ -379,32 +379,41 @@ cobrar rápido.
 
 En escritorio son dos columnas y una franja. A la izquierda, todo el texto
 alineado: la pastilla de «Disponibles», el titular, la bajada y los dos
-botones. A la derecha, el boleto dorado. Abajo, de punta a punta, la galería de
-pantallas corriendo. Abajo de 1024 el boleto pasa debajo de los botones, y en
-el teléfono todo corre seguido.
+botones. A la derecha, el pase de Pantufla y, debajo, el formulario para
+reservar un lugar. Abajo, de punta a punta, la galería de pantallas corriendo.
+Abajo de 1024 el pase pasa debajo de los botones, y en el teléfono todo corre
+seguido.
 
 - **El titular** lleva dos palabras en la itálica de Newsreader, en el mismo
   negro que el resto. Es la única otra letra del sitio y solo se baja en la
   home. En el Studio son los tramos con estilo «Itálica». A 1440 entra en dos
   líneas; más angosto, en tres.
-- **El boleto dorado** es la ilustración y a la vez un formulario: un pase
-  dorado y holográfico, con su talón perforado, donde se deja el mail para
-  reservar un lugar en la agenda. Con el mouse encima se inclina y el brillo
-  sigue al puntero. El mail va a `/api/lugar`, que lo guarda en el Studio como
-  *Lugar reservado* (una sola fila por mail) y avisa por mail con las mismas
-  variables de Resend que el brief. El navegador recuerda que ya se reservó:
-  quien vuelve ve su lugar guardado, con un enlace para usar otro mail. Los
-  textos están en el Studio, en *Boleto dorado*.
-- **El vuelo.** Cuando el boleto de la portada llega arriba de la pantalla,
-  una copia se despega y acompaña el scroll como un papel que se lleva el
-  viento: más chica, cruzando de un costado al otro en el tercio de abajo de la
-  ventana, inclinándose y cambiando de brillo. Antes de la última sección baja
-  y aterriza exactamente sobre el boleto de ahí, que es el de verdad. Lo mueve
-  el scroll y nada más: con la página quieta, queda quieto. Nunca tapa un
-  clic. Si alguien está escribiendo en un boleto, o llega con el teclado, ese
-  boleto se ve entero y la copia se esconde. En el teléfono y con movimiento
-  reducido no vuela: los dos boletos están quietos en su lugar. Si se apaga la
-  sección del cierre en el Studio, el de la portada se queda donde está.
+- **El pase** es una pieza 3D (Three.js) con física de papel: una malla de
+  puntos unidos por resortes que se dobla, flamea y se asienta como un papel
+  blando. Va en los cuatro colores de la marca, con un sticker y una esquina
+  holográficos que cambian de color según cómo le da la luz al doblarse. Con
+  el mouse encima se hunde donde apoya y se inclina hacia el puntero.
+- **El vuelo.** Cuando el pase de la portada llega arriba de la pantalla, se
+  despega curvándose, se achica y acompaña el scroll cruzando la página de un
+  costado al otro en el tercio de abajo de la ventana, dando vueltas (a mitad
+  de cada cruce se ve el dorso). Antes de la última sección baja, crece y se
+  apoya exactamente en el lugar de ahí. Lo mueven el scroll y el puntero:
+  cuando el papel se asienta, deja de dibujar. Si alguien está escribiendo su
+  mail, el pase se queda en ese lugar. En el teléfono no vuela: se queda en el
+  lugar que se ve. Con movimiento reducido, sin placa de video o sin
+  JavaScript se ve la imagen del pase, quieta.
+- **El formulario** va debajo del pase, no adentro: un campo tiene que
+  quedarse quieto para que alguien escriba. El mail va a `/api/lugar`, que lo
+  guarda en el Studio como *Lugar reservado* (una sola fila por mail) y avisa
+  por mail con las mismas variables de Resend que el brief. Al reservar, el
+  pase imprime el mail en su cara con la etiqueta «Reservado», y el navegador
+  lo recuerda: quien vuelve ve su pase con su mail, y un enlace para usar
+  otro. Los textos del formulario están en el Studio, en *Pase*.
+- **El dibujo del pase** son imágenes en `public/pase` (la cara en español y
+  en inglés, el dorso y un mapa de qué es holográfico, satinado o mate). Se
+  generan con `node scripts/generar-pase.mjs`, que las dibuja en HTML: para
+  cambiar un texto o un color del pase se edita ese archivo y se vuelve a
+  correr.
 - **La galería** son capturas de sitios, de escritorio y de teléfono, en
   columnas tipo masonry: dos de escritorio apiladas, un teléfono de alto
   entero, o una de escritorio grande cuando queda sola antes de un teléfono.
@@ -553,7 +562,7 @@ CTA), con el margen justo para que el título no quede debajo del header.
    (`components/ui/riel-pausable.tsx`). Los testimonios rotan solos hasta que
    se elige una cara, esperan mientras alguien los lee y no rotan con
    movimiento reducido. La galería del hero es un riel más, con las mismas
-   reglas. El boleto que vuela no se mueve solo: lo mueve el scroll.
+   reglas. El pase que vuela no se mueve solo: lo mueve el scroll.
 
 ---
 
@@ -565,8 +574,8 @@ CTA), con el margen justo para que el título no quede debajo del header.
   medidas para que el texto no salte cuando llega la fuente. Si se cambia el
   archivo, hay que subir el `-vN` del nombre: se sirve con caché inmutable.
   Y una itálica de acento, Newsreader, solo para las palabras en itálica del
-  titular del hero y del boleto dorado: fijada en un peso y un tamaño óptico y
-  recortada al latino (19 KB).
+  titular del hero: fijada en un peso y un tamaño óptico y recortada al
+  latino (19 KB).
 - **Fondo de bruma** (`#eaedf8`) en claro y casi negro en oscuro, con un grano
   muy leve para que no quede plano. El blanco queda para lo que se destaca: las
   tarjetas, la píldora del menú, los botones sobre oscuro.

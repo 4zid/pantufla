@@ -1,8 +1,7 @@
 import { defineField, defineType } from "sanity";
 
 /**
- * Alguien que dejó el mail en el boleto dorado para reservar su lugar en la
- * agenda.
+ * Alguien que dejó el mail en el pase para reservar su lugar en la agenda.
  *
  * Lo escribe /api/lugar y nadie más, así que es de solo lectura, como los
  * briefs y las reuniones. Es una lista de espera: quien está acá pidió que le
@@ -25,8 +24,8 @@ export const lugar = defineType({
       type: "string",
       options: {
         list: [
-          { title: "En el boleto de la portada", value: "hero" },
-          { title: "En el boleto del cierre", value: "cierre" },
+          { title: "En el pase de la portada", value: "hero" },
+          { title: "En el pase del cierre", value: "cierre" },
         ],
       },
     }),
