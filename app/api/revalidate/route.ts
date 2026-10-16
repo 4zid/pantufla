@@ -5,10 +5,11 @@ import { revalidateTag } from "next/cache";
  * Le avisa al sitio que cambió algo en Sanity.
  *
  * Sin esto, publicar en el Studio no se veía. Cada consulta a Sanity queda
- * cacheada con una etiqueta —project, testimonial, siteCopy, siteSections— y sin nadie
- * que las invalide lo único que las vence es el tiempo. O sea que un cambio
- * tardaba en aparecer, y si la página ya estaba servida desde el borde podía no
- * aparecer nunca hasta el próximo deploy. Que es exactamente lo que pasaba.
+ * cacheada con una etiqueta —project, testimonial, siteCopy, siteSections— y
+ * sin nadie que las invalide lo único que las vence es el tiempo. O sea que
+ * un cambio tardaba en aparecer, y si la página ya estaba servida desde el
+ * borde podía no aparecer nunca hasta el próximo deploy. Que es exactamente
+ * lo que pasaba.
  *
  * Ahora Sanity pega acá al publicar, esto borra la etiqueta del tipo que
  * cambió y el próximo visitante ve el contenido nuevo. No hay build de por
@@ -60,8 +61,8 @@ export async function POST(request: Request) {
      webhook lleve una proyección propia que no lo incluya, o que el evento sea
      un borrado, para que el cuerpo llegue con poco más que el id. Ignorarlo
      sería el peor final posible para un webhook —contesta 200, Sanity lo da
-     por entregado, y el cambio no aparece nunca—, así que se vencen las cuatro
-     etiquetas. Cuesta cuatro consultas de más en la próxima visita; a cambio
+     por entregado, y el cambio no aparece nunca—, así que se vencen todas las
+     etiquetas. Cuesta unas consultas de más en la próxima visita; a cambio
      no hay forma de que un cambio se pierda por cómo quedó configurado el
      webhook del otro lado.
   */

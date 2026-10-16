@@ -812,17 +812,6 @@
   --desde: 4px;
 }
 
-/* El reloj del carrusel del hero (components/sections/hero-carrusel.tsx):
-   la barra se llena y, al terminar, pasa a la tarjeta siguiente. */
-@keyframes barra {
-  from {
-    transform: scaleX(0);
-  }
-  to {
-    transform: scaleX(1);
-  }
-}
-
 @keyframes entrar {
   from {
     opacity: 0;
@@ -1031,5 +1020,15 @@ header[data-quieta] * {
     background-color: currentColor;
     -webkit-mask: var(--logo) center / contain no-repeat;
     mask: var(--logo) center / contain no-repeat;
+  }
+
+  /*
+     El pase 3D (components/pase). Mientras corre, la imagen de respaldo de
+     cada lugar se apaga: el pase de verdad se dibuja encima, en el canvas
+     fijo. Si el 3D no arranca o se cae, el atributo no está y la imagen
+     queda.
+  */
+  [data-pase-3d] [data-pase-respaldo] {
+    opacity: 0;
   }
 }

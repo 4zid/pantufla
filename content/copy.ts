@@ -52,8 +52,8 @@ export type SiteCopy = {
     /** La pastilla de arriba del titular: si el estudio toma trabajo. */
     eyebrow: string;
     /**
-     * El titular por tramos. Los de `mark: "serif"` salen en la itálica gris
-     * («visitantes», «clientes»); el resto, en la letra del sitio.
+     * El titular por tramos. Los de `mark: "serif"` salen en la itálica de
+     * acento («visitantes», «clientes»); el resto, en la letra del sitio.
      *
      * Es un campo nuevo y no el `titleSegments` de antes a propósito: el
      * titular viejo sigue cargado en Sanity, y con el mismo nombre le habría
@@ -63,10 +63,61 @@ export type SiteCopy = {
     lead: string;
     primary: Link;
     secondary: Link;
-    /** El carrusel de proyectos del hero: su nombre y las dos flechas. */
-    carousel: { label: string; prev: string; next: string };
+    /** El nombre de la galería de pantallas, para el lector de pantalla. */
+    gallery: string;
   };
-  socialProof: { label: string; claim: string };
+  /**
+   * El pase: el de la portada, el que vuela con el scroll y el que se acuesta
+   * en el banner son el mismo. El dibujo es una imagen (public/pase); acá van
+   * los textos de los formularios y lo que el pase imprime en su cara cuando
+   * se reserva.
+   *
+   * Reserva un lugar en la agenda: quien deja sus datos pide que le escriban
+   * primero cuando se abra el próximo cupo.
+   */
+  pase: {
+    /** Lo que muestra el dibujo, para quien no lo ve. */
+    alt: string;
+    /** La línea de arriba del formulario. */
+    body: string;
+    label: string;
+    placeholder: string;
+    submit: string;
+    sending: string;
+    /** La letra chica de abajo del campo. */
+    fine: string;
+    /** Si el mail no es válido. */
+    invalid: string;
+    /** Si no se pudo guardar. Lleva {email}, el del estudio. */
+    error: string;
+    success: {
+      title: string;
+      /** Lleva {email}, el que dejó la persona. */
+      body: string;
+      reset: string;
+    };
+    /** La etiqueta del panel del pase, arriba del nombre o el mail impreso. */
+    titular: string;
+    /** El estado que imprime al lado del nombre o el mail. */
+    reservado: string;
+    /** El campo del nombre, que solo pide el formulario del banner. */
+    nombre: {
+      label: string;
+      placeholder: string;
+      /** Si se manda vacío. */
+      missing: string;
+    };
+  };
+  /** El banner de la mitad de la home, donde aterriza el pase acostado. */
+  lugar: {
+    eyebrow: string;
+    title: string;
+    lead: string;
+    points: string[];
+    /** Lo que dice el hueco del pase mientras está vacío. */
+    hueco: string;
+  };
+  socialProof: { label: string };
   approach: {
     eyebrow: string;
     title: string;

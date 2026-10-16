@@ -1,0 +1,233 @@
+"use client";
+
+import { useId, useState } from "react";
+
+import { useCopy, useLocale } from "@/components/copy-provider";
+import { fill } from "@/content/copy";
+import { site } from "@/content/site";
+import { cn } from "@/lib/cn";
+import {
+  reservarLugar,
+  soltarPase,
+  usePase,
+  type OrigenPase,
+} from "@/lib/pase";
+
+/**
+ * El formulario del pase: los datos para reservar un lugar en la agenda.
+ *
+ * Va debajo del pase y no adentro: el pase es un objeto 3D que se dobla, se
+ * da vuelta y vuela, y un campo de texto tiene que quedarse quieto y derecho
+ * para que alguien escriba. A cambio, el pase se entera: cuando la reserva
+ * sale, imprime el nombre y el mail en su cara (ver pase-3d.ts).
+ *
+ * Hay dos y comparten el estado (lib/pase.ts): reservar en uno deja
+ * reservado al otro.
+ *
+ * - El de la portada es corto: el mail solo, en una línea, sobre la página.
+ * - El del banner (`conNombre`) pide nombre y mail, con las etiquetas a la
+ *   vista, y va sobre la tinta del banner (`sobreTinta`): ahí el botón negro
+ *   desaparecería, así que lleva los colores del pase.
+ */
+export function PaseFormulario({
+  origen,
+  conNombre = false,
+  sobreTinta = false,
+  className,
+}: {
+  origen: OrigenPase;
+  conNombre?: boolean;
+  sobreTinta?: boolean;
+  className?: string;
+}) {
+  const { pase } = useCopy();
+  const locale = useLocale();
+  const estado = usePase();
+  const campo = useId();
+  const [email, setEmail] = useState("");
+  const [nombre, setNombre] = useState("");
+  const [trampa, setTrampa] = useState("");
+
+  const enviando = estado.fase === "enviando";
+  const mensaje =
+    estado.fase === "error"
+      ? estado.motivo === "invalido"
+        ? pase.invalid
+        : estado.motivo === "nombre"
+          ? pase.nombre.missing
+          : fill(pase.error, { email: site.email })
+      : "";
+
+  const tinta = sobreTinta ? "text-on-ink" : "text-ink";
+  const suave = sobreTinta ? "text-on-ink/70" : "text-ink-soft";
+
+  if (estado.fase === "reservado") {
+    return (
+      <div
+        className={cn("text-[0.95rem]", conNombre && "text-center", className)}
+        aria-live="polite"
+      >
+        <p className={cn("font-semibold", tinta)}>✓ {pase.success.title}</p>
+        <p className={cn("mt-1", suave)}>
+          {fill(pase.success.body, { email: estado.email })}
+        </p>
+        <button
+          type="button"
+          onClick={soltarPase}
+          className={cn(
+            "mt-2 text-[0.85rem] font-medium underline underline-offset-4 transition-colors",
+            sobreTinta
+              ? "text-on-ink/70 decoration-on-ink/30 hover:text-on-ink"
+              : "text-ink-soft decoration-line-strong hover:text-ink",
+          )}
+        >
+          {pase.success.reset}
+        </button>
+      </div>
+    );
+  }
+
+  /* El campo es el mismo en los dos: blanco sobre la página clara y sobre
+     la tinta oscura, oscuro cuando el tema se da vuelta. */
+  const entrada =
+    "h-12 w-full min-w-0 rounded-full border border-line-strong bg-card px-5 text-[0.95rem] text-ink placeholder:text-ink-faint focus:border-ink focus:outline-none";
+  const etiqueta = cn(
+    "mb-1.5 block pl-5 text-[0.78rem] font-medium",
+    sobreTinta ? "text-on-ink/70" : "text-ink-soft",
+  );
+
+  return (
+    <div className={cn(conNombre && "text-left", className)}>
+      {conNombre ? null : (
+        <p className="text-[0.95rem] font-medium text-ink">{pase.body}</p>
+      )}
+      <form
+        noValidate
+        onSubmit={(e) => {
+          e.preventDefault();
+          if (!enviando) {
+            void reservarLugar(
+              { email, nombre: conNombre ? nombre : undefined },
+              origen,
+              locale,
+              trampa,
+              conNombre,
+            );
+          }
+        }}
+        className={cn(
+          "flex flex-col gap-2",
+          conNombre
+            ? "gap-3 sm:grid sm:grid-cols-[minmax(0,1fr)_minmax(0,1.25fr)_auto] sm:items-end"
+            : "mt-3 sm:flex-row",
+        )}
+      >
+        {conNombre ? (
+          <div>
+            <label htmlFor={`${campo}-nombre`} className={etiqueta}>
+              {pase.nombre.label}
+            </label>
+            <input
+              id={`${campo}-nombre`}
+              type="text"
+              name="name"
+              autoComplete="name"
+              required
+              maxLength={80}
+              value={nombre}
+              onChange={(e) => setNombre(e.target.value)}
+              placeholder={pase.nombre.placeholder}
+              aria-invalid={
+                (estado.fase === "error" && estado.motivo === "nombre") ||
+                undefined
+              }
+              aria-describedby={`${campo}-estado`}
+              className={entrada}
+            />
+          </div>
+        ) : null}
+        <div className={conNombre ? undefined : "contents"}>
+          <label htmlFor={campo} className={conNombre ? etiqueta : "sr-only"}>
+            {pase.label}
+          </label>
+          <input
+            id={campo}
+            type="email"
+            name="email"
+            autoComplete="email"
+            inputMode="email"
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder={pase.placeholder}
+            aria-invalid={
+              (estado.fase === "error" && estado.motivo !== "nombre") ||
+              undefined
+            }
+            aria-describedby={`${campo}-estado`}
+            className={cn(
+              entrada,
+              conNombre ? undefined : "sm:w-auto sm:flex-1",
+            )}
+          />
+        </div>
+        {/* La trampa para bots, como en el brief: no se ve ni se llega con
+            el teclado. */}
+        <input
+          type="text"
+          name="website"
+          tabIndex={-1}
+          autoComplete="off"
+          aria-hidden
+          value={trampa}
+          onChange={(e) => setTrampa(e.target.value)}
+          className="hidden"
+        />
+        <button
+          type="submit"
+          disabled={enviando}
+          className={cn(
+            "h-12 whitespace-nowrap rounded-full px-6 text-[0.95rem] font-medium transition-[opacity,transform] disabled:opacity-70",
+            sobreTinta
+              ? /* Los colores del pase, en un degradé fijo: va sobre la
+                   tinta en los dos temas, y el texto oscuro pasa 9:1 contra
+                   cualquiera de los tres. */
+                "bg-[linear-gradient(100deg,var(--color-aqua),var(--color-rosa)_55%,var(--color-miel))] text-[#121212] hover:-translate-y-px hover:opacity-95"
+              : "bg-ink text-on-ink hover:opacity-90",
+          )}
+        >
+          {enviando ? pase.sending : pase.submit}
+        </button>
+      </form>
+      <p
+        id={`${campo}-estado`}
+        aria-live="polite"
+        className={cn(
+          "mt-2 min-h-[1.25rem] text-[0.8rem]",
+          conNombre && "pl-5",
+          mensaje
+            ? sobreTinta
+              ? "font-medium text-on-ink"
+              : "font-medium text-rosa-deep"
+            : sobreTinta
+              ? "text-on-ink/60"
+              : "text-ink-faint",
+        )}
+      >
+        {mensaje ? (
+          <>
+            {sobreTinta ? (
+              <span
+                aria-hidden
+                className="mr-1.5 inline-block h-2 w-2 rounded-full bg-rosa align-middle"
+              />
+            ) : null}
+            {mensaje}
+          </>
+        ) : (
+          pase.fine
+        )}
+      </p>
+    </div>
+  );
+}

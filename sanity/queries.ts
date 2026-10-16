@@ -89,6 +89,34 @@ export const siteSectionsQuery = groq`
   *[_id == "siteSections"][0]
 `;
 
+/**
+ * Las pantallas de la galería del hero, proyecto por proyecto.
+ *
+ * La galería no tiene lista propia: son las pantallas que cada proyecto
+ * carga en «Pantallas para la portada», en el orden de los proyectos. Va con
+ * el mismo filtro de idioma que la lista de la home, así la galería nunca
+ * muestra un proyecto que la página de abajo no tiene.
+ *
+ * Las medidas vienen del asset: con ellas se calcula el ancho de cada
+ * columna y se le reserva el lugar antes de que la imagen llegue. Del
+ * proyecto alcanza con saber si tiene el caso escrito, que es lo que decide
+ * si su ficha existe para el público y si la pantalla lleva a ella.
+ */
+export const pantallasHeroQuery = groq`
+  *[_type == "project" && ${enIdioma} && count(pantallas[defined(asset)]) > 0] | order(order asc) {
+    title,
+    "slug": slug.current,
+    "conCaso": count(body) > 0,
+    "pantallas": pantallas[defined(asset)]{
+      _key,
+      formato,
+      alt,
+      asset,
+      "dimensiones": asset->metadata.dimensions{ width, height }
+    }
+  }
+`;
+
 export const testimonialsQuery = groq`
   *[_type == "testimonial" && ${enIdioma}] | order(order asc)[0...6] {
     _id, quote, name, role, company, rating, avatar

@@ -60,16 +60,47 @@ export const es: SiteCopy = {
     lead: "Diseño, textos y desarrollo para que la gente que entra entienda qué hacés en diez segundos y termine escribiéndote.",
     primary: { label: "Empezar un proyecto", href: "/#brief" },
     secondary: { label: "Ver planes y precios", href: "/#planes" },
-    carousel: {
-      label: "Proyectos",
-      prev: "Proyecto anterior",
-      next: "Proyecto siguiente",
+    gallery: "Pantallas de sitios que hicimos",
+  },
+
+  pase: {
+    alt: "Pase prioritario de Pantufla: vale por un lugar en la agenda.",
+    body: "Reservá tu lugar para el próximo cupo de la agenda.",
+    label: "Tu mail",
+    placeholder: "vos@mail.com",
+    submit: "Reservar mi lugar",
+    sending: "Reservando…",
+    fine: "Un solo mail, cuando se abra el cupo.",
+    invalid: "Revisá el mail.",
+    error: "No pudimos reservarlo. Probá de nuevo o escribinos a {email}.",
+    success: {
+      title: "Lugar reservado.",
+      body: "Te escribimos a {email} cuando se abra el próximo cupo.",
+      reset: "Usar otro mail",
     },
+    titular: "Titular",
+    reservado: "Reservado",
+    nombre: {
+      label: "Tu nombre",
+      placeholder: "Cómo te llamás",
+      missing: "Falta tu nombre.",
+    },
+  },
+
+  lugar: {
+    eyebrow: "Próximo cupo",
+    title: "El próximo lugar es tuyo.",
+    lead: "Tomamos pocos proyectos por mes para hacerlos enteros nosotros. Dejanos tu nombre y tu mail y te escribimos primero cuando se libere un cupo, antes de anunciarlo.",
+    points: [
+      "Te avisamos antes que a nadie.",
+      "Un solo mail: no es un newsletter.",
+      "Sin compromiso. Si no te sirve, lo dejás pasar.",
+    ],
+    hueco: "Tu pase va acá",
   },
 
   socialProof: {
     label: "Clientes",
-    claim: "Tomamos pocos proyectos a la vez y los hacemos enteros nosotros.",
   },
 
   approach: {

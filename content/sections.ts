@@ -25,7 +25,8 @@ export type SeccionId =
   | "testimonials"
   | "clientsMap"
   | "faq"
-  | "finalCta";
+  | "finalCta"
+  | "lugar";
 
 /** De qué color está la página mientras se mira la sección. */
 export type Fondo = "claro" | "oscuro";
@@ -74,6 +75,13 @@ export const SECCIONES: Seccion[] = [
     fondo: "claro",
     titulo: "Capacidades",
     ancla: "capacidades",
+  },
+  {
+    id: "lugar",
+    fondo: "claro",
+    titulo: "Pase (banner)",
+    nota: "Es donde aterriza, acostado, el pase que vuela desde la portada, con el formulario de nombre y mail. Va a la mitad de la home para que el vuelo no acompañe la página entera. Apagada, el pase se queda en la portada y no vuela.",
+    ancla: "lugar",
   },
   {
     id: "process",

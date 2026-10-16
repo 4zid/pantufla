@@ -110,9 +110,6 @@ export const platformDesign: Record<
 /* ------------------------------------------------------------------ */
 
 /**
- * La frase de esta tira no dice cuántos clientes hay, y es a propósito: ver la
- * nota larga en copy.es.ts.
- *
  * Las marcas son los clientes reales, con el logo que mandó cada uno. Están
  * en public/logos/clientes en negro sobre transparente: la tira los pinta con
  * la tinta del tema a través de una máscara, así que de cada archivo solo
