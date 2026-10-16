@@ -124,10 +124,11 @@ function sizesDe(c: Columna, menos = 0) {
 
 /*
    La duración sale del largo de la lista con el alto de escritorio, para
-   que corra a la misma velocidad haya las pantallas que haya: unos 40px por
-   segundo.
+   que corra a la misma velocidad haya las pantallas que haya: unos 70px por
+   segundo. A 40 tardaba más de dos minutos en dar la vuelta y se sentía
+   quieta.
 */
-const VELOCIDAD = 40;
+const VELOCIDAD = 70;
 
 /** Una pantalla de escritorio: la barra de una ventana y la captura abajo. */
 function Escritorio({ p, sizes }: { p: Pantalla; sizes: string }) {
