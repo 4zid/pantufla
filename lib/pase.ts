@@ -3,12 +3,13 @@ import { useSyncExternalStore } from "react";
 import type { Locale } from "@/lib/i18n";
 
 /**
- * El estado del boleto dorado, compartido entre los dos que hay en la página.
+ * El estado del pase, compartido por todo lo que lo muestra.
  *
- * El de la portada y el del cierre son dos formularios, pero para quien los
- * usa son el mismo boleto: si reservó arriba, el que aterriza abajo tiene que
- * llegar ya reservado, no volver a pedirle el mail. Por eso el estado vive
- * acá, fuera de React, y cada boleto se suscribe.
+ * El formulario de la portada y el del cierre son dos, pero para quien los
+ * usa son el mismo pase: si reservó arriba, el de abajo tiene que estar ya
+ * reservado, no volver a pedirle el mail. Y el pase 3D imprime el mail en su
+ * cara apenas se reserva. Por eso el estado vive acá, fuera de React, y cada
+ * parte se suscribe.
  *
  * La reserva se recuerda en el navegador (localStorage): quien vuelve otro
  * día ve su lugar guardado en vez del campo vacío. Es una comodidad y nada
@@ -17,22 +18,22 @@ import type { Locale } from "@/lib/i18n";
  * recuerdo y no pasa nada más.
  */
 
-export type EstadoBoleto =
+export type EstadoPase =
   | { fase: "libre" }
   | { fase: "enviando" }
   | { fase: "reservado"; email: string }
   | { fase: "error"; motivo: "invalido" | "fallo" };
 
-export type OrigenBoleto = "hero" | "cierre";
+export type OrigenPase = "hero" | "cierre";
 
-const CLAVE = "pantufla-boleto";
-const INICIAL: EstadoBoleto = { fase: "libre" };
+const CLAVE = "pantufla-pase";
+const INICIAL: EstadoPase = { fase: "libre" };
 
-let estado: EstadoBoleto = INICIAL;
+let estado: EstadoPase = INICIAL;
 let leido = false;
 const oyentes = new Set<() => void>();
 
-function recordado(): EstadoBoleto {
+function recordado(): EstadoPase {
   try {
     const email = window.localStorage.getItem(CLAVE);
     return email ? { fase: "reservado", email } : INICIAL;
@@ -46,11 +47,11 @@ function recordar(email: string | null) {
     if (email) window.localStorage.setItem(CLAVE, email);
     else window.localStorage.removeItem(CLAVE);
   } catch {
-    /* Sin permiso para guardar: el boleto se olvida al recargar, y listo. */
+    /* Sin permiso para guardar: el pase se olvida al recargar, y listo. */
   }
 }
 
-function cambiar(nuevo: EstadoBoleto) {
+function cambiar(nuevo: EstadoPase) {
   estado = nuevo;
   for (const avisar of oyentes) avisar();
 }
@@ -70,13 +71,13 @@ function leer() {
   return estado;
 }
 
-export function useBoleto() {
+export function usePase() {
   return useSyncExternalStore(suscribir, leer, () => INICIAL);
 }
 
 export async function reservarLugar(
   email: string,
-  origen: OrigenBoleto,
+  origen: OrigenPase,
   idioma: Locale,
   trampa: string,
 ) {
@@ -113,7 +114,7 @@ export async function reservarLugar(
 }
 
 /** Vuelve a mostrar el campo, para dejar otro mail. */
-export function soltarBoleto() {
+export function soltarPase() {
   recordar(null);
   cambiar(INICIAL);
 }

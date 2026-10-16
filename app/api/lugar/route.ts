@@ -6,12 +6,12 @@ import { z } from "zod";
 import { getWriteClient } from "@/sanity/client";
 
 /**
- * Recibe el mail del boleto dorado: alguien que quiere su lugar en la agenda.
+ * Recibe el mail del pase: alguien que quiere su lugar en la agenda.
  *
  * Sigue el camino del brief (api/brief): se guarda en Sanity, para que quede
  * en el Studio como «Lugar reservado», y se avisa por mail con las mismas
  * variables de Resend. Con que salga una de las dos alcanza; si fallan las
- * dos, se contesta error para que el boleto no diga «reservado» sin que nadie
+ * dos, se contesta error para que el pase no diga «reservado» sin que nadie
  * se haya enterado.
  */
 
@@ -100,7 +100,7 @@ export async function POST(request: Request) {
         html: `
           <div style="font-family:-apple-system,Segoe UI,Roboto,sans-serif;color:#17150f;max-width:560px">
             <h2 style="margin:0 0 12px;font-size:20px">Alguien reservó su lugar</h2>
-            <p style="margin:0 0 16px;font-size:14px;line-height:1.6">Dejó el mail en el boleto dorado ${
+            <p style="margin:0 0 16px;font-size:14px;line-height:1.6">Dejó el mail en el pase ${
               origen === "cierre" ? "del final de la home" : "de la portada"
             } y quiere que le escriban cuando se abra el próximo cupo.</p>
             <p style="margin:0;font-size:16px;font-weight:600">${escapeHtml(email)}</p>

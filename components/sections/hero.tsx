@@ -1,7 +1,8 @@
 import { preload } from "react-dom";
 
 import type { Surface } from "@/components/ui/section";
-import { BoletoDorado } from "@/components/boleto/boleto-dorado";
+import { PaseFormulario } from "@/components/pase/pase-formulario";
+import { PaseLugar } from "@/components/pase/pase-lugar";
 import { HeroGaleria } from "@/components/sections/hero-galeria";
 import { HeroTexto } from "@/components/sections/hero-intro";
 import type { Pantalla } from "@/content/hero-galeria";
@@ -10,22 +11,20 @@ import type { Pantalla } from "@/content/hero-galeria";
  * La portada.
  *
  * Arriba, dos columnas: a la izquierda todo el texto alineado —la pastilla de
- * disponibilidad, el titular, la bajada y los botones— y a la derecha el
- * boleto dorado, que es la ilustración y a la vez un formulario: deja el
- * mail para reservar un lugar en la agenda. Abajo, de punta a punta, la
- * galería de pantallas corriendo como un riel.
+ * disponibilidad, el titular, la bajada y los botones— y a la derecha el pase
+ * de Pantufla, con el formulario para reservar un lugar en la agenda debajo.
+ * Abajo, de punta a punta, la galería de pantallas corriendo como un riel.
  *
- * El boleto no se queda acá. Cuando el hero se va de la pantalla, una copia
- * sale volando desde este lugar y acompaña el scroll hasta la última sección,
- * donde aterriza en el boleto de verdad (boleto-vuelo.tsx). Por eso el boleto
- * va dentro de un lugar con data-boleto-lugar: el vuelo mide ese lugar, no
- * el boleto, que se inclina con el mouse y entra con su animación.
+ * El pase es un papel en 3D (components/pase) que no se queda acá: cuando el
+ * hero se va de la pantalla se despega de su lugar, acompaña el scroll y
+ * aterriza en el de la última sección. Lo que hay en la página es el lugar
+ * (PaseLugar), con una imagen del pase que es lo que se ve sin 3D.
  *
- * Abajo de lg el boleto va debajo de los botones, y en el teléfono todo corre
+ * Abajo de lg el pase va debajo de los botones, y en el teléfono todo corre
  * seguido.
  *
  * Entra sin JavaScript: la pastilla, el titular, la bajada, los botones y el
- * boleto tienen su entrada de CSS (ver globals.css), y la galería es HTML que
+ * pase tienen su entrada de CSS (ver globals.css), y la galería es HTML que
  * el riel mueve con CSS.
  */
 export function Hero({
@@ -38,8 +37,8 @@ export function Hero({
   /** El nombre de la galería para el lector de pantalla. */
   galeria: string;
 }) {
-  /* La itálica solo existe en el titular y en el boleto, así que la precarga
-     la pide el hero y no el layout: las demás páginas no la bajan. */
+  /* La itálica solo existe en el titular, así que la precarga la pide el hero
+     y no el layout: las demás páginas no la bajan. */
   preload("/fonts/newsreader-italic-latin-v1.woff2", {
     as: "font",
     type: "font/woff2",
@@ -60,11 +59,16 @@ export function Hero({
         <HeroTexto />
 
         <div
-          data-boleto-lugar="hero"
-          className="w-full max-w-[29rem] lg:w-[27rem] xl:w-[29rem]"
+          data-pase-zona="hero"
+          className="mx-auto w-full max-w-[23rem] lg:mx-0 lg:w-[21rem] xl:w-[23rem]"
         >
-          <div data-entra style={{ "--entra": "0.55s" } as React.CSSProperties}>
-            <BoletoDorado origen="hero" />
+          <PaseLugar
+            origen="hero"
+            entra={0.5}
+            className="mx-auto w-[15.5rem] sm:w-[16rem] xl:w-[17.5rem]"
+          />
+          <div data-entra style={{ "--entra": "0.6s" } as React.CSSProperties}>
+            <PaseFormulario origen="hero" className="mt-7" />
           </div>
         </div>
       </div>

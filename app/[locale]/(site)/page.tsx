@@ -1,6 +1,6 @@
 import { Fragment } from "react";
 
-import { BoletoVuelo } from "@/components/boleto/boleto-vuelo";
+import { PaseEscena } from "@/components/pase/pase-escena";
 
 import { Approach } from "@/components/sections/approach";
 import { Bento } from "@/components/sections/bento";
@@ -125,10 +125,11 @@ export default async function HomePage({
         <Fragment key={id}>{piezas[id](superficie(fondos[id]))}</Fragment>
       ))}
 
-      {/* El boleto que vuela de la portada al cierre necesita los dos
-          lugares: sin uno de los dos no hay de dónde salir o adónde llegar,
-          y el que queda se queda quieto. */}
-      {secciones.hero && secciones.lugar ? <BoletoVuelo /> : null}
+      {/* El pase 3D. Vuela de la portada al cierre si están los dos lugares;
+          con uno solo se queda quieto en ese. */}
+      {secciones.hero || secciones.lugar ? (
+        <PaseEscena volar={secciones.hero && secciones.lugar} />
+      ) : null}
 
       <JsonLd
         nodos={[

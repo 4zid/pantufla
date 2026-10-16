@@ -63,13 +63,9 @@ export const es: SiteCopy = {
     gallery: "Pantallas de sitios que hicimos",
   },
 
-  boleto: {
-    kicker: "Boleto dorado",
-    serial: "N.º 0042",
-    title: "Pase",
-    titleAccent: "prioritario",
+  pase: {
+    alt: "Pase prioritario de Pantufla: vale por un lugar en la agenda.",
     body: "Reservá tu lugar para el próximo cupo de la agenda.",
-    stub: "Vale por un lugar",
     label: "Tu mail",
     placeholder: "vos@mail.com",
     submit: "Reservar mi lugar",
@@ -82,6 +78,8 @@ export const es: SiteCopy = {
       body: "Te escribimos a {email} cuando se abra el próximo cupo.",
       reset: "Usar otro mail",
     },
+    titular: "Titular",
+    reservado: "Reservado",
   },
 
   lugar: {
