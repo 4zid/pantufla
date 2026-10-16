@@ -37,22 +37,37 @@ export default defineConfig({
               .title("Secciones de la home")
               .id("siteSections")
               .child(
-                S.document().schemaType("siteSections").documentId("siteSections"),
+                S.document()
+                  .schemaType("siteSections")
+                  .documentId("siteSections"),
               ),
             S.listItem()
               .title("Textos del sitio (ES)")
               .id("siteCopyEs")
-              .child(S.document().schemaType("siteCopy").documentId("siteCopy.es")),
+              .child(
+                S.document().schemaType("siteCopy").documentId("siteCopy.es"),
+              ),
             S.listItem()
               .title("Textos del sitio (EN)")
               .id("siteCopyEn")
-              .child(S.document().schemaType("siteCopy").documentId("siteCopy.en")),
+              .child(
+                S.document().schemaType("siteCopy").documentId("siteCopy.en"),
+              ),
+            S.listItem()
+              .title("Pantallas del hero")
+              .id("heroGaleria")
+              .child(
+                S.document()
+                  .schemaType("heroGaleria")
+                  .documentId("heroGaleria"),
+              ),
             S.divider(),
             S.documentTypeListItem("project").title("Proyectos"),
             S.documentTypeListItem("testimonial").title("Testimonios"),
             S.divider(),
             S.documentTypeListItem("brief").title("Briefs recibidos"),
             S.documentTypeListItem("meeting").title("Reuniones agendadas"),
+            S.documentTypeListItem("lugar").title("Lugares reservados"),
           ]),
     }),
     visionTool({ defaultApiVersion: apiVersion }),

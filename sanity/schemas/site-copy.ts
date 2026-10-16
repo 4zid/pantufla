@@ -175,16 +175,89 @@ export const siteCopy = defineType({
         link("primary", "Botón principal"),
         link("secondary", "Botón secundario"),
         defineField({
-          name: "carousel",
-          title: "Carrusel de proyectos",
+          name: "gallery",
+          title: "Nombre de la galería de pantallas",
+          type: "string",
           description:
-            "Muestra los proyectos con caso escrito; acá van solo sus textos para el lector de pantalla.",
+            "Solo para el lector de pantalla. Las pantallas se cargan en «Pantallas del hero».",
+        }),
+      ],
+    }),
+
+    /* --- Boleto dorado --- */
+    defineField({
+      name: "boleto",
+      title: "Boleto dorado",
+      description:
+        "El boleto de la portada, el que vuela con el scroll y el que aterriza al final son el mismo: estos textos van en los tres.",
+      type: "object",
+      options: { collapsible: true, collapsed: true },
+      fields: [
+        defineField({
+          name: "kicker",
+          title: "Arriba a la izquierda",
+          type: "string",
+        }),
+        defineField({
+          name: "serial",
+          title: "Número de serie",
+          type: "string",
+          description: "Es de adorno: el mismo para todos.",
+        }),
+        defineField({ name: "title", title: "Título", type: "string" }),
+        defineField({
+          name: "titleAccent",
+          title: "Título, parte en itálica",
+          type: "string",
+          description: "Va pegada después del título, en la letra de acento.",
+        }),
+        texto("body", "Bajada"),
+        defineField({ name: "stub", title: "Texto del talón", type: "string" }),
+        defineField({
+          name: "label",
+          title: "Etiqueta del campo",
+          type: "string",
+        }),
+        defineField({
+          name: "placeholder",
+          title: "Ejemplo del campo",
+          type: "string",
+        }),
+        defineField({ name: "submit", title: "Botón", type: "string" }),
+        defineField({
+          name: "sending",
+          title: "Botón mientras envía",
+          type: "string",
+        }),
+        defineField({ name: "fine", title: "Letra chica", type: "string" }),
+        defineField({
+          name: "invalid",
+          title: "Mail inválido",
+          type: "string",
+        }),
+        defineField({
+          name: "error",
+          title: "Si no se pudo reservar",
+          type: "string",
+          description: "Usá {email} donde va la dirección del estudio.",
+        }),
+        defineField({
+          name: "success",
+          title: "Reservado",
           type: "object",
-          options: { collapsible: true, collapsed: true },
           fields: [
-            texto("label", "Nombre del carrusel"),
-            texto("prev", "Flecha anterior"),
-            texto("next", "Flecha siguiente"),
+            defineField({ name: "title", title: "Título", type: "string" }),
+            defineField({
+              name: "body",
+              title: "Texto",
+              type: "string",
+              description: "Usá {email} donde va el mail que dejó la persona.",
+            }),
+            defineField({
+              name: "reset",
+              title: "Usar otro mail",
+              type: "string",
+            }),
           ],
         }),
       ],
@@ -203,7 +276,6 @@ export const siteCopy = defineType({
           type: "string",
           description: "Solo lo escucha quien navega con lector de pantalla.",
         }),
-        texto("claim", "Frase"),
       ],
     }),
 
@@ -828,6 +900,26 @@ export const siteCopy = defineType({
           title: "Enlace de mail",
           type: "string",
           description: "Usá {email} donde va la dirección.",
+        }),
+      ],
+    }),
+
+    /* --- Último lugar: donde aterriza el boleto --- */
+    defineField({
+      name: "lugar",
+      title: "Cierre del boleto",
+      description: "La última sección de la home, después del formulario.",
+      type: "object",
+      options: { collapsible: true, collapsed: true },
+      fields: [
+        defineField({ name: "eyebrow", title: "Etiqueta", type: "string" }),
+        defineField({ name: "title", title: "Título", type: "string" }),
+        texto("lead", "Bajada"),
+        defineField({
+          name: "points",
+          title: "Puntos",
+          type: "array",
+          of: [{ type: "string" }],
         }),
       ],
     }),

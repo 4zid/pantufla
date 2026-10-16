@@ -89,6 +89,23 @@ export const siteSectionsQuery = groq`
   *[_id == "siteSections"][0]
 `;
 
+/**
+ * Las pantallas del hero, por id como los interruptores: es un documento
+ * único. Las medidas vienen del asset para reservar el lugar de cada una
+ * antes de que cargue, y el proyecto solo cuenta si tiene caso escrito, que
+ * es lo que decide si su ficha existe para el público.
+ */
+export const heroGaleriaQuery = groq`
+  *[_id == "heroGaleria"][0].pantallas[defined(imagen.asset)]{
+    _key,
+    formato,
+    alt,
+    imagen,
+    "dimensiones": imagen.asset->metadata.dimensions{width, height},
+    "proyecto": proyecto->{ "slug": slug.current, "conCaso": count(body) > 0 }
+  }
+`;
+
 export const testimonialsQuery = groq`
   *[_type == "testimonial" && ${enIdioma}] | order(order asc)[0...6] {
     _id, quote, name, role, company, rating, avatar
