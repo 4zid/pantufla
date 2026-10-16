@@ -6,8 +6,7 @@
  * clonado, en un deploy de preview o si Sanity no responde.
  *
  * PROYECTOS: son reales y cada uno lleva la URL del sitio publicado, que es a
- * donde va la tarjeta, y el fondo de esa tarjeta. Los que todavía no tienen
- * sitio cargado (Kine, Daily) van a su ficha.
+ * donde va la tarjeta, y el fondo de esa tarjeta.
  *
  * ⚠️ Los cinco fondos de /public/proyectos son de relleno: manchas difusas
  * generadas en código para que la tarjeta tenga su forma definitiva. Para
@@ -49,12 +48,12 @@ function enSanity(ref: string, alt?: string) {
 export const fallbackProjects: SanityProject[] = [
   {
     // Los cuatro primeros son los principales, en el mismo orden que en
-    // Sanity (order 0 a 3). Kine y Daily todavía no tienen caso escrito ni
-    // sitio cargado: la esfera lleva a la ficha, que va sin indexar hasta
-    // que el caso exista. Sus pantallas sí están, en la galería del hero.
+    // Sanity (order 0 a 3). Kine y Daily todavía no tienen caso escrito: su
+    // ficha existe pero va sin indexar hasta que lo tengan.
     _id: "work-kine",
     title: "Kine",
     slug: "kine",
+    url: "https://kine.pantufla.design/",
     tagline:
       "Historia clínica para kinesiólogos: mapa corporal del dolor, sesiones en formato SOAP e informe listo para imprimir.",
     sector: "Salud",
@@ -63,6 +62,7 @@ export const fallbackProjects: SanityProject[] = [
     _id: "work-daily",
     title: "Daily",
     slug: "daily",
+    url: "https://daily.pantufla.design/",
     tagline:
       "Registro diario de actividades para terapia: el paciente anota su día y su terapeuta lo lee en un informe semanal.",
     sector: "Salud mental",
