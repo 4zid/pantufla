@@ -6,7 +6,8 @@
  * clonado, en un deploy de preview o si Sanity no responde.
  *
  * PROYECTOS: son reales y cada uno lleva la URL del sitio publicado, que es a
- * donde va la tarjeta, y el fondo de esa tarjeta.
+ * donde va la tarjeta, y el fondo de esa tarjeta. Los que todavía no tienen
+ * sitio cargado (Kine, Daily) van a su ficha.
  *
  * ⚠️ Los cinco fondos de /public/proyectos son de relleno: manchas difusas
  * generadas en código para que la tarjeta tenga su forma definitiva. Para
@@ -47,9 +48,28 @@ function enSanity(ref: string, alt?: string) {
 
 export const fallbackProjects: SanityProject[] = [
   {
-    // El más nuevo va primero, igual que en Sanity (order 0). Todavía no
-    // tiene fondo propio en /public/proyectos: la tarjeta no lo usa y la
-    // ficha cae al degradé de la paleta.
+    // Los cuatro primeros son los principales, en el mismo orden que en
+    // Sanity (order 0 a 3). Kine y Daily todavía no tienen caso escrito ni
+    // sitio cargado: la esfera lleva a la ficha, que va sin indexar hasta
+    // que el caso exista. Sus pantallas sí están, en la galería del hero.
+    _id: "work-kine",
+    title: "Kine",
+    slug: "kine",
+    tagline:
+      "Historia clínica para kinesiólogos: mapa corporal del dolor, sesiones en formato SOAP e informe listo para imprimir.",
+    sector: "Salud",
+  },
+  {
+    _id: "work-daily",
+    title: "Daily",
+    slug: "daily",
+    tagline:
+      "Registro diario de actividades para terapia: el paciente anota su día y su terapeuta lo lee en un informe semanal.",
+    sector: "Salud mental",
+  },
+  {
+    // Todavía no tiene fondo propio en /public/proyectos: la tarjeta no lo
+    // usa y la ficha cae al degradé de la paleta.
     _id: "work-tierras-argentinas",
     title: "Tierras Argentinas",
     slug: "tierras-argentinas",
@@ -81,54 +101,6 @@ export const fallbackProjects: SanityProject[] = [
     ),
     body: casos["tierras-argentinas"],
     conCaso: true,
-  },
-  {
-    _id: "work-lupa",
-    title: "Lupa Studio",
-    slug: "lupa-studio",
-    art: "/proyectos/lupa-studio.jpg",
-    url: "https://www.lupastudio.co/",
-    tagline:
-      "Sitio de portfolio para una agencia de soluciones creativas, con una estética limpia y actual.",
-    sector: "Agencia creativa",
-    plan: "Sitio",
-    services: ["Diseño", "Desarrollo"],
-  },
-  {
-    _id: "work-remmy",
-    title: "Remmy",
-    slug: "remmy",
-    art: "/proyectos/remmy.jpg",
-    url: "https://remmy.la",
-    tagline:
-      "Landing para una startup de contratación: mensaje directo y una sola línea de lectura.",
-    sector: "Recursos humanos",
-    plan: "Landing",
-    services: ["Copy", "Diseño", "Desarrollo"],
-  },
-  {
-    _id: "work-acacia",
-    title: "Acacia",
-    slug: "acacia",
-    art: "/proyectos/acacia.jpg",
-    url: "https://acaciaestetica.com/",
-    tagline:
-      "Sitio para un salón de belleza, con una estética suave y sin adornos de más.",
-    sector: "Belleza",
-    plan: "Sitio",
-    services: ["Diseño", "Desarrollo"],
-  },
-  {
-    _id: "work-rostar",
-    title: "Rostar",
-    slug: "rostar",
-    art: "/proyectos/rostar.jpg",
-    url: "https://rostaremix.framer.website/",
-    tagline:
-      "Diseño de interfaz y desarrollo para una plataforma que centraliza rosters de youtubers de Estados Unidos.",
-    sector: "Plataforma",
-    plan: "Sitio",
-    services: ["Diseño UI", "Desarrollo"],
   },
   {
     _id: "work-2mg",
@@ -164,6 +136,54 @@ export const fallbackProjects: SanityProject[] = [
     ),
     body: casos["2mg"],
     conCaso: true,
+  },
+  {
+    _id: "work-lupa",
+    title: "Lupa Studio",
+    slug: "lupa-studio",
+    art: "/proyectos/lupa-studio.jpg",
+    url: "https://www.lupastudio.co/",
+    tagline:
+      "Sitio de portfolio para una agencia de soluciones creativas, con una estética limpia y actual.",
+    sector: "Agencia creativa",
+    plan: "Sitio",
+    services: ["Diseño", "Desarrollo"],
+  },
+  {
+    _id: "work-remmy",
+    title: "Remmy",
+    slug: "remmy",
+    art: "/proyectos/remmy.jpg",
+    url: "https://remmy.la",
+    tagline:
+      "Landing para una startup de contratación: mensaje directo y una sola línea de lectura.",
+    sector: "Recursos humanos",
+    plan: "Landing",
+    services: ["Copy", "Diseño", "Desarrollo"],
+  },
+  {
+    _id: "work-rostar",
+    title: "Rostar",
+    slug: "rostar",
+    art: "/proyectos/rostar.jpg",
+    url: "https://rostaremix.framer.website/",
+    tagline:
+      "Diseño de interfaz y desarrollo para una plataforma que centraliza rosters de youtubers de Estados Unidos.",
+    sector: "Plataforma",
+    plan: "Sitio",
+    services: ["Diseño UI", "Desarrollo"],
+  },
+  {
+    _id: "work-acacia",
+    title: "Acacia",
+    slug: "acacia",
+    art: "/proyectos/acacia.jpg",
+    url: "https://acaciaestetica.com/",
+    tagline:
+      "Sitio para un salón de belleza, con una estética suave y sin adornos de más.",
+    sector: "Belleza",
+    plan: "Sitio",
+    services: ["Diseño", "Desarrollo"],
   },
   {
     _id: "work-block-desarrollos",

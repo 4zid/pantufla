@@ -90,19 +90,30 @@ export const siteSectionsQuery = groq`
 `;
 
 /**
- * Las pantallas del hero, por id como los interruptores: es un documento
- * único. Las medidas vienen del asset para reservar el lugar de cada una
- * antes de que cargue, y el proyecto solo cuenta si tiene caso escrito, que
- * es lo que decide si su ficha existe para el público.
+ * Las pantallas de la galería del hero, proyecto por proyecto.
+ *
+ * La galería no tiene lista propia: son las pantallas que cada proyecto
+ * carga en «Pantallas para la portada», en el orden de los proyectos. Va con
+ * el mismo filtro de idioma que la lista de la home, así la galería nunca
+ * muestra un proyecto que la página de abajo no tiene.
+ *
+ * Las medidas vienen del asset: con ellas se calcula el ancho de cada
+ * columna y se le reserva el lugar antes de que la imagen llegue. Del
+ * proyecto alcanza con saber si tiene el caso escrito, que es lo que decide
+ * si su ficha existe para el público y si la pantalla lleva a ella.
  */
-export const heroGaleriaQuery = groq`
-  *[_id == "heroGaleria"][0].pantallas[defined(imagen.asset)]{
-    _key,
-    formato,
-    alt,
-    imagen,
-    "dimensiones": imagen.asset->metadata.dimensions{width, height},
-    "proyecto": proyecto->{ "slug": slug.current, "conCaso": count(body) > 0 }
+export const pantallasHeroQuery = groq`
+  *[_type == "project" && ${enIdioma} && count(pantallas[defined(asset)]) > 0] | order(order asc) {
+    title,
+    "slug": slug.current,
+    "conCaso": count(body) > 0,
+    "pantallas": pantallas[defined(asset)]{
+      _key,
+      formato,
+      alt,
+      asset,
+      "dimensiones": asset->metadata.dimensions{ width, height }
+    }
   }
 `;
 

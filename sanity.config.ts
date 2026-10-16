@@ -53,14 +53,6 @@ export default defineConfig({
               .child(
                 S.document().schemaType("siteCopy").documentId("siteCopy.en"),
               ),
-            S.listItem()
-              .title("Pantallas del hero")
-              .id("heroGaleria")
-              .child(
-                S.document()
-                  .schemaType("heroGaleria")
-                  .documentId("heroGaleria"),
-              ),
             S.divider(),
             S.documentTypeListItem("project").title("Proyectos"),
             S.documentTypeListItem("testimonial").title("Testimonios"),

@@ -179,7 +179,7 @@ export const siteCopy = defineType({
           title: "Nombre de la galería de pantallas",
           type: "string",
           description:
-            "Solo para el lector de pantalla. Las pantallas se cargan en «Pantallas del hero».",
+            "Solo para el lector de pantalla. Las pantallas se cargan en cada proyecto, en «Pantallas para la portada».",
         }),
       ],
     }),
