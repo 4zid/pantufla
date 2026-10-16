@@ -67,11 +67,12 @@ export type SiteCopy = {
     gallery: string;
   };
   /**
-   * El pase: el de la portada, el que vuela con el scroll y el del cierre son
-   * el mismo. El dibujo es una imagen (public/pase); acá van los textos del
-   * formulario de abajo y lo que el pase imprime en su cara cuando se reserva.
+   * El pase: el de la portada, el que vuela con el scroll y el que se acuesta
+   * en el banner son el mismo. El dibujo es una imagen (public/pase); acá van
+   * los textos de los formularios y lo que el pase imprime en su cara cuando
+   * se reserva.
    *
-   * Reserva un lugar en la agenda: quien deja el mail pide que le escriban
+   * Reserva un lugar en la agenda: quien deja sus datos pide que le escriban
    * primero cuando se abra el próximo cupo.
    */
   pase: {
@@ -95,17 +96,26 @@ export type SiteCopy = {
       body: string;
       reset: string;
     };
-    /** La etiqueta del panel del pase, arriba del mail impreso. */
+    /** La etiqueta del panel del pase, arriba del nombre o el mail impreso. */
     titular: string;
-    /** El estado que imprime al lado del mail. */
+    /** El estado que imprime al lado del nombre o el mail. */
     reservado: string;
+    /** El campo del nombre, que solo pide el formulario del banner. */
+    nombre: {
+      label: string;
+      placeholder: string;
+      /** Si se manda vacío. */
+      missing: string;
+    };
   };
-  /** La última sección de la home, donde aterriza el pase. */
+  /** El banner de la mitad de la home, donde aterriza el pase acostado. */
   lugar: {
     eyebrow: string;
     title: string;
     lead: string;
     points: string[];
+    /** Lo que dice el hueco del pase mientras está vacío. */
+    hueco: string;
   };
   socialProof: { label: string };
   approach: {

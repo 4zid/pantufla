@@ -73,17 +73,23 @@ export const en: SiteCopy = {
     },
     titular: "Holder",
     reservado: "Saved",
+    nombre: {
+      label: "Your name",
+      placeholder: "What should we call you?",
+      missing: "Add your name.",
+    },
   },
 
   lugar: {
     eyebrow: "Next slot",
-    title: "Save yourself a spot in the calendar.",
-    lead: "We take on a few projects a month so we can build each one ourselves. Leave your email and we will write to you first when the next slot opens, before we announce it.",
+    title: "The next spot is yours.",
+    lead: "We take on a few projects a month so we can build each one ourselves. Leave your name and email and we will write to you first when a slot opens, before we announce it.",
     points: [
       "You hear about it before anyone else.",
       "One email: this is not a newsletter.",
       "No strings attached. If it does not suit you, let it pass.",
     ],
+    hueco: "Your pass goes here",
   },
 
   socialProof: {

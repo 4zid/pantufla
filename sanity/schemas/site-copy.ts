@@ -189,7 +189,7 @@ export const siteCopy = defineType({
       name: "pase",
       title: "Pase",
       description:
-        "El pase de la portada, el que vuela con el scroll y el del cierre son el mismo. El dibujo es una imagen; acá van los textos del formulario y lo que el pase imprime al reservar.",
+        "El pase de la portada, el que vuela con el scroll y el que se acuesta en el banner son el mismo. El dibujo es una imagen; acá van los textos de los formularios y lo que el pase imprime al reservar.",
       type: "object",
       options: { collapsible: true, collapsed: true },
       fields: [
@@ -259,6 +259,25 @@ export const siteCopy = defineType({
           title: "Estado al reservar",
           type: "string",
           description: "La etiqueta que el pase imprime al lado del mail.",
+        }),
+        defineField({
+          name: "nombre",
+          title: "Campo del nombre",
+          description: "Solo lo pide el formulario del banner.",
+          type: "object",
+          fields: [
+            defineField({ name: "label", title: "Etiqueta", type: "string" }),
+            defineField({
+              name: "placeholder",
+              title: "Ejemplo del campo",
+              type: "string",
+            }),
+            defineField({
+              name: "missing",
+              title: "Si queda vacío",
+              type: "string",
+            }),
+          ],
         }),
       ],
     }),
@@ -904,11 +923,12 @@ export const siteCopy = defineType({
       ],
     }),
 
-    /* --- Último lugar: donde aterriza el pase --- */
+    /* --- El banner del pase: donde aterriza --- */
     defineField({
       name: "lugar",
-      title: "Cierre del pase",
-      description: "La última sección de la home, después del formulario.",
+      title: "Banner del pase",
+      description:
+        "La sección de la mitad de la home donde el pase aterriza acostado, en el hueco que le falta al banner.",
       type: "object",
       options: { collapsible: true, collapsed: true },
       fields: [
@@ -920,6 +940,13 @@ export const siteCopy = defineType({
           title: "Puntos",
           type: "array",
           of: [{ type: "string" }],
+        }),
+        defineField({
+          name: "hueco",
+          title: "Texto del hueco",
+          type: "string",
+          description:
+            "Lo que se lee en el hueco mientras el pase todavía no aterrizó.",
         }),
       ],
     }),
