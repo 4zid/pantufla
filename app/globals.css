@@ -812,17 +812,6 @@
   --desde: 4px;
 }
 
-/* El reloj del carrusel del hero (components/sections/hero-carrusel.tsx):
-   la barra se llena y, al terminar, pasa a la tarjeta siguiente. */
-@keyframes barra {
-  from {
-    transform: scaleX(0);
-  }
-  to {
-    transform: scaleX(1);
-  }
-}
-
 @keyframes entrar {
   from {
     opacity: 0;
@@ -1031,5 +1020,161 @@ header[data-quieta] * {
     background-color: currentColor;
     -webkit-mask: var(--logo) center / contain no-repeat;
     mask: var(--logo) center / contain no-repeat;
+  }
+
+  /*
+     El boleto dorado (components/boleto/boleto-dorado.tsx).
+
+     Es un objeto propio y no sigue al tema: el dorado es el mismo sobre la
+     bruma y sobre el fondo oscuro, como un papel que alguien apoyó encima de
+     la página. Por eso los colores van fijos acá y no como tokens.
+
+     La forma —esquinas redondeadas y las dos muescas donde se corta el
+     talón— es una máscara de dos capas, una por mitad: la de arriba lleva un
+     círculo vacío en su borde de arriba y la de abajo en su borde de abajo,
+     los dos a la altura de la perforación. La sombra no puede ir en el papel
+     (la máscara la recortaría), así que va como drop-shadow en el envoltorio,
+     que respeta la silueta.
+
+     Lo holográfico son tres capas sobre el oro: un brillo que sigue al
+     puntero (--mx/--my), un arcoíris en color-dodge que se corre con --hx y
+     un grano de papel. En el boleto que vuela, --hx lo mueve el scroll.
+  */
+  .boleto {
+    --tinta: #3a2804;
+    --talon: 5.75rem;
+    --muesca: 0.7rem;
+    perspective: 900px;
+    filter: drop-shadow(0 22px 34px rgba(58, 40, 4, 0.28))
+      drop-shadow(0 3px 6px rgba(58, 40, 4, 0.22));
+    color: var(--tinta);
+  }
+
+  .boleto-papel {
+    position: relative;
+    display: flex;
+    border-radius: 1.25rem;
+    transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+    transition: transform 0.6s cubic-bezier(0.215, 0.61, 0.355, 1);
+    background:
+      radial-gradient(
+        120% 110% at var(--mx, 28%) var(--my, 18%),
+        rgba(255, 255, 255, 0.6),
+        transparent 46%
+      ),
+      repeating-linear-gradient(
+        105deg,
+        rgba(255, 255, 255, 0.09) 0 2px,
+        transparent 2px 5px
+      ),
+      linear-gradient(
+        118deg,
+        #fff4c2 0%,
+        #f1cd5e 16%,
+        #b9852a 34%,
+        #f6d97e 50%,
+        #c18f2f 68%,
+        #fbe39b 84%,
+        #a8751f 100%
+      );
+    -webkit-mask:
+      radial-gradient(
+          circle var(--muesca) at calc(100% - var(--talon)) 0,
+          #0000 97%,
+          #000
+        )
+        top / 100% 51% no-repeat,
+      radial-gradient(
+          circle var(--muesca) at calc(100% - var(--talon)) 100%,
+          #0000 97%,
+          #000
+        )
+        bottom / 100% 51% no-repeat;
+    mask:
+      radial-gradient(
+          circle var(--muesca) at calc(100% - var(--talon)) 0,
+          #0000 97%,
+          #000
+        )
+        top / 100% 51% no-repeat,
+      radial-gradient(
+          circle var(--muesca) at calc(100% - var(--talon)) 100%,
+          #0000 97%,
+          #000
+        )
+        bottom / 100% 51% no-repeat;
+  }
+
+  /* Mientras el puntero lo mueve, la transición se acorta: con 600ms el
+     boleto llegaba tarde a donde estaba el mouse. */
+  .boleto[data-inclinando] .boleto-papel {
+    transition-duration: 0.12s;
+  }
+
+  .boleto-papel::before,
+  .boleto-papel::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+  }
+
+  .boleto-papel::before {
+    background: linear-gradient(
+      115deg,
+      transparent 22%,
+      rgba(255, 70, 200, 0.55) 33%,
+      rgba(70, 220, 255, 0.55) 43%,
+      rgba(120, 255, 160, 0.5) 53%,
+      rgba(255, 235, 90, 0.5) 63%,
+      transparent 76%
+    );
+    background-size: 300% 300%;
+    background-position: var(--hx, 38%) 50%;
+    mix-blend-mode: color-dodge;
+    opacity: 0.55;
+  }
+
+  .boleto-papel::after {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+    mix-blend-mode: multiply;
+    opacity: 0.22;
+  }
+
+  /* El talón: separado por la perforación, con el texto de costado. */
+  .boleto-talon {
+    width: var(--talon);
+    border-left: 2px dashed rgba(58, 40, 4, 0.32);
+  }
+
+  .boleto-codigo {
+    background: repeating-linear-gradient(
+      90deg,
+      var(--tinta) 0 2px,
+      transparent 2px 4px,
+      var(--tinta) 4px 5px,
+      transparent 5px 8px,
+      var(--tinta) 8px 11px,
+      transparent 11px 13px
+    );
+    opacity: 0.75;
+  }
+
+  /* Las letras impresas en relieve: una luz de un píxel abajo. */
+  .boleto-relieve {
+    text-shadow: 0 1px 0 rgba(255, 248, 220, 0.55);
+  }
+
+  @media (max-width: 639px) {
+    .boleto {
+      --talon: 4.25rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .boleto-papel {
+      transform: none;
+    }
   }
 }

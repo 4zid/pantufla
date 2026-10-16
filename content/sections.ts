@@ -25,7 +25,8 @@ export type SeccionId =
   | "testimonials"
   | "clientsMap"
   | "faq"
-  | "finalCta";
+  | "finalCta"
+  | "lugar";
 
 /** De qué color está la página mientras se mira la sección. */
 export type Fondo = "claro" | "oscuro";
@@ -124,6 +125,13 @@ export const SECCIONES: Seccion[] = [
     titulo: "Formulario de contacto",
     nota: "Es adonde apuntan casi todos los botones del sitio. Apagándola pasan a llevar a la página de reunión, que es el otro camino para escribirnos.",
     ancla: "brief",
+  },
+  {
+    id: "lugar",
+    fondo: "claro",
+    titulo: "Boleto dorado (cierre)",
+    nota: "Es donde aterriza el boleto que vuela desde la portada. Apagada, el boleto de la portada se queda quieto en su lugar y no vuela.",
+    ancla: "lugar",
   },
 ];
 

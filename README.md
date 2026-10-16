@@ -47,7 +47,8 @@ funciona sin configurar nada. Si algún día se vaciara, `/studio` muestra una
 pantalla con los pasos que faltan en vez de romper.
 
 Lo único que hace falta cargar es el token de escritura, que se usa para guardar
-los briefs que llegan del formulario y las reuniones que llegan de Cal.com:
+los briefs que llegan del formulario, las reuniones que llegan de Cal.com y los
+lugares que se reservan con el boleto dorado:
 
 1. En [sanity.io/manage](https://www.sanity.io/manage) → API → Tokens, creá uno
    con permiso *Editor*.
@@ -243,7 +244,8 @@ Casi todo se edita en `/studio`, sin tocar código:
 | Qué secciones de la home se muestran y si van en claro u oscuro | Studio → *Secciones de la home* |
 | Todo el texto del sitio: titulares, planes y precios, proceso, preguntas frecuentes, formulario | Studio → *Textos del sitio (ES)* y *(EN)* |
 | Proyectos y testimonios | Studio → *Proyectos*, *Testimonios* |
-| Briefs y reuniones que llegan | Studio → *Briefs recibidos*, *Reuniones agendadas* (solo lectura) |
+| Las pantallas que corren abajo del hero | Studio → *Pantallas del hero* (vacío, salen las de relleno de `content/hero-galeria.ts`) |
+| Briefs, reuniones y lugares reservados que llegan | Studio → *Briefs recibidos*, *Reuniones agendadas*, *Lugares reservados* (solo lectura) |
 | Texto de respaldo, si el Studio no tiene nada cargado | `content/copy.es.ts` y `content/copy.en.ts` |
 | Colores, íconos y números de cada bloque, celdas del bento | `content/site.ts` |
 | Contacto, clientes del mapa, marcas de la prueba social, riel de herramientas | `content/site.ts` |
@@ -317,15 +319,19 @@ dice sale como viene de fábrica: prendida, salvo el stack.
 | 10 | Mapa de clientes | `#clientes` | claro |
 | 11 | Preguntas frecuentes | `#faq` | claro |
 | 12 | Formulario | `#brief` | oscuro |
+| 13 | Boleto dorado (cierre) | `#lugar` | claro |
 
 El recorrido sigue **promesa → prueba → qué incluye → cómo → precio →
 objeciones → contacto**:
 
-- **Portada.** Sale de Claude Design (ver *El hero*). Una pastilla dice que el
+- **Portada.** Todo el texto alineado a la izquierda: una pastilla dice que el
   estudio toma proyectos, el titular dice para qué sirve el sitio —«Sitios que
-  convierten *visitantes* en *clientes*»—, la bajada lo cuenta, hay un CTA
-  principal al formulario y uno secundario a los planes, y abajo a la derecha
-  corre un carrusel con los proyectos que tienen caso.
+  convierten *visitantes* en *clientes*»—, la bajada lo cuenta, y hay un CTA
+  principal al formulario y uno secundario a los planes. A la derecha, el
+  boleto dorado para reservar un lugar en la agenda; abajo, de punta a punta,
+  la galería de pantallas (ver *El hero*).
+- **Prueba social.** Solo los logos de los clientes, corriendo de punta a punta
+  de la pantalla.
 - **Cómo lo resolvemos.** Tres pilares: alcance cerrado, ritmo corto con fechas
   visibles, y el sitio entregado andando.
 - **Proyectos.** Justo después de la promesa: el trabajo se ve antes que el
@@ -357,8 +363,12 @@ objeciones → contacto**:
   sitio, editar sin programar, con qué herramientas, costo mensual, uso de IA,
   formas de pago. Al pie ofrece agendar una reunión, o el mail mientras el
   calendario no esté conectado.
-- **Formulario.** Un solo cierre, con el brief: plan, presupuesto y plazo van en
-  desplegables propios del sitio, no en el `<select>` del sistema.
+- **Formulario.** El brief: plan, presupuesto y plazo van en desplegables
+  propios del sitio, no en el `<select>` del sistema.
+- **Boleto dorado.** La última sección, después del brief: el camino corto
+  para quien llegó al final sin escribirlo. Deja solo el mail y se guarda un
+  lugar para el próximo cupo. Ahí aterriza el boleto que vino volando desde la
+  portada.
 
 El toggle de precios no es mensual/anual, porque el estudio no vende una
 suscripción. Ofrece **pago único con 15% de descuento** contra **dos pagos de
@@ -367,30 +377,43 @@ cobrar rápido.
 
 ### El hero
 
-Viene de un diseño de Claude Design (`Pantufla_Hero.html`), pasado a los
-componentes del sitio. En escritorio ocupa una pantalla: la pastilla y el
-titular arriba a la izquierda, la bajada con los botones abajo a la izquierda y
-el carrusel abajo a la derecha. Abajo de 1280 las dos mitades de abajo van una
-debajo de la otra, y en el teléfono todo corre seguido.
+En escritorio son dos columnas y una franja. A la izquierda, todo el texto
+alineado: la pastilla de «Disponibles», el titular, la bajada y los dos
+botones. A la derecha, el boleto dorado. Abajo, de punta a punta, la galería de
+pantallas corriendo. Abajo de 1024 el boleto pasa debajo de los botones, y en
+el teléfono todo corre seguido.
 
-- **La cinta del fondo** es un shader de WebGL, el mismo del diseño, en un
-  degradé de blanco al verde profundo de la marca (`#166B67`) que va y viene
-  a lo largo de la cinta, siempre con los dos colores a la vista. Es más
-  angosta que en el diseño, que la tenía en miel, rosa y aqua. Se corre un
-  poco hacia el cursor. Arranca cuando el navegador está libre, se
-  para cuando el hero sale de pantalla y, con movimiento reducido, queda quieta
-  en un cuadro. Sin placa de video no se dibuja: calculada por el procesador
-  cada cuadro trababa la página casi medio segundo. Si con placa igual va
-  lenta, baja la resolución y, si hace falta, se queda quieta. En los tres
-  casos el hero se ve igual, con el fondo de bruma.
 - **El titular** lleva dos palabras en la itálica de Newsreader, en el mismo
   negro que el resto. Es la única otra letra del sitio y solo se baja en la
-  home. En el Studio son los tramos con estilo «Itálica».
-- **El carrusel** muestra los proyectos con caso escrito, que son los que
-  tienen mockups de verdad (hoy 2MG y Tierras Argentinas); cada tarjeta lleva a
-  su caso. Usa la imagen para redes del proyecto, o la portada si no tiene.
-  Avanza solo cada 4,5 segundos, se frena con el mouse encima o con el foco
-  adentro, y deja de avanzar solo cuando alguien usa las flechas.
+  home. En el Studio son los tramos con estilo «Itálica». A 1440 entra en dos
+  líneas; más angosto, en tres.
+- **El boleto dorado** es la ilustración y a la vez un formulario: un pase
+  dorado y holográfico, con su talón perforado, donde se deja el mail para
+  reservar un lugar en la agenda. Con el mouse encima se inclina y el brillo
+  sigue al puntero. El mail va a `/api/lugar`, que lo guarda en el Studio como
+  *Lugar reservado* (una sola fila por mail) y avisa por mail con las mismas
+  variables de Resend que el brief. El navegador recuerda que ya se reservó:
+  quien vuelve ve su lugar guardado, con un enlace para usar otro mail. Los
+  textos están en el Studio, en *Boleto dorado*.
+- **El vuelo.** Cuando el boleto de la portada llega arriba de la pantalla,
+  una copia se despega y acompaña el scroll como un papel que se lleva el
+  viento: más chica, cruzando de un costado al otro en el tercio de abajo de la
+  ventana, inclinándose y cambiando de brillo. Antes de la última sección baja
+  y aterriza exactamente sobre el boleto de ahí, que es el de verdad. Lo mueve
+  el scroll y nada más: con la página quieta, queda quieto. Nunca tapa un
+  clic. Si alguien está escribiendo en un boleto, o llega con el teclado, ese
+  boleto se ve entero y la copia se esconde. En el teléfono y con movimiento
+  reducido no vuela: los dos boletos están quietos en su lugar. Si se apaga la
+  sección del cierre en el Studio, el de la portada se queda donde está.
+- **La galería** son capturas de sitios, de escritorio y de teléfono, en
+  columnas tipo masonry: dos de escritorio apiladas, un teléfono de alto
+  entero, o una de escritorio grande cuando queda sola antes de un teléfono.
+  Corre como los otros rieles y se frena igual. Las capturas se cargan en el
+  Studio, en *Pantallas del hero*: el orden arma las columnas, cada una dice si
+  es de escritorio o de teléfono, y si se le asigna un proyecto con caso
+  escrito, la pantalla lleva al caso. Mientras el documento está vacío salen
+  unas de relleno (sitios inventados, en `public/hero/pantallas`); apenas hay
+  una real, se usan solo las del Studio.
 - **La barra de arriba**, en el tope de la página, no tiene fondo: el logo, el
   menú en su pastilla de vidrio y los botones flotan con el mismo margen que el
   hero. Al bajar se arma la barra compacta de siempre.
@@ -529,9 +552,8 @@ CTA), con el margen justo para que el título no quede debajo del header.
    teléfono y con un botón que aparece al llegar con el teclado
    (`components/ui/riel-pausable.tsx`). Los testimonios rotan solos hasta que
    se elige una cara, esperan mientras alguien los lee y no rotan con
-   movimiento reducido. El carrusel del hero, igual: se frena con el mouse o
-   el foco, deja de avanzar solo cuando se usan las flechas y no avanza con
-   movimiento reducido. La cinta del hero se para fuera de pantalla.
+   movimiento reducido. La galería del hero es un riel más, con las mismas
+   reglas. El boleto que vuela no se mueve solo: lo mueve el scroll.
 
 ---
 
@@ -542,9 +564,9 @@ CTA), con el margen justo para que el título no quede debajo del header.
   y al alfabeto latino (40 KB), precargada y con un respaldo ajustado a sus
   medidas para que el texto no salte cuando llega la fuente. Si se cambia el
   archivo, hay que subir el `-vN` del nombre: se sirve con caché inmutable.
-  Y una itálica de acento, Newsreader, solo para las dos palabras en itálica
-  del titular del hero: fijada en un peso y un tamaño óptico y recortada al
-  latino (19 KB).
+  Y una itálica de acento, Newsreader, solo para las palabras en itálica del
+  titular del hero y del boleto dorado: fijada en un peso y un tamaño óptico y
+  recortada al latino (19 KB).
 - **Fondo de bruma** (`#eaedf8`) en claro y casi negro en oscuro, con un grano
   muy leve para que no quede plano. El blanco queda para lo que se destaca: las
   tarjetas, la píldora del menú, los botones sobre oscuro.

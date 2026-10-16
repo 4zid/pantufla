@@ -52,8 +52,8 @@ export type SiteCopy = {
     /** La pastilla de arriba del titular: si el estudio toma trabajo. */
     eyebrow: string;
     /**
-     * El titular por tramos. Los de `mark: "serif"` salen en la itálica gris
-     * («visitantes», «clientes»); el resto, en la letra del sitio.
+     * El titular por tramos. Los de `mark: "serif"` salen en la itálica de
+     * acento («visitantes», «clientes»); el resto, en la letra del sitio.
      *
      * Es un campo nuevo y no el `titleSegments` de antes a propósito: el
      * titular viejo sigue cargado en Sanity, y con el mismo nombre le habría
@@ -63,10 +63,52 @@ export type SiteCopy = {
     lead: string;
     primary: Link;
     secondary: Link;
-    /** El carrusel de proyectos del hero: su nombre y las dos flechas. */
-    carousel: { label: string; prev: string; next: string };
+    /** El nombre de la galería de pantallas, para el lector de pantalla. */
+    gallery: string;
   };
-  socialProof: { label: string; claim: string };
+  /**
+   * El boleto dorado: el del hero, el que vuela con el scroll y el que
+   * aterriza en la última sección son el mismo, con estos textos.
+   *
+   * Reserva un lugar en la agenda: quien deja el mail pide que le escriban
+   * primero cuando se abra el próximo cupo.
+   */
+  boleto: {
+    /** Arriba a la izquierda, en versalitas. */
+    kicker: string;
+    /** El número de serie de adorno, arriba a la derecha. */
+    serial: string;
+    /** El título va en dos partes: la segunda sale en la itálica. */
+    title: string;
+    titleAccent: string;
+    body: string;
+    /** El talón: el texto vertical del costado. */
+    stub: string;
+    label: string;
+    placeholder: string;
+    submit: string;
+    sending: string;
+    /** La letra chica de abajo del campo. */
+    fine: string;
+    /** Si el mail no es válido. */
+    invalid: string;
+    /** Si no se pudo guardar. Lleva {email}, el del estudio. */
+    error: string;
+    success: {
+      title: string;
+      /** Lleva {email}, el que dejó la persona. */
+      body: string;
+      reset: string;
+    };
+  };
+  /** La última sección de la home, donde aterriza el boleto. */
+  lugar: {
+    eyebrow: string;
+    title: string;
+    lead: string;
+    points: string[];
+  };
+  socialProof: { label: string };
   approach: {
     eyebrow: string;
     title: string;

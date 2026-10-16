@@ -60,16 +60,43 @@ export const es: SiteCopy = {
     lead: "Diseño, textos y desarrollo para que la gente que entra entienda qué hacés en diez segundos y termine escribiéndote.",
     primary: { label: "Empezar un proyecto", href: "/#brief" },
     secondary: { label: "Ver planes y precios", href: "/#planes" },
-    carousel: {
-      label: "Proyectos",
-      prev: "Proyecto anterior",
-      next: "Proyecto siguiente",
+    gallery: "Pantallas de sitios que hicimos",
+  },
+
+  boleto: {
+    kicker: "Boleto dorado",
+    serial: "N.º 0042",
+    title: "Pase",
+    titleAccent: "prioritario",
+    body: "Reservá tu lugar para el próximo cupo de la agenda.",
+    stub: "Vale por un lugar",
+    label: "Tu mail",
+    placeholder: "vos@mail.com",
+    submit: "Reservar mi lugar",
+    sending: "Reservando…",
+    fine: "Un solo mail, cuando se abra el cupo.",
+    invalid: "Revisá el mail.",
+    error: "No pudimos reservarlo. Probá de nuevo o escribinos a {email}.",
+    success: {
+      title: "Lugar reservado.",
+      body: "Te escribimos a {email} cuando se abra el próximo cupo.",
+      reset: "Usar otro mail",
     },
+  },
+
+  lugar: {
+    eyebrow: "Próximo cupo",
+    title: "Guardate un lugar en la agenda.",
+    lead: "Tomamos pocos proyectos por mes para hacerlos enteros nosotros. Dejá tu mail y te escribimos primero cuando se libere el próximo cupo, antes de anunciarlo.",
+    points: [
+      "Te avisamos antes que a nadie.",
+      "Un solo mail: no es un newsletter.",
+      "Sin compromiso. Si no te sirve, lo dejás pasar.",
+    ],
   },
 
   socialProof: {
     label: "Clientes",
-    claim: "Tomamos pocos proyectos a la vez y los hacemos enteros nosotros.",
   },
 
   approach: {
