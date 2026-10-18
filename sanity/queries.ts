@@ -27,11 +27,15 @@ const projectFields = `
   services,
   results,
   url,
-  "conCaso": count(body) > 0
-`;
-
-export const featuredProjectsQuery = groq`
-  *[_type == "project" && featured == true && ${enIdioma}] | order(order asc)[0...4] { ${projectFields} }
+  featured,
+  "conCaso": count(body) > 0,
+  "pantallas": pantallas[defined(asset)]{
+    _key,
+    formato,
+    alt,
+    asset,
+    "dimensiones": asset->metadata.dimensions{ width, height }
+  }
 `;
 
 export const allProjectsQuery = groq`
@@ -59,7 +63,7 @@ export const projectSlugsQuery = groq`
  * Las fichas que van al sitemap: las que tienen el caso escrito.
  *
  * Sin caso, una ficha es el nombre, una bajada y dos datos, y la home ni la
- * enlaza (la esfera lleva al sitio publicado). Mandarla al buscador es pedirle
+ * enlaza (la tarjeta lleva al sitio publicado). Mandarla al buscador es pedirle
  * que indexe una página flaca. Siguen existiendo y se pueden abrir; van con
  * noindex y entran solas apenas se escribe el caso.
  */

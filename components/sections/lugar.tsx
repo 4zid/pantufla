@@ -24,8 +24,7 @@ function Vecino({ lado }: { lado: "izquierda" | "derecha" }) {
       aria-hidden
       className={`absolute top-0 hidden h-full w-full sm:block ${ESQUINAS} border-[1.5px] border-dashed border-on-ink/20 bg-on-ink/[0.035] ${
         lado === "izquierda"
-          ? /* En dos columnas quedaría debajo del texto. */
-            "right-[calc(100%+1.75rem)] lg:hidden"
+          ? "right-[calc(100%+1.75rem)]"
           : "left-[calc(100%+1.75rem)]"
       }`}
     >
@@ -45,7 +44,7 @@ function Vecino({ lado }: { lado: "izquierda" | "derecha" }) {
  * tijera y un halo tenue. El único color es el champagne del foil del pase,
  * en la línea de corte, la tijera y las tildes: el resto es la tinta. El pase que vino volando desde
  * la portada (components/pase) baja, se acuesta y calza ahí: es la pieza que
- * faltaba. Al lado (abajo en el teléfono), el formulario con nombre y mail.
+ * faltaba. Abajo, el formulario con nombre y mail.
  *
  * Antes era la última sección y el pase acompañaba toda la home hasta el
  * final, que era demasiado. A la mitad el vuelo es la mitad de largo y el
@@ -62,41 +61,38 @@ export function Lugar({ surface = "mist" }: { surface?: Surface }) {
   const { lugar } = useCopy();
 
   /*
-     En escritorio son dos columnas: el texto y el formulario a la
-     izquierda, el hueco a la derecha. Apilado era altísimo —el titular, la
-     bajada, el hueco, el formulario y los puntos uno abajo del otro pasaban
-     de una pantalla—, y así la sección mide lo que mide el texto. En el
-     teléfono sigue apilado y el hueco queda entre la bajada y el
-     formulario: primero se ve el pase, abajo se dejan los datos. La grilla
-     de lg ubica las tres partes sin cambiar el orden del documento.
+     Centrada y apilada, pero contenida: el ritmo compacto, la tarjeta con
+     menos relleno, el hueco un poco más chico y los saltos entre partes más
+     cortos. Pasó por dos columnas —texto a la izquierda, hueco a la
+     derecha— para que no fuera altísima, y se volvió: el hueco al medio,
+     con la tira de cupones de punta a punta, es lo que hace que el pase se
+     lea como la pieza que faltaba.
   */
   return (
     <Section id="lugar" surface={surface} ritmo="compacto">
       <div
         data-pase-zona="banner"
-        className="relative isolate overflow-hidden rounded-[2rem] bg-ink px-6 py-12 text-center text-on-ink sm:px-12 md:rounded-[2.5rem] md:px-14 md:py-14 lg:grid lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-x-16 lg:py-16 lg:text-left xl:px-16"
+        className="relative isolate overflow-hidden rounded-[2rem] bg-ink px-6 pb-10 pt-12 text-center text-on-ink sm:px-12 md:rounded-[2.5rem] md:px-16 md:pb-12 md:pt-14"
       >
-        <div className="lg:col-start-1 lg:row-start-1 lg:self-end">
-          <Reveal>
-            <span className="inline-flex items-center gap-2 rounded-full border border-on-ink/15 bg-on-ink/[0.06] px-3.5 py-1.5 text-[0.7rem] font-medium uppercase tracking-[0.12em] text-on-ink/75">
-              <TagIcon className="h-3.5 w-3.5 shrink-0" />
-              {lugar.eyebrow}
-            </span>
-          </Reveal>
-          <SplitHeading
-            text={lugar.title}
-            className="mx-auto mt-5 max-w-[14em] text-h2 lg:mx-0"
-          />
-          <Reveal delay={0.15}>
-            <p className="mx-auto mt-4 max-w-[32rem] text-lead text-on-ink/70 lg:mx-0 lg:max-w-[28rem]">
-              {lugar.lead}
-            </p>
-          </Reveal>
-        </div>
+        <Reveal>
+          <span className="inline-flex items-center gap-2 rounded-full border border-on-ink/15 bg-on-ink/[0.06] px-3.5 py-1.5 text-[0.7rem] font-medium uppercase tracking-[0.12em] text-on-ink/75">
+            <TagIcon className="h-3.5 w-3.5 shrink-0" />
+            {lugar.eyebrow}
+          </span>
+        </Reveal>
+        <SplitHeading
+          text={lugar.title}
+          className="mx-auto mt-5 max-w-[14em] text-h2"
+        />
+        <Reveal delay={0.15}>
+          <p className="mx-auto mt-4 max-w-[38rem] text-lead text-on-ink/70">
+            {lugar.lead}
+          </p>
+        </Reveal>
 
         {/* La tira de cupones y el hueco. El contenedor mide lo que el hueco:
             los vecinos y el halo se ubican desde él y la tarjeta los corta. */}
-        <div className="relative mx-auto mt-10 w-full max-w-[17rem] sm:max-w-[22rem] lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:mt-0 lg:w-[22rem] lg:self-center xl:w-[24rem]">
+        <div className="relative mx-auto mt-10 w-full max-w-[16rem] sm:max-w-[20rem] md:mt-12 lg:max-w-[22rem]">
           <div
             aria-hidden
             className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[150%] w-[130%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,#e6d7bb,transparent)] opacity-25 blur-3xl"
@@ -136,27 +132,30 @@ export function Lugar({ surface = "mist" }: { surface?: Surface }) {
           <PaseLugar
             origen="banner"
             acostado
-            sizes="(min-width: 1280px) 250px, (min-width: 640px) 230px, 180px"
+            sizes="(min-width: 1024px) 230px, (min-width: 640px) 210px, 170px"
             className="w-full"
           />
         </div>
 
-        <div className="mx-auto mt-10 max-w-[34rem] lg:col-start-1 lg:row-start-2 lg:mx-0 lg:mt-8 lg:self-start">
-          <Reveal delay={0.1}>
-            <PaseFormulario origen="banner" conNombre sobreTinta />
-          </Reveal>
+        <Reveal delay={0.1}>
+          <PaseFormulario
+            origen="banner"
+            conNombre
+            sobreTinta
+            className="mx-auto mt-10 max-w-[42rem]"
+          />
+        </Reveal>
 
-          <Reveal delay={0.2}>
-            <ul className="mt-4 flex flex-wrap justify-center gap-x-5 gap-y-1.5 text-[0.78rem] text-on-ink/60 lg:justify-start">
-              {lugar.points.map((punto) => (
-                <li key={punto} className="flex items-center gap-2">
-                  <CheckIcon className="h-3.5 w-3.5 shrink-0 text-[#c8ae84]" />
-                  {punto}
-                </li>
-              ))}
-            </ul>
-          </Reveal>
-        </div>
+        <Reveal delay={0.2}>
+          <ul className="mx-auto mt-4 flex max-w-[56rem] flex-wrap justify-center gap-x-6 gap-y-1.5 text-[0.78rem] text-on-ink/60">
+            {lugar.points.map((punto) => (
+              <li key={punto} className="flex items-center gap-2">
+                <CheckIcon className="h-3.5 w-3.5 shrink-0 text-[#c8ae84]" />
+                {punto}
+              </li>
+            ))}
+          </ul>
+        </Reveal>
       </div>
     </Section>
   );

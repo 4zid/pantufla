@@ -3,17 +3,17 @@ import type { NextConfig } from "next";
 /**
  * Las páginas que se fueron siguen contestando.
  *
- * /contacto, /notas y el listado /proyectos existieron, están en el sitemap
- * que ya se envió y pueden estar enlazadas desde afuera. Borrarlas sin más
- * las convierte en 404: se pierde el enlace y, si alguna estaba indexada, se
- * pierde lo que traía. Con un 308 el buscador mueve la autoridad al destino
- * nuevo y quien tenía el link llega igual.
+ * /contacto y /notas existieron, están en el sitemap que ya se envió y
+ * pueden estar enlazadas desde afuera. Borrarlas sin más las convierte en
+ * 404: se pierde el enlace y, si alguna estaba indexada, se pierde lo que
+ * traía. Con un 308 el buscador mueve la autoridad al destino nuevo y quien
+ * tenía el link llega igual.
  *
  * El ancla del destino la agrega el navegador —el # nunca viaja al servidor—
  * así que /contacto termina en la home, en el formulario.
  *
- * Las fichas de proyecto no entran acá: /proyectos/[slug] sigue existiendo, y
- * source "/proyectos" coincide exacto, no con lo que cuelga debajo.
+ * El listado /proyectos también estuvo acá, redirigido a la sección de la
+ * home, y volvió a ser una página: la home muestra cuatro y ahí están todos.
  */
 const nextConfig: NextConfig = {
   /*
@@ -50,7 +50,6 @@ const nextConfig: NextConfig = {
   async redirects() {
     const pares: [string, string][] = [
       ["/contacto", "/#brief"],
-      ["/proyectos", "/#proyectos"],
       ["/notas", "/"],
       ["/notas/:slug", "/"],
     ];

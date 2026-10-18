@@ -767,6 +767,11 @@ export const siteCopy = defineType({
           title: "Enlace al caso escrito",
           type: "string",
         }),
+        defineField({
+          name: "all",
+          title: "Enlace a todos los proyectos",
+          type: "string",
+        }),
       ],
     }),
     defineField({

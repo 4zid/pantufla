@@ -61,14 +61,15 @@ export default async function HomePage({
     ]);
 
   /*
-     Todos y no los cuatro destacados: el corte lo hace la sección, que muestra
-     cuatro y suma de a dos cuando se lo piden. Traer solo cuatro dejaría el
-     botón sin nada que cargar.
-
-     Ya no hay un /proyectos donde ver el resto, así que esta es la única
-     puerta al catálogo entero.
+     La home muestra los cuatro destacados en el Studio, en su orden; el
+     resto está en /proyectos. Se traen todos igual: con el total la sección
+     sabe si hace falta el enlace a ver todos, y si nadie marcó ninguno
+     destacado entran los cuatro primeros en vez de una sección vacía. El
+     respaldo tiene a los cuatro principales primero.
   */
   const projects = cmsProjects.length ? cmsProjects : fallbackProjects;
+  const marcados = projects.filter((p) => p.featured).slice(0, 4);
+  const destacados = marcados.length ? marcados : projects.slice(0, 4);
   const testimonials = cmsTestimonials.length
     ? cmsTestimonials
     : (fallbackTestimonials[locale] ?? fallbackTestimonials.es);
@@ -103,7 +104,9 @@ export default async function HomePage({
     process: (surface) => <Process surface={surface} />,
     stackTicker: (surface) => <StackTicker surface={surface} />,
     pricing: (surface) => <Pricing surface={surface} />,
-    work: (surface) => <Work projects={projects} surface={surface} />,
+    work: (surface) => (
+      <Work projects={destacados} total={projects.length} surface={surface} />
+    ),
     testimonials: (surface) => (
       <Testimonials items={testimonials} surface={surface}>
         {juntos ? <ClientsMap embedded /> : null}
@@ -148,7 +151,7 @@ export default async function HomePage({
           */
           ...(secciones.faq ? [nodoFaq(copy, locale)] : []),
           ...(secciones.work
-            ? [nodoProyectos(projects, locale, copy.work.title)]
+            ? [nodoProyectos(destacados, locale, copy.work.title)]
             : []),
         ]}
       />
