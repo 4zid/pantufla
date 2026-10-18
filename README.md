@@ -491,10 +491,13 @@ compuesta (un mockup con sus propios marcos, o una ilustración) y adentro de
 una ventana parecería un sitio roto. Para que la tarjeta tenga capturas
 alcanza con cargarle pantallas, y eso también lo suma a la galería del hero.
 
-El mockup lleva al sitio publicado: al pasar el mouse se desenfoca y aparece
-en el medio una pastilla blanca con «Ver sitio». Ese clic es solo para el
-mouse; con el teclado o en el teléfono están los enlaces de texto de abajo:
-«Leer el caso» cuando está escrito, y «Ver sitio».
+Los botones viven adentro del mockup, y abajo quedan solo el nombre, el rubro
+y la bajada. Al pasar el mouse el mockup se desenfoca y en el medio aparecen
+«Ver sitio», una pastilla blanca con letra negra, y al lado, si el caso está
+escrito, «Leer el caso» en el champagne del pase. El clic en el resto del
+plano lleva al sitio. Con el teclado, el foco en un botón hace lo mismo que
+el mouse; en el teléfono, donde no hay mouse, los botones están siempre,
+abajo del plano y sin desenfoque.
 
 Cada proyecto tiene además su ficha en `/proyectos/<slug>`. Lo que muestra sale
 del Studio: si el proyecto no tiene portada ni caso escrito («Caso completo»),
@@ -503,7 +506,7 @@ portada y el caso aparecen solos cuando se cargan.
 
 El caso escrito es lo que decide si la ficha existe para afuera:
 
-- **Con caso**, la tarjeta lleva a la ficha con «Leer el caso», la ficha va al
+- **Con caso**, la tarjeta suma el botón «Leer el caso», la ficha va al
   sitemap y se indexa.
 - **Sin caso**, la ficha se puede abrir pero va con `noindex`, fuera del
   sitemap, y ninguna tarjeta la enlaza (llevan al sitio publicado). Es una
