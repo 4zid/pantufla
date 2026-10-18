@@ -104,7 +104,7 @@ export async function generateMetadata({
 export const viewport: Viewport = {
   /* El fondo de la página en claro (--page-bg). Al pasar a oscuro lo cambia
      components/theme-scroll.tsx, para que la barra del navegador acompañe. */
-  themeColor: "#eaedf8",
+  themeColor: "#ffffff",
   colorScheme: "light",
 };
 

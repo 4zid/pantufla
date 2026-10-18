@@ -134,11 +134,9 @@
   --color-on-ink: #ffffff;
   --color-ink-soft: #565656;
   /*
-     Sobre blanco #767676 daba 4.6:1 y pasaba, pero la mitad de las secciones
-     van sobre bruma (#eaedf8), que es más oscura, y ahí caía a 3.9:1. Como es
-     la tinta de los pies de tabla y los cargos —texto chico— tiene que pasar
-     4.5:1 en las dos superficies: con #666 da 5.7:1 sobre papel y 4.9:1 sobre
-     bruma.
+     Sobre blanco #767676 daba 4.6:1 y pasaba justo; con #666 da 5.7:1, y
+     sigue pasando sobre los grises de las tarjetas (paper-alt). Es la tinta
+     de los pies de tabla y los cargos: texto chico.
   */
   --color-ink-faint: #666666;
   /*
@@ -287,7 +285,7 @@
 @property --page-bg {
   syntax: "<color>";
   inherits: true;
-  initial-value: #eaedf8;
+  initial-value: #ffffff;
 }
 @property --color-paper {
   syntax: "<color>";
@@ -374,7 +372,13 @@
 }
 
 :root {
-  --page-bg: #eaedf8;
+  /*
+     Blanco. Era bruma (#eaedf8), un lila que teñía toda la página; en blanco
+     el contenido respira más y las secciones oscuras se recortan limpias.
+     Lo que antes se separaba del fondo por ser blanco ahora lleva su filete
+     o un gris apenas más oscuro (paper-alt).
+  */
+  --page-bg: #ffffff;
   --riel-aqua: #166b67;
   --riel-rosa: #a3405a;
   --riel-verde: #456f35;

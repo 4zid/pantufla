@@ -53,7 +53,7 @@ const BANDA_ABAJO = 0.55;
    Van escritos acá y no leídos del CSS porque --page-bg transiciona, y leerlo
    justo después del cambio devolvería un color a mitad de camino.
 */
-const BARRA_CLARA = "#eaedf8";
+const BARRA_CLARA = "#ffffff";
 const BARRA_OSCURA = "#0e0e0e";
 
 /*
