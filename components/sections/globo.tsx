@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import type { ControlGlobo } from "@/components/sections/globo-3d";
 import { RielPausable } from "@/components/ui/riel-pausable";
 import {
+  DIAMETRO_VISIBLE,
   VISTA_INICIAL,
   giroPara,
   inclinacionPara,
@@ -27,6 +28,16 @@ export type PaisGlobo = {
    respaldo y del primer cuadro del 3D. */
 const GIRO_INICIAL = giroPara(VISTA_INICIAL.lon);
 const INCLINACION_INICIAL = inclinacionPara(VISTA_INICIAL.lat);
+
+/** El círculo del globo dentro del cuadro, para el grano de la imagen. */
+const MARGEN = `${(((1 - DIAMETRO_VISIBLE) / 2) * 100).toFixed(2)}%`;
+
+/**
+ * El grano de la imagen quieta: ruido fractal en gris, repetido. El 3D lo
+ * dibuja en el shader; la imagen lo trae aparte porque el ruido no se
+ * comprime y horneado la haría pesar el triple.
+ */
+const GRANO = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23g)'/%3E%3C/svg%3E")`;
 
 /**
  * El globo de «Dónde trabajamos»: blanco y negro, girando despacio, con los
@@ -86,6 +97,9 @@ export function Globo({
           quieto: () =>
             !!riel?.matches(":hover, :focus-within, [data-pausado]"),
           alListo: () => setListo(true),
+          conGrano:
+            new URLSearchParams(window.location.search).get("globo3d") !==
+            "limpio",
         });
       } catch (error) {
         console.warn("[globo] sin 3D:", error);
@@ -136,6 +150,13 @@ export function Globo({
           sizes="(min-width: 1024px) 512px, 90vw"
           className={cn("globo-respaldo", listo && "opacity-0")}
         />
+        {listo ? null : (
+          <span
+            aria-hidden
+            className="absolute rounded-full opacity-[0.16]"
+            style={{ inset: MARGEN, backgroundImage: GRANO }}
+          />
+        )}
 
         {paises.map((p, i) => {
           const quieto = proyectar(

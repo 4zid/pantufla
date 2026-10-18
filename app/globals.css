@@ -53,6 +53,25 @@
     U+2215, U+FEFF, U+FFFD;
 }
 
+/*
+   El Black (900) de la misma familia, solo en mayúsculas: lo usa la palabra
+   gigante de atrás del globo de «Dónde trabajamos». El archivo de arriba
+   llega hasta 600, y sumarle el 900 entero eran 24 KB más para todo el
+   sitio; recortado a las mayúsculas, con los acentos del español, pesa 3 KB
+   y el navegador lo baja recién cuando la palabra aparece. Sale de
+   @fontsource/schibsted-grotesk (OFL), recortado con fonttools.
+*/
+@font-face {
+  font-family: "Schibsted Grotesk";
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url("/fonts/schibsted-grotesk-black-mayusculas-v1.woff2") format("woff2");
+  unicode-range:
+    U+0020-0021, U+002D-002E, U+0041-005A, U+00C1, U+00C9, U+00CD, U+00D1,
+    U+00D3, U+00DA, U+00DC;
+}
+
 @font-face {
   font-family: "Schibsted Fallback";
   font-weight: 100 500;

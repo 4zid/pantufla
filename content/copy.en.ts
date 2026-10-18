@@ -346,6 +346,7 @@ export const en: SiteCopy = {
     eyebrow: "Where we work",
     title: "We work from Buenos Aires, for wherever you are.",
     note: "The whole process runs on writing and video. So far we have published sites for clients in {count} countries.",
+    backdrop: "Worldwide",
   },
 
   faq: {

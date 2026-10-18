@@ -387,10 +387,21 @@ objeciones → contacto**:
 ### El globo
 
 «Dónde trabajamos» es un globo blanco y negro que gira despacio, de oeste a
-este, una vuelta cada setenta segundos. Los países donde trabajamos van en
-tinta, con una marca con el nombre; al lado, la lista de esos países, y pasar
-por uno (o tocarlo, o llegar con el teclado) hace girar el globo hasta
-ponerlo de frente. Reemplaza al mapa plano con líneas desde Buenos Aires.
+este, una vuelta cada setenta segundos, delante de una palabra gigante:
+«WORLDWIDE», en el Black (900) de la Schibsted, en mayúsculas y en la tinta.
+La palabra se edita en el Studio (*Mapa de clientes* → *Palabra de atrás del
+globo*) y mide el ancho de la ventana; en el teléfono va arriba del globo,
+que le pisa el pie de las letras, porque detrás la tapaba entera.
+
+Los países donde trabajamos van en tinta, con una marca con el nombre, y
+abajo del planeta están los mismos países en pastillas: pasar por una (o
+tocarla, o llegar con el teclado) hace girar el globo hasta ponerlo de frente.
+Reemplaza al mapa plano con líneas desde Buenos Aires.
+
+- **El acabado** es holográfico, como el foil del pase: un brillo nacarado en
+  la misma paleta (champagne, perla, verde agua y rosa apagados) que corre por
+  el globo mientras gira y se carga hacia el borde, y un grano fino, como el de
+  una foto.
 
 - **Cómo está hecho.** Three.js, el mismo paquete del pase, que se baja recién
   cuando la sección se acerca (`components/sections/globo-3d.ts`). La esfera
@@ -402,10 +413,17 @@ ponerlo de frente. Reemplaza al mapa plano con líneas desde Buenos Aires.
   el foco adentro o con el botón del teclado. Fuera de la pantalla no dibuja.
 - **Sin 3D** (sin WebGL, con placa de video por software o con menos
   movimiento pedido) queda una imagen quieta del mismo globo
-  (`public/globo/globo.webp`), con las marcas encima en el mismo lugar. Esa
-  imagen se saca del 3D con `scripts/generar-globo-imagen.mjs` y hay que
-  volver a sacarla si cambian los países o el dibujo. `?globo3d` fuerza el 3D
-  para probarlo en un navegador sin placa.
+  (`public/globo/globo.webp`), con las marcas encima en el mismo lugar y el
+  grano puesto por CSS (horneado, el ruido triplicaba el peso). Esa imagen se
+  saca del 3D con `scripts/generar-globo-imagen.mjs` y hay que volver a
+  sacarla si cambian los países o el dibujo. `?globo3d` fuerza el 3D para
+  probarlo en un navegador sin placa (`?globo3d=limpio`, sin grano, es lo que
+  usa el script).
+- **La fuente Black** es un recorte de 3 KB con solo las mayúsculas
+  (`public/fonts/schibsted-grotesk-black-mayusculas-v1.woff2`, de
+  `@fontsource/schibsted-grotesk`, OFL): el archivo de siempre llega hasta 600
+  y el 900 entero eran 24 KB más para todo el sitio. Solo se baja cuando la
+  palabra aparece.
 - **Preguntas frecuentes.** Objeciones de compra: páginas de más, propiedad del
   sitio, editar sin programar, con qué herramientas, costo mensual, uso de IA,
   formas de pago. Al pie ofrece agendar una reunión, o el mail mientras el

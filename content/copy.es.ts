@@ -353,6 +353,7 @@ export const es: SiteCopy = {
     eyebrow: "Dónde trabajamos",
     title: "Trabajamos desde Buenos Aires para donde haga falta.",
     note: "Todo el proceso pasa por escrito y por video. Hasta hoy publicamos sitios para clientes en {count} países.",
+    backdrop: "Worldwide",
   },
 
   faq: {
