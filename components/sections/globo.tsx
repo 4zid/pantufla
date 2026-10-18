@@ -57,16 +57,13 @@ const GRANO = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'
  *
  * Se mueve solo, así que se puede frenar como los rieles (RielPausable): con
  * el mouse encima, con un toque, con el foco adentro o con el botón del
- * teclado. Y `activo` —el país que se señala en la lista de al lado— lo
- * hace girar hasta ponerlo de frente y lo deja ahí.
+ * teclado.
  */
 export function Globo({
   paises,
-  activo,
   className,
 }: {
   paises: PaisGlobo[];
-  activo: string | null;
   className?: string;
 }) {
   const caja = useRef<HTMLDivElement>(null);
@@ -130,11 +127,6 @@ export function Globo({
     };
   }, [paises]);
 
-  useEffect(() => {
-    const p = paises.find((x) => x.pais === activo);
-    control.current?.enfocar(p ? { lon: p.lon, lat: p.lat } : null);
-  }, [activo, paises]);
-
   return (
     <RielPausable className={cn("mx-auto w-full max-w-[32rem]", className)}>
       <div ref={caja} className="relative aspect-square w-full touch-pan-y">
@@ -165,7 +157,6 @@ export function Globo({
             GIRO_INICIAL,
             INCLINACION_INICIAL,
           );
-          const encendido = activo === p.pais;
           return (
             <span
               key={p.pais}
@@ -180,26 +171,9 @@ export function Globo({
                 opacity: quieto.frente,
               }}
             >
-              <span
-                className={cn(
-                  "flex items-center transition-opacity duration-300",
-                  activo && !encendido && "opacity-40",
-                )}
-              >
-                <span
-                  className={cn(
-                    "block h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-ink ring-2 ring-paper-alt transition-transform duration-300",
-                    encendido && "scale-150",
-                  )}
-                />
-                <span
-                  className={cn(
-                    "ml-1 -translate-y-1/2 whitespace-nowrap rounded-full border px-2 py-0.5 text-[0.68rem] font-medium tracking-[-0.01em] shadow-[0_6px_16px_-10px_rgba(0,0,0,0.35)] transition-colors duration-300",
-                    encendido
-                      ? "border-ink bg-ink text-on-ink"
-                      : "border-line bg-card text-ink",
-                  )}
-                >
+              <span className="flex items-center">
+                <span className="block h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-ink ring-2 ring-paper-alt" />
+                <span className="ml-1 -translate-y-1/2 whitespace-nowrap rounded-full border border-line bg-card px-2 py-0.5 text-[0.68rem] font-medium tracking-[-0.01em] text-ink shadow-[0_6px_16px_-10px_rgba(0,0,0,0.35)]">
                   {p.nombre}
                 </span>
               </span>

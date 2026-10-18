@@ -1,15 +1,14 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 
 import { clients } from "@/content/site";
 import { useCopy, useLocale } from "@/components/copy-provider";
 import { fill } from "@/content/copy";
 import { nombreCiudad, nombrePais } from "@/content/countries";
 import { Reveal } from "@/components/motion/reveal";
-import { SplitHeading } from "@/components/motion/split-heading";
 import { Globo, type PaisGlobo } from "@/components/sections/globo";
-import { Section, SectionHead, type Surface } from "@/components/ui/section";
+import { Section, type Surface } from "@/components/ui/section";
 import { cn } from "@/lib/cn";
 
 /**
@@ -46,11 +45,9 @@ export function ClientsMap({
 }) {
   const { clientsMap } = useCopy();
   const locale = useLocale();
-  const [activo, setActivo] = useState<string | null>(null);
 
   /* Memorizado a propósito: el globo se vuelve a armar si cambia esta lista,
-     y una lista nueva en cada render lo armaría de nuevo a cada paso del
-     mouse por la lista. */
+     y una lista nueva en cada render lo armaría de nuevo. */
   const paises = useMemo<PaisGlobo[]>(
     () =>
       clients.map((c) => ({
@@ -66,20 +63,17 @@ export function ClientsMap({
 
   const cuerpo = (
     <>
+      {/* Sin título a la vista: el globo con su palabra gigante ya es el
+          encabezado. Queda para el índice y para quien navega con lector,
+          con la cuenta de países que antes iba en la bajada. */}
       {embedded ? (
-        <div className="mx-auto max-w-2xl text-center">
-          <SplitHeading as="h3" text={clientsMap.title} className="text-h3" />
-          <Reveal delay={0.1}>
-            <p className="mt-4 text-lead text-ink-soft">{bajada}</p>
-          </Reveal>
-        </div>
+        <h3 className="sr-only">
+          {clientsMap.title} {bajada}
+        </h3>
       ) : (
-        <SectionHead
-          icon="globo"
-          eyebrow={clientsMap.eyebrow}
-          title={clientsMap.title}
-          lead={bajada}
-        />
+        <h2 className="sr-only">
+          {clientsMap.title} {bajada}
+        </h2>
       )}
 
       {/* El escenario: la palabra gigante atrás y el globo adelante. La
@@ -91,7 +85,7 @@ export function ClientsMap({
           En el teléfono el globo es casi tan ancho como la palabra y detrás
           la tapaba entera: ahí va arriba, y el globo sube a pisarle solo el
           pie de las letras. */}
-      <div className="relative mt-10 md:mt-14">
+      <div className="relative">
         <Reveal
           y={40}
           className="pointer-events-none relative text-center md:absolute md:left-1/2 md:top-[44%] md:-translate-x-1/2 md:-translate-y-1/2"
@@ -106,84 +100,26 @@ export function ClientsMap({
         <Reveal delay={0.1} className="relative -mt-[6vw] md:mt-0">
           <Globo
             paises={paises}
-            activo={activo}
             className="max-w-[22rem] sm:max-w-[26rem] lg:max-w-[30rem]"
           />
         </Reveal>
       </div>
 
-      {/* Los países, abajo del planeta. Son el dato legible —el globo
-          muestra el alcance, acá están los nombres— y también el control:
-          señalar uno lo pone de frente en el globo.
-
-          Cada uno es un botón y no un li con hover. El hover no existe en un
-          teléfono, así que una lista que esperaba un mouse no respondía a
-          nada. Con un botón se toca; el hover se sigue atendiendo aparte
-          para que en escritorio pasar por encima alcance, sin hacer clic. */}
-      <Reveal delay={0.15}>
-        <ul className="mx-auto mt-8 flex max-w-3xl flex-wrap justify-center gap-2 md:mt-10">
-          {clients.map(({ country, city }) => {
-            const encendido = activo === country;
-            return (
-              <li key={country}>
-                <button
-                  type="button"
-                  /* El pointerType distingue el dedo del mouse: sin eso, en un
-                     teléfono el toque dispara también el enter y el leave, y el
-                     país se enciende y se apaga en el mismo gesto. */
-                  onPointerEnter={(e) => {
-                    if (e.pointerType !== "touch") setActivo(country);
-                  }}
-                  onPointerLeave={(e) => {
-                    if (e.pointerType !== "touch") setActivo(null);
-                  }}
-                  onFocus={() => setActivo(country)}
-                  onBlur={() => setActivo(null)}
-                  /* Enciende, no alterna: el toque da el foco antes del clic,
-                     así que alternar prendía el país con el foco y lo apagaba
-                     con el clic. Se toca otro y listo, y al salir del botón
-                     el blur limpia. */
-                  onClick={() => setActivo(country)}
-                  aria-pressed={encendido}
-                  className={cn(
-                    "inline-flex items-center gap-2 rounded-full border px-4 py-2 text-[0.9rem] font-medium tracking-[-0.015em] transition-[background-color,border-color,color,opacity] duration-300",
-                    encendido
-                      ? "border-ink bg-ink text-on-ink"
-                      : "border-line bg-card text-ink hover:border-line-strong",
-                    activo && !encendido && "opacity-50",
-                  )}
-                >
-                  <span
-                    aria-hidden
-                    className={cn(
-                      "h-1.5 w-1.5 shrink-0 rounded-full",
-                      encendido ? "bg-on-ink" : "bg-ink",
-                    )}
-                  />
-                  {nombrePais(country, locale)}
-                  {city ? (
-                    <span
-                      className={cn(
-                        "font-normal",
-                        encendido ? "text-on-ink/70" : "text-ink-faint",
-                      )}
-                    >
-                      · {nombreCiudad(city, locale)}
-                    </span>
-                  ) : null}
-                </button>
-              </li>
-            );
-          })}
-        </ul>
-      </Reveal>
+      {/* Los nombres están en las marcas del globo, que son decorado: para
+          el lector de pantalla, la lista entera acá. */}
+      <ul className="sr-only">
+        {clients.map(({ country, city }) => (
+          <li key={country}>
+            {nombrePais(country, locale)}
+            {city ? `, ${nombreCiudad(city, locale)}` : null}
+          </li>
+        ))}
+      </ul>
     </>
   );
 
   return embedded ? (
-    <div id="clientes" className="mt-24 md:mt-32">
-      {cuerpo}
-    </div>
+    <div id="clientes">{cuerpo}</div>
   ) : (
     <Section id="clientes" surface={surface}>
       {cuerpo}
