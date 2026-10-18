@@ -235,7 +235,7 @@ export function HeroGaleria({
   const duracion = `${Math.max(30, Math.round(largo / VELOCIDAD))}s`;
 
   return (
-    <RielPausable className="mt-14 md:mt-20">
+    <RielPausable className="mt-16 md:mt-28">
       <section
         aria-label={label}
         className="ticker w-full overflow-hidden [--alto:300px] [--g:12px] md:[--alto:400px] md:[--g:16px] xl:[--alto:440px]"

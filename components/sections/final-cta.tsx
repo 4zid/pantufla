@@ -39,7 +39,7 @@ export function FinalCta({
   const { finalCta } = useCopy();
   if (withForm) {
     return (
-      <Section id="brief" surface={surface} className="py-20 md:py-28">
+      <Section id="brief" surface={surface}>
         <div className="grid gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:items-start lg:gap-16">
           <div className="lg:sticky lg:top-28 lg:self-start">
             <SplitHeading text={finalCta.title} className="text-h2" />
@@ -86,7 +86,7 @@ export function FinalCta({
   }
 
   return (
-    <Section surface={surface} className="py-24 md:py-32">
+    <Section surface={surface}>
       <div className="relative mx-auto max-w-2xl text-center">
         <SplitHeading text={finalCta.title} className="text-h2" />
         <Reveal delay={0.15}>

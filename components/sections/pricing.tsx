@@ -59,7 +59,7 @@ export function Pricing({ surface }: { surface?: Surface }) {
   );
 
   return (
-    <Section id="planes" surface={surface} className="py-16 md:py-20">
+    <Section id="planes" surface={surface} ritmo="compacto">
       <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
         <SectionHead
           icon="etiqueta"

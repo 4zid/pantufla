@@ -122,7 +122,7 @@ export function Process({ surface = "deep" }: { surface?: Surface }) {
     <Section
       id="proceso"
       surface={surface}
-      className="md:py-40"
+      ritmo="amplio"
       overlay={
         /* El resplandor sube desde el piso y se apaga antes de la mitad.
            Centrado quedaría como una mancha; naciendo del piso se lee como si

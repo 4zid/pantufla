@@ -64,7 +64,7 @@ export function Lugar({ surface = "mist" }: { surface?: Surface }) {
     <Section id="lugar" surface={surface}>
       <div
         data-pase-zona="banner"
-        className="relative isolate overflow-hidden rounded-[2rem] bg-ink px-5 pb-10 pt-12 text-center text-on-ink sm:px-10 md:rounded-[2.75rem] md:px-16 md:pb-14 md:pt-16"
+        className="relative isolate overflow-hidden rounded-[2rem] bg-ink px-6 pb-12 pt-14 text-center text-on-ink sm:px-12 md:rounded-[2.75rem] md:px-20 md:pb-20 md:pt-24"
       >
         <Reveal>
           <span className="inline-flex items-center gap-2 rounded-full border border-on-ink/15 bg-on-ink/[0.06] px-3.5 py-1.5 text-[0.7rem] font-medium uppercase tracking-[0.12em] text-on-ink/75">
@@ -74,17 +74,17 @@ export function Lugar({ surface = "mist" }: { surface?: Surface }) {
         </Reveal>
         <SplitHeading
           text={lugar.title}
-          className="mx-auto mt-5 max-w-[14em] text-h2"
+          className="mx-auto mt-6 max-w-[14em] text-h2"
         />
         <Reveal delay={0.15}>
-          <p className="mx-auto mt-5 max-w-[36rem] text-lead text-on-ink/70">
+          <p className="mx-auto mt-5 max-w-[32rem] text-lead text-on-ink/70">
             {lugar.lead}
           </p>
         </Reveal>
 
         {/* La tira de cupones y el hueco. El contenedor mide lo que el hueco:
             los vecinos y el halo se ubican desde él y la tarjeta los corta. */}
-        <div className="relative mx-auto mt-10 w-full max-w-[17rem] sm:max-w-[22rem] md:mt-12 lg:max-w-[26rem]">
+        <div className="relative mx-auto mt-12 w-full max-w-[17rem] sm:max-w-[22rem] md:mt-16 lg:max-w-[26rem]">
           <div
             aria-hidden
             className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[150%] w-[130%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,#e6d7bb,transparent)] opacity-25 blur-3xl"
@@ -134,12 +134,12 @@ export function Lugar({ surface = "mist" }: { surface?: Surface }) {
             origen="banner"
             conNombre
             sobreTinta
-            className="mx-auto mt-12 max-w-[44rem]"
+            className="mx-auto mt-14 max-w-[42rem]"
           />
         </Reveal>
 
         <Reveal delay={0.2}>
-          <ul className="mx-auto mt-6 flex max-w-[56rem] flex-wrap justify-center gap-x-6 gap-y-2 text-[0.85rem] text-on-ink/70">
+          <ul className="mx-auto mt-8 flex max-w-[56rem] flex-wrap justify-center gap-x-7 gap-y-2 text-[0.8rem] text-on-ink/60">
             {lugar.points.map((punto) => (
               <li key={punto} className="flex items-center gap-2">
                 <CheckIcon className="h-3.5 w-3.5 shrink-0 text-[#c8ae84]" />

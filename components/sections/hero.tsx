@@ -55,7 +55,7 @@ export function Hero({
         className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(140%_60%_at_50%_0%,rgba(255,255,255,0.7)_0%,transparent_55%)] md:bg-[radial-gradient(90%_70%_at_75%_10%,rgba(255,255,255,0.75)_0%,transparent_60%)]"
       />
 
-      <div className="mx-auto grid w-full max-w-[90rem] items-center gap-12 px-5 pt-[112px] md:px-8 md:pt-[150px] lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-16 xl:px-16">
+      <div className="mx-auto grid w-full max-w-[90rem] items-center gap-12 px-5 pt-[120px] md:px-10 md:pt-[176px] lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-20 xl:px-24">
         <HeroTexto />
 
         <div

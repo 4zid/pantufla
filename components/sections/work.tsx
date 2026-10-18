@@ -47,7 +47,7 @@ export function Work({
     <section
       id="proyectos"
       data-surface={surface}
-      className="relative py-20 md:py-28 lg:py-0"
+      className="relative py-24 md:py-36 lg:py-0"
     >
       <div className="shell grid gap-14 lg:grid-cols-2 lg:items-start lg:gap-16">
         <div className="lg:sticky lg:top-0 lg:flex lg:h-screen lg:items-center">

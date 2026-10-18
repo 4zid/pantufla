@@ -156,7 +156,7 @@ export function Faq({ surface }: { surface?: Surface }) {
   );
 
   return (
-    <Section id="faq" surface={surface} className="py-16 md:py-20">
+    <Section id="faq" surface={surface} ritmo="compacto">
       <div className="mx-auto max-w-2xl text-center">
         <Reveal>
           <div className="flex justify-center">
