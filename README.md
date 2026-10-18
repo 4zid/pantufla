@@ -384,10 +384,15 @@ objeciones → contacto**:
   planes. Lo que decía —herramientas conocidas, que no te atan a nadie— es
   ahora una pregunta frecuente. Se prende desde el Studio si se la quiere de
   vuelta.
-- **Testimonios y globo.** Con los dos prendidos van en una sola sección: la
-  cita arriba y, abajo, el globo con su titular en chico. Eran dos bloques de
-  prueba seguidos, cada uno con etiqueta y título, y se leían como dos veces lo
-  mismo. Con uno solo prendido, ese sale solo, como antes.
+- **Globo y testimonios.** Con los dos prendidos van en una sola sección y
+  sin títulos a la vista: arriba el globo con «WORLDWIDE» detrás, abajo los
+  cuatro testimonios en una fila de celdas cuadradas, pegadas y sin borde,
+  separadas por una línea fina, como la referencia de la grilla de etapas.
+  Cada celda lleva el número arriba a la izquierda, la empresa arriba a la
+  derecha y la cita con el nombre y el cargo; una va en la tinta, con el
+  número en champagne, y sigue al mouse. En tablet son dos por dos y en el
+  teléfono una debajo de otra. Los títulos quedan escondidos para el lector de
+  pantalla y el índice. Con uno solo prendido, ese sale solo.
 
 ### El globo
 
@@ -398,10 +403,9 @@ La palabra se edita en el Studio (*Mapa de clientes* → *Palabra de atrás del
 globo*) y mide el ancho de la ventana; en el teléfono va arriba del globo,
 que le pisa el pie de las letras, porque detrás la tapaba entera.
 
-Los países donde trabajamos van en tinta, con una marca con el nombre, y
-abajo del planeta están los mismos países en pastillas: pasar por una (o
-tocarla, o llegar con el teclado) hace girar el globo hasta ponerlo de frente.
-Reemplaza al mapa plano con líneas desde Buenos Aires.
+Los países donde trabajamos van en tinta, con una marca con el nombre. No hay
+lista aparte a la vista (para el lector de pantalla, sí). Reemplaza al mapa
+plano con líneas desde Buenos Aires.
 
 - **El acabado** es holográfico, como el foil del pase: un brillo nacarado en
   la misma paleta (champagne, perla, verde agua y rosa apagados) que corre por
@@ -668,10 +672,9 @@ CTA), con el margen justo para que el título no quede debajo del header.
 5. Lo que se mueve solo se puede frenar. Los rieles de herramientas y de
    clientes paran al pasar el mouse, con el foco adentro, con un toque en el
    teléfono y con un botón que aparece al llegar con el teclado
-   (`components/ui/riel-pausable.tsx`). Los testimonios rotan solos hasta que
-   se elige una cara, esperan mientras alguien los lee y no rotan con
-   movimiento reducido. La galería del hero es un riel más, con las mismas
-   reglas. El pase que vuela no se mueve solo: lo mueve el scroll.
+   (`components/ui/riel-pausable.tsx`). El globo y la galería del hero se
+   frenan igual. Los testimonios ya no rotan: están los cuatro a la vista. El
+   pase que vuela no se mueve solo: lo mueve el scroll.
 
 ---
 

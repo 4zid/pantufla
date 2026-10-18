@@ -46,10 +46,9 @@ import {
  *
  * Gira alrededor de los polos, de oeste a este como la Tierra, una vuelta
  * cada setenta segundos. Se queda quieto mientras `quieto()` diga que sí (el
- * mouse encima, el foco adentro o la pausa del riel: ver globo.tsx) y
- * mientras está enfocado en un país, al que llega girando por el camino más
- * corto. Fuera de la pantalla no dibuja, y cuando no hay nada que mover la
- * escena se duerme.
+ * mouse encima, el foco adentro o la pausa del riel: ver globo.tsx). Fuera
+ * de la pantalla no dibuja, y cuando no hay nada que mover la escena se
+ * duerme.
  *
  * Las marcas con los nombres son HTML (para usar la tipografía del sitio);
  * acá solo se las mueve, cuadro a cuadro, con la misma cuenta que usa la
@@ -59,8 +58,6 @@ import {
 export type MarcaGlobo = { lon: number; lat: number; el: HTMLElement };
 
 export type ControlGlobo = {
-  /** Gira hasta un punto y se queda ahí; con null vuelve a girar solo. */
-  enfocar: (punto: { lon: number; lat: number } | null) => void;
   destruir: () => void;
 };
 
@@ -155,8 +152,14 @@ const fragmento = /* glsl */ `
     float t = canto * 1.4 + vNormal.x * 0.35 + vNormal.y * 0.25
       + (vUv.x * 2.0 + vUv.y) * 1.1;
     vec3 holo = foil(t);
-    float fuerza = 0.22 + 0.5 * pow(canto, 1.4);
-    color = mix(color, color * holo * 1.5, fuerza);
+    // Tiñe sin aclarar: el foil dividido por su propio brillo cambia el tono
+    // y no la luz. Aclarando, la tierra se perdía contra el mar.
+    float luz = dot(holo, vec3(0.2126, 0.7152, 0.0722));
+    // Un reflejo y no un color: el globo sigue siendo blanco y negro.
+    float fuerza = 0.16 + 0.26 * pow(canto, 1.4);
+    color = mix(color, color * holo / max(luz, 0.001), fuerza);
+    // El nácar, solo en el canto: ahí sí aclara, como un borde de luz.
+    color = mix(color, holo * 1.15, pow(canto, 2.5) * 0.22);
     // Sobre la tinta casi no hay color que teñir: ahí el foil brilla encima,
     // apenas (en lineal un poco ya es mucho: la tinta se volvía gris).
     color += holo * m.g * (0.006 + 0.04 * canto);
@@ -287,8 +290,6 @@ export function montarGlobo({
   });
   vista.observe(contenedor);
 
-  let objetivo: { giro: number; inclinacion: number } | null = null;
-
   /* Sin 3D las marcas van con left y top en porcentajes (la vista quieta);
      acá se las lleva al origen y se las mueve con transform, que no obliga al
      navegador a recalcular el layout en cada cuadro. */
@@ -320,26 +321,9 @@ export function montarGlobo({
     antes = ahora;
     let seguir = false;
 
-    if (objetivo) {
-      /* Al país enfocado, por el camino más corto y frenando al llegar. */
-      const k = 1 - Math.exp(-dt * 5);
-      let d = objetivo.giro - giro.rotation.y;
-      d = Math.atan2(Math.sin(d), Math.cos(d));
-      giro.rotation.y += d * k;
-      inclinacion.rotation.x +=
-        (objetivo.inclinacion - inclinacion.rotation.x) * k;
-      seguir =
-        Math.abs(d) > 0.0005 ||
-        Math.abs(objetivo.inclinacion - inclinacion.rotation.x) > 0.0005;
-    } else {
-      // Sin país, vuelve a la inclinación de reposo y gira solo.
-      const k = 1 - Math.exp(-dt * 3);
-      inclinacion.rotation.x += (reposo - inclinacion.rotation.x) * k;
-      if (!quieto()) {
-        giro.rotation.y += VELOCIDAD * dt;
-        seguir = true;
-      }
-      seguir ||= Math.abs(reposo - inclinacion.rotation.x) > 0.0005;
+    if (!quieto()) {
+      giro.rotation.y += VELOCIDAD * dt;
+      seguir = true;
     }
 
     if (ahora < coloresHasta) {
@@ -374,16 +358,6 @@ export function montarGlobo({
   despertar();
 
   return {
-    enfocar(p) {
-      objetivo = p
-        ? {
-            giro: giroPara(p.lon),
-            // Sin pasarse: inclinado de más, los polos se comen el globo.
-            inclinacion: inclinacionPara(Math.max(-30, Math.min(40, p.lat))),
-          }
-        : null;
-      despertar();
-    },
     destruir() {
       cancelAnimationFrame(cuadro);
       window.clearTimeout(espera);

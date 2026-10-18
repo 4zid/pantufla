@@ -83,9 +83,10 @@ export default async function HomePage({
      todos la misma lista y no tres que hay que mantener iguales a mano.
   */
   /*
-     Testimonios y mapa van juntos cuando están los dos: el mapa entra abajo
-     de la cita, en la misma sección y con el fondo de los testimonios. Cada
-     uno sigue teniendo su interruptor; con uno solo prendido, ese sale solo.
+     Testimonios y globo van juntos cuando están los dos: el globo arriba y
+     las cuatro citas abajo, en la misma sección y con el fondo de los
+     testimonios. Cada uno sigue teniendo su interruptor; con uno solo
+     prendido, ese sale solo.
   */
   const juntos =
     secciones.testimonials && secciones.clientsMap && testimonials.length > 0;
