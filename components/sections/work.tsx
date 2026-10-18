@@ -1,68 +1,68 @@
 "use client";
 
-import { useCopy } from "@/components/copy-provider";
-import { ProjectStack } from "@/components/ui/project-stack";
-import { SectionHead, type Surface } from "@/components/ui/section";
+import Link from "next/link";
+
+import { useCopy, useHref } from "@/components/copy-provider";
+import { Reveal } from "@/components/motion/reveal";
+import { ArrowIcon } from "@/components/ui/icons";
+import { GrillaProyectos } from "@/components/ui/proyecto-tarjeta";
+import { Section, SectionHead, type Surface } from "@/components/ui/section";
 import type { SanityProject } from "@/sanity/types";
 
 /**
- * Los proyectos, en la home y sin página aparte.
+ * Los proyectos de la home: los cuatro destacados, en una grilla de dos por
+ * dos con un mockup cada uno, y un enlace a /proyectos con todos.
  *
- * En escritorio el título queda quieto a media altura mientras la columna de
- * esferas pasa con el scroll normal de la página; el proyecto que cruza esa
- * misma altura se prende (ver project-stack). Nada retiene la rueda: la
- * sección mide lo que mide su contenido y se baja como cualquier otra.
+ * Fue una columna de esferas con el título quieto a media altura, y antes un
+ * paso a paso clavado a la rueda. Con cuatro proyectos y capturas de verdad
+ * alcanza con mostrarlos: la grilla se baja como cualquier otra sección y no
+ * retiene nada.
  *
- * El aire de arriba y de abajo de la columna es media pantalla menos media
- * fila. Con eso el primer proyecto llega al medio justo cuando el título se
- * queda quieto, y el último cuando el título se suelta: los dos siempre a la
- * par.
+ * Cuáles son los cuatro lo decide el Studio («Destacado en la home»); la
+ * página los recibe ya elegidos (ver page.tsx). El enlace a todos aparece
+ * solo si hay más de los que se ven.
  *
- * En teléfono es una columna: el título y después la lista.
- *
- * Las fichas de cada proyecto siguen existiendo: lo que se fue es el índice,
- * no el detalle.
+ * Oscura por defecto: las capturas son claras y sobre la página apagada se
+ * leen como pantallas encendidas.
  */
 export function Work({
   projects,
+  total,
   surface = "deep",
 }: {
   projects: SanityProject[];
+  /** Cuántos proyectos hay en total, para saber si hace falta «ver todos». */
+  total: number;
   surface?: Surface;
 }) {
   const { work } = useCopy();
+  const href = useHref();
 
   if (!projects.length) return null;
 
   return (
-    /*
-       Oscura, por las esferas.
-
-       El degradé de la esfera está calculado para que el casquete se lea como
-       luz, y eso sobre una página clara no pasa: medido, el casquete da 1,17
-       contra el fondo. Sobre oscuro la misma esfera se lee entera sin
-       agregarle nada encima: el fondo es la página, que ya sabe apagarse sola
-       cuando esta sección entra en pantalla.
-    */
-    <section
-      id="proyectos"
-      data-surface={surface}
-      className="relative py-24 md:py-36 lg:py-0"
-    >
-      <div className="shell grid gap-14 lg:grid-cols-2 lg:items-start lg:gap-16">
-        <div className="lg:sticky lg:top-0 lg:flex lg:h-screen lg:items-center">
-          <SectionHead
-            icon="grilla"
-            eyebrow={work.eyebrow}
-            title={work.title}
-            lead={work.lead}
-          />
-        </div>
-        {/* 6rem es media fila: la esfera mide 12rem en escritorio. */}
-        <div className="lg:py-[calc(50vh-6rem)]">
-          <ProjectStack projects={projects} />
-        </div>
+    <Section id="proyectos" surface={surface}>
+      <div className="flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
+        <SectionHead
+          icon="grilla"
+          eyebrow={work.eyebrow}
+          title={work.title}
+          lead={work.lead}
+        />
+        {total > projects.length ? (
+          <Reveal delay={0.2} className="shrink-0">
+            <Link
+              href={href("/proyectos")}
+              className="group inline-flex items-center gap-2 rounded-full border border-line-strong px-5 py-2.5 text-[0.9rem] font-medium text-ink transition-colors hover:border-ink"
+            >
+              {work.all}
+              <ArrowIcon className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />
+            </Link>
+          </Reveal>
+        ) : null}
       </div>
-    </section>
+
+      <GrillaProyectos proyectos={projects} className="mt-14 md:mt-20" />
+    </Section>
   );
 }

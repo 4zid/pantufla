@@ -333,6 +333,7 @@ export const en: SiteCopy = {
     lead: "Different industries, different sizes, the same method.",
     view: "Visit site",
     readCase: "Read the case study",
+    all: "See all projects",
   },
 
   testimonials: {

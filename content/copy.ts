@@ -239,6 +239,8 @@ export type SiteCopy = {
     view: string;
     /** El enlace a la ficha, en los proyectos que tienen el caso escrito. */
     readCase: string;
+    /** El enlace a /proyectos, con todos: la home muestra los destacados. */
+    all: string;
   };
   testimonials: { eyebrow: string; title: string; rating: string };
   clientsMap: { eyebrow: string; title: string; note: string };

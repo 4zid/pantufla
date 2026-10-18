@@ -259,10 +259,11 @@ diseño se cruzan por id: el color de un plan o el número de una etapa viven en
 `content/site.ts`, no en el Studio, y **cambiar un id en el Studio deja ese
 bloque sin su diseño**.
 
-`/notas`, `/contacto` y el listado `/proyectos` se sacaron y redirigen a la
-home: a la portada, al formulario y a la sección de proyectos
-(`next.config.ts`). Las notas también salieron del Studio. Las fichas de cada
-proyecto, en `/proyectos/<slug>`, siguen publicadas.
+`/notas` y `/contacto` se sacaron y redirigen a la home: a la portada y al
+formulario (`next.config.ts`). Las notas también salieron del Studio. El
+listado `/proyectos` estuvo redirigido a la sección de la home y volvió a ser
+una página, con todos los proyectos; las fichas de cada uno siguen en
+`/proyectos/<slug>`.
 
 Para sumar el logo de un cliente: el archivo va en `public/logos/clientes`, en
 negro sobre transparente (SVG con `viewBox`, o PNG), y en `content/site.ts` →
@@ -337,9 +338,10 @@ objeciones → contacto**:
 - **Proyectos.** Justo después de la promesa: el trabajo se ve antes que el
   precio. Iba después de los planes, a la mitad de la página en el teléfono, y
   quien quería ver qué hace el estudio tenía que pasar por todo lo demás.
-  Los que tienen el caso escrito suman «Leer el caso» (ver *Los proyectos*).
-  Van en el orden del campo *Orden* de cada proyecto: los cuatro primeros, los
-  principales, son Kine, Daily, Tierras Argentinas y 2MG. El mismo orden manda
+  Son cuatro tarjetas con mockup, en una grilla de dos por dos: los proyectos
+  marcados como *Destacado en la home* (hoy Kine, Daily, Tierras Argentinas y
+  2MG), en el orden del campo *Orden*. El resto está en `/proyectos`, al que
+  lleva «Ver todos los proyectos» (ver *Los proyectos*). El mismo orden manda
   en la galería del hero.
 - **Capacidades.** Un bento de cuatro celdas, cada una con su viñeta animada:
   velocidad de carga, que te encuentren (también en asistentes de IA), el
@@ -356,11 +358,11 @@ objeciones → contacto**:
   corte con su tijera y un halo tenue; el único color es el champagne del
   foil del pase, en la línea de corte, la tijera y las tildes. El pase que vino
   volando desde la portada se acuesta y calza ahí, como la pieza que faltaba.
-  En escritorio son dos columnas, el texto y el formulario a la izquierda y
-  el hueco a la derecha, para que la sección no pase de una pantalla (apilado
-  era altísimo); en el teléfono va apilado, con el pase arriba del
-  formulario. Antes era la última sección y el pase acompañaba la página
-  entera, que era demasiado.
+  Va centrada y apilada —el titular, el hueco y abajo el formulario en una
+  fila— con el aire justo para que no sea altísima: probó dos columnas y se
+  volvió, porque el hueco al medio de la tira es lo que hace que el pase se
+  lea como la pieza que faltaba. Antes era la última sección y el pase
+  acompañaba la página entera, que era demasiado.
 - **Proceso.** Cuatro etapas, cada una con fecha: quince días hábiles un
   Sitio, una semana una Landing. El riel que las une lleva
   los cuatro colores del bento en el mismo orden y llega a cada número con su
@@ -469,12 +471,25 @@ seguido.
 
 ### Los proyectos
 
-Se recorre con el scroll normal, sin trabar la rueda. En escritorio el título
-queda quieto a media altura mientras pasa la columna de proyectos, y se prende
-el que cruza esa altura; en los demás se apaga la esfera y el texto baja un
-poco, sin dejar de leerse. En el teléfono es una lista, con el mismo resaltado,
-y la esfera prendida muestra «Ver sitio», porque ahí no hay mouse que lo
-descubra.
+En la home son los cuatro destacados (*Destacado en la home* en el Studio; si
+no hay ninguno marcado, los cuatro primeros) en una grilla de dos por dos, una
+columna en el teléfono. En `/proyectos` están todos, con la misma tarjeta y en
+el mismo orden, destacados incluidos.
+
+Cada tarjeta es un mockup mínimo sobre un plano gris: una ventana de navegador
+con el dominio del sitio en la barra y, montado abajo a la derecha, un
+teléfono. Las capturas salen de las mismas *Pantallas para la portada* que
+corren en el hero: de las de escritorio entra la que mejor llena una ventana
+16:10, y del teléfono la primera. Un proyecto sin pantallas muestra la ventana
+con su nombre adentro; la portada no se usa ahí, porque es una imagen
+compuesta (un mockup con sus propios marcos, o una ilustración) y adentro de
+una ventana parecería un sitio roto. Para que la tarjeta tenga capturas
+alcanza con cargarle pantallas, y eso también lo suma a la galería del hero.
+
+Toda la tarjeta es un enlace: al caso si está escrito, al sitio publicado si
+no. Las que tienen caso suman abajo «Ver sitio» aparte. Al pasar el mouse la
+ventana sube un poco y el teléfono un poco más; con menos movimiento pedido
+no se mueven.
 
 Cada proyecto tiene además su ficha en `/proyectos/<slug>`. Lo que muestra sale
 del Studio: si el proyecto no tiene portada ni caso escrito («Caso completo»),
@@ -483,13 +498,13 @@ portada y el caso aparecen solos cuando se cargan.
 
 El caso escrito es lo que decide si la ficha existe para afuera:
 
-- **Con caso**, la fila de la home suma «Leer el caso», la ficha va al sitemap
-  y se indexa.
+- **Con caso**, la tarjeta lleva a la ficha con «Leer el caso», la ficha va al
+  sitemap y se indexa.
 - **Sin caso**, la ficha se puede abrir pero va con `noindex`, fuera del
-  sitemap, y la home no la enlaza (la esfera lleva al sitio publicado). Es una
+  sitemap, y ninguna tarjeta la enlaza (llevan al sitio publicado). Es una
   página flaca y no tiene sentido mandarla a Google.
 
-Hoy tienen caso **Tierras Argentinas**, **2MG** y **247WC**. Están escritos a
+Hoy tienen caso **Tierras Argentinas** y **2MG**. Están escritos a
 partir de lo que muestra cada sitio, sin métricas ni plazos porque no los
 tenemos: conviene revisarlos y, si hay datos reales (tiempo de entrega,
 resultados), sumarlos en el Studio. El respaldo local de esos textos está en

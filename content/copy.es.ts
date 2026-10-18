@@ -340,6 +340,7 @@ export const es: SiteCopy = {
     lead: "Distintos rubros, distintos tamaños, el mismo método.",
     view: "Ver sitio",
     readCase: "Leer el caso",
+    all: "Ver todos los proyectos",
   },
 
   testimonials: {

@@ -125,11 +125,11 @@ export default async function ProjectPage({ params }: Params) {
             (PageHeader): con menos, el header fijo tapaba el enlace de
             volver. */}
         <div className="shell pb-14 pt-32 md:pt-40">
-          {/* Vuelve a la sección de la home y no a un listado: ese listado ya
-              no existe, y el ancla deja a la persona parada justo en la fila
-              de proyectos, no arriba de todo para que scrollee de nuevo. */}
+          {/* Vuelve al listado con todos los proyectos: la home muestra solo
+              los destacados, y desde una ficha lo que se quiere ver es el
+              siguiente proyecto, no la home de nuevo. */}
           <Link
-            href={localeHref("/#proyectos", locale)}
+            href={localeHref("/proyectos", locale)}
             className="group inline-flex items-center gap-2 text-[0.9rem] text-ink-soft transition-colors hover:text-ink"
           >
             <ArrowIcon className="h-4 w-4 rotate-180 transition-transform duration-200 group-hover:-translate-x-0.5" />
@@ -285,10 +285,7 @@ export default async function ProjectPage({ params }: Params) {
           }),
           migas(locale, [
             { name: site.name, path: "/" },
-            /* La miga del medio apunta a la home con ancla: es donde vive
-               ahora el índice de proyectos. Un buscador la resuelve como la
-               home, que es la verdad. */
-            { name: pages.proyectos.eyebrow, path: "/#proyectos" },
+            { name: pages.proyectos.eyebrow, path: "/proyectos" },
             { name: project.title, path: `/proyectos/${project.slug}` },
           ]),
           {
