@@ -118,7 +118,7 @@ export function PaseFormulario({
         className={cn(
           "flex flex-col gap-2",
           conNombre
-            ? "gap-3 sm:grid sm:grid-cols-[minmax(0,1fr)_minmax(0,1.25fr)_auto] sm:items-end"
+            ? "gap-3 sm:grid sm:grid-cols-2 sm:items-end"
             : "mt-3 sm:flex-row",
         )}
       >
@@ -188,6 +188,9 @@ export function PaseFormulario({
           disabled={enviando}
           className={cn(
             "h-12 whitespace-nowrap rounded-full px-6 text-[0.95rem] font-medium transition-[opacity,transform] disabled:opacity-70",
+            /* Con nombre, los dos campos van lado a lado y el botón abajo, a
+               lo ancho: entra en la columna del banner sin apretar nada. */
+            conNombre && "sm:col-span-2",
             sobreTinta
               ? /* Sobre la tinta, el botón es el papel: blanco sobre la
                    tarjeta oscura, y oscuro cuando el tema la da vuelta. */

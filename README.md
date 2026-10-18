@@ -356,8 +356,11 @@ objeciones → contacto**:
   corte con su tijera y un halo tenue; el único color es el champagne del
   foil del pase, en la línea de corte, la tijera y las tildes. El pase que vino
   volando desde la portada se acuesta y calza ahí, como la pieza que faltaba.
-  Antes era la última sección y el pase acompañaba la página entera, que era
-  demasiado.
+  En escritorio son dos columnas, el texto y el formulario a la izquierda y
+  el hueco a la derecha, para que la sección no pase de una pantalla (apilado
+  era altísimo); en el teléfono va apilado, con el pase arriba del
+  formulario. Antes era la última sección y el pase acompañaba la página
+  entera, que era demasiado.
 - **Proceso.** Cuatro etapas, cada una con fecha: quince días hábiles un
   Sitio, una semana una Landing. El riel que las une lleva
   los cuatro colores del bento en el mismo orden y llega a cada número con su
@@ -621,9 +624,11 @@ CTA), con el margen justo para que el título no quede debajo del header.
   a 1440). El espaciado de cada sección se elige con un ritmo con nombre en
   `components/ui/section.tsx` (normal, compacto para planes y preguntas,
   amplio para el proceso), no con clases sueltas.
-- **Fondo de bruma** (`#eaedf8`) en claro y casi negro en oscuro, con un grano
-  muy leve para que no quede plano. El blanco queda para lo que se destaca: las
-  tarjetas, la píldora del menú, los botones sobre oscuro.
+- **Fondo blanco** en claro y casi negro en oscuro, con un grano muy leve
+  para que no quede plano. Era bruma (`#eaedf8`), un lila que teñía toda la
+  página. Lo que antes se separaba del fondo por ser blanco ahora lleva su
+  filete (tarjetas, campos, la píldora del menú) o un gris apenas más oscuro
+  (las preguntas frecuentes, el tablero de capacidades, las etiquetas).
 - **Cuatro colores de marca** en pastel: aqua, rosa, verde y miel.
 - **La etiqueta de sección** es una pastilla con ícono y el texto en mayúsculas,
   en gris neutro. Suelto sobre el fondo, ese tratamiento se lee a plantilla;

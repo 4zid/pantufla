@@ -176,7 +176,7 @@ export function Faq({ surface }: { surface?: Surface }) {
                 <div
                   key={item.q}
                   className={cn(
-                    "overflow-hidden rounded-[16px] bg-card transition-shadow duration-500",
+                    "overflow-hidden rounded-[16px] bg-paper-alt transition-shadow duration-500",
                     abierto
                       ? "shadow-[0_14px_34px_-24px_rgba(0,0,0,0.45)]"
                       : "shadow-none",

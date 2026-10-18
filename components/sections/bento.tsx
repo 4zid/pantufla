@@ -651,7 +651,7 @@ export function Bento({ surface }: { surface?: Surface }) {
 
       <div
         ref={scope}
-        className="mt-14 rounded-[var(--radius-tablero)] border border-line bg-mist p-2.5 shadow-[0_24px_60px_-40px_rgba(35,28,18,0.35)]"
+        className="mt-14 rounded-[var(--radius-tablero)] border border-line bg-paper-alt p-2.5 shadow-[0_24px_60px_-40px_rgba(35,28,18,0.35)]"
       >
         <Reveal stagger className="grid gap-2.5 md:grid-cols-2 lg:grid-cols-3">
           {bento.cards.map((card) => {
