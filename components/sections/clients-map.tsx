@@ -86,17 +86,21 @@ export function ClientsMap({
           la tapaba entera: ahí va arriba, y el globo sube a pisarle solo el
           pie de las letras. */}
       <div className="relative">
-        <Reveal
-          y={40}
-          className="pointer-events-none relative text-center md:absolute md:left-1/2 md:top-[44%] md:-translate-x-1/2 md:-translate-y-1/2"
-        >
-          <p
-            aria-hidden
-            className="select-none whitespace-nowrap text-[min(14vw,16rem)] font-black uppercase leading-[0.8] tracking-[-0.045em] text-ink"
-          >
-            {clientsMap.backdrop}
-          </p>
-        </Reveal>
+        {/* El centrado va en un envoltorio aparte y no en el Reveal: la
+            entrada mueve ese elemento con transform, y con menos movimiento
+            pedido el CSS lo deja en transform: none, que se llevaba también
+            el corrimiento del centrado y tiraba la palabra 580 px a la
+            derecha, con scroll de costado. */}
+        <div className="pointer-events-none relative text-center md:absolute md:left-1/2 md:top-[44%] md:-translate-x-1/2 md:-translate-y-1/2">
+          <Reveal y={40}>
+            <p
+              aria-hidden
+              className="select-none whitespace-nowrap text-[min(14vw,16rem)] font-black uppercase leading-[0.8] tracking-[-0.045em] text-ink"
+            >
+              {clientsMap.backdrop}
+            </p>
+          </Reveal>
+        </div>
         <Reveal delay={0.1} className="relative -mt-[6vw] md:mt-0">
           <Globo
             paises={paises}

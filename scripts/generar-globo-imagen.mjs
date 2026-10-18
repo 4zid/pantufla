@@ -83,10 +83,25 @@ const salida = join(OUT, "globo.webp");
    la imagen pesa el doble) sin ablandar las costas, que tienen varios
    píxeles de ancho. En color y no en gris: el brillo nacarado es parte del
    dibujo. */
-await sharp(png)
+/* La captura trae un velo de alfa 3 en lo que debería ser transparente
+   (el canvas no limpia del todo): sobre blanco se veía el recuadro de la
+   imagen. Lo que está casi transparente pasa a transparente del todo; el
+   borde de la esfera, que va de 0 a 255 en dos píxeles, ni se entera. */
+const { data, info } = await sharp(png)
+  .ensureAlpha()
+  .raw()
+  .toBuffer({ resolveWithObject: true });
+for (let i = 3; i < data.length; i += 4) if (data[i] < 12) data[i] = 0;
+const limpia = sharp(data, {
+  raw: { width: info.width, height: info.height, channels: 4 },
+});
+
+await limpia
   .resize(1024, 1024, { fit: "cover" })
   .median(3)
-  .webp({ quality: 72, alphaQuality: 80, effort: 6 })
+  // El alfa sin pérdida: comprimido, dejaba un velo de uno o dos puntos en
+  // las esquinas transparentes, y sobre blanco se veía el recuadro.
+  .webp({ quality: 72, alphaQuality: 100, effort: 6 })
   .toFile(salida);
 const { size } = await import("node:fs").then((fs) => fs.statSync(salida));
 console.log(`public/globo/globo.webp: ${(size / 1024).toFixed(0)} KB`);
