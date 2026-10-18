@@ -16,17 +16,6 @@ export function CheckIcon({ className }: IconProps) {
   );
 }
 
-/** La tijera de la línea de corte del banner del pase. */
-export function ScissorsIcon({ className }: IconProps) {
-  return (
-    <svg viewBox="0 0 16 16" className={className} aria-hidden="true">
-      <circle cx="3.6" cy="4.4" r="2" {...stroke} />
-      <circle cx="3.6" cy="11.6" r="2" {...stroke} />
-      <path d="M5.3 5.5 14 11.4M5.3 10.5 14 4.6" {...stroke} />
-    </svg>
-  );
-}
-
 export function ChevronDownIcon({ className }: IconProps) {
   return (
     <svg viewBox="0 0 16 16" className={className} aria-hidden="true">

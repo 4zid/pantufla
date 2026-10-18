@@ -94,18 +94,25 @@ function Telefono({ pantalla }: { pantalla: PantallaMockup }) {
 
 /**
  * La tarjeta de un proyecto: el mockup arriba —una ventana y un teléfono
- * sobre un plano gris, nada más— y abajo el nombre, el rubro y la bajada.
+ * sobre un plano gris, nada más— y abajo el nombre, el rubro, la bajada y
+ * los enlaces.
  *
- * Toda la tarjeta es el enlace: al caso cuando está escrito, al sitio
- * publicado cuando no. El enlace es el nombre, estirado sobre la tarjeta con
- * un ::after, y no un <a> que envuelve todo: así el lector de pantalla lee un
- * nombre y no un párrafo entero, y el segundo enlace (el sitio, en los que
- * tienen caso) puede ir por encima sin anidar enlaces.
+ * El mockup lleva al sitio publicado. Al pasar el mouse se desenfoca y en el
+ * medio aparece una pastilla blanca con «Ver sitio»: dice qué pasa con el
+ * clic sin tapar las capturas mientras nadie las está apuntando. Es blanca
+ * con letra negra en los dos temas, porque se apoya sobre las capturas, que
+ * son claras.
  *
- * Las capturas van con alt vacío: son decorado del enlace, que ya dice qué
- * proyecto es. Al pasar el mouse la ventana sube un poco y el teléfono un
- * poco más, como si se despegaran del plano; con menos movimiento pedido no
- * se mueven.
+ * Ese enlace es para el mouse y nada más: va fuera del orden del teclado y
+ * escondido del lector de pantalla, porque abajo están los mismos destinos
+ * en texto —«Leer el caso» cuando está escrito y «Ver sitio» siempre—, que
+ * es lo que usan el teclado y el teléfono, donde no hay mouse que haga
+ * aparecer la pastilla. Dos enlaces al mismo lugar en el orden del teclado
+ * serían una parada de más en cada tarjeta.
+ *
+ * Las capturas van con alt vacío: son decorado, y el nombre del proyecto
+ * está en el titular. Con menos movimiento pedido el desenfoque y la
+ * pastilla aparecen sin transición.
  */
 export function ProyectoTarjeta({
   proyecto,
@@ -120,49 +127,63 @@ export function ProyectoTarjeta({
   const dominio = dominioDe(proyecto.url);
 
   const caso = proyecto.conCaso ? href(`/proyectos/${proyecto.slug}`) : null;
-  const externo = !caso && Boolean(proyecto.url);
-  // Sin caso ni URL, la ficha interna: el enlace nunca queda muerto.
-  const destino = caso ?? proyecto.url ?? href(`/proyectos/${proyecto.slug}`);
+  const sitio = proyecto.url;
+
+  /* Con teléfono, la ventana se corre arriba a la izquierda y el teléfono
+     se apoya abajo a la derecha, montado sobre ella. Sin teléfono, la
+     ventana va al centro. */
+  const mockup = (
+    <div className="absolute inset-0 transition-[filter,transform] duration-500 ease-out group-hover/escenario:scale-[1.02] group-hover/escenario:blur-[6px] motion-reduce:transition-none">
+      <div
+        className={`absolute left-[10%] w-[80%] ${
+          telefono ? "top-[12%]" : "top-1/2 -translate-y-1/2"
+        }`}
+      >
+        <div className="aspect-[16/10.6]">
+          <Ventana
+            pantalla={escritorio}
+            dominio={dominio}
+            titulo={proyecto.title}
+          />
+        </div>
+      </div>
+      {telefono ? (
+        <div className="absolute bottom-[7%] right-[7%] aspect-[9/19.5] w-[21%]">
+          <Telefono pantalla={telefono} />
+        </div>
+      ) : null}
+    </div>
+  );
+  const escenario =
+    "relative block aspect-[4/3] overflow-hidden rounded-[1.25rem] border border-line bg-paper-alt md:rounded-[1.5rem]";
 
   return (
-    <article className="group/tarjeta relative">
-      <div className="relative aspect-[4/3] overflow-hidden rounded-[1.25rem] border border-line bg-paper-alt md:rounded-[1.5rem]">
-        {/* Con teléfono, la ventana se corre arriba a la izquierda y el
-            teléfono se apoya abajo a la derecha, montado sobre ella. Sin
-            teléfono, la ventana va al centro. */}
-        <div
-          className={`absolute left-[10%] w-[80%] transition-transform duration-700 ease-[cubic-bezier(0.2,0.7,0.2,1)] group-hover/tarjeta:-translate-y-1.5 motion-reduce:transform-none motion-reduce:transition-none ${
-            telefono ? "top-[12%]" : "top-1/2 -translate-y-1/2"
-          }`}
+    <article>
+      {sitio ? (
+        <a
+          href={sitio}
+          target="_blank"
+          rel="noreferrer"
+          tabIndex={-1}
+          aria-hidden
+          className={`group/escenario ${escenario}`}
         >
-          <div className="aspect-[16/10.6]">
-            <Ventana
-              pantalla={escritorio}
-              dominio={dominio}
-              titulo={proyecto.title}
-            />
-          </div>
-        </div>
-        {telefono ? (
-          <div className="absolute bottom-[7%] right-[7%] aspect-[9/19.5] w-[21%] transition-transform duration-700 ease-[cubic-bezier(0.2,0.7,0.2,1)] group-hover/tarjeta:-translate-y-3 motion-reduce:transform-none motion-reduce:transition-none">
-            <Telefono pantalla={telefono} />
-          </div>
-        ) : null}
-      </div>
+          {mockup}
+          <span className="absolute left-1/2 top-1/2 inline-flex -translate-x-1/2 translate-y-[calc(-50%+6px)] items-center gap-1.5 whitespace-nowrap rounded-full bg-white px-5 py-2.5 text-[0.88rem] font-medium text-[#121212] opacity-0 shadow-[0_12px_30px_-12px_rgba(0,0,0,0.35)] transition-[opacity,translate] duration-300 ease-out group-hover/escenario:-translate-y-1/2 group-hover/escenario:opacity-100 motion-reduce:transition-none">
+            {work.view}
+            <ArrowUpRightIcon className="h-3.5 w-3.5" />
+          </span>
+        </a>
+      ) : (
+        <div className={escenario}>{mockup}</div>
+      )}
 
       <div className="mt-5 flex items-baseline justify-between gap-6">
         <Titulo
           translate="no"
           className="text-[1.15rem] font-semibold leading-tight tracking-[-0.025em] md:text-[1.25rem]"
         >
-          <Link
-            href={destino}
-            target={externo ? "_blank" : undefined}
-            rel={externo ? "noreferrer" : undefined}
-            className="outline-none after:absolute after:inset-0 after:rounded-[1.5rem] focus-visible:after:outline focus-visible:after:outline-2 focus-visible:after:outline-offset-4 focus-visible:after:outline-ink"
-          >
-            {proyecto.title}
-          </Link>
+          {proyecto.title}
         </Titulo>
         {proyecto.sector ? (
           <span className="shrink-0 text-[0.8rem] text-ink-faint">
@@ -176,26 +197,29 @@ export function ProyectoTarjeta({
         </p>
       ) : null}
 
+      {/* El caso primero, cuando está escrito: es lo que esta página tiene
+          y el sitio publicado no. */}
       <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-[0.85rem] font-medium">
-        <span
-          aria-hidden
-          className="inline-flex items-center gap-1.5 text-ink underline decoration-line-strong underline-offset-4 transition-colors group-hover/tarjeta:decoration-ink"
-        >
-          {caso ? work.readCase : work.view}
-          {caso ? (
-            <ArrowIcon className="h-3.5 w-3.5 transition-transform duration-200 group-hover/tarjeta:translate-x-0.5" />
-          ) : (
-            <ArrowUpRightIcon className="h-3.5 w-3.5" />
-          )}
-        </span>
-        {/* En los que tienen caso, el sitio publicado aparte, por encima
-            del enlace estirado. */}
-        {caso && proyecto.url ? (
+        {caso ? (
+          <Link
+            href={caso}
+            className="group/caso inline-flex items-center gap-1.5 text-ink underline decoration-line-strong underline-offset-4 transition-colors hover:decoration-ink"
+          >
+            {work.readCase}
+            <span className="sr-only">: {proyecto.title}</span>
+            <ArrowIcon className="h-3.5 w-3.5 transition-transform duration-200 group-hover/caso:translate-x-0.5" />
+          </Link>
+        ) : null}
+        {sitio ? (
           <a
-            href={proyecto.url}
+            href={sitio}
             target="_blank"
             rel="noreferrer"
-            className="relative z-10 inline-flex items-center gap-1 text-ink-soft transition-colors hover:text-ink"
+            className={
+              caso
+                ? "inline-flex items-center gap-1 text-ink-soft transition-colors hover:text-ink"
+                : "inline-flex items-center gap-1 text-ink underline decoration-line-strong underline-offset-4 transition-colors hover:decoration-ink"
+            }
           >
             {work.view}
             <span className="sr-only">: {proyecto.title}</span>

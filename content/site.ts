@@ -49,7 +49,7 @@ export const processDesign: Record<
 };
 
 /**
- * Dónde cae cada capacidad en la grilla y de qué color habla.
+ * Dónde cae cada capacidad en la grilla.
  *
  * El bento no es una grilla de cuatro iguales: dos chicas arriba, una
  * vertical a la derecha y una ancha abajo. Esa forma no es decorativa, le toca
@@ -69,24 +69,17 @@ export const processDesign: Record<
 export const bentoDesign: Record<
   string,
   {
-    tone: "aqua" | "rosa" | "verde" | "miel";
     area: string;
     shape: "chica" | "ancha";
   }
 > = {
   velocidad: {
-    tone: "aqua",
     area: "lg:col-start-2 lg:col-span-2 lg:row-start-1",
     shape: "ancha",
   },
-  seo: { tone: "rosa", area: "lg:col-start-1 lg:row-start-1", shape: "chica" },
-  pantallas: {
-    tone: "verde",
-    area: "lg:col-start-3 lg:row-start-2",
-    shape: "chica",
-  },
+  seo: { area: "lg:col-start-1 lg:row-start-1", shape: "chica" },
+  pantallas: { area: "lg:col-start-3 lg:row-start-2", shape: "chica" },
   resultados: {
-    tone: "miel",
     area: "lg:col-start-1 lg:col-span-2 lg:row-start-2",
     shape: "ancha",
   },
