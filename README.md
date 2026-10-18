@@ -348,12 +348,16 @@ objeciones → contacto**:
   sitio en el teléfono, y las consultas que llegan. Las promesas son las que
   se pueden sostener: el objetivo de carga es de menos de dos segundos en un
   teléfono, y la viñeta de la IA muestra lo que puede contestar, no lo que
-  contesta seguro. Es sobrio, como el hero y el pase: cada celda es el mismo
-  plano gris con borde fino de las tarjetas de proyectos, en la tinta del
-  tema, con un solo color —el champagne del foil del pase— y la itálica serif
-  del titular del hero en la cifra de velocidad y en la respuesta del chat.
-  Antes eran cuatro láminas de color (aqua, rosa, miel y verde) con degradés,
-  y quedaban de otra página.
+  contesta seguro. Sale de una referencia de producto: cuatro tarjetas
+  grandes y suaves, dos por dos, cada una con una viñeta de interfaz arriba
+  —un chat con su campo para escribir, una lista con la fila hecha, un
+  documento con su barra de carga y un teléfono, una línea de tiempo con la
+  consulta nueva— y abajo el titular grande y una bajada corta. Las piezas son
+  blancas con borde finito sobre el gris de la tarjeta; el único color es el
+  champagne del foil del pase (las tildes y la barra) y la cifra de velocidad
+  y la respuesta del chat van en la itálica del hero. Antes fue un damero en
+  cuatro colores y después en gris con el texto arriba, y las dos veces quedó
+  feo.
 - **Pase (banner).** A la mitad de la home, después de ver el trabajo y lo
   que incluye: el camino corto, nombre y mail para guardarse un lugar en el
   próximo cupo. La sección está armada alrededor de un hueco: una tarjeta en
