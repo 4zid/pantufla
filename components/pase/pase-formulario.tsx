@@ -27,7 +27,7 @@ import {
  * - El de la portada es corto: el mail solo, en una línea, sobre la página.
  * - El del banner (`conNombre`) pide nombre y mail, con las etiquetas a la
  *   vista, y va sobre la tinta del banner (`sobreTinta`): ahí el botón negro
- *   desaparecería, así que lleva los colores del pase.
+ *   desaparecería, así que se da vuelta y es del color del papel.
  */
 export function PaseFormulario({
   origen,
@@ -189,10 +189,9 @@ export function PaseFormulario({
           className={cn(
             "h-12 whitespace-nowrap rounded-full px-6 text-[0.95rem] font-medium transition-[opacity,transform] disabled:opacity-70",
             sobreTinta
-              ? /* Los colores del pase, en un degradé fijo: va sobre la
-                   tinta en los dos temas, y el texto oscuro pasa 9:1 contra
-                   cualquiera de los tres. */
-                "bg-[linear-gradient(100deg,var(--color-aqua),var(--color-rosa)_55%,var(--color-miel))] text-[#121212] hover:-translate-y-px hover:opacity-95"
+              ? /* Sobre la tinta, el botón es el papel: blanco sobre la
+                   tarjeta oscura, y oscuro cuando el tema la da vuelta. */
+                "bg-on-ink text-ink hover:-translate-y-px hover:opacity-90"
               : "bg-ink text-on-ink hover:opacity-90",
           )}
         >

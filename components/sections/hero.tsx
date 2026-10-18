@@ -65,7 +65,8 @@ export function Hero({
           <PaseLugar
             origen="hero"
             entra={0.5}
-            className="mx-auto w-[15.5rem] sm:w-[16rem] xl:w-[17.5rem]"
+            sizes="(min-width: 1280px) 232px, 216px"
+            className="mx-auto w-[13rem] sm:w-[13.5rem] xl:w-[14.5rem]"
           />
           <div data-entra style={{ "--entra": "0.6s" } as React.CSSProperties}>
             <PaseFormulario origen="hero" className="mt-7" />

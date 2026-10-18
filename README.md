@@ -353,7 +353,8 @@ objeciones → contacto**:
   la tinta del tema con una tira de cupones punteados, y al del medio le
   falta el suyo. El hueco tiene la forma exacta del pase acostado —las
   esquinas y dos pestañas que entran en las muescas del talón—, una línea de
-  corte con su tijera y un halo de los colores del pase. El pase que vino
+  corte con su tijera y un halo tenue; el único color es el champagne del
+  foil del pase, en la línea de corte, la tijera y las tildes. El pase que vino
   volando desde la portada se acuesta y calza ahí, como la pieza que faltaba.
   Antes era la última sección y el pase acompañaba la página entera, que era
   demasiado.
@@ -399,13 +400,19 @@ seguido.
   líneas; más angosto, en tres.
 - **El pase** es una pieza 3D (Three.js) con física de papel: una malla de
   puntos unidos por resortes que se dobla, flamea y se asienta como un papel
-  blando. Va en los cuatro colores de la marca, con un sticker y una esquina
-  holográficos que cambian de color según cómo le da la luz al doblarse. Con
+  blando. Es sobrio a propósito: papel marfil, una sola tinta, la itálica de
+  Newsreader mezclada con Schibsted («*Pase* prioritario», «*Tu lugar*»), un
+  sello negro como un foil estampado y el dorso negro. El único color es el
+  borde, un foil champagne y perla que rodea toda la silueta (también las
+  muescas y el troquel) y que en el 3D brilla como metal y cambia apenas de
+  tono cuando el papel se dobla. Antes iba en los cuatro colores de la marca
+  y era demasiado. Con
   el mouse encima se hunde donde apoya y se inclina hacia el puntero.
 - **El vuelo.** Cuando el pase de la portada llega arriba de la pantalla, se
-  despega curvándose, se achica y acompaña el scroll cruzando la página de un
-  costado al otro en el tercio de abajo de la ventana, dando vueltas (a mitad
-  de cada cruce se ve el dorso). Al llegar al banner de la mitad de la home
+  despega curvándose, se achica (a un tercio, para que moleste poco mientras
+  se lee) y acompaña el scroll cruzando la página de un costado al otro en el
+  tercio de abajo de la ventana, una ida y vuelta cada cuatro pantallas, dando
+  vueltas (a mitad de cada cruce se ve el dorso). Al llegar al banner de la mitad de la home
   baja, se acuesta un cuarto de vuelta, crece y calza exactamente en el hueco
   de ahí (llega cuando el hueco está en el medio de la pantalla). Lo mueven el
   scroll y el puntero: cuando el papel se asienta, deja de dibujar. Si alguien

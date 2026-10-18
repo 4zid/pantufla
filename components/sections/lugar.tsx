@@ -41,7 +41,8 @@ function Vecino({ lado }: { lado: "izquierda" | "derecha" }) {
  * del medio le falta el suyo: en su lugar hay un recorte del color de la
  * página, con la forma exacta del pase acostado —las esquinas, y dos
  * pestañas que calzan en las muescas del talón—, la línea de corte con su
- * tijera y un halo de los colores del pase. El pase que vino volando desde
+ * tijera y un halo tenue. El único color es el champagne del foil del pase,
+ * en la línea de corte, la tijera y las tildes: el resto es la tinta. El pase que vino volando desde
  * la portada (components/pase) baja, se acuesta y calza ahí: es la pieza que
  * faltaba. Abajo, el formulario con nombre y mail.
  *
@@ -83,10 +84,10 @@ export function Lugar({ surface = "mist" }: { surface?: Surface }) {
 
         {/* La tira de cupones y el hueco. El contenedor mide lo que el hueco:
             los vecinos y el halo se ubican desde él y la tarjeta los corta. */}
-        <div className="relative mx-auto mt-10 w-full max-w-[19rem] sm:max-w-[26rem] md:mt-12 lg:max-w-[32rem]">
+        <div className="relative mx-auto mt-10 w-full max-w-[17rem] sm:max-w-[22rem] md:mt-12 lg:max-w-[26rem]">
           <div
             aria-hidden
-            className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[150%] w-[130%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side_at_28%_42%,var(--color-aqua),transparent),radial-gradient(closest-side_at_70%_38%,var(--color-rosa),transparent),radial-gradient(closest-side_at_52%_72%,var(--color-miel),transparent)] opacity-40 blur-3xl"
+            className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[150%] w-[130%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,#e6d7bb,transparent)] opacity-25 blur-3xl"
           />
           <Vecino lado="izquierda" />
           <Vecino lado="derecha" />
@@ -94,9 +95,9 @@ export function Lugar({ surface = "mist" }: { surface?: Surface }) {
           {/* La línea de corte, con la tijera encima. */}
           <div
             aria-hidden
-            className="pointer-events-none absolute -inset-2.5 rounded-[calc(4%+10px)/calc(6.25%+10px)] border-[1.5px] border-dashed border-miel/70"
+            className="pointer-events-none absolute -inset-2.5 rounded-[calc(4%+10px)/calc(6.25%+10px)] border-[1.5px] border-dashed border-[#c8ae84]/60"
           >
-            <ScissorsIcon className="absolute -top-[9px] left-7 h-4 w-4 bg-ink text-miel" />
+            <ScissorsIcon className="absolute -top-[9px] left-7 h-4 w-4 bg-ink text-[#c8ae84]" />
           </div>
 
           {/* El recorte: el color de la página, con un poco de sombra
@@ -123,7 +124,7 @@ export function Lugar({ surface = "mist" }: { surface?: Surface }) {
           <PaseLugar
             origen="banner"
             acostado
-            sizes="(min-width: 1024px) 330px, (min-width: 640px) 270px, 200px"
+            sizes="(min-width: 1024px) 270px, (min-width: 640px) 230px, 180px"
             className="w-full"
           />
         </div>
@@ -141,7 +142,7 @@ export function Lugar({ surface = "mist" }: { surface?: Surface }) {
           <ul className="mx-auto mt-6 flex max-w-[56rem] flex-wrap justify-center gap-x-6 gap-y-2 text-[0.85rem] text-on-ink/70">
             {lugar.points.map((punto) => (
               <li key={punto} className="flex items-center gap-2">
-                <CheckIcon className="h-3.5 w-3.5 shrink-0 text-miel" />
+                <CheckIcon className="h-3.5 w-3.5 shrink-0 text-[#c8ae84]" />
                 {punto}
               </li>
             ))}
