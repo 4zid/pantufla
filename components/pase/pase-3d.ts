@@ -114,12 +114,14 @@ const PESO = 240;
 const ROCE = 0.045;
 const ARRASTRE_VUELO = 0.9;
 const ITERACIONES = 5;
-const ESCALA_VUELO = 0.42;
+/* Chico: volando cruza el texto que alguien está leyendo. Era 0,42 y
+   molestaba al scrollear. */
+const ESCALA_VUELO = 0.34;
 
 /* La textura de la cara, en px de la imagen (a 2x del diseño de 640 × 1000). */
 const TEX_W = 1280;
 const TEX_H = 2000;
-const PANEL = { x: 80, y: 820, w: 840, h: 300, r: 48 };
+const PANEL = { x: 80, y: 820, w: 840, h: 300, r: 40 };
 
 type Pose = {
   x: number;
@@ -276,47 +278,59 @@ export async function montarPase(o: OpcionesPase): Promise<ControlPase> {
     pincel.clearRect(0, 0, TEX_W, TEX_H);
     pincel.drawImage(cara, 0, 0, TEX_W, TEX_H);
     if (sello) {
-      await document.fonts.load('600 92px "Schibsted Grotesk"').catch(() => {});
+      /* El panel se vuelve a pintar entero con el mismo dibujo que tiene
+         en la textura (scripts/generar-pase.mjs): el marfil del panel, su
+         filete y la etiqueta. El nombre va en la itálica de Newsreader, como
+         «Tu lugar»; la portada ya la bajó, así que está a mano. */
+      await Promise.all([
+        document.fonts.load('600 26px "Schibsted Grotesk"'),
+        document.fonts.load('italic 400 100px "Newsreader"'),
+      ]).catch(() => {});
       const { x, y, w, h, r } = PANEL;
-      pincel.fillStyle = "#fffdf9";
+      pincel.fillStyle = "#fbf9f4";
+      pincel.strokeStyle = "rgba(21,20,19,0.12)";
+      pincel.lineWidth = 3;
       pincel.beginPath();
-      pincel.roundRect(x, y, w, h, r);
+      pincel.roundRect(x + 1.5, y + 1.5, w - 3, h - 3, r - 1.5);
       pincel.fill();
-      pincel.fillStyle = "#6a6a6a";
-      pincel.font = '600 26px "Schibsted Grotesk", sans-serif';
-      pincel.letterSpacing = "5.7px";
-      pincel.fillText(o.textos.titular.toUpperCase(), x + 56, y + 74);
-      // La etiqueta, ahora rellena: el lugar ya es de alguien.
+      pincel.stroke();
+      pincel.fillStyle = "#7a736b";
       pincel.font = '600 24px "Schibsted Grotesk", sans-serif';
-      pincel.letterSpacing = "4.3px";
+      pincel.letterSpacing = "5.8px";
+      pincel.fillText(o.textos.titular.toUpperCase(), x + 56, y + 70);
+      // La etiqueta, ahora rellena: el lugar ya es de alguien.
+      pincel.font = '600 22px "Schibsted Grotesk", sans-serif';
+      pincel.letterSpacing = "4.4px";
       const etiqueta = o.textos.reservado.toUpperCase();
       const ancho = pincel.measureText(etiqueta).width + 44;
-      pincel.fillStyle = "#121212";
+      pincel.fillStyle = "#151413";
       pincel.beginPath();
-      pincel.roundRect(x + w - 44 - ancho, y + 44, ancho, 46, 23);
+      pincel.roundRect(x + w - 44 - ancho, y + 40, ancho, 46, 23);
       pincel.fill();
-      pincel.fillStyle = "#fffdf9";
-      pincel.fillText(etiqueta, x + w - 44 - ancho + 22, y + 76);
+      pincel.fillStyle = "#fbf9f4";
+      pincel.fillText(etiqueta, x + w - 44 - ancho + 22, y + 71);
       // Lo principal, tan grande como entre en el panel: el nombre si lo
       // dejó, y si no el mail. Con nombre, el mail va chico abajo.
       const principal = sello.nombre || sello.email;
-      pincel.letterSpacing = "-2px";
-      pincel.fillStyle = "#121212";
-      let tam = 84;
+      pincel.letterSpacing = "-1px";
+      pincel.fillStyle = "#151413";
+      let tam = sello.nombre ? 108 : 76;
       do {
-        pincel.font = `600 ${tam}px "Schibsted Grotesk", sans-serif`;
+        pincel.font = sello.nombre
+          ? `italic 400 ${tam}px "Newsreader", Georgia, serif`
+          : `600 ${tam}px "Schibsted Grotesk", sans-serif`;
         tam -= 4;
       } while (pincel.measureText(principal).width > w - 112 && tam > 30);
-      pincel.fillText(principal, x + 56, y + (sello.nombre ? 178 : 200));
+      pincel.fillText(principal, x + 56, y + (sello.nombre ? 190 : 200));
       if (sello.nombre) {
         pincel.letterSpacing = "0px";
-        pincel.fillStyle = "#565656";
-        tam = 34;
+        pincel.fillStyle = "#5e5850";
+        tam = 32;
         do {
           pincel.font = `500 ${tam}px "Schibsted Grotesk", sans-serif`;
           tam -= 2;
         } while (pincel.measureText(sello.email).width > w - 112 && tam > 20);
-        pincel.fillText(sello.email, x + 56, y + 244);
+        pincel.fillText(sello.email, x + 56, y + 252);
       }
       pincel.letterSpacing = "0px";
     }
@@ -496,7 +510,9 @@ export async function montarPase(o: OpcionesPase): Promise<ControlPase> {
   const seguir = (sy: number, e: ReturnType<typeof etapas>): Pose => {
     const tramo = Math.max(1, e.descenso - e.despegue);
     const q = acotar((sy - e.despegue) / tramo);
-    const cruces = 2 * Math.max(1, Math.round(tramo / (vh * 3)));
+    // Una ida y vuelta cada cuatro pantallas: con una cada tres, el pase
+    // pasaba de un costado al otro tan seguido que distraía.
+    const cruces = 2 * Math.max(1, Math.round(tramo / (vh * 4)));
     const mitad = (W0 * ESCALA_VUELO) / 2 + 40;
     const lado = 0.5 + 0.5 * Math.cos(Math.PI * q * cruces);
     return {
