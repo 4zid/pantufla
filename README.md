@@ -252,7 +252,7 @@ Casi todo se edita en `/studio`, sin tocar código:
 | Las pantallas que corren abajo del hero | Studio → *Proyectos* → cada proyecto, en *Pantallas para la portada* |
 | Briefs, reuniones y lugares reservados que llegan | Studio → *Briefs recibidos*, *Reuniones agendadas*, *Lugares reservados* (solo lectura) |
 | Texto de respaldo, si el Studio no tiene nada cargado | `content/copy.es.ts` y `content/copy.en.ts` |
-| Colores, íconos y números de cada bloque, celdas del bento | `content/site.ts` |
+| Colores, íconos y números de cada bloque, lugar de cada celda del bento | `content/site.ts` |
 | Contacto, países del globo, marcas de la prueba social, riel de herramientas | `content/site.ts` |
 | Logos de los clientes de la tira | `public/logos/clientes` + `content/site.ts` → `socialProof` |
 | Orden de las secciones de la home | `content/sections.ts` |
@@ -353,16 +353,26 @@ objeciones → contacto**:
   sitio en el teléfono, y las consultas que llegan. Las promesas son las que
   se pueden sostener: el objetivo de carga es de menos de dos segundos en un
   teléfono, y la viñeta de la IA muestra lo que puede contestar, no lo que
-  contesta seguro.
+  contesta seguro. Sale de una referencia de producto: cuatro tarjetas
+  grandes y suaves, dos por dos, cada una con una viñeta de interfaz arriba
+  —un chat con su campo para escribir, una lista con la fila hecha, un
+  documento con su barra de carga y un teléfono, una línea de tiempo con la
+  consulta nueva— y abajo el titular grande y una bajada corta. Las piezas son
+  blancas con borde finito sobre el gris de la tarjeta; el único color es el
+  champagne del foil del pase (las tildes y la barra) y la cifra de velocidad
+  y la respuesta del chat van en la itálica del hero. Antes fue un damero en
+  cuatro colores y después en gris con el texto arriba, y las dos veces quedó
+  feo.
 - **Pase (banner).** A la mitad de la home, después de ver el trabajo y lo
   que incluye: el camino corto, nombre y mail para guardarse un lugar en el
   próximo cupo. La sección está armada alrededor de un hueco: una tarjeta en
   la tinta del tema con una tira de cupones punteados, y al del medio le
   falta el suyo. El hueco tiene la forma exacta del pase acostado —las
   esquinas y dos pestañas que entran en las muescas del talón—, una línea de
-  corte con su tijera y un halo tenue; el único color es el champagne del
-  foil del pase, en la línea de corte, la tijera y las tildes. El pase que vino
-  volando desde la portada se acuesta y calza ahí, como la pieza que faltaba.
+  corte punteada en blanco y un halo tenue; el único color es el champagne
+  del foil del pase, en las tildes. El pase que vino volando desde la portada
+  se acuesta y calza ahí, como la pieza que faltaba. Ahí no responde al
+  mouse: inclinado, se despegaba del borde del hueco.
   Va centrada y apilada —el titular, el hueco y abajo el formulario en una
   fila— con el aire justo para que no sea altísima: probó dos columnas y se
   volvió, porque el hueco al medio de la tira es lo que hace que el pase se
@@ -370,8 +380,7 @@ objeciones → contacto**:
   acompañaba la página entera, que era demasiado.
 - **Proceso.** Cuatro etapas, cada una con fecha: quince días hábiles un
   Sitio, una semana una Landing. El riel que las une lleva
-  los cuatro colores del bento en el mismo orden y llega a cada número con su
-  color ya hecho.
+  los cuatro colores de la marca y llega a cada número con su color ya hecho.
 - **Planes.** Dos opciones y nada más: una página sola o el sitio completo, más
   un bloque para quien ya tiene un sitio en Webflow o Framer (administrarlo,
   mejorarlo, rediseñarlo o un cambio puntual).
@@ -461,7 +470,7 @@ seguido.
   borde, un foil champagne y perla que rodea toda la silueta (también las
   muescas y el troquel) y que en el 3D brilla como metal y cambia apenas de
   tono cuando el papel se dobla. Antes iba en los cuatro colores de la marca
-  y era demasiado. Con
+  y era demasiado. En la portada, con
   el mouse encima se hunde donde apoya y se inclina hacia el puntero.
 - **El vuelo.** Cuando el pase de la portada llega arriba de la pantalla, se
   despega curvándose, se achica (a un tercio, para que moleste poco mientras
@@ -536,10 +545,13 @@ compuesta (un mockup con sus propios marcos, o una ilustración) y adentro de
 una ventana parecería un sitio roto. Para que la tarjeta tenga capturas
 alcanza con cargarle pantallas, y eso también lo suma a la galería del hero.
 
-Toda la tarjeta es un enlace: al caso si está escrito, al sitio publicado si
-no. Las que tienen caso suman abajo «Ver sitio» aparte. Al pasar el mouse la
-ventana sube un poco y el teléfono un poco más; con menos movimiento pedido
-no se mueven.
+Los botones viven adentro del mockup, y abajo quedan solo el nombre, el rubro
+y la bajada. Al pasar el mouse el mockup se desenfoca y en el medio aparecen
+«Ver sitio», una pastilla blanca con letra negra, y al lado, si el caso está
+escrito, «Leer el caso» en el champagne del pase. El clic en el resto del
+plano lleva al sitio. Con el teclado, el foco en un botón hace lo mismo que
+el mouse; en el teléfono, donde no hay mouse, los botones están siempre,
+abajo del plano y sin desenfoque.
 
 Cada proyecto tiene además su ficha en `/proyectos/<slug>`. Lo que muestra sale
 del Studio: si el proyecto no tiene portada ni caso escrito («Caso completo»),
@@ -548,7 +560,7 @@ portada y el caso aparecen solos cuando se cargan.
 
 El caso escrito es lo que decide si la ficha existe para afuera:
 
-- **Con caso**, la tarjeta lleva a la ficha con «Leer el caso», la ficha va al
+- **Con caso**, la tarjeta suma el botón «Leer el caso», la ficha va al
   sitemap y se indexa.
 - **Sin caso**, la ficha se puede abrir pero va con `noindex`, fuera del
   sitemap, y ninguna tarjeta la enlaza (llevan al sitio publicado). Es una
@@ -715,8 +727,8 @@ Para eso está la variante profunda.
 | base | rellenos, formas, ilustración, y texto sobre fondo oscuro |
 | `-deep` | texto e íconos chicos sobre fondo claro |
 
-El color es taxonomía, no decoración: cada etapa del proceso, cada plan y cada
-celda del bento tiene su color asignado en `content/site.ts` y se resuelve con
+El color es taxonomía, no decoración: cada etapa del proceso y cada plan
+tiene su color asignado en `content/site.ts` y se resuelve con
 los mapas de `lib/tones.ts`. Tailwind no arma nombres de clase en runtime, así
 que las variantes están escritas enteras ahí.
 

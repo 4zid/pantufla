@@ -565,7 +565,15 @@ export async function montarPase(o: OpcionesPase): Promise<ControlPase> {
     return p;
   };
 
-  /* El puntero: hunde el papel donde apoya y lo inclina hacia él. */
+  /*
+     El puntero: hunde el papel donde apoya y lo inclina hacia él.
+
+     Solo en la portada. En el banner el pase calza en un hueco con su forma
+     exacta, y cualquier inclinación lo despega del borde: de un lado asoma
+     una franja del hueco y del otro el pase se pasa, y la pieza que faltaba
+     deja de calzar. Ahí se queda plano.
+  */
+  const CON_PUNTERO: LugarPase[] = ["hero"];
   let puntero: { lugar: LugarPase; u: number; v: number } | null = null;
   const alMover = (lugar: LugarPase) => (e: PointerEvent) => {
     const el = o.lugares[lugar];
@@ -583,7 +591,7 @@ export async function montarPase(o: OpcionesPase): Promise<ControlPase> {
     despertar();
   };
   const oyentes: [HTMLElement, string, EventListener][] = [];
-  for (const lugar of LUGARES) {
+  for (const lugar of CON_PUNTERO) {
     const el = o.lugares[lugar];
     if (!el) continue;
     const mover = alMover(lugar) as EventListener;

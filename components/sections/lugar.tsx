@@ -3,7 +3,7 @@
 import { useCopy } from "@/components/copy-provider";
 import { Reveal } from "@/components/motion/reveal";
 import { SplitHeading } from "@/components/motion/split-heading";
-import { CheckIcon, ScissorsIcon, TagIcon } from "@/components/ui/icons";
+import { CheckIcon, TagIcon } from "@/components/ui/icons";
 import { Section, type Surface } from "@/components/ui/section";
 import { PaseFormulario } from "@/components/pase/pase-formulario";
 import { PaseLugar } from "@/components/pase/pase-lugar";
@@ -40,11 +40,12 @@ function Vecino({ lado }: { lado: "izquierda" | "derecha" }) {
  * tinta del tema con una tira de cupones punteados de punta a punta, y al
  * del medio le falta el suyo: en su lugar hay un recorte del color de la
  * página, con la forma exacta del pase acostado —las esquinas, y dos
- * pestañas que calzan en las muescas del talón—, la línea de corte con su
- * tijera y un halo tenue. El único color es el champagne del foil del pase,
- * en la línea de corte, la tijera y las tildes: el resto es la tinta. El pase que vino volando desde
+ * pestañas que calzan en las muescas del talón—, la línea de corte punteada
+ * en blanco y un halo tenue. El único color es el champagne del foil del
+ * pase, en las tildes: el resto es la tinta. El pase que vino volando desde
  * la portada (components/pase) baja, se acuesta y calza ahí: es la pieza que
- * faltaba. Abajo, el formulario con nombre y mail.
+ * faltaba. Ahí no responde al mouse (ver pase-3d.ts): inclinado dejaría de
+ * calzar. Abajo, el formulario con nombre y mail.
  *
  * Antes era la última sección y el pase acompañaba toda la home hasta el
  * final, que era demasiado. A la mitad el vuelo es la mitad de largo y el
@@ -100,13 +101,13 @@ export function Lugar({ surface = "mist" }: { surface?: Surface }) {
           <Vecino lado="izquierda" />
           <Vecino lado="derecha" />
 
-          {/* La línea de corte, con la tijera encima. */}
+          {/* La línea de corte: punteada y en el color del texto de la
+              tarjeta, blanca sobre la tinta. Llevaba una tijera y era
+              champagne; con el pase encima sobraban las dos cosas. */}
           <div
             aria-hidden
-            className="pointer-events-none absolute -inset-2.5 rounded-[calc(4%+10px)/calc(6.25%+10px)] border-[1.5px] border-dashed border-[#c8ae84]/60"
-          >
-            <ScissorsIcon className="absolute -top-[9px] left-7 h-4 w-4 bg-ink text-[#c8ae84]" />
-          </div>
+            className="pointer-events-none absolute -inset-2.5 rounded-[calc(4%+10px)/calc(6.25%+10px)] border-[1.5px] border-dashed border-on-ink/60"
+          />
 
           {/* El recorte: el color de la página, con un poco de sombra
               adentro para que se lea como hueco y no como tarjeta. */}
