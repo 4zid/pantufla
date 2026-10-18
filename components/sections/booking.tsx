@@ -14,7 +14,7 @@ import { ENLACE_CAL as ENLACE } from "@/lib/calendario";
  * la parte fácil— sino las cuatro que vienen abajo de ella: saber cuándo la
  * persona que atiende está ocupada, impedir que dos visitantes tomen el mismo
  * turno, traducir la hora a la zona horaria de cada uno —los clientes están en
- * siete países— y mandar recordatorios, el link de video y los avisos de
+ * cinco países— y mandar recordatorios, el link de video y los avisos de
  * cancelación. Construir eso a mano es construir un calendario, y un calendario
  * a medio hacer no falla a la vista: falla el día que alguien aparece una hora
  * tarde.
