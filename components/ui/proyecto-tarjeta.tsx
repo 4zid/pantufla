@@ -94,25 +94,29 @@ function Telefono({ pantalla }: { pantalla: PantallaMockup }) {
 
 /**
  * La tarjeta de un proyecto: el mockup arriba —una ventana y un teléfono
- * sobre un plano gris, nada más— y abajo el nombre, el rubro, la bajada y
- * los enlaces.
+ * sobre un plano gris, nada más— y abajo el nombre, el rubro y la bajada.
+ * Sin enlaces de texto: los botones viven adentro del mockup.
  *
- * El mockup lleva al sitio publicado. Al pasar el mouse se desenfoca y en el
- * medio aparece una pastilla blanca con «Ver sitio»: dice qué pasa con el
- * clic sin tapar las capturas mientras nadie las está apuntando. Es blanca
- * con letra negra en los dos temas, porque se apoya sobre las capturas, que
- * son claras.
+ * Al pasar el mouse el mockup se desenfoca y en el medio aparecen los
+ * botones: «Ver sitio», una pastilla blanca con letra negra, y al lado,
+ * cuando el caso está escrito, «Leer el caso» en el champagne del pase, el
+ * único color de la página. Son blancos y champagne en los dos temas porque
+ * se apoyan sobre las capturas, que son claras. Además, todo el plano lleva
+ * al sitio: el clic fuera de los botones no se pierde.
  *
- * Ese enlace es para el mouse y nada más: va fuera del orden del teclado y
- * escondido del lector de pantalla, porque abajo están los mismos destinos
- * en texto —«Leer el caso» cuando está escrito y «Ver sitio» siempre—, que
- * es lo que usan el teclado y el teléfono, donde no hay mouse que haga
- * aparecer la pastilla. Dos enlaces al mismo lugar en el orden del teclado
- * serían una parada de más en cada tarjeta.
+ * Los botones son enlaces de verdad. Con el teclado, el foco en cualquiera
+ * de los dos hace aparecer el desenfoque y los botones igual que el mouse.
+ * El plano entero es un enlace solo para el mouse, fuera del orden del
+ * teclado y escondido del lector de pantalla: el mismo destino ya está en
+ * «Ver sitio».
+ *
+ * En una pantalla táctil no hay mouse que los haga aparecer, así que ahí
+ * están siempre, abajo del plano y sin desenfoque, para no tapar el centro
+ * de las capturas.
  *
  * Las capturas van con alt vacío: son decorado, y el nombre del proyecto
- * está en el titular. Con menos movimiento pedido el desenfoque y la
- * pastilla aparecen sin transición.
+ * está en el titular. Con menos movimiento pedido el desenfoque y los
+ * botones aparecen sin transición.
  */
 export function ProyectoTarjeta({
   proyecto,
@@ -128,55 +132,82 @@ export function ProyectoTarjeta({
 
   const caso = proyecto.conCaso ? href(`/proyectos/${proyecto.slug}`) : null;
   const sitio = proyecto.url;
+  const conBotones = Boolean(sitio || caso);
 
-  /* Con teléfono, la ventana se corre arriba a la izquierda y el teléfono
-     se apoya abajo a la derecha, montado sobre ella. Sin teléfono, la
-     ventana va al centro. */
-  const mockup = (
-    <div className="absolute inset-0 transition-[filter,transform] duration-500 ease-out group-hover/escenario:scale-[1.02] group-hover/escenario:blur-[6px] motion-reduce:transition-none">
-      <div
-        className={`absolute left-[10%] w-[80%] ${
-          telefono ? "top-[12%]" : "top-1/2 -translate-y-1/2"
-        }`}
-      >
-        <div className="aspect-[16/10.6]">
-          <Ventana
-            pantalla={escritorio}
-            dominio={dominio}
-            titulo={proyecto.title}
-          />
-        </div>
-      </div>
-      {telefono ? (
-        <div className="absolute bottom-[7%] right-[7%] aspect-[9/19.5] w-[21%]">
-          <Telefono pantalla={telefono} />
-        </div>
-      ) : null}
-    </div>
-  );
-  const escenario =
-    "relative block aspect-[4/3] overflow-hidden rounded-[1.25rem] border border-line bg-paper-alt md:rounded-[1.5rem]";
+  const boton =
+    "inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-4 py-2 text-[0.82rem] font-medium md:px-5 md:py-2.5 md:text-[0.88rem] text-[#121212] shadow-[0_12px_30px_-12px_rgba(0,0,0,0.35)] transition-transform duration-200 hover:-translate-y-px focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#121212]";
 
   return (
     <article>
-      {sitio ? (
-        <a
-          href={sitio}
-          target="_blank"
-          rel="noreferrer"
-          tabIndex={-1}
-          aria-hidden
-          className={`group/escenario ${escenario}`}
+      <div className="group/escenario relative aspect-[4/3] overflow-hidden rounded-[1.25rem] border border-line bg-paper-alt md:rounded-[1.5rem]">
+        {/* Con teléfono, la ventana se corre arriba a la izquierda y el
+            teléfono se apoya abajo a la derecha, montado sobre ella. Sin
+            teléfono, la ventana va al centro. */}
+        <div
+          className={`absolute inset-0 transition-[filter,transform] duration-500 ease-out motion-reduce:transition-none ${
+            conBotones
+              ? "group-hover/escenario:scale-[1.02] group-hover/escenario:blur-[6px] group-focus-within/escenario:scale-[1.02] group-focus-within/escenario:blur-[6px] [@media(hover:none)]:scale-100! [@media(hover:none)]:blur-none!"
+              : ""
+          }`}
         >
-          {mockup}
-          <span className="absolute left-1/2 top-1/2 inline-flex -translate-x-1/2 translate-y-[calc(-50%+6px)] items-center gap-1.5 whitespace-nowrap rounded-full bg-white px-5 py-2.5 text-[0.88rem] font-medium text-[#121212] opacity-0 shadow-[0_12px_30px_-12px_rgba(0,0,0,0.35)] transition-[opacity,translate] duration-300 ease-out group-hover/escenario:-translate-y-1/2 group-hover/escenario:opacity-100 motion-reduce:transition-none">
-            {work.view}
-            <ArrowUpRightIcon className="h-3.5 w-3.5" />
-          </span>
-        </a>
-      ) : (
-        <div className={escenario}>{mockup}</div>
-      )}
+          <div
+            className={`absolute left-[10%] w-[80%] ${
+              telefono ? "top-[12%]" : "top-1/2 -translate-y-1/2"
+            }`}
+          >
+            <div className="aspect-[16/10.6]">
+              <Ventana
+                pantalla={escritorio}
+                dominio={dominio}
+                titulo={proyecto.title}
+              />
+            </div>
+          </div>
+          {telefono ? (
+            <div className="absolute bottom-[7%] right-[7%] aspect-[9/19.5] w-[21%]">
+              <Telefono pantalla={telefono} />
+            </div>
+          ) : null}
+        </div>
+
+        {sitio ? (
+          <a
+            href={sitio}
+            target="_blank"
+            rel="noreferrer"
+            tabIndex={-1}
+            aria-hidden
+            className="absolute inset-0"
+          />
+        ) : null}
+
+        {conBotones ? (
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-center gap-2 opacity-0 transition-opacity duration-300 ease-out group-focus-within/escenario:opacity-100 group-hover/escenario:opacity-100 motion-reduce:transition-none [@media(hover:none)]:items-end [@media(hover:none)]:pb-4 [@media(hover:none)]:opacity-100">
+            {sitio ? (
+              <a
+                href={sitio}
+                target="_blank"
+                rel="noreferrer"
+                className={`pointer-events-auto bg-white ${boton}`}
+              >
+                {work.view}
+                <span className="sr-only">: {proyecto.title}</span>
+                <ArrowUpRightIcon className="h-3.5 w-3.5" />
+              </a>
+            ) : null}
+            {caso ? (
+              <Link
+                href={caso}
+                className={`pointer-events-auto bg-[#c8ae84] ${boton}`}
+              >
+                {work.readCase}
+                <span className="sr-only">: {proyecto.title}</span>
+                <ArrowIcon className="h-3.5 w-3.5" />
+              </Link>
+            ) : null}
+          </div>
+        ) : null}
+      </div>
 
       <div className="mt-5 flex items-baseline justify-between gap-6">
         <Titulo
@@ -196,37 +227,6 @@ export function ProyectoTarjeta({
           {proyecto.tagline}
         </p>
       ) : null}
-
-      {/* El caso primero, cuando está escrito: es lo que esta página tiene
-          y el sitio publicado no. */}
-      <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-[0.85rem] font-medium">
-        {caso ? (
-          <Link
-            href={caso}
-            className="group/caso inline-flex items-center gap-1.5 text-ink underline decoration-line-strong underline-offset-4 transition-colors hover:decoration-ink"
-          >
-            {work.readCase}
-            <span className="sr-only">: {proyecto.title}</span>
-            <ArrowIcon className="h-3.5 w-3.5 transition-transform duration-200 group-hover/caso:translate-x-0.5" />
-          </Link>
-        ) : null}
-        {sitio ? (
-          <a
-            href={sitio}
-            target="_blank"
-            rel="noreferrer"
-            className={
-              caso
-                ? "inline-flex items-center gap-1 text-ink-soft transition-colors hover:text-ink"
-                : "inline-flex items-center gap-1 text-ink underline decoration-line-strong underline-offset-4 transition-colors hover:decoration-ink"
-            }
-          >
-            {work.view}
-            <span className="sr-only">: {proyecto.title}</span>
-            <ArrowUpRightIcon className="h-3.5 w-3.5" />
-          </a>
-        ) : null}
-      </div>
     </article>
   );
 }
