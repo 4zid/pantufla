@@ -708,11 +708,6 @@
   transform-origin: 50% 100%;
 }
 
-.motion-ready [data-celda] [data-lleno] {
-  transform: scaleX(0);
-  transform-origin: 0% 50%;
-}
-
 .motion-ready [data-celda] [data-punto] {
   transform: scale(0);
 }
@@ -736,7 +731,6 @@
       [data-respuesta],
       [data-avatar],
       [data-barra],
-      [data-lleno],
       [data-punto]
     ) {
     opacity: 1 !important;

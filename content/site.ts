@@ -49,40 +49,16 @@ export const processDesign: Record<
 };
 
 /**
- * Dónde cae cada capacidad en la grilla.
- *
- * El bento no es una grilla de cuatro iguales: dos chicas arriba, una
- * vertical a la derecha y una ancha abajo. Esa forma no es decorativa, le toca
- * a cada tarjeta por lo que tiene adentro —la vertical lleva un teléfono y la
- * ancha un gráfico, y ninguna de las dos entra en la otra— así que la celda es
- * parte del diseño de la tarjeta y vive acá, no en el texto.
- *
- * Abajo de md es una sola columna y todo esto no aplica: cuatro tarjetas
- * apiladas en el orden en que están escritas.
+ * El orden de las tarjetas del bento, que es dos por dos (una columna en el
+ * teléfono). El chat va primero, como en la referencia: es la viñeta que más
+ * dice de un vistazo. El orden del texto en el copy no cambia; el lugar lo
+ * pone esto.
  */
-/**
- * Dónde va cada celda del tablero y qué forma tiene. Tres columnas y dos
- * filas desde lg, en damero: arriba la chica a la izquierda y la ancha a la
- * derecha; abajo la ancha a la izquierda y la chica a la derecha. En md son
- * dos columnas parejas y las áreas no aplican; abajo, una sola.
- */
-export const bentoDesign: Record<
-  string,
-  {
-    area: string;
-    shape: "chica" | "ancha";
-  }
-> = {
-  velocidad: {
-    area: "lg:col-start-2 lg:col-span-2 lg:row-start-1",
-    shape: "ancha",
-  },
-  seo: { area: "lg:col-start-1 lg:row-start-1", shape: "chica" },
-  pantallas: { area: "lg:col-start-3 lg:row-start-2", shape: "chica" },
-  resultados: {
-    area: "lg:col-start-1 lg:col-span-2 lg:row-start-2",
-    shape: "ancha",
-  },
+export const bentoDesign: Record<string, { area: string }> = {
+  seo: { area: "order-1" },
+  velocidad: { area: "order-2" },
+  pantallas: { area: "order-3" },
+  resultados: { area: "order-4" },
 };
 
 export const planDesign: Record<string, { tone: string; featured: boolean }> = {
