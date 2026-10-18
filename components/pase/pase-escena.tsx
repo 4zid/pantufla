@@ -6,44 +6,7 @@ import { useCopy, useLocale } from "@/components/copy-provider";
 import { GIROS } from "@/components/pase/pase-lugar";
 import type { ControlPase, SelloPase } from "@/components/pase/pase-3d";
 import { usePase } from "@/lib/pase";
-
-/**
- * Si vale la pena dibujar el pase en 3D en esta máquina.
- *
- * Con una placa de video por software (SwiftShader, llvmpipe: lo que da el
- * Chrome sin pantalla de Lighthouse, o una máquina virtual) cada cuadro
- * cuesta cientos de milisegundos, así que ni se baja Three.js: queda la
- * imagen. failIfMajorPerformanceCaveat ya lo pide, pero algunos navegadores
- * lo ignoran, y por eso también se mira el nombre del renderizador.
- *
- * ?pase3d lo fuerza, para probarlo en un navegador sin placa.
- */
-function sePuede(): { si: boolean; forzado: boolean } {
-  if (new URLSearchParams(window.location.search).has("pase3d")) {
-    return { si: true, forzado: true };
-  }
-  try {
-    const c = document.createElement("canvas");
-    const op = { failIfMajorPerformanceCaveat: true };
-    const gl =
-      (c.getContext("webgl2", op) as WebGL2RenderingContext | null) ??
-      (c.getContext("webgl", op) as WebGLRenderingContext | null);
-    if (!gl) return { si: false, forzado: false };
-    const info = gl.getExtension("WEBGL_debug_renderer_info");
-    const nombre = String(
-      info
-        ? gl.getParameter(info.UNMASKED_RENDERER_WEBGL)
-        : gl.getParameter(gl.RENDERER),
-    );
-    gl.getExtension("WEBGL_lose_context")?.loseContext();
-    return {
-      si: !/swiftshader|llvmpipe|softpipe|software|basic render/i.test(nombre),
-      forzado: false,
-    };
-  } catch {
-    return { si: false, forzado: false };
-  }
-}
+import { sePuede3d } from "@/lib/webgl";
 
 /**
  * La escena del pase: un canvas fijo que cubre la ventana, sin puntero, por
@@ -101,7 +64,7 @@ export function PaseEscena({ volar }: { volar: boolean }) {
 
     const arrancar = async () => {
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-      const { si, forzado } = sePuede();
+      const { si, forzado } = sePuede3d("pase3d");
       if (!si || !vivo) return;
       const lugar = (o: string) =>
         document.querySelector<HTMLElement>(`[data-pase-lugar="${o}"]`) ??

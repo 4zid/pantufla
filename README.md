@@ -20,8 +20,13 @@ conviene tener a mano:
    `content/fallback-content.ts`. Se muestra **solo mientras el CMS no tenga
    ninguno**: apenas cargues el primer proyecto (o el primer testimonio) en
    `/studio`, Sanity gana y el respaldo de ese tipo deja de verse.
-2. **Los países del mapa.** `content/site.ts` → `clients`. El pie de la sección
-   cuenta esa lista, así que el número siempre coincide con lo que se muestra.
+2. **Los países del globo.** `content/site.ts` → `clients` (hoy Argentina,
+   Colombia, Estados Unidos, España y Dinamarca, con Copenhague). El pie de la
+   sección cuenta esa lista, así que el número siempre coincide con lo que se
+   muestra. Un país nuevo también hay que pintarlo: sumarlo en
+   `scripts/generar-globo.mjs`, correrlo, ponerle nombre en
+   `content/countries.ts` y volver a sacar la imagen quieta con
+   `scripts/generar-globo-imagen.mjs` (ver *El globo*).
 3. **Datos de contacto y redes.** `content/site.ts` → `site` (mail, WhatsApp,
    ubicación, redes).
 
@@ -187,7 +192,7 @@ sitio todo el día.
 `/reunion` embebe un calendario de Cal.com. El motor es de ellos a propósito: lo
 difícil de una reserva no es la pantalla sino saber cuándo está ocupada la
 persona que atiende, impedir que dos visitantes tomen el mismo turno, traducir
-la hora a la zona de cada uno —hay clientes en siete países— y mandar
+la hora a la zona de cada uno —hay clientes en cinco países— y mandar
 recordatorios, el link de video y los avisos de cancelación.
 
 Lo arma **quien atiende las reuniones**, con su cuenta y su calendario. Así no
@@ -248,7 +253,7 @@ Casi todo se edita en `/studio`, sin tocar código:
 | Briefs, reuniones y lugares reservados que llegan | Studio → *Briefs recibidos*, *Reuniones agendadas*, *Lugares reservados* (solo lectura) |
 | Texto de respaldo, si el Studio no tiene nada cargado | `content/copy.es.ts` y `content/copy.en.ts` |
 | Colores, íconos y números de cada bloque, celdas del bento | `content/site.ts` |
-| Contacto, clientes del mapa, marcas de la prueba social, riel de herramientas | `content/site.ts` |
+| Contacto, países del globo, marcas de la prueba social, riel de herramientas | `content/site.ts` |
 | Logos de los clientes de la tira | `public/logos/clientes` + `content/site.ts` → `socialProof` |
 | Orden de las secciones de la home | `content/sections.ts` |
 | Colores, tipografía y escala | `app/globals.css` → `@theme` |
@@ -318,7 +323,7 @@ dice sale como viene de fábrica: prendida, salvo el stack.
 | 8 | Con qué está hecho | `#stack` | claro, **apagada** |
 | 9 | Planes | `#planes` | claro |
 | 10 | Testimonios | `#testimonios` | claro |
-| 11 | Mapa de clientes | `#clientes` | claro |
+| 11 | Dónde trabajamos (globo) | `#clientes` | claro |
 | 12 | Preguntas frecuentes | `#faq` | claro |
 | 13 | Formulario | `#brief` | oscuro |
 
@@ -374,10 +379,33 @@ objeciones → contacto**:
   planes. Lo que decía —herramientas conocidas, que no te atan a nadie— es
   ahora una pregunta frecuente. Se prende desde el Studio si se la quiere de
   vuelta.
-- **Testimonios y mapa.** Con los dos prendidos van en una sola sección: la
-  cita arriba y, abajo, el mapa con su titular en chico. Eran dos bloques de
+- **Testimonios y globo.** Con los dos prendidos van en una sola sección: la
+  cita arriba y, abajo, el globo con su titular en chico. Eran dos bloques de
   prueba seguidos, cada uno con etiqueta y título, y se leían como dos veces lo
   mismo. Con uno solo prendido, ese sale solo, como antes.
+
+### El globo
+
+«Dónde trabajamos» es un globo blanco y negro que gira despacio, de oeste a
+este, una vuelta cada setenta segundos. Los países donde trabajamos van en
+tinta, con una marca con el nombre; al lado, la lista de esos países, y pasar
+por uno (o tocarlo, o llegar con el teclado) hace girar el globo hasta
+ponerlo de frente. Reemplaza al mapa plano con líneas desde Buenos Aires.
+
+- **Cómo está hecho.** Three.js, el mismo paquete del pase, que se baja recién
+  cuando la sección se acerca (`components/sections/globo-3d.ts`). La esfera
+  no lleva una foto de la Tierra: lleva un dibujo de la tierra y de los
+  países sacado de Natural Earth (`content/globo-datos.ts`, generado por
+  `scripts/generar-globo.mjs`), y los colores salen del tema, así que con la
+  sección en oscuro se da vuelta sola. Las marcas con los nombres son HTML.
+- **Se puede frenar**, como los rieles: con el mouse encima, con un toque, con
+  el foco adentro o con el botón del teclado. Fuera de la pantalla no dibuja.
+- **Sin 3D** (sin WebGL, con placa de video por software o con menos
+  movimiento pedido) queda una imagen quieta del mismo globo
+  (`public/globo/globo.webp`), con las marcas encima en el mismo lugar. Esa
+  imagen se saca del 3D con `scripts/generar-globo-imagen.mjs` y hay que
+  volver a sacarla si cambian los países o el dibujo. `?globo3d` fuerza el 3D
+  para probarlo en un navegador sin placa.
 - **Preguntas frecuentes.** Objeciones de compra: páginas de más, propiedad del
   sitio, editar sin programar, con qué herramientas, costo mensual, uso de IA,
   formas de pago. Al pie ofrece agendar una reunión, o el mail mientras el

@@ -679,23 +679,6 @@
   transform: translateY(22px);
 }
 
-/* Los arcos del mapa: con pathLength="1" el largo de cualquier trazo es
-   1, así que el dash no depende de medir el camino. */
-.motion-ready [data-arco] {
-  stroke-dasharray: 1;
-  stroke-dashoffset: 1;
-}
-
-/* El mapa: los pines chicos y la tierra apagada hasta que se dibuja. */
-.motion-ready [data-pin] {
-  opacity: 0;
-  transform: scale(0.4);
-}
-
-.motion-ready [data-tierra] {
-  opacity: 0;
-}
-
 /* Las piezas del bento (components/sections/bento.tsx). */
 .motion-ready
   [data-celda]
@@ -734,8 +717,6 @@
   .motion-ready [data-progress],
   .motion-ready [data-dot],
   .motion-ready [data-body],
-  .motion-ready [data-pin],
-  .motion-ready [data-tierra],
   .motion-ready
     [data-celda]
     :is(
@@ -753,9 +734,6 @@
     ) {
     opacity: 1 !important;
     transform: none !important;
-  }
-  .motion-ready [data-arco] {
-    stroke-dashoffset: 0 !important;
   }
   /* El «escribiendo» del chat no existe sin movimiento: la respuesta ya está. */
   .motion-ready [data-celda] [data-escribiendo] {
@@ -1048,5 +1026,20 @@ header[data-quieta] * {
   */
   [data-pase-3d] [data-pase-respaldo] {
     opacity: 0;
+  }
+
+  /*
+     La imagen quieta del globo (components/sections/globo.tsx) está sacada
+     con el tema claro. Es blanco y negro, así que invertida da el globo
+     oscuro: mar casi negro, tierra gris oscuro y los países en la tinta
+     clara. Sigue al tema con el mismo tiempo que los tokens.
+  */
+  .globo-respaldo {
+    transition:
+      filter 600ms ease-in-out,
+      opacity 500ms ease-out;
+  }
+  :root[data-tema="oscuro"] .globo-respaldo {
+    filter: invert(1);
   }
 }
