@@ -20,8 +20,13 @@ conviene tener a mano:
    `content/fallback-content.ts`. Se muestra **solo mientras el CMS no tenga
    ninguno**: apenas cargues el primer proyecto (o el primer testimonio) en
    `/studio`, Sanity gana y el respaldo de ese tipo deja de verse.
-2. **Los países del mapa.** `content/site.ts` → `clients`. El pie de la sección
-   cuenta esa lista, así que el número siempre coincide con lo que se muestra.
+2. **Los países del globo.** `content/site.ts` → `clients` (hoy Argentina,
+   Colombia, Estados Unidos, España y Dinamarca, con Copenhague). El pie de la
+   sección cuenta esa lista, así que el número siempre coincide con lo que se
+   muestra. Un país nuevo también hay que pintarlo: sumarlo en
+   `scripts/generar-globo.mjs`, correrlo, ponerle nombre en
+   `content/countries.ts` y volver a sacar la imagen quieta con
+   `scripts/generar-globo-imagen.mjs` (ver *El globo*).
 3. **Datos de contacto y redes.** `content/site.ts` → `site` (mail, WhatsApp,
    ubicación, redes).
 
@@ -187,7 +192,7 @@ sitio todo el día.
 `/reunion` embebe un calendario de Cal.com. El motor es de ellos a propósito: lo
 difícil de una reserva no es la pantalla sino saber cuándo está ocupada la
 persona que atiende, impedir que dos visitantes tomen el mismo turno, traducir
-la hora a la zona de cada uno —hay clientes en siete países— y mandar
+la hora a la zona de cada uno —hay clientes en cinco países— y mandar
 recordatorios, el link de video y los avisos de cancelación.
 
 Lo arma **quien atiende las reuniones**, con su cuenta y su calendario. Así no
@@ -248,7 +253,7 @@ Casi todo se edita en `/studio`, sin tocar código:
 | Briefs, reuniones y lugares reservados que llegan | Studio → *Briefs recibidos*, *Reuniones agendadas*, *Lugares reservados* (solo lectura) |
 | Texto de respaldo, si el Studio no tiene nada cargado | `content/copy.es.ts` y `content/copy.en.ts` |
 | Colores, íconos y números de cada bloque, lugar de cada celda del bento | `content/site.ts` |
-| Contacto, clientes del mapa, marcas de la prueba social, riel de herramientas | `content/site.ts` |
+| Contacto, países del globo, marcas de la prueba social, riel de herramientas | `content/site.ts` |
 | Logos de los clientes de la tira | `public/logos/clientes` + `content/site.ts` → `socialProof` |
 | Orden de las secciones de la home | `content/sections.ts` |
 | Colores, tipografía y escala | `app/globals.css` → `@theme` |
@@ -318,7 +323,7 @@ dice sale como viene de fábrica: prendida, salvo el stack.
 | 8 | Con qué está hecho | `#stack` | claro, **apagada** |
 | 9 | Planes | `#planes` | claro |
 | 10 | Testimonios | `#testimonios` | claro |
-| 11 | Mapa de clientes | `#clientes` | claro |
+| 11 | Dónde trabajamos (globo) | `#clientes` | claro |
 | 12 | Preguntas frecuentes | `#faq` | claro |
 | 13 | Formulario | `#brief` | oscuro |
 
@@ -383,10 +388,55 @@ objeciones → contacto**:
   planes. Lo que decía —herramientas conocidas, que no te atan a nadie— es
   ahora una pregunta frecuente. Se prende desde el Studio si se la quiere de
   vuelta.
-- **Testimonios y mapa.** Con los dos prendidos van en una sola sección: la
-  cita arriba y, abajo, el mapa con su titular en chico. Eran dos bloques de
-  prueba seguidos, cada uno con etiqueta y título, y se leían como dos veces lo
-  mismo. Con uno solo prendido, ese sale solo, como antes.
+- **Globo y testimonios.** Con los dos prendidos van en una sola sección y
+  sin títulos a la vista: arriba el globo con «WORLDWIDE» detrás, abajo los
+  cuatro testimonios en una fila de celdas cuadradas, pegadas y sin borde,
+  separadas por una línea fina, como la referencia de la grilla de etapas.
+  Cada celda lleva el número arriba a la izquierda, la empresa arriba a la
+  derecha y la cita con el nombre y el cargo; una va en la tinta, con el
+  número en champagne, y sigue al mouse. En tablet son dos por dos y en el
+  teléfono una debajo de otra. Los títulos quedan escondidos para el lector de
+  pantalla y el índice. Con uno solo prendido, ese sale solo.
+
+### El globo
+
+«Dónde trabajamos» es un globo blanco y negro que gira despacio, de oeste a
+este, una vuelta cada setenta segundos, delante de una palabra gigante:
+«WORLDWIDE», en el Black (900) de la Schibsted, en mayúsculas y en la tinta.
+La palabra se edita en el Studio (*Mapa de clientes* → *Palabra de atrás del
+globo*) y mide el ancho de la ventana; en el teléfono va arriba del globo,
+que le pisa el pie de las letras, porque detrás la tapaba entera.
+
+Los países donde trabajamos van en tinta, con una marca con el nombre. No hay
+lista aparte a la vista (para el lector de pantalla, sí). Reemplaza al mapa
+plano con líneas desde Buenos Aires.
+
+- **El acabado** es holográfico, como el foil del pase: un brillo nacarado en
+  la misma paleta (champagne, perla, verde agua y rosa apagados) que corre por
+  el globo mientras gira y se carga hacia el borde, y un grano fino, como el de
+  una foto.
+
+- **Cómo está hecho.** Three.js, el mismo paquete del pase, que se baja recién
+  cuando la sección se acerca (`components/sections/globo-3d.ts`). La esfera
+  no lleva una foto de la Tierra: lleva un dibujo de la tierra y de los
+  países sacado de Natural Earth (`content/globo-datos.ts`, generado por
+  `scripts/generar-globo.mjs`), y los colores salen del tema, así que con la
+  sección en oscuro se da vuelta sola. Las marcas con los nombres son HTML.
+- **Se puede frenar**, como los rieles: con el mouse encima, con un toque, con
+  el foco adentro o con el botón del teclado. Fuera de la pantalla no dibuja.
+- **Sin 3D** (sin WebGL, con placa de video por software o con menos
+  movimiento pedido) queda una imagen quieta del mismo globo
+  (`public/globo/globo.webp`), con las marcas encima en el mismo lugar y el
+  grano puesto por CSS (horneado, el ruido triplicaba el peso). Esa imagen se
+  saca del 3D con `scripts/generar-globo-imagen.mjs` y hay que volver a
+  sacarla si cambian los países o el dibujo. `?globo3d` fuerza el 3D para
+  probarlo en un navegador sin placa (`?globo3d=limpio`, sin grano, es lo que
+  usa el script).
+- **La fuente Black** es un recorte de 3 KB con solo las mayúsculas
+  (`public/fonts/schibsted-grotesk-black-mayusculas-v1.woff2`, de
+  `@fontsource/schibsted-grotesk`, OFL): el archivo de siempre llega hasta 600
+  y el 900 entero eran 24 KB más para todo el sitio. Solo se baja cuando la
+  palabra aparece.
 - **Preguntas frecuentes.** Objeciones de compra: páginas de más, propiedad del
   sitio, editar sin programar, con qué herramientas, costo mensual, uso de IA,
   formas de pago. Al pie ofrece agendar una reunión, o el mail mientras el
@@ -626,10 +676,9 @@ CTA), con el margen justo para que el título no quede debajo del header.
 5. Lo que se mueve solo se puede frenar. Los rieles de herramientas y de
    clientes paran al pasar el mouse, con el foco adentro, con un toque en el
    teléfono y con un botón que aparece al llegar con el teclado
-   (`components/ui/riel-pausable.tsx`). Los testimonios rotan solos hasta que
-   se elige una cara, esperan mientras alguien los lee y no rotan con
-   movimiento reducido. La galería del hero es un riel más, con las mismas
-   reglas. El pase que vuela no se mueve solo: lo mueve el scroll.
+   (`components/ui/riel-pausable.tsx`). El globo y la galería del hero se
+   frenan igual. Los testimonios ya no rotan: están los cuatro a la vista. El
+   pase que vuela no se mueve solo: lo mueve el scroll.
 
 ---
 

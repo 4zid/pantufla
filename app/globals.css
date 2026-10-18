@@ -53,6 +53,25 @@
     U+2215, U+FEFF, U+FFFD;
 }
 
+/*
+   El Black (900) de la misma familia, solo en mayúsculas: lo usa la palabra
+   gigante de atrás del globo de «Dónde trabajamos». El archivo de arriba
+   llega hasta 600, y sumarle el 900 entero eran 24 KB más para todo el
+   sitio; recortado a las mayúsculas, con los acentos del español, pesa 3 KB
+   y el navegador lo baja recién cuando la palabra aparece. Sale de
+   @fontsource/schibsted-grotesk (OFL), recortado con fonttools.
+*/
+@font-face {
+  font-family: "Schibsted Grotesk";
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url("/fonts/schibsted-grotesk-black-mayusculas-v1.woff2") format("woff2");
+  unicode-range:
+    U+0020-0021, U+002D-002E, U+0041-005A, U+00C1, U+00C9, U+00CD, U+00D1,
+    U+00D3, U+00DA, U+00DC;
+}
+
 @font-face {
   font-family: "Schibsted Fallback";
   font-weight: 100 500;
@@ -667,23 +686,6 @@
   transform: translateY(22px);
 }
 
-/* Los arcos del mapa: con pathLength="1" el largo de cualquier trazo es
-   1, así que el dash no depende de medir el camino. */
-.motion-ready [data-arco] {
-  stroke-dasharray: 1;
-  stroke-dashoffset: 1;
-}
-
-/* El mapa: los pines chicos y la tierra apagada hasta que se dibuja. */
-.motion-ready [data-pin] {
-  opacity: 0;
-  transform: scale(0.4);
-}
-
-.motion-ready [data-tierra] {
-  opacity: 0;
-}
-
 /* Las piezas del bento (components/sections/bento.tsx). */
 .motion-ready
   [data-celda]
@@ -717,8 +719,6 @@
   .motion-ready [data-progress],
   .motion-ready [data-dot],
   .motion-ready [data-body],
-  .motion-ready [data-pin],
-  .motion-ready [data-tierra],
   .motion-ready
     [data-celda]
     :is(
@@ -735,9 +735,6 @@
     ) {
     opacity: 1 !important;
     transform: none !important;
-  }
-  .motion-ready [data-arco] {
-    stroke-dashoffset: 0 !important;
   }
   /* El «escribiendo» del chat no existe sin movimiento: la respuesta ya está. */
   .motion-ready [data-celda] [data-escribiendo] {
@@ -1030,5 +1027,20 @@ header[data-quieta] * {
   */
   [data-pase-3d] [data-pase-respaldo] {
     opacity: 0;
+  }
+
+  /*
+     La imagen quieta del globo (components/sections/globo.tsx) está sacada
+     con el tema claro. Es blanco y negro, así que invertida da el globo
+     oscuro: mar casi negro, tierra gris oscuro y los países en la tinta
+     clara. Sigue al tema con el mismo tiempo que los tokens.
+  */
+  .globo-respaldo {
+    transition:
+      filter 600ms ease-in-out,
+      opacity 500ms ease-out;
+  }
+  :root[data-tema="oscuro"] .globo-respaldo {
+    filter: invert(1);
   }
 }

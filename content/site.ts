@@ -153,34 +153,33 @@ export const socialProof = {
 } as const;
 
 /**
- * ⚠️ Reemplazar por los países donde realmente hay clientes antes de publicar.
- * El pie de la sección cuenta esta lista, así que el número siempre coincide
- * con lo que se muestra: no hay una cifra escrita a mano que se desactualice.
+ * Los países donde trabajamos: los que se pintan en el globo y la lista de
+ * al lado. El pie de la sección cuenta esta lista, así que el número siempre
+ * coincide con lo que se muestra: no hay una cifra escrita a mano que se
+ * desactualice.
  *
  * El país va en español y funciona como clave: el nombre que se muestra sale
- * del copy del idioma que esté activo.
- */
-export const clients = [
-  { city: "Buenos Aires", country: "Argentina", lon: -58.4, lat: -34.6 },
-  { city: "Córdoba", country: "Argentina", lon: -64.2, lat: -31.4 },
-  { city: "Montevideo", country: "Uruguay", lon: -56.2, lat: -34.9 },
-  { city: "Santiago", country: "Chile", lon: -70.7, lat: -33.4 },
-  { city: "Ciudad de México", country: "México", lon: -99.1, lat: 19.4 },
-  { city: "Miami", country: "Estados Unidos", lon: -80.2, lat: 25.8 },
-  { city: "Madrid", country: "España", lon: -3.7, lat: 40.4 },
-  { city: "Barcelona", country: "España", lon: 2.2, lat: 41.4 },
-  { city: "Berlín", country: "Alemania", lon: 13.4, lat: 52.5 },
-] as const;
-
-/**
- * De dónde salen las líneas del mapa.
+ * de content/countries.ts, y el contorno que se pinta, de
+ * content/globo-datos.ts (un país nuevo hay que sumarlo también en
+ * scripts/generar-globo.mjs). La ciudad va solo donde la sabemos.
  *
- * El estudio es también una de las ciudades de la lista de arriba, y no está
- * duplicado por descuido: en el mapa cumple dos papeles distintos —es el origen
- * de todas las líneas y es un cliente más— y separarlos acá evita que el
- * componente tenga que adivinar cuál de las nueve es la casa.
+ * `lon` y `lat` son dónde va la marca con el nombre, y adónde gira el globo
+ * cuando se señala el país: la capital, o el medio del país en Estados
+ * Unidos, que es enorme y no tiene una ciudad que lo resuma. En Argentina es
+ * Buenos Aires, la casa del estudio.
  */
-export const studio = { city: "Buenos Aires", lon: -58.4, lat: -34.6 } as const;
+export const clients: {
+  country: string;
+  city?: string;
+  lon: number;
+  lat: number;
+}[] = [
+  { country: "Argentina", lon: -58.4, lat: -34.6 },
+  { country: "Colombia", lon: -74.1, lat: 4.7 },
+  { country: "Estados Unidos", lon: -98.5, lat: 39.5 },
+  { country: "España", lon: -3.7, lat: 40.4 },
+  { country: "Dinamarca", city: "Copenhague", lon: 12.6, lat: 55.7 },
+];
 
 /* ------------------------------------------------------------------ */
 /* Stack                                                               */

@@ -805,6 +805,13 @@ export const siteCopy = defineType({
           rows: 3,
           description: "Usá {count} donde va la cantidad de países.",
         }),
+        defineField({
+          name: "backdrop",
+          title: "Palabra de atrás del globo",
+          type: "string",
+          description:
+            "Va gigante y en mayúsculas detrás del globo. Corta: una palabra.",
+        }),
       ],
     }),
 

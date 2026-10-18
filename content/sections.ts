@@ -109,14 +109,14 @@ export const SECCIONES: Seccion[] = [
     id: "testimonials",
     fondo: "claro",
     titulo: "Testimonios",
-    nota: "Con el mapa prendido van juntos, en una sola sección: la cita arriba y el mapa abajo, con el fondo de esta.",
+    nota: "Con el globo prendido van juntos, en una sola sección: el globo arriba y las cuatro citas abajo, con el fondo de esta.",
     ancla: "testimonios",
   },
   {
     id: "clientsMap",
     fondo: "claro",
     titulo: "Mapa de clientes",
-    nota: "Si los testimonios están prendidos, el mapa va adentro de esa sección y su fondo no cuenta.",
+    nota: "Si los testimonios están prendidos, el globo va adentro de esa sección, arriba de las citas, y su fondo no cuenta.",
     ancla: "clientes",
   },
   {
