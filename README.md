@@ -47,7 +47,8 @@ funciona sin configurar nada. Si algún día se vaciara, `/studio` muestra una
 pantalla con los pasos que faltan en vez de romper.
 
 Lo único que hace falta cargar es el token de escritura, que se usa para guardar
-los briefs que llegan del formulario y las reuniones que llegan de Cal.com:
+los briefs que llegan del formulario, las reuniones que llegan de Cal.com y los
+lugares que se reservan con el pase:
 
 1. En [sanity.io/manage](https://www.sanity.io/manage) → API → Tokens, creá uno
    con permiso *Editor*.
@@ -243,7 +244,8 @@ Casi todo se edita en `/studio`, sin tocar código:
 | Qué secciones de la home se muestran y si van en claro u oscuro | Studio → *Secciones de la home* |
 | Todo el texto del sitio: titulares, planes y precios, proceso, preguntas frecuentes, formulario | Studio → *Textos del sitio (ES)* y *(EN)* |
 | Proyectos y testimonios | Studio → *Proyectos*, *Testimonios* |
-| Briefs y reuniones que llegan | Studio → *Briefs recibidos*, *Reuniones agendadas* (solo lectura) |
+| Las pantallas que corren abajo del hero | Studio → *Proyectos* → cada proyecto, en *Pantallas para la portada* |
+| Briefs, reuniones y lugares reservados que llegan | Studio → *Briefs recibidos*, *Reuniones agendadas*, *Lugares reservados* (solo lectura) |
 | Texto de respaldo, si el Studio no tiene nada cargado | `content/copy.es.ts` y `content/copy.en.ts` |
 | Colores, íconos y números de cada bloque, celdas del bento | `content/site.ts` |
 | Contacto, clientes del mapa, marcas de la prueba social, riel de herramientas | `content/site.ts` |
@@ -257,10 +259,11 @@ diseño se cruzan por id: el color de un plan o el número de una etapa viven en
 `content/site.ts`, no en el Studio, y **cambiar un id en el Studio deja ese
 bloque sin su diseño**.
 
-`/notas`, `/contacto` y el listado `/proyectos` se sacaron y redirigen a la
-home: a la portada, al formulario y a la sección de proyectos
-(`next.config.ts`). Las notas también salieron del Studio. Las fichas de cada
-proyecto, en `/proyectos/<slug>`, siguen publicadas.
+`/notas` y `/contacto` se sacaron y redirigen a la home: a la portada y al
+formulario (`next.config.ts`). Las notas también salieron del Studio. El
+listado `/proyectos` estuvo redirigido a la sección de la home y volvió a ser
+una página, con todos los proyectos; las fichas de cada uno siguen en
+`/proyectos/<slug>`.
 
 Para sumar el logo de un cliente: el archivo va en `public/logos/clientes`, en
 negro sobre transparente (SVG con `viewBox`, o PNG), y en `content/site.ts` →
@@ -310,34 +313,56 @@ dice sale como viene de fábrica: prendida, salvo el stack.
 | 3 | Cómo lo resolvemos | `#metodo` | claro |
 | 4 | Proyectos | `#proyectos` | oscuro |
 | 5 | Capacidades (bento) | `#capacidades` | claro |
-| 6 | Proceso | `#proceso` | oscuro |
-| 7 | Con qué está hecho | `#stack` | claro, **apagada** |
-| 8 | Planes | `#planes` | claro |
-| 9 | Testimonios | `#testimonios` | claro |
-| 10 | Mapa de clientes | `#clientes` | claro |
-| 11 | Preguntas frecuentes | `#faq` | claro |
-| 12 | Formulario | `#brief` | oscuro |
+| 6 | Pase (banner) | `#lugar` | claro |
+| 7 | Proceso | `#proceso` | oscuro |
+| 8 | Con qué está hecho | `#stack` | claro, **apagada** |
+| 9 | Planes | `#planes` | claro |
+| 10 | Testimonios | `#testimonios` | claro |
+| 11 | Mapa de clientes | `#clientes` | claro |
+| 12 | Preguntas frecuentes | `#faq` | claro |
+| 13 | Formulario | `#brief` | oscuro |
 
 El recorrido sigue **promesa → prueba → qué incluye → cómo → precio →
 objeciones → contacto**:
 
-- **Portada.** Sale de Claude Design (ver *El hero*). Una pastilla dice que el
+- **Portada.** Todo el texto alineado a la izquierda: una pastilla dice que el
   estudio toma proyectos, el titular dice para qué sirve el sitio —«Sitios que
-  convierten *visitantes* en *clientes*»—, la bajada lo cuenta, hay un CTA
-  principal al formulario y uno secundario a los planes, y abajo a la derecha
-  corre un carrusel con los proyectos que tienen caso.
+  convierten *visitantes* en *clientes*»—, la bajada lo cuenta, y hay un CTA
+  principal al formulario y uno secundario a los planes. A la derecha, el pase
+  de Pantufla con el formulario para reservar un lugar en la agenda; abajo, de
+  punta a punta, la galería de pantallas (ver *El hero*).
+- **Prueba social.** Solo los logos de los clientes, corriendo de punta a punta
+  de la pantalla.
 - **Cómo lo resolvemos.** Tres pilares: alcance cerrado, ritmo corto con fechas
   visibles, y el sitio entregado andando.
 - **Proyectos.** Justo después de la promesa: el trabajo se ve antes que el
   precio. Iba después de los planes, a la mitad de la página en el teléfono, y
   quien quería ver qué hace el estudio tenía que pasar por todo lo demás.
-  Los que tienen el caso escrito suman «Leer el caso» (ver *Los proyectos*).
+  Son cuatro tarjetas con mockup, en una grilla de dos por dos: los proyectos
+  marcados como *Destacado en la home* (hoy Kine, Daily, Tierras Argentinas y
+  2MG), en el orden del campo *Orden*. El resto está en `/proyectos`, al que
+  lleva «Ver todos los proyectos» (ver *Los proyectos*). El mismo orden manda
+  en la galería del hero.
 - **Capacidades.** Un bento de cuatro celdas, cada una con su viñeta animada:
   velocidad de carga, que te encuentren (también en asistentes de IA), el
   sitio en el teléfono, y las consultas que llegan. Las promesas son las que
   se pueden sostener: el objetivo de carga es de menos de dos segundos en un
   teléfono, y la viñeta de la IA muestra lo que puede contestar, no lo que
   contesta seguro.
+- **Pase (banner).** A la mitad de la home, después de ver el trabajo y lo
+  que incluye: el camino corto, nombre y mail para guardarse un lugar en el
+  próximo cupo. La sección está armada alrededor de un hueco: una tarjeta en
+  la tinta del tema con una tira de cupones punteados, y al del medio le
+  falta el suyo. El hueco tiene la forma exacta del pase acostado —las
+  esquinas y dos pestañas que entran en las muescas del talón—, una línea de
+  corte con su tijera y un halo tenue; el único color es el champagne del
+  foil del pase, en la línea de corte, la tijera y las tildes. El pase que vino
+  volando desde la portada se acuesta y calza ahí, como la pieza que faltaba.
+  Va centrada y apilada —el titular, el hueco y abajo el formulario en una
+  fila— con el aire justo para que no sea altísima: probó dos columnas y se
+  volvió, porque el hueco al medio de la tira es lo que hace que el pase se
+  lea como la pieza que faltaba. Antes era la última sección y el pase
+  acompañaba la página entera, que era demasiado.
 - **Proceso.** Cuatro etapas, cada una con fecha: quince días hábiles un
   Sitio, una semana una Landing. El riel que las une lleva
   los cuatro colores del bento en el mismo orden y llega a cada número con su
@@ -357,8 +382,8 @@ objeciones → contacto**:
   sitio, editar sin programar, con qué herramientas, costo mensual, uso de IA,
   formas de pago. Al pie ofrece agendar una reunión, o el mail mientras el
   calendario no esté conectado.
-- **Formulario.** Un solo cierre, con el brief: plan, presupuesto y plazo van en
-  desplegables propios del sitio, no en el `<select>` del sistema.
+- **Formulario.** El brief: plan, presupuesto y plazo van en desplegables
+  propios del sitio, no en el `<select>` del sistema.
 
 El toggle de precios no es mensual/anual, porque el estudio no vende una
 suscripción. Ofrece **pago único con 15% de descuento** contra **dos pagos de
@@ -367,42 +392,104 @@ cobrar rápido.
 
 ### El hero
 
-Viene de un diseño de Claude Design (`Pantufla_Hero.html`), pasado a los
-componentes del sitio. En escritorio ocupa una pantalla: la pastilla y el
-titular arriba a la izquierda, la bajada con los botones abajo a la izquierda y
-el carrusel abajo a la derecha. Abajo de 1280 las dos mitades de abajo van una
-debajo de la otra, y en el teléfono todo corre seguido.
+En escritorio son dos columnas y una franja. A la izquierda, todo el texto
+alineado: la pastilla de «Disponibles», el titular, la bajada y los dos
+botones. A la derecha, el pase de Pantufla y, debajo, el formulario para
+reservar un lugar. Abajo, de punta a punta, la galería de pantallas corriendo.
+Abajo de 1024 el pase pasa debajo de los botones, y en el teléfono todo corre
+seguido.
 
-- **La cinta del fondo** es un shader de WebGL, el mismo del diseño, en un
-  degradé de blanco al verde profundo de la marca (`#166B67`) que va y viene
-  a lo largo de la cinta, siempre con los dos colores a la vista. Es más
-  angosta que en el diseño, que la tenía en miel, rosa y aqua. Se corre un
-  poco hacia el cursor. Arranca cuando el navegador está libre, se
-  para cuando el hero sale de pantalla y, con movimiento reducido, queda quieta
-  en un cuadro. Sin placa de video no se dibuja: calculada por el procesador
-  cada cuadro trababa la página casi medio segundo. Si con placa igual va
-  lenta, baja la resolución y, si hace falta, se queda quieta. En los tres
-  casos el hero se ve igual, con el fondo de bruma.
 - **El titular** lleva dos palabras en la itálica de Newsreader, en el mismo
   negro que el resto. Es la única otra letra del sitio y solo se baja en la
-  home. En el Studio son los tramos con estilo «Itálica».
-- **El carrusel** muestra los proyectos con caso escrito, que son los que
-  tienen mockups de verdad (hoy 2MG y Tierras Argentinas); cada tarjeta lleva a
-  su caso. Usa la imagen para redes del proyecto, o la portada si no tiene.
-  Avanza solo cada 4,5 segundos, se frena con el mouse encima o con el foco
-  adentro, y deja de avanzar solo cuando alguien usa las flechas.
+  home. En el Studio son los tramos con estilo «Itálica». A 1440 entra en dos
+  líneas; más angosto, en tres.
+- **El pase** es una pieza 3D (Three.js) con física de papel: una malla de
+  puntos unidos por resortes que se dobla, flamea y se asienta como un papel
+  blando. Es sobrio a propósito: papel marfil, una sola tinta, la itálica de
+  Newsreader mezclada con Schibsted («*Pase* prioritario», «*Tu lugar*»), un
+  sello negro como un foil estampado y el dorso negro. El único color es el
+  borde, un foil champagne y perla que rodea toda la silueta (también las
+  muescas y el troquel) y que en el 3D brilla como metal y cambia apenas de
+  tono cuando el papel se dobla. Antes iba en los cuatro colores de la marca
+  y era demasiado. Con
+  el mouse encima se hunde donde apoya y se inclina hacia el puntero.
+- **El vuelo.** Cuando el pase de la portada llega arriba de la pantalla, se
+  despega curvándose, se achica (a un tercio, para que moleste poco mientras
+  se lee) y acompaña el scroll cruzando la página de un costado al otro en el
+  tercio de abajo de la ventana, una ida y vuelta cada cuatro pantallas, dando
+  vueltas (a mitad de cada cruce se ve el dorso). Al llegar al banner de la mitad de la home
+  baja, se acuesta un cuarto de vuelta, crece y calza exactamente en el hueco
+  de ahí (llega cuando el hueco está en el medio de la pantalla). Lo mueven el
+  scroll y el puntero: cuando el papel se asienta, deja de dibujar. Si alguien
+  está escribiendo en uno de los formularios, el pase se queda en ese lugar.
+  En el teléfono no vuela: se queda en el lugar que se ve, también acostado en
+  el banner. Con movimiento reducido, sin placa de video o sin JavaScript se
+  ve la imagen del pase, quieta, en los dos lugares.
+- **Los formularios** van debajo del pase, no adentro: un campo tiene que
+  quedarse quieto para que alguien escriba. El de la portada pide el mail
+  solo; el del banner, nombre y mail. Van a `/api/lugar`, que los guarda en
+  el Studio como *Lugar reservado* (una sola fila por mail; si alguien dejó
+  primero el mail solo y después vuelve con su nombre, el nombre se suma) y
+  avisa por mail con las mismas variables de Resend que el brief. Al
+  reservar, el pase imprime en su cara el nombre (y el mail abajo, en chico)
+  con la etiqueta «Reservado», y el navegador lo recuerda: quien vuelve ve su
+  pase con sus datos, y un enlace para usar otro mail. Reservar en uno deja
+  reservado al otro. Los textos de los formularios están en el Studio, en
+  *Pase*; los del banner, en *Banner del pase*.
+- **El dibujo del pase** son imágenes en `public/pase` (la cara en español y
+  en inglés, el dorso y un mapa de qué es holográfico, satinado o mate). Se
+  generan con `node scripts/generar-pase.mjs`, que las dibuja en HTML: para
+  cambiar un texto o un color del pase se edita ese archivo y se vuelve a
+  correr.
+- **La galería** son capturas de los proyectos, de escritorio y de teléfono,
+  en columnas tipo masonry: dos de escritorio apiladas, un teléfono de alto
+  entero, o una de escritorio grande cuando queda sola antes de un teléfono.
+  Corre como los otros rieles y se frena igual. **Se arma sola**: no tiene
+  lista propia, son las pantallas que cada proyecto carga en el Studio, en
+  *Pantallas para la portada*, una atrás de la otra en el orden de los
+  proyectos. Para sumar un proyecto a la galería alcanza con cargarle
+  pantallas; para sacarlo, con borrárselas.
+  - Cada pantalla es una captura suelta, **sin marco**: el navegador y el
+    teléfono los dibuja la galería. Dice si es de escritorio o de teléfono y
+    qué se ve (para quien no ve la imagen).
+  - El orden dentro del proyecto arma sus columnas: dos de escritorio
+    seguidas van apiladas, y una de escritorio sola antes de un teléfono va
+    grande. Las columnas no mezclan proyectos.
+  - Cada columna toma el ancho que piden sus capturas, así se ven enteras:
+    una captura de escritorio de proporción común (16:10, 16:9) entra justa;
+    una muy rara se recorta. Los teléfonos miden todos lo mismo; una captura
+    de teléfono más corta que la pantalla se recorta abajo.
+  - Si el proyecto tiene el caso escrito, sus pantallas llevan al caso.
+  - Si ningún proyecto tiene pantallas, o Sanity no contesta, salen las del
+    respaldo (`content/hero-galeria.ts`, archivos en `public/hero/pantallas`),
+    que son las mismas capturas de Kine, Daily, Tierras Argentinas y 2MG.
+    Las tres primeras salen de sus HTML de Claude Design, recortadas pantalla
+    por pantalla; las de 2MG, de sus mockups en `assets/proyectos/2mg`.
 - **La barra de arriba**, en el tope de la página, no tiene fondo: el logo, el
   menú en su pastilla de vidrio y los botones flotan con el mismo margen que el
-  hero. Al bajar se arma la barra compacta de siempre.
+  hero (96px a 1440). Al bajar se arma la barra compacta de siempre.
 
 ### Los proyectos
 
-Se recorre con el scroll normal, sin trabar la rueda. En escritorio el título
-queda quieto a media altura mientras pasa la columna de proyectos, y se prende
-el que cruza esa altura; en los demás se apaga la esfera y el texto baja un
-poco, sin dejar de leerse. En el teléfono es una lista, con el mismo resaltado,
-y la esfera prendida muestra «Ver sitio», porque ahí no hay mouse que lo
-descubra.
+En la home son los cuatro destacados (*Destacado en la home* en el Studio; si
+no hay ninguno marcado, los cuatro primeros) en una grilla de dos por dos, una
+columna en el teléfono. En `/proyectos` están todos, con la misma tarjeta y en
+el mismo orden, destacados incluidos.
+
+Cada tarjeta es un mockup mínimo sobre un plano gris: una ventana de navegador
+con el dominio del sitio en la barra y, montado abajo a la derecha, un
+teléfono. Las capturas salen de las mismas *Pantallas para la portada* que
+corren en el hero: de las de escritorio entra la que mejor llena una ventana
+16:10, y del teléfono la primera. Un proyecto sin pantallas muestra la ventana
+con su nombre adentro; la portada no se usa ahí, porque es una imagen
+compuesta (un mockup con sus propios marcos, o una ilustración) y adentro de
+una ventana parecería un sitio roto. Para que la tarjeta tenga capturas
+alcanza con cargarle pantallas, y eso también lo suma a la galería del hero.
+
+Toda la tarjeta es un enlace: al caso si está escrito, al sitio publicado si
+no. Las que tienen caso suman abajo «Ver sitio» aparte. Al pasar el mouse la
+ventana sube un poco y el teléfono un poco más; con menos movimiento pedido
+no se mueven.
 
 Cada proyecto tiene además su ficha en `/proyectos/<slug>`. Lo que muestra sale
 del Studio: si el proyecto no tiene portada ni caso escrito («Caso completo»),
@@ -411,13 +498,13 @@ portada y el caso aparecen solos cuando se cargan.
 
 El caso escrito es lo que decide si la ficha existe para afuera:
 
-- **Con caso**, la fila de la home suma «Leer el caso», la ficha va al sitemap
-  y se indexa.
+- **Con caso**, la tarjeta lleva a la ficha con «Leer el caso», la ficha va al
+  sitemap y se indexa.
 - **Sin caso**, la ficha se puede abrir pero va con `noindex`, fuera del
-  sitemap, y la home no la enlaza (la esfera lleva al sitio publicado). Es una
+  sitemap, y ninguna tarjeta la enlaza (llevan al sitio publicado). Es una
   página flaca y no tiene sentido mandarla a Google.
 
-Hoy tienen caso **Tierras Argentinas**, **2MG** y **247WC**. Están escritos a
+Hoy tienen caso **Tierras Argentinas** y **2MG**. Están escritos a
 partir de lo que muestra cada sitio, sin métricas ni plazos porque no los
 tenemos: conviene revisarlos y, si hay datos reales (tiempo de entrega,
 resultados), sumarlos en el Studio. El respaldo local de esos textos está en
@@ -529,9 +616,8 @@ CTA), con el margen justo para que el título no quede debajo del header.
    teléfono y con un botón que aparece al llegar con el teclado
    (`components/ui/riel-pausable.tsx`). Los testimonios rotan solos hasta que
    se elige una cara, esperan mientras alguien los lee y no rotan con
-   movimiento reducido. El carrusel del hero, igual: se frena con el mouse o
-   el foco, deja de avanzar solo cuando se usan las flechas y no avanza con
-   movimiento reducido. La cinta del hero se para fuera de pantalla.
+   movimiento reducido. La galería del hero es un riel más, con las mismas
+   reglas. El pase que vuela no se mueve solo: lo mueve el scroll.
 
 ---
 
@@ -542,12 +628,22 @@ CTA), con el margen justo para que el título no quede debajo del header.
   y al alfabeto latino (40 KB), precargada y con un respaldo ajustado a sus
   medidas para que el texto no salte cuando llega la fuente. Si se cambia el
   archivo, hay que subir el `-vN` del nombre: se sirve con caché inmutable.
-  Y una itálica de acento, Newsreader, solo para las dos palabras en itálica
-  del titular del hero: fijada en un peso y un tamaño óptico y recortada al
-  latino (19 KB).
-- **Fondo de bruma** (`#eaedf8`) en claro y casi negro en oscuro, con un grano
-  muy leve para que no quede plano. El blanco queda para lo que se destaca: las
-  tarjetas, la píldora del menú, los botones sobre oscuro.
+  Y una itálica de acento, Newsreader, para las palabras en itálica del
+  titular del hero y para el pase (va dibujada en sus texturas, y el nombre
+  que imprime al reservar también va en ella): fijada en un peso y un tamaño
+  óptico y recortada al latino (19 KB).
+- **Mucho aire y letra contenida.** El contenido vive en un ancho de 72rem
+  con márgenes que crecen con la pantalla (192px de cada lado a 1440), las
+  secciones llevan 144–176px arriba y abajo en escritorio, y los titulares
+  son un escalón más chicos que antes (42px el de sección y 68px el del hero
+  a 1440). El espaciado de cada sección se elige con un ritmo con nombre en
+  `components/ui/section.tsx` (normal, compacto para planes y preguntas,
+  amplio para el proceso), no con clases sueltas.
+- **Fondo blanco** en claro y casi negro en oscuro, con un grano muy leve
+  para que no quede plano. Era bruma (`#eaedf8`), un lila que teñía toda la
+  página. Lo que antes se separaba del fondo por ser blanco ahora lleva su
+  filete (tarjetas, campos, la píldora del menú) o un gris apenas más oscuro
+  (las preguntas frecuentes, el tablero de capacidades, las etiquetas).
 - **Cuatro colores de marca** en pastel: aqua, rosa, verde y miel.
 - **La etiqueta de sección** es una pastilla con ícono y el texto en mayúsculas,
   en gris neutro. Suelto sobre el fondo, ese tratamiento se lee a plantilla;

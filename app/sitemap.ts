@@ -37,14 +37,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
 
   /*
-     Tres cosas nada más, porque el sitio ya no es más que eso: la página, la
-     reserva y una ficha por proyecto. Los anclas de la home —#proceso,
-     #planes, #proyectos— no van: para un buscador son la misma URL, y
-     repetirla con distinto fragmento no suma, confunde.
+     Cuatro cosas nada más, porque el sitio ya no es más que eso: la página,
+     la reserva, el listado de proyectos y una ficha por proyecto con caso.
+     Los anclas de la home —#proceso, #planes, #proyectos— no van: para un
+     buscador son la misma URL, y repetirla con distinto fragmento no suma,
+     confunde.
   */
   const rutas: { path: string; priority: number }[] = [
     { path: "/", priority: 1 },
     { path: "/reunion", priority: 0.9 },
+    { path: "/proyectos", priority: 0.8 },
     ...projects.map((slug) => ({ path: `/proyectos/${slug}`, priority: 0.7 })),
   ];
 

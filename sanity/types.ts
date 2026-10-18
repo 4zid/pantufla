@@ -30,6 +30,18 @@ export type SanityProject = {
   body?: PortableTextBlock[];
   /** Si tiene el caso escrito. La home lo usa para enlazar la ficha. */
   conCaso?: boolean;
+  /** «Destacado en la home»: los cuatro que entran en la grilla de la home. */
+  featured?: boolean;
+  /**
+   * Las capturas sin marco de «Pantallas para la portada». Corren en la
+   * galería del hero y arman el mockup de la tarjeta (ver content/mockup.ts).
+   */
+  pantallas?: (Image & {
+    _key: string;
+    formato?: "desktop" | "mobile";
+    alt?: string;
+    dimensiones?: { width: number; height: number } | null;
+  })[];
 };
 
 export type SanityTestimonial = {

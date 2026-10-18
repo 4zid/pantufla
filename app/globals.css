@@ -134,11 +134,9 @@
   --color-on-ink: #ffffff;
   --color-ink-soft: #565656;
   /*
-     Sobre blanco #767676 daba 4.6:1 y pasaba, pero la mitad de las secciones
-     van sobre bruma (#eaedf8), que es más oscura, y ahí caía a 3.9:1. Como es
-     la tinta de los pies de tabla y los cargos —texto chico— tiene que pasar
-     4.5:1 en las dos superficies: con #666 da 5.7:1 sobre papel y 4.9:1 sobre
-     bruma.
+     Sobre blanco #767676 daba 4.6:1 y pasaba justo; con #666 da 5.7:1, y
+     sigue pasando sobre los grises de las tarjetas (paper-alt). Es la tinta
+     de los pies de tabla y los cargos: texto chico.
   */
   --color-ink-faint: #666666;
   /*
@@ -214,8 +212,8 @@
   --radius-tablero: 40px;
 
   /*
-     Interpolación entre dos puntos y no un vw suelto: 32px a 390 y 70.4px a
-     1440, con una recta en el medio.
+     Interpolación entre dos puntos y no un vw suelto, con una recta en el
+     medio.
 
      Con clamp(2.3rem, 5.3vw, 4.4rem) el piso ganaba en todo lo que fuera más
      angosto que 700px, así que del teléfono chico al grande la letra medía
@@ -223,29 +221,31 @@
      A 390 eso dejaba «convierten visitantes» a 27px de cada borde: el titular
      tocando el margen. Ahora la letra acompaña el ancho y el corte es parejo.
   */
-  --text-display: clamp(1.9rem, 1.11rem + 3.66vw, 4.4rem);
+  /* Un escalón más chico (era 70.4px a 1440): con más aire alrededor, la
+     letra no necesita gritar. 30px a 390 y 60px a 1440. */
+  --text-display: clamp(1.875rem, 1.18rem + 2.857vw, 3.75rem);
   --text-display--line-height: 1.02;
   --text-display--letter-spacing: -0.042em;
   --text-display--font-weight: 600;
 
   /* Números gigantes del proceso: el texto como imagen. */
-  --text-numeral: clamp(3.25rem, 7.5vw, 6.25rem);
+  --text-numeral: clamp(2.75rem, 6vw, 5rem);
   --text-numeral--line-height: 0.8;
   --text-numeral--letter-spacing: -0.05em;
   --text-numeral--font-weight: 600;
 
-  /* Mismo criterio que el display: 27px a 390, 52px a 1440. */
-  --text-h2: clamp(1.6rem, 1.03rem + 2.64vw, 3.25rem);
+  /* Mismo criterio que el display: 26px a 390, 42px a 1440 (era 52px). */
+  --text-h2: clamp(1.625rem, 1.25rem + 1.524vw, 2.625rem);
   --text-h2--line-height: 1.02;
   --text-h2--letter-spacing: -0.03em;
   --text-h2--font-weight: 600;
 
-  --text-h3: clamp(1.35rem, 2vw, 1.7rem);
+  --text-h3: clamp(1.25rem, 1.7vw, 1.5rem);
   --text-h3--line-height: 1.15;
   --text-h3--letter-spacing: -0.02em;
   --text-h3--font-weight: 600;
 
-  --text-lead: clamp(1.05rem, 1.5vw, 1.3rem);
+  --text-lead: clamp(1rem, 1.25vw, 1.125rem);
   --text-lead--line-height: 1.5;
   --text-lead--letter-spacing: -0.01em;
 }
@@ -285,7 +285,7 @@
 @property --page-bg {
   syntax: "<color>";
   inherits: true;
-  initial-value: #eaedf8;
+  initial-value: #ffffff;
 }
 @property --color-paper {
   syntax: "<color>";
@@ -372,7 +372,13 @@
 }
 
 :root {
-  --page-bg: #eaedf8;
+  /*
+     Blanco. Era bruma (#eaedf8), un lila que teñía toda la página; en blanco
+     el contenido respira más y las secciones oscuras se recortan limpias.
+     Lo que antes se separaba del fondo por ser blanco ahora lleva su filete
+     o un gris apenas más oscuro (paper-alt).
+  */
+  --page-bg: #ffffff;
   --riel-aqua: #166b67;
   --riel-rosa: #a3405a;
   --riel-verde: #456f35;
@@ -564,9 +570,14 @@
 }
 
 @layer components {
+  /*
+     72rem y márgenes que crecen con la pantalla: a 1440 el contenido queda a
+     192px de cada borde. Era 76rem con 32px de relleno (144px a 1440), y el
+     contenido se sentía apretado contra los costados.
+  */
   .shell {
     width: 100%;
-    max-width: 76rem;
+    max-width: 72rem;
     margin-inline: auto;
     padding-inline: 1.25rem;
   }
@@ -586,7 +597,14 @@
   @media (min-width: 768px) {
     .shell,
     .shell-wide {
-      padding-inline: 2rem;
+      padding-inline: 2.5rem;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .shell,
+    .shell-wide {
+      padding-inline: 3rem;
     }
   }
 
@@ -812,17 +830,6 @@
   --desde: 4px;
 }
 
-/* El reloj del carrusel del hero (components/sections/hero-carrusel.tsx):
-   la barra se llena y, al terminar, pasa a la tarjeta siguiente. */
-@keyframes barra {
-  from {
-    transform: scaleX(0);
-  }
-  to {
-    transform: scaleX(1);
-  }
-}
-
 @keyframes entrar {
   from {
     opacity: 0;
@@ -1031,5 +1038,15 @@ header[data-quieta] * {
     background-color: currentColor;
     -webkit-mask: var(--logo) center / contain no-repeat;
     mask: var(--logo) center / contain no-repeat;
+  }
+
+  /*
+     El pase 3D (components/pase). Mientras corre, la imagen de respaldo de
+     cada lugar se apaga: el pase de verdad se dibuja encima, en el canvas
+     fijo. Si el 3D no arranca o se cae, el atributo no está y la imagen
+     queda.
+  */
+  [data-pase-3d] [data-pase-respaldo] {
+    opacity: 0;
   }
 }

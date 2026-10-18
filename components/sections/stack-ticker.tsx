@@ -114,7 +114,7 @@ export function StackTicker({ surface = "mist" }: { surface?: Surface }) {
     <section
       id="stack"
       data-surface={surface}
-      className="relative overflow-hidden py-20 md:py-24"
+      className="relative overflow-hidden py-24 md:py-32"
     >
       <div className="shell">
         <div className="max-w-2xl">

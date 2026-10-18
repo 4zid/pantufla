@@ -33,11 +33,29 @@ import { cn } from "@/lib/cn";
 
 export type Surface = "mist" | "deep";
 
+/*
+   El aire de arriba y de abajo de cada sección. Va acá y no en el className
+   de cada una porque cn() es una unión plana: un py-16 que llegaba de afuera
+   competía con el py-20 de acá y ganaba el que el CSS pusiera último, no el
+   que se pasaba. Con un ritmo con nombre no hay dos valores peleando.
+
+   Es mucho aire a propósito: el contenido se lee más chico y más cuidado
+   cuando tiene espacio alrededor. Compacto es para las secciones que son una
+   lista larga (planes, preguntas), donde tanto aire separaría las partes de
+   una misma cosa; amplio, para el proceso, que es un recorrido.
+*/
+const RITMOS = {
+  normal: "py-24 md:py-36 xl:py-44",
+  compacto: "py-20 md:py-28 xl:py-32",
+  amplio: "py-24 md:py-40 xl:py-48",
+} as const;
+
 export function Section({
   id,
   children,
   className,
   surface = "mist",
+  ritmo = "normal",
   overlay,
   wide = false,
 }: {
@@ -45,6 +63,7 @@ export function Section({
   children: ReactNode;
   className?: string;
   surface?: Surface;
+  ritmo?: keyof typeof RITMOS;
   /** Capa decorativa a sangre, detrás del contenido y fuera del ancho de
       lectura. Va acá y no dentro de los hijos porque el contenido vive en
       .shell, que tiene ancho máximo: un degradé ahí adentro se corta. */
@@ -56,7 +75,7 @@ export function Section({
     <section
       id={id}
       data-surface={surface}
-      className={cn("relative py-20 md:py-28", className)}
+      className={cn("relative", RITMOS[ritmo], className)}
     >
       {overlay}
 

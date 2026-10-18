@@ -53,16 +53,47 @@ export const en: SiteCopy = {
     lead: "Design, copy and development, so that whoever lands on your site knows what you do in ten seconds and ends up writing to you.",
     primary: { label: "Start a project", href: "/#brief" },
     secondary: { label: "See plans and pricing", href: "/#planes" },
-    carousel: {
-      label: "Projects",
-      prev: "Previous project",
-      next: "Next project",
+    gallery: "Screens from sites we made",
+  },
+
+  pase: {
+    alt: "Pantufla priority pass: admits one to the calendar.",
+    body: "Save your spot for the next opening in the calendar.",
+    label: "Your email",
+    placeholder: "you@mail.com",
+    submit: "Save my spot",
+    sending: "Saving…",
+    fine: "One email, when a slot opens.",
+    invalid: "Check the email.",
+    error: "We could not save it. Try again or write to {email}.",
+    success: {
+      title: "Spot saved.",
+      body: "We will write to {email} when the next slot opens.",
+      reset: "Use another email",
     },
+    titular: "Holder",
+    reservado: "Saved",
+    nombre: {
+      label: "Your name",
+      placeholder: "What should we call you?",
+      missing: "Add your name.",
+    },
+  },
+
+  lugar: {
+    eyebrow: "Next slot",
+    title: "The next spot is yours.",
+    lead: "We take on a few projects a month so we can build each one ourselves. Leave your name and email and we will write to you first when a slot opens, before we announce it.",
+    points: [
+      "You hear about it before anyone else.",
+      "One email: this is not a newsletter.",
+      "No strings attached. If it does not suit you, let it pass.",
+    ],
+    hueco: "Your pass goes here",
   },
 
   socialProof: {
     label: "Clients",
-    claim: "We take on few projects at a time and build each one ourselves.",
   },
 
   approach: {
@@ -302,6 +333,7 @@ export const en: SiteCopy = {
     lead: "Different industries, different sizes, the same method.",
     view: "Visit site",
     readCase: "Read the case study",
+    all: "See all projects",
   },
 
   testimonials: {

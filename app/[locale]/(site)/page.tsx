@@ -1,11 +1,14 @@
 import { Fragment } from "react";
 
+import { PaseEscena } from "@/components/pase/pase-escena";
+
 import { Approach } from "@/components/sections/approach";
 import { Bento } from "@/components/sections/bento";
 import { ClientsMap } from "@/components/sections/clients-map";
 import { Faq } from "@/components/sections/faq";
 import { FinalCta } from "@/components/sections/final-cta";
 import { Hero } from "@/components/sections/hero";
+import { Lugar } from "@/components/sections/lugar";
 import { Pricing } from "@/components/sections/pricing";
 import { Process } from "@/components/sections/process";
 import { SocialProof } from "@/components/sections/social-proof";
@@ -18,6 +21,7 @@ import {
 } from "@/content/fallback-content";
 import { JsonLd } from "@/components/json-ld";
 import { getCopy } from "@/content/get-copy";
+import { getHeroGaleria } from "@/content/get-hero-galeria";
 import { getFondos, getSections } from "@/content/get-sections";
 import { SECCIONES, type Fondo, type SeccionId } from "@/content/sections";
 import type { Surface } from "@/components/ui/section";
@@ -36,11 +40,12 @@ export default async function HomePage({
   params: Promise<{ locale: Locale }>;
 }) {
   const { locale } = await params;
-  const [copy, secciones, fondos, cmsProjects, cmsTestimonials] =
+  const [copy, secciones, fondos, pantallas, cmsProjects, cmsTestimonials] =
     await Promise.all([
       getCopy(locale),
       getSections(),
       getFondos(),
+      getHeroGaleria(locale),
       sanityFetch<SanityProject[]>(
         allProjectsQuery,
         { language: locale },
@@ -56,14 +61,15 @@ export default async function HomePage({
     ]);
 
   /*
-     Todos y no los cuatro destacados: el corte lo hace la sección, que muestra
-     cuatro y suma de a dos cuando se lo piden. Traer solo cuatro dejaría el
-     botón sin nada que cargar.
-
-     Ya no hay un /proyectos donde ver el resto, así que esta es la única
-     puerta al catálogo entero.
+     La home muestra los cuatro destacados en el Studio, en su orden; el
+     resto está en /proyectos. Se traen todos igual: con el total la sección
+     sabe si hace falta el enlace a ver todos, y si nadie marcó ninguno
+     destacado entran los cuatro primeros en vez de una sección vacía. El
+     respaldo tiene a los cuatro principales primero.
   */
   const projects = cmsProjects.length ? cmsProjects : fallbackProjects;
+  const marcados = projects.filter((p) => p.featured).slice(0, 4);
+  const destacados = marcados.length ? marcados : projects.slice(0, 4);
   const testimonials = cmsTestimonials.length
     ? cmsTestimonials
     : (fallbackTestimonials[locale] ?? fallbackTestimonials.es);
@@ -85,14 +91,22 @@ export default async function HomePage({
     secciones.testimonials && secciones.clientsMap && testimonials.length > 0;
 
   const piezas: Record<SeccionId, (surface: Surface) => React.ReactNode> = {
-    hero: (surface) => <Hero surface={surface} projects={projects} />,
+    hero: (surface) => (
+      <Hero
+        surface={surface}
+        pantallas={pantallas}
+        galeria={copy.hero.gallery}
+      />
+    ),
     socialProof: (surface) => <SocialProof surface={surface} />,
     approach: (surface) => <Approach surface={surface} />,
     bento: (surface) => <Bento surface={surface} />,
     process: (surface) => <Process surface={surface} />,
     stackTicker: (surface) => <StackTicker surface={surface} />,
     pricing: (surface) => <Pricing surface={surface} />,
-    work: (surface) => <Work projects={projects} surface={surface} />,
+    work: (surface) => (
+      <Work projects={destacados} total={projects.length} surface={surface} />
+    ),
     testimonials: (surface) => (
       <Testimonials items={testimonials} surface={surface}>
         {juntos ? <ClientsMap embedded /> : null}
@@ -101,6 +115,7 @@ export default async function HomePage({
     clientsMap: (surface) => (juntos ? null : <ClientsMap surface={surface} />),
     faq: (surface) => <Faq surface={surface} />,
     finalCta: (surface) => <FinalCta withForm surface={surface} />,
+    lugar: (surface) => <Lugar surface={surface} />,
   };
 
   /* El panel habla de claro y oscuro; las secciones, de bruma y profundo. */
@@ -112,6 +127,12 @@ export default async function HomePage({
       {SECCIONES.filter(({ id }) => secciones[id]).map(({ id }) => (
         <Fragment key={id}>{piezas[id](superficie(fondos[id]))}</Fragment>
       ))}
+
+      {/* El pase 3D. Vuela de la portada al banner si están los dos lugares;
+          con uno solo se queda quieto en ese. */}
+      {secciones.hero || secciones.lugar ? (
+        <PaseEscena volar={secciones.hero && secciones.lugar} />
+      ) : null}
 
       <JsonLd
         nodos={[
@@ -130,7 +151,7 @@ export default async function HomePage({
           */
           ...(secciones.faq ? [nodoFaq(copy, locale)] : []),
           ...(secciones.work
-            ? [nodoProyectos(projects, locale, copy.work.title)]
+            ? [nodoProyectos(destacados, locale, copy.work.title)]
             : []),
         ]}
       />

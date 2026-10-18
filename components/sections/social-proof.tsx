@@ -19,8 +19,10 @@ import { RielPausable } from "@/components/ui/riel-pausable";
  * con el mismo, el hero se hunde en la tira y lo que separa las dos cosas es
  * el aire, no una línea de color. Las reglas sobraban por lo mismo.
  *
- * A la izquierda va quién hace el trabajo y a la derecha para quién se hizo.
- * La frase no cuenta clientes: ver por qué en content/site.ts.
+ * Son solo los logos, de punta a punta de la pantalla. Antes tenía a la
+ * izquierda las caras del estudio y una frase; sin esa columna el riel no
+ * arranca cortado contra un divisor —se veía la mitad de un logo saliendo de
+ * atrás de la línea— y la tira dice una sola cosa: para quién trabajamos.
  *
  * Las marcas corren en un riel y no quietas en fila. Quietas, la fila mide
  * lo que suman los logos y deja un hueco al final que cambia con cada cliente
@@ -51,11 +53,12 @@ const REPES = 3;
  * nueva la alarga y, con el mismo tiempo, la acelera. El tiempo crece con la
  * pista para que el riel vaya siempre a unos 58px por segundo: con cinco
  * marcas eran 34s, con seis 42s y con siete, ya con el logo de Acacia en vez
- * de su nombre escrito (1012px por pasada), 52s. Si se suma otra marca o se
- * cambia un logo, la cuenta es la misma: el ancho de una pasada sobre 58, por
- * tres.
+ * de su nombre escrito, 52s. Con la tira a lo ancho los logos se separaron
+ * un poco más (56px en vez de 48) y una pasada mide unos 1068px: 55s. Si se
+ * suma otra marca o se cambia un logo, la cuenta es la misma: el ancho de una
+ * pasada sobre 58, por tres.
  */
-const DURACION = "52s";
+const DURACION = "55s";
 
 /**
  * Cuánta superficie ocupa cada logo, en píxeles cuadrados, y hasta qué alto.
@@ -86,40 +89,16 @@ export function SocialProof({ surface = "mist" }: { surface?: Surface }) {
       data-surface={surface}
       className="relative"
     >
-      <Reveal className="relative z-10 shell flex flex-col items-center gap-6 py-8 lg:flex-row lg:gap-10 lg:py-7">
-        <div className="flex shrink-0 items-center gap-4">
-          <ul className="flex" aria-hidden>
-            {socialProof.faces.map((face, i) => (
-              <li
-                key={face.initials}
-                className="grid h-11 w-11 place-items-center rounded-full text-[0.72rem] font-semibold text-white ring-[3px] ring-mist"
-                style={{
-                  background: `linear-gradient(140deg, ${face.from}, ${face.to})`,
-                  // Corto: acá hay iniciales, no fotos, y con más solapado el
-                  // borde de la de al lado les come la última letra.
-                  marginLeft: i === 0 ? 0 : "-0.375rem",
-                }}
-              >
-                {face.initials}
-              </li>
-            ))}
-          </ul>
-          <p className="max-w-[15rem] text-[0.92rem] leading-snug text-ink-soft">
-            {copy.socialProof.claim}
-          </p>
-        </div>
-
-        <span aria-hidden className="hidden h-12 w-px bg-line lg:block" />
-
+      <Reveal className="relative z-10 py-8 lg:py-10">
         {/*
           El riel. La lista real la anuncia el lector de pantalla una sola vez;
           las copias de más existen para que el empalme no se vea y van
           escondidas.
         */}
-        <RielPausable className="w-full min-w-0 flex-1">
+        <RielPausable className="w-full">
           <div
             className="ticker w-full overflow-hidden"
-            style={{ "--ticker-fade": "3rem" } as React.CSSProperties}
+            style={{ "--ticker-fade": "6rem" } as React.CSSProperties}
           >
             <ul
               className="ticker-track items-center"
@@ -131,7 +110,7 @@ export function SocialProof({ surface = "mist" }: { surface?: Surface }) {
                     key={`${copia}-${marca.name}`}
                     aria-hidden={copia > 0 || undefined}
                     translate="no"
-                    className="flex items-center whitespace-nowrap pr-12 text-[1.05rem] font-semibold tracking-[-0.03em] text-ink-soft"
+                    className="flex items-center whitespace-nowrap pr-14 text-[1.05rem] font-semibold tracking-[-0.03em] text-ink-soft"
                   >
                     {marca.logo ? (
                       <span
