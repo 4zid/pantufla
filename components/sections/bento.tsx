@@ -8,118 +8,68 @@ import { useCopy } from "@/components/copy-provider";
 import { bentoDesign } from "@/content/site";
 import type { SiteCopy } from "@/content/copy";
 import { Section, SectionHead, type Surface } from "@/components/ui/section";
-import { tonePill, toneSoftBg, toneTextDeep, type Tone } from "@/lib/tones";
 import { gsap, registerGsap, ScrollTrigger, START } from "@/lib/motion";
 import { cn } from "@/lib/cn";
 
 /**
  * Las cuatro cosas que se lleva todo sitio, en un tablero.
  *
- * Un tablero y no cuatro tarjetas sueltas: las cuatro viven adentro de un
- * mismo contenedor, separadas por una junta de diez píxeles del color de la
- * página, y donde se cruzan dos juntas las esquinas redondeadas dejan una
- * muesca en forma de estrella. Tres columnas y dos filas desde lg, en
- * damero: arriba la chica del chat a la izquierda y la ancha de velocidad a
- * la derecha; abajo la ancha del formulario a la izquierda y la chica de las
- * pantallas a la derecha. Las dos anchas nunca quedan una sobre otra. En tablet son
- * dos columnas parejas —a tres, cada celda quedaba de 220 y el chat se
- * partía en palabras sueltas— y en teléfono, una sola.
+ * Cuatro celdas en damero: tres columnas y dos filas desde lg, con la chica
+ * del chat arriba a la izquierda y la ancha de velocidad a la derecha; abajo
+ * la ancha del formulario a la izquierda y la chica de las pantallas a la
+ * derecha. Las dos anchas nunca quedan una sobre otra. En tablet son dos
+ * columnas parejas —a tres, cada celda quedaba de 220 y el chat se partía en
+ * palabras sueltas— y en teléfono, una sola.
  *
- * Cada celda es una lámina de color con el texto arriba a la izquierda y una
- * viñeta en el resto. El texto va directo sobre la lámina, sin panel: la
- * celda es una sola pieza. Y cada lámina se ilumina arriba a la izquierda,
- * justo donde está el texto, y se apaga lejos de él.
+ * Sobrio, como el hero y el pase. Eran cuatro láminas de color —aqua, rosa,
+ * miel y verde, con degradés y grano de foto— y al lado del hero blanco, del
+ * pase marfil y de los mockups grises quedaban de otra página. Ahora cada
+ * celda es el mismo plano gris con borde fino de las tarjetas de proyectos,
+ * la tinta es la del tema y hay un solo color: el champagne del foil del
+ * pase, en el punto de la regla, en el aviso de la consulta nueva y en los
+ * bloques de las pantallas. La tipografía hace lo que hacía el color: la
+ * cifra de velocidad y la respuesta del chat van en la itálica de Newsreader,
+ * la del titular del hero, contra la Schibsted del resto.
  *
- * Las láminas son degradés puros, sin filtros. Cada tono tiene su propia
- * composición —de dónde entra la luz, dónde se apaga— para que las cuatro no
- * sean la misma foto en cuatro colores. Encima va un grano fino, mezclado en
- * overlay, que es lo que las hace parecer una fotografía desenfocada y no un
- * relleno de CSS. Es una textura de 160 píxeles repetida, no un blur.
+ * Al ser tokens y no colores fijos, el tablero sigue al tema: con la sección
+ * en oscuro desde el panel, las celdas y las viñetas se dan vuelta solas.
  *
  * Las cuatro viñetas son cuatro cosas distintas, y solo una va en un marco.
  * Velocidad: el texto arriba y, en el pie de la celda, una regla de segundos
- * que la cruza entera y se va de cuadro por los dos lados, con el número
- * grande arriba a la derecha. SEO: un chat suelto sobre la lámina, la
- * pregunta a la derecha y la respuesta a la izquierda, con el «escribiendo»
- * en el medio. Pantallas: una ventana y un teléfono cortados por el borde de
- * la celda. Resultados: una tarjeta blanca con las consultas en barras, y el
- * aviso de la nueva pisando su esquina. Cuatro tarjetas iguales con una
- * interfaz adentro eran cuatro veces la misma idea; esto son cuatro ideas, y
- * la tarjeta, que es una sola, vuelve a ser una tarjeta.
+ * que la cruza entera y se va de cuadro por los dos lados, con la cifra
+ * grande arriba a la derecha. SEO: un chat suelto, la pregunta a la derecha y
+ * la respuesta a la izquierda, con el «escribiendo» en el medio. Pantallas:
+ * una ventana y un teléfono cortados por el borde de la celda. Resultados:
+ * una tarjeta con las consultas en barras, y el aviso de la nueva pisando su
+ * esquina.
  *
  * Se mueven dos veces y nada más. Al entrar en pantalla, cada viñeta tiene su
- * propia coreografía (ver `entrada` en cada una): la regla se traza y el
- * número cuenta; la pregunta llega, ChatGPT escribe un rato y contesta; la
- * ventana entra de costado y el teléfono sube; la tarjeta se asienta, las
- * barras crecen y el aviso salta. Todo por opacidad y transformación, con
- * cada pieza ya ocupando su lugar desde el primer pintado: nada cambia de
- * alto, ni siquiera cuando el «escribiendo» se vuelve respuesta, porque la
- * respuesta ya está ahí, invisible, y el «escribiendo» va encima. El estado
- * inicial de cada pieza (invisible, encogida) es del CSS y no lo escribe
- * GSAP al crearse: ver la nota «Movimiento» en globals.css. Y al pasar
- * el mouse, la lámina hace un zoom lento y una pieza de cada viñeta se mueve
- * un poco. El hover es CSS puro y va en un envoltorio aparte del elemento
- * que anima GSAP: los dos escriben transform, y en el mismo elemento se
- * pisan.
+ * propia coreografía (ver `entrada` en cada una): la regla se traza; la
+ * pregunta llega, la IA escribe un rato y contesta; la ventana entra de
+ * costado y el teléfono sube; la tarjeta se asienta, las barras crecen y el
+ * aviso salta. Todo por opacidad y transformación, con cada pieza ya
+ * ocupando su lugar desde el primer pintado: nada cambia de alto, ni
+ * siquiera cuando el «escribiendo» se vuelve respuesta, porque la respuesta
+ * ya está ahí, invisible, y el «escribiendo» va encima. El estado inicial de
+ * cada pieza (invisible, encogida) es del CSS y no lo escribe GSAP al
+ * crearse: ver la nota «Movimiento» en globals.css. Y al pasar el mouse una
+ * pieza de cada viñeta se mueve un poco. El hover es CSS puro y va en un
+ * envoltorio aparte del elemento que anima GSAP: los dos escriben transform,
+ * y en el mismo elemento se pisan.
  */
 
-/** La tinta de las láminas es fija: son imágenes, no cambian con el tema. */
-const TINTA = "#121212";
-const TINTA_SUAVE = "rgba(18, 18, 18, 0.72)";
+/**
+ * El único color del tablero: el champagne del foil del pase, el mismo de la
+ * línea de corte del banner. Es fijo y no un token porque se lee igual sobre
+ * el gris claro y sobre el oscuro.
+ */
+const CHAMPAGNE = "#c8ae84";
+
+/** La itálica del hero, para las cifras y la respuesta del chat. */
+const SERIF = "font-serif font-normal italic";
 
 type Figuras = SiteCopy["bento"]["figures"];
-type Vineta = { tone: Tone; f: Figuras };
-
-/* ------------------------------------------------------------------ */
-/* Las láminas                                                         */
-/* ------------------------------------------------------------------ */
-
-/**
- * El grano: un SVG de ruido fractal de 160 × 160, repetido y mezclado en
- * overlay a un cuarto de opacidad. Con menos no se nota; con más se ve sucio.
- */
-const GRANO = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23g)'/%3E%3C/svg%3E")`;
-
-/** El tono profundo apagado hacia negro: la zona de sombra de cada lámina. */
-const sombra = (tone: Tone, pct: number) =>
-  `color-mix(in srgb, var(--color-${tone}-deep) ${pct}%, #0e0e0e)`;
-
-/**
- * Una composición por tono, capa por capa, de arriba hacia abajo. Todas se
- * iluminan arriba a la izquierda, donde va el texto, y se apagan lejos: la
- * aqua abajo a la derecha, la rosa abajo a la izquierda, la verde en el pie
- * con una franja de luz cruzándola en diagonal, y la miel por el costado
- * derecho, detrás de la viñeta. En las dos anchas la viñeta va a la derecha,
- * sobre la zona apagada, y el texto a la izquierda, sobre la luz. Las sombras
- * de la aqua y la miel se quedan a mitad de camino del negro: encima va tinta
- * dibujada, y sobre un pozo negro la tinta desaparece.
- */
-const laminas: Record<Tone, string> = {
-  aqua: [
-    "radial-gradient(70% 55% at 14% 10%, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0) 70%)",
-    `radial-gradient(52% 48% at 94% 96%, ${sombra("aqua", 88)} 0%, transparent 70%)`,
-    "radial-gradient(75% 60% at 60% 55%, var(--color-aqua) 0%, transparent 75%)",
-    "linear-gradient(160deg, var(--color-aqua-soft) 0%, var(--color-aqua) 55%, var(--color-aqua-deep) 130%)",
-  ].join(", "),
-  rosa: [
-    "radial-gradient(70% 50% at 16% 8%, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0) 70%)",
-    `radial-gradient(60% 55% at 8% 96%, ${sombra("rosa", 75)} 0%, transparent 70%)`,
-    "radial-gradient(70% 60% at 55% 60%, var(--color-rosa) 0%, transparent 75%)",
-    "linear-gradient(160deg, var(--color-rosa-soft) 0%, var(--color-rosa) 55%, var(--color-rosa-deep) 130%)",
-  ].join(", "),
-  verde: [
-    "linear-gradient(118deg, rgba(255,255,255,0) 34%, rgba(255,255,255,0.9) 49%, rgba(255,255,255,0) 64%)",
-    `radial-gradient(90% 40% at 50% 108%, ${sombra("verde", 90)} 0%, transparent 70%)`,
-    "radial-gradient(70% 40% at 12% 6%, var(--color-verde-soft) 0%, transparent 70%)",
-    "linear-gradient(180deg, var(--color-verde) 0%, var(--color-verde) 60%, var(--color-verde-deep) 120%)",
-  ].join(", "),
-  miel: [
-    "radial-gradient(45% 60% at 12% 14%, var(--color-miel-soft) 0%, transparent 70%)",
-    `radial-gradient(36% 70% at 96% 42%, ${sombra("miel", 64)} 0%, ${sombra("miel", 64)} 15%, transparent 68%)`,
-    "radial-gradient(60% 70% at 45% 70%, var(--color-miel) 0%, transparent 75%)",
-    "linear-gradient(160deg, var(--color-miel) 0%, color-mix(in srgb, var(--color-miel) 55%, var(--color-miel-deep)) 100%)",
-  ].join(", "),
-};
+type Vineta = { f: Figuras };
 
 /* ------------------------------------------------------------------ */
 /* Las viñetas                                                         */
@@ -131,29 +81,27 @@ function numero(texto: string) {
   return m ? Number(m[0]) : 0;
 }
 
-/** El tono profundo, como color CSS. */
-const profundo = (tone: Tone) => `var(--color-${tone}-deep)`;
-
-/** Tinta a una opacidad. */
-const tinta = (alfa: number) => `rgba(18, 18, 18, ${alfa})`;
+/** La tinta del tema a una opacidad: sigue al tema como el resto. */
+const tinta = (pct: number) =>
+  `color-mix(in srgb, var(--color-ink) ${pct}%, transparent)`;
 
 /** La entrada de una viñeta: lo que cada una hace con su línea de tiempo. */
 type Entrada = (tl: gsap.core.Timeline, q: gsap.utils.SelectorFunc) => void;
 
 /**
  * Velocidad: la regla de segundos. Cruza la celda entera por el pie y se va
- * de cuadro por los dos lados; un trazo grueso llega hasta nuestro tiempo y
- * termina en un punto encendido, y de ahí sigue punteado y apagado hasta el
- * promedio. El número grande va arriba a la derecha en escritorio, frente al
- * título, y arriba de la regla cuando la celda es angosta. La regla llega
- * hasta el segundo entero que sigue al número más alto, así sirve para
- * cualquier par de valores.
+ * de cuadro por los dos lados; un trazo de tinta llega hasta nuestro tiempo
+ * y termina en el punto champagne, y de ahí sigue punteado y apagado hasta
+ * el promedio. La cifra va arriba a la derecha en escritorio, frente al
+ * título, y arriba de la regla cuando la celda es angosta, grande y en la
+ * itálica del hero. La regla llega hasta el segundo entero que sigue al
+ * número más alto, así sirve para cualquier par de valores.
  *
  * Es HTML con posiciones en porcentaje y no un SVG: un SVG escalado al ancho
  * de la celda agranda también los textos y los grosores, y acá el ancho va
  * de 300 a 700 píxeles.
  */
-function Velocidad({ tone, f }: Vineta) {
+function Velocidad({ f }: Vineta) {
   const nuestro = numero(f.speedOurs);
   const suyo = numero(f.speedTheirs);
   const tope = Math.max(1, Math.ceil(Math.max(nuestro, suyo)));
@@ -163,18 +111,16 @@ function Velocidad({ tone, f }: Vineta) {
   return (
     <div className="w-full">
       <div className="lg:absolute lg:right-7 lg:top-7 lg:text-right">
-        <p
-          data-pieza
-          className="text-[0.7rem] font-medium"
-          style={{ color: TINTA_SUAVE }}
-        >
+        <p data-pieza className="text-[0.7rem] font-medium text-ink-faint">
           {f.speedCaption}
         </p>
         <p
           data-pieza
           data-cifra
-          className="mt-1 text-[2.5rem] font-semibold leading-none tracking-[-0.04em] tabular-nums"
-          style={{ color: TINTA }}
+          className={cn(
+            SERIF,
+            "mt-2 text-[3.5rem] leading-[0.9] tracking-[-0.03em] text-ink md:text-[4rem]",
+          )}
         >
           {f.speedOurs}
         </p>
@@ -185,18 +131,20 @@ function Velocidad({ tone, f }: Vineta) {
         <span
           className="absolute -left-12 -right-12 top-1/2 h-px"
           style={{
-            background: `linear-gradient(90deg, transparent, ${tinta(0.28)} 10%, ${tinta(0.28)})`,
+            background: `linear-gradient(90deg, transparent, ${tinta(22)} 10%, ${tinta(22)})`,
           }}
         />
         {marcas.map((seg) => (
           <span
             key={seg}
             className="absolute bottom-1/2 top-1 border-l border-dashed"
-            style={{ left: `${x(seg)}%`, borderColor: tinta(0.28) }}
+            style={{ left: `${x(seg)}%`, borderColor: tinta(22) }}
           >
             <span
-              className={cn(etiqueta, "left-0 top-[calc(100%+0.55rem)]")}
-              style={{ color: tinta(0.7) }}
+              className={cn(
+                etiqueta,
+                "left-0 top-[calc(100%+0.55rem)] text-ink-faint",
+              )}
             >
               {seg} s
             </span>
@@ -209,28 +157,29 @@ function Velocidad({ tone, f }: Vineta) {
           style={{
             left: `${x(nuestro)}%`,
             width: `${x(suyo) - x(nuestro)}%`,
-            borderColor: tinta(0.45),
+            borderColor: tinta(35),
           }}
         />
         <span
           data-pieza
           className="absolute top-1/2 h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full border-[1.5px]"
-          style={{ left: `${x(suyo)}%`, borderColor: tinta(0.7) }}
+          style={{ left: `${x(suyo)}%`, borderColor: tinta(55) }}
         />
         <span
           data-pieza
-          className={cn(etiqueta, "bottom-[calc(50%+0.8rem)]")}
-          style={{ left: `${x(suyo)}%`, color: tinta(0.75) }}
+          className={cn(etiqueta, "bottom-[calc(50%+0.8rem)] text-ink-faint")}
+          style={{ left: `${x(suyo)}%` }}
         >
           {f.speedLabelTheirs} · {f.speedTheirs}
         </span>
-        {/* El nuestro: un trazo grueso desde fuera de cuadro hasta el punto. */}
+        {/* El nuestro: un trazo de tinta desde fuera de cuadro hasta el punto. */}
         <span
           data-lleno
-          className="absolute -left-12 top-1/2 h-[5px] -translate-y-1/2 rounded-full"
+          className="absolute -left-12 top-1/2 h-[3px] -translate-y-1/2 rounded-full"
           style={{
             width: `calc(${x(nuestro)}% + 3rem)`,
-            background: `linear-gradient(90deg, transparent, ${TINTA} 22%, ${TINTA})`,
+            background:
+              "linear-gradient(90deg, transparent, var(--color-ink) 22%, var(--color-ink))",
           }}
         />
         <span
@@ -241,20 +190,23 @@ function Velocidad({ tone, f }: Vineta) {
             <span
               className="absolute -inset-4 rounded-full"
               style={{
-                background:
-                  "radial-gradient(circle, rgba(255,255,255,0.85), rgba(255,255,255,0.25) 55%, transparent 72%)",
+                background: `radial-gradient(circle, ${CHAMPAGNE}66, transparent 70%)`,
               }}
             />
+            {/* El aro es del color de la celda: el punto parece calado. */}
             <span
-              className="absolute inset-0 rounded-full border-[2.5px] border-white"
-              style={{ background: profundo(tone) }}
+              className="absolute inset-0 rounded-full border-[2.5px] border-paper-alt"
+              style={{ background: CHAMPAGNE }}
             />
           </span>
         </span>
         <span
           data-pieza
-          className={cn(etiqueta, "bottom-[calc(50%+0.8rem)] font-semibold")}
-          style={{ left: `${x(nuestro)}%`, color: TINTA }}
+          className={cn(
+            etiqueta,
+            "bottom-[calc(50%+0.8rem)] font-semibold text-ink",
+          )}
+          style={{ left: `${x(nuestro)}%` }}
         >
           {f.speedLabelOurs}
         </span>
@@ -319,26 +271,23 @@ function Chispa({ className }: { className?: string }) {
 }
 
 /**
- * SEO: un chat suelto sobre la lámina. La pregunta a la derecha, en el tono
- * de la celda; la respuesta a la izquierda, blanca, con el avatar de ChatGPT
- * al lado. Entre una y otra, ChatGPT escribe: tres puntos que laten sobre el
- * mismo lugar donde después aparece la respuesta, que ya está ahí ocupando
- * su alto. Al pasar el mouse los dos globos se levantan apenas.
+ * SEO: un chat suelto. La pregunta a la derecha y la respuesta a la
+ * izquierda, las dos en globos del color de las tarjetas con borde fino, y
+ * la respuesta en la itálica del hero: es lo que la IA dice de vos, y se lee
+ * como una cita. Entre una y otra, la IA escribe: tres puntos que laten
+ * sobre el mismo lugar donde después aparece la respuesta, que ya está ahí
+ * ocupando su alto. Al pasar el mouse los dos globos se levantan apenas.
  */
-function Seo({ tone, f }: Vineta) {
+function Seo({ f }: Vineta) {
   const globo =
-    "rounded-[16px] px-3.5 py-2.5 shadow-[0_14px_30px_-18px_rgba(0,0,0,0.4)]";
+    "rounded-[16px] border border-line bg-card px-3.5 py-2.5 shadow-[0_14px_30px_-22px_rgba(0,0,0,0.35)]";
   return (
     <div className="w-full max-w-[340px] text-[0.76rem] leading-snug">
       <div className="flex justify-end pl-8">
         <div className="transition-transform duration-500 ease-out group-hover:-translate-y-0.5">
           <p
             data-pregunta
-            className={cn(
-              globo,
-              "rounded-br-[5px] font-medium",
-              tonePill[tone],
-            )}
+            className={cn(globo, "rounded-br-[5px] font-medium text-ink")}
           >
             {f.seoQuestion}
           </p>
@@ -347,20 +296,18 @@ function Seo({ tone, f }: Vineta) {
       <div className="mt-3 flex items-end gap-2 pr-6">
         <span
           data-avatar
-          className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-white"
-          style={{ background: TINTA }}
+          className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-ink text-on-ink"
         >
           <Chispa className="h-3 w-3" />
         </span>
         <div className="relative min-w-0 transition-transform duration-500 ease-out group-hover:-translate-y-0.5">
-          <div
-            data-respuesta
-            className={cn(globo, "rounded-bl-[5px] bg-white")}
-          >
-            <p className={cn("text-[0.62rem] font-medium", toneTextDeep[tone])}>
+          <div data-respuesta className={cn(globo, "rounded-bl-[5px]")}>
+            <p className="text-[0.62rem] font-medium text-ink-faint">
               {f.seoCaption}
             </p>
-            <p className="mt-1 font-medium" style={{ color: TINTA }}>
+            <p
+              className={cn(SERIF, "mt-1 text-[1rem] leading-[1.25] text-ink")}
+            >
               {f.seoAnswer}
             </p>
           </div>
@@ -368,12 +315,12 @@ function Seo({ tone, f }: Vineta) {
             data-escribiendo
             className={cn(
               globo,
-              "escribiendo absolute bottom-0 left-0 flex h-9 items-center gap-1 rounded-bl-[5px] bg-white",
+              "escribiendo absolute bottom-0 left-0 flex h-9 items-center gap-1 rounded-bl-[5px]",
             )}
           >
-            <span className="h-1.5 w-1.5 rounded-full bg-[#9b9b97]" />
-            <span className="h-1.5 w-1.5 rounded-full bg-[#9b9b97]" />
-            <span className="h-1.5 w-1.5 rounded-full bg-[#9b9b97]" />
+            <span className="h-1.5 w-1.5 rounded-full bg-ink-faint" />
+            <span className="h-1.5 w-1.5 rounded-full bg-ink-faint" />
+            <span className="h-1.5 w-1.5 rounded-full bg-ink-faint" />
           </div>
         </div>
       </div>
@@ -416,32 +363,34 @@ const entradaSeo: Entrada = (tl, q) => {
 };
 
 /**
- * Pantallas: la misma página en una ventana y en un teléfono, sin marco
- * alrededor. La ventana se va por el borde derecho de la celda y el
- * teléfono, adelante e inclinado, por el de abajo: la celda los corta, y eso
- * es lo que los hace parecer más grandes que el cuadro. Al pasar el mouse el
- * teléfono se levanta y se endereza un poco.
+ * Pantallas: la misma página en una ventana y en un teléfono, dibujados en
+ * gris con el bloque principal en champagne. La ventana se va por el borde
+ * derecho de la celda y el teléfono, adelante e inclinado, por el de abajo:
+ * la celda los corta, y eso es lo que los hace parecer más grandes que el
+ * cuadro. Al pasar el mouse el teléfono se levanta y se endereza un poco.
  */
-function Pantallas({ tone }: Vineta) {
-  const bloque = "rounded-[5px] bg-[#e9e9e7]";
+function Pantallas() {
+  const bloque = "rounded-[5px] bg-line";
+  const principal = { background: `${CHAMPAGNE}59` };
   return (
     <div className="relative h-[12rem] w-full">
       <div className="absolute left-0 top-0 w-[124%] transition-transform duration-500 ease-out group-hover:-translate-x-1">
         <div
           data-ventana
-          className="rounded-[12px] bg-white p-3 shadow-[0_18px_40px_-24px_rgba(0,0,0,0.45)]"
+          className="rounded-[12px] border border-line bg-card p-3 shadow-[0_18px_40px_-28px_rgba(0,0,0,0.4)]"
         >
           <div className="flex gap-1">
             {[0, 1, 2].map((i) => (
-              <span key={i} className="h-1.5 w-1.5 rounded-full bg-[#d9d9d6]" />
+              <span
+                key={i}
+                className="h-1.5 w-1.5 rounded-full bg-line-strong"
+              />
             ))}
           </div>
           <div className="mt-2.5 grid grid-cols-[1.4fr_1fr_1fr] gap-1.5">
             <div
-              className={cn(
-                "row-span-2 h-[4.5rem] rounded-[5px]",
-                toneSoftBg[tone],
-              )}
+              className="row-span-2 h-[4.5rem] rounded-[5px]"
+              style={principal}
             />
             <div className={cn("h-8", bloque)} />
             <div className={cn("h-8", bloque)} />
@@ -455,17 +404,17 @@ function Pantallas({ tone }: Vineta) {
       <div className="absolute -bottom-20 left-[4%] w-[38%] -rotate-[6deg] transition-transform duration-500 ease-out group-hover:-translate-y-2 group-hover:-rotate-[3deg]">
         <div
           data-telefono
-          className="rounded-[18px] border-[3px] border-[#1c1c1c] bg-white p-1.5 shadow-[0_22px_44px_-20px_rgba(0,0,0,0.5)]"
+          className="rounded-[18px] border-[3px] border-ink bg-card p-1.5 shadow-[0_22px_44px_-24px_rgba(0,0,0,0.45)]"
         >
-          <div className="mx-auto mt-0.5 h-1 w-5 rounded-full bg-[#1c1c1c]" />
+          <div className="mx-auto mt-0.5 h-1 w-5 rounded-full bg-ink" />
           <div className="mt-2 space-y-1.5">
-            <div className={cn("h-12 rounded-[6px]", toneSoftBg[tone])} />
-            <div className="h-2 rounded-[4px] bg-[#e9e9e7]" />
-            <div className="h-2 rounded-[4px] bg-[#e9e9e7]" />
-            <div className="h-2 w-2/3 rounded-[4px] bg-[#e9e9e7]" />
-            <div className="h-9 rounded-[6px] bg-[#e9e9e7]" />
-            <div className="h-2 rounded-[4px] bg-[#e9e9e7]" />
-            <div className="h-2 w-4/5 rounded-[4px] bg-[#e9e9e7]" />
+            <div className="h-12 rounded-[6px]" style={principal} />
+            <div className="h-2 rounded-[4px] bg-line" />
+            <div className="h-2 rounded-[4px] bg-line" />
+            <div className="h-2 w-2/3 rounded-[4px] bg-line" />
+            <div className="h-9 rounded-[6px] bg-line" />
+            <div className="h-2 rounded-[4px] bg-line" />
+            <div className="h-2 w-4/5 rounded-[4px] bg-line" />
           </div>
         </div>
       </div>
@@ -489,25 +438,23 @@ const entradaPantallas: Entrada = (tl, q) => {
 
 /**
  * Resultados: la única viñeta con marco, porque es la que dibuja un panel.
- * Una tarjeta blanca con las consultas que fueron llegando desde que el
- * sitio se publicó, en barras del tono de la celda: las de atrás más
- * claras, la de hoy en el tono profundo. Sobre la esquina de la tarjeta, el
- * aviso de que acaba de llegar otra. Al pasar el mouse la tarjeta se levanta
- * y el aviso se ladea.
+ * Una tarjeta con las consultas que fueron llegando desde que el sitio se
+ * publicó, en barras de tinta que van ganando fuerza: las de atrás casi
+ * transparentes, la de hoy entera. Sobre la esquina de la tarjeta, el aviso
+ * de que acaba de llegar otra, con el punto champagne. Al pasar el mouse la
+ * tarjeta se levanta y el aviso se ladea.
  */
 const ALTURAS = [16, 24, 20, 32, 38, 34, 50, 58, 66, 88];
 
-function Resultados({ tone, f }: Vineta) {
+function Resultados({ f }: Vineta) {
   const ultima = ALTURAS.length - 1;
   return (
     <div className="relative w-full max-w-[320px] transition-transform duration-500 ease-out group-hover:-translate-y-1.5">
       <div
         data-tarjeta
-        className="rounded-[18px] bg-white p-4 shadow-[0_26px_50px_-24px_rgba(0,0,0,0.45)]"
+        className="rounded-[18px] border border-line bg-card p-4 shadow-[0_26px_50px_-30px_rgba(0,0,0,0.4)]"
       >
-        <p className="text-[0.74rem] font-medium" style={{ color: TINTA }}>
-          {f.leadsCaption}
-        </p>
+        <p className="text-[0.74rem] font-medium text-ink">{f.leadsCaption}</p>
         <div className="mt-4 flex h-[5.5rem] items-end gap-[7px]">
           {ALTURAS.map((alto, i) => (
             <span
@@ -516,17 +463,15 @@ function Resultados({ tone, f }: Vineta) {
               className="block flex-1 rounded-full"
               style={{
                 height: `${alto}%`,
-                background:
-                  i === ultima ? profundo(tone) : `var(--color-${tone})`,
-                opacity: i === ultima ? 1 : 0.4 + (i / ultima) * 0.6,
+                /* La fuerza va en el color y no en la opacidad: con menos
+                   movimiento pedido el CSS les fuerza opacity: 1 a las
+                   piezas, y quedaban todas negras. */
+                background: tinta(i === ultima ? 100 : 12 + (i / ultima) * 30),
               }}
             />
           ))}
         </div>
-        <div
-          className="mt-2.5 flex justify-between border-t pt-2 text-[0.64rem]"
-          style={{ borderColor: "#ececea", color: "#8a8a86" }}
-        >
+        <div className="mt-2.5 flex justify-between border-t border-line pt-2 text-[0.64rem] text-ink-faint">
           <span>{f.leadsStart}</span>
           <span>{f.leadsEnd}</span>
         </div>
@@ -534,12 +479,11 @@ function Resultados({ tone, f }: Vineta) {
       <div className="absolute -right-3 -top-3 transition-transform duration-500 ease-out group-hover:-rotate-3 group-hover:scale-105">
         <div
           data-pop
-          className="flex items-center gap-1.5 whitespace-nowrap rounded-full border border-white/70 bg-white px-2.5 py-1.5 text-[0.66rem] font-medium shadow-[0_12px_28px_-12px_rgba(0,0,0,0.4)]"
-          style={{ color: TINTA }}
+          className="flex items-center gap-1.5 whitespace-nowrap rounded-full border border-line bg-card px-2.5 py-1.5 text-[0.66rem] font-medium text-ink shadow-[0_12px_28px_-14px_rgba(0,0,0,0.35)]"
         >
           <span
             className="h-1.5 w-1.5 rounded-full"
-            style={{ background: profundo(tone) }}
+            style={{ background: CHAMPAGNE }}
           />
           {f.formNotice}
         </div>
@@ -649,14 +593,10 @@ export function Bento({ surface }: { surface?: Surface }) {
         lead={bento.lead}
       />
 
-      <div
-        ref={scope}
-        className="mt-14 rounded-[var(--radius-tablero)] border border-line bg-paper-alt p-2.5 shadow-[0_24px_60px_-40px_rgba(35,28,18,0.35)]"
-      >
-        <Reveal stagger className="grid gap-2.5 md:grid-cols-2 lg:grid-cols-3">
+      <div ref={scope} className="mt-14 md:mt-20">
+        <Reveal stagger className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
           {bento.cards.map((card) => {
             const diseño = bentoDesign[card.id] ?? {
-              tone: "aqua" as const,
               area: "",
               shape: "chica" as const,
             };
@@ -669,26 +609,11 @@ export function Bento({ surface }: { surface?: Surface }) {
                 key={card.id}
                 data-celda={card.id}
                 className={cn(
-                  "group relative overflow-hidden rounded-[var(--radius-celda)]",
-                  "md:min-h-[24rem]",
+                  "group relative overflow-hidden rounded-[1.25rem] border border-line bg-paper-alt md:rounded-[1.5rem]",
+                  "md:min-h-[23rem]",
                   diseño.area,
                 )}
               >
-                {/* La lámina y el grano, debajo de todo. El zoom del hover va acá. */}
-                <div
-                  aria-hidden
-                  className="absolute inset-0 transition-transform duration-700 ease-out group-hover:scale-[1.04]"
-                  style={{ background: laminas[diseño.tone] }}
-                >
-                  <span
-                    className="absolute inset-0 opacity-25 mix-blend-overlay"
-                    style={{
-                      backgroundImage: GRANO,
-                      backgroundSize: "160px 160px",
-                    }}
-                  />
-                </div>
-
                 <div
                   className={cn(
                     "relative flex h-full flex-col p-6 md:p-7",
@@ -696,16 +621,10 @@ export function Bento({ surface }: { surface?: Surface }) {
                   )}
                 >
                   <div className={cn(fila && "lg:w-[46%] lg:shrink-0")}>
-                    <h3
-                      className="text-[1.12rem] font-semibold leading-snug tracking-[-0.02em]"
-                      style={{ color: TINTA }}
-                    >
+                    <h3 className="text-[1.08rem] font-semibold leading-snug tracking-[-0.02em] text-ink">
                       {card.title}
                     </h3>
-                    <p
-                      className="mt-2 max-w-[34ch] text-[0.95rem] leading-relaxed"
-                      style={{ color: TINTA_SUAVE }}
-                    >
+                    <p className="mt-2 max-w-[34ch] text-[0.92rem] leading-relaxed text-ink-soft">
                       {card.body}
                     </p>
                   </div>
@@ -716,7 +635,7 @@ export function Bento({ surface }: { surface?: Surface }) {
                       fila && "lg:pt-0",
                     )}
                   >
-                    <Dibujo tone={diseño.tone} f={bento.figures} />
+                    <Dibujo f={bento.figures} />
                   </div>
                 </div>
               </article>
