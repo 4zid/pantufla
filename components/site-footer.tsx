@@ -14,7 +14,7 @@ export function SiteFooter() {
 
   return (
     <footer data-surface="mist" className="border-t border-line">
-      <div className="shell py-14 md:py-16">
+      <div className="shell py-16 md:py-24">
         <div className="grid gap-10 md:grid-cols-[1.4fr_1fr_1fr]">
           <div className="max-w-sm">
             <Link

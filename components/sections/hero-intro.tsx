@@ -51,7 +51,7 @@ export function HeroTexto() {
         segments={hero.headline}
         delay={0.1}
         immediate
-        className="mt-5 max-w-[9.4em] text-[clamp(2.9rem,1.35rem+4.9vw,5.25rem)] font-semibold leading-[0.98] tracking-[-0.045em] [text-wrap:balance] md:mt-6 md:-ml-[0.035em]"
+        className="mt-5 max-w-[9.4em] text-[clamp(2.5rem,1.85rem+2.667vw,4.25rem)] font-semibold leading-[0.98] tracking-[-0.045em] [text-wrap:balance] md:mt-6 md:-ml-[0.035em]"
       />
 
       <p

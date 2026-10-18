@@ -462,7 +462,7 @@ seguido.
     por pantalla; las de 2MG, de sus mockups en `assets/proyectos/2mg`.
 - **La barra de arriba**, en el tope de la página, no tiene fondo: el logo, el
   menú en su pastilla de vidrio y los botones flotan con el mismo margen que el
-  hero. Al bajar se arma la barra compacta de siempre.
+  hero (96px a 1440). Al bajar se arma la barra compacta de siempre.
 
 ### Los proyectos
 
@@ -610,9 +610,17 @@ CTA), con el margen justo para que el título no quede debajo del header.
   y al alfabeto latino (40 KB), precargada y con un respaldo ajustado a sus
   medidas para que el texto no salte cuando llega la fuente. Si se cambia el
   archivo, hay que subir el `-vN` del nombre: se sirve con caché inmutable.
-  Y una itálica de acento, Newsreader, solo para las palabras en itálica del
-  titular del hero: fijada en un peso y un tamaño óptico y recortada al
-  latino (19 KB).
+  Y una itálica de acento, Newsreader, para las palabras en itálica del
+  titular del hero y para el pase (va dibujada en sus texturas, y el nombre
+  que imprime al reservar también va en ella): fijada en un peso y un tamaño
+  óptico y recortada al latino (19 KB).
+- **Mucho aire y letra contenida.** El contenido vive en un ancho de 72rem
+  con márgenes que crecen con la pantalla (192px de cada lado a 1440), las
+  secciones llevan 144–176px arriba y abajo en escritorio, y los titulares
+  son un escalón más chicos que antes (42px el de sección y 68px el del hero
+  a 1440). El espaciado de cada sección se elige con un ritmo con nombre en
+  `components/ui/section.tsx` (normal, compacto para planes y preguntas,
+  amplio para el proceso), no con clases sueltas.
 - **Fondo de bruma** (`#eaedf8`) en claro y casi negro en oscuro, con un grano
   muy leve para que no quede plano. El blanco queda para lo que se destaca: las
   tarjetas, la píldora del menú, los botones sobre oscuro.

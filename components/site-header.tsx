@@ -354,15 +354,15 @@ export function SiteHeader() {
                6xl de la barra expandida. */
             /* Arriba de todo no hay barra (el hero de Claude Design): el logo,
                el menú en su propia pastilla de vidrio y los botones flotan
-               sueltos, con el mismo margen que el contenido del hero —64px a
+               sueltos, con el mismo margen que el contenido del hero —96px a
                1440, hasta 1440 de ancho—, así el logo cae justo encima de la
                pastilla de «Disponibles». Los rellenos suman ese margen con
-               los 16px del header: 4 en el teléfono (20), 16 desde md (32) y
-               48 desde xl (64). Al bajar se arma la barra compacta de
+               los 16px del header: 4 en el teléfono (20), 24 desde md (40) y
+               80 desde xl (96). Al bajar se arma la barra compacta de
                siempre, y el ancho y el relleno se animan entre los dos. */
             compact || open
               ? "max-w-4xl border-line px-3 shadow-[0_8px_30px_-12px_rgba(35,28,18,0.25)] backdrop-blur-xl sm:px-4"
-              : "max-w-[90rem] border-transparent px-1 md:px-4 xl:px-12",
+              : "max-w-[90rem] border-transparent px-1 md:px-6 xl:px-20",
             // Compacta es translúcida a propósito: flota sobre el contenido y
             // deja ver que hay algo abajo. Abierta no: es un panel, y con el
             // fondo a medias el titular del hero se leía por detrás de los
