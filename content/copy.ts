@@ -243,7 +243,13 @@ export type SiteCopy = {
     all: string;
   };
   testimonials: { eyebrow: string; title: string; rating: string };
-  clientsMap: { eyebrow: string; title: string; note: string };
+  clientsMap: {
+    eyebrow: string;
+    title: string;
+    note: string;
+    /** La palabra gigante de atrás del globo; va en mayúsculas por CSS. */
+    backdrop: string;
+  };
   faq: {
     eyebrow: string;
     title: string;

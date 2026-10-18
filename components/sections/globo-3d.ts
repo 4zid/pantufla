@@ -36,6 +36,14 @@ import {
  * vuelta solo. Hacia el borde se tiñe apenas, para que se lea como esfera y
  * no como un disco.
  *
+ * Encima va un acabado holográfico, como el foil del pase: un brillo
+ * nacarado en la misma paleta (champagne, perla, verde agua y rosa
+ * apagados) que depende del ángulo y de la posición en la superficie, así
+ * corre por el globo mientras gira y se carga hacia el borde. Y un grano
+ * fino, fijo en la pantalla como el de una foto, que le saca lo liso de lo
+ * digital. El grano va después de pasar a sRGB para que se vea parejo en la
+ * tinta y en el gris claro.
+ *
  * Gira alrededor de los polos, de oeste a este como la Tierra, una vuelta
  * cada setenta segundos. Se queda quieto mientras `quieto()` diga que sí (el
  * mouse encima, el foco adentro o la pausa del riel: ver globo.tsx) y
@@ -111,18 +119,56 @@ const fragmento = /* glsl */ `
   uniform vec3 pais;
   uniform vec3 grilla;
   uniform vec3 borde;
+  uniform float ruido;
+  uniform float densidad;
   varying vec2 vUv;
   varying vec3 vNormal;
+
+  // La paleta del foil del pase (scripts/generar-pase.mjs), en vuelta.
+  vec3 foil(float t) {
+    vec3 a = vec3(0.722, 0.604, 0.416);
+    vec3 b = vec3(0.965, 0.945, 0.910);
+    vec3 c = vec3(0.788, 0.835, 0.824);
+    vec3 d = vec3(0.906, 0.835, 0.824);
+    float s = fract(t) * 4.0;
+    vec3 col = s < 1.0 ? mix(a, b, s)
+      : s < 2.0 ? mix(b, c, s - 1.0)
+      : s < 3.0 ? mix(c, d, s - 2.0)
+      : mix(d, a, s - 3.0);
+    return pow(col, vec3(2.2));
+  }
+
+  float azar(vec2 p) {
+    return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453);
+  }
+
   void main() {
     vec4 m = texture2D(mascara, vUv);
     vec3 color = mix(mar, grilla, m.b * 0.8);
     color = mix(color, tierra, m.r);
     color = mix(color, pais, m.g);
-    // Hacia el borde, el color del borde: la esfera se lee redonda.
+
     float frente = clamp(vNormal.z, 0.0, 1.0);
-    color = mix(color, borde, pow(1.0 - frente, 3.0) * 0.55);
+    float canto = 1.0 - frente;
+
+    // El holográfico: el tono corre con el ángulo y con el lugar del globo.
+    float t = canto * 1.4 + vNormal.x * 0.35 + vNormal.y * 0.25
+      + (vUv.x * 2.0 + vUv.y) * 1.1;
+    vec3 holo = foil(t);
+    float fuerza = 0.22 + 0.5 * pow(canto, 1.4);
+    color = mix(color, color * holo * 1.5, fuerza);
+    // Sobre la tinta casi no hay color que teñir: ahí el foil brilla encima,
+    // apenas (en lineal un poco ya es mucho: la tinta se volvía gris).
+    color += holo * m.g * (0.006 + 0.04 * canto);
+
+    // Hacia el borde, el color del borde: la esfera se lee redonda.
+    color = mix(color, borde, pow(canto, 3.0) * 0.5);
     gl_FragColor = vec4(color, 1.0);
     #include <colorspace_fragment>
+
+    // El grano, en píxeles de CSS y fijo en la pantalla.
+    float n = azar(floor(gl_FragCoord.xy / densidad));
+    gl_FragColor.rgb += (n - 0.5) * ruido;
   }
 `;
 
@@ -131,15 +177,23 @@ export function montarGlobo({
   marcas,
   quieto,
   alListo,
+  conGrano = true,
 }: {
   contenedor: HTMLElement;
   marcas: MarcaGlobo[];
   /** Si tiene que dejar de girar solo en este cuadro. */
   quieto: () => boolean;
   alListo: () => void;
+  /**
+   * Sin grano solo para sacar la imagen de respaldo
+   * (scripts/generar-globo-imagen.mjs): el ruido no se comprime y la
+   * imagen pesaría el triple. Ahí el grano lo pone el CSS.
+   */
+  conGrano?: boolean;
 }): ControlGlobo {
   const renderer = new WebGLRenderer({ antialias: true, alpha: true });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  const densidad = Math.min(window.devicePixelRatio, 2);
+  renderer.setPixelRatio(densidad);
   renderer.setClearColor(0x000000, 0);
   const lienzo = renderer.domElement;
   lienzo.setAttribute("aria-hidden", "true");
@@ -172,6 +226,8 @@ export function montarGlobo({
       pais: { value: colores.pais },
       grilla: { value: colores.grilla },
       borde: { value: colores.borde },
+      ruido: { value: conGrano ? 0.07 : 0 },
+      densidad: { value: densidad },
     },
   });
   const geometria = new SphereGeometry(1, 96, 64);

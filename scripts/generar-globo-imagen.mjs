@@ -7,8 +7,9 @@
  * ser exactamente el primer cuadro del 3D: la misma vista (VISTA_INICIAL en
  * lib/globo.ts), los mismos colores. Por eso no se dibuja aparte: se abre la
  * home con el 3D forzado, con el mouse encima para que no gire, y se
- * fotografía el globo solo, sin las marcas (esas van en HTML encima) y con
- * el fondo transparente. Se saca con el tema claro; el oscuro la invierte.
+ * fotografía el globo solo, sin las marcas (esas van en HTML encima), sin el
+ * grano (lo pone el CSS: el ruido no se comprime) y con el fondo
+ * transparente. Se saca con el tema claro; el oscuro la invierte.
  *
  * Hay que volver a sacarla si cambian los países, la vista, los colores o
  * el dibujo. Con el sitio levantado:
@@ -47,7 +48,8 @@ const pagina = await navegador.newPage({
   viewport: { width: 1440, height: 900 },
   deviceScaleFactor: 2,
 });
-await pagina.goto(`${SITIO}/?globo3d`, { waitUntil: "networkidle" });
+// «limpio»: sin el grano del shader, que en la imagen pone el CSS.
+await pagina.goto(`${SITIO}/?globo3d=limpio`, { waitUntil: "networkidle" });
 
 const caja = pagina.locator("#clientes [data-riel] > div").first();
 await caja.scrollIntoViewIfNeeded();
@@ -60,21 +62,29 @@ await pagina.evaluate(() => {
   for (const el of [document.documentElement, document.body]) {
     el.style.background = "transparent";
   }
-  const caja = document.querySelector("#clientes canvas").parentElement;
-  for (const el of caja.children) {
-    if (el.tagName !== "CANVAS") el.style.display = "none";
+  // Toda la sección escondida menos el globo: atrás está la palabra
+  // gigante, y la foto se la llevaría pegada.
+  const lienzo = document.querySelector("#clientes canvas");
+  document.querySelector("#clientes").style.visibility = "hidden";
+  lienzo.style.visibility = "visible";
+  // Las marcas no: el 3D les vuelve a poner visibility en cada cuadro.
+  for (const el of lienzo.parentElement.children) {
+    if (el !== lienzo) el.style.display = "none";
   }
 });
-const png = await caja.screenshot({ omitBackground: true });
+// Por recorte de la página y no del elemento: la caja quedó con visibility
+// hidden y Playwright no fotografía un elemento escondido.
+const recorte = await caja.boundingBox();
+const png = await pagina.screenshot({ omitBackground: true, clip: recorte });
 await navegador.close();
 
 const salida = join(OUT, "globo.webp");
-/* En gris, que es lo que es. La mediana borra el ruido fino que deja el
-   render por software (sin ella la imagen pesa el doble) sin ablandar las
-   costas, que tienen varios píxeles de ancho. */
+/* La mediana borra el ruido fino que deja el render por software (sin ella
+   la imagen pesa el doble) sin ablandar las costas, que tienen varios
+   píxeles de ancho. En color y no en gris: el brillo nacarado es parte del
+   dibujo. */
 await sharp(png)
   .resize(1024, 1024, { fit: "cover" })
-  .grayscale()
   .median(3)
   .webp({ quality: 72, alphaQuality: 80, effort: 6 })
   .toFile(salida);

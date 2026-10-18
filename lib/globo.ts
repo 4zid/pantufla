@@ -27,6 +27,14 @@ export const VISTA_INICIAL = { lon: -38, lat: 14 } as const;
 const RAD = Math.PI / 180;
 
 /**
+ * Cuánto del cuadro ocupa el globo, de lado a lado (0 a 1). Con perspectiva
+ * la esfera se ve un poco más chica que su diámetro: el borde está donde la
+ * mirada la toca tangente.
+ */
+export const DIAMETRO_VISIBLE =
+  Math.tan(Math.asin(1 / DISTANCIA)) / Math.tan((FOV / 2) * RAD);
+
+/**
  * Un punto de la superficie, en las mismas coordenadas que la esfera de
  * Three.js (SphereGeometry): la longitud -180 cae en -x, la 0 en +x y la
  * -90 de frente a la cámara, en +z. Así la textura equirectangular calza sin
