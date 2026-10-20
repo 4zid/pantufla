@@ -99,9 +99,10 @@ function Telefono({ pantalla }: { pantalla: PantallaMockup }) {
  *
  * Al pasar el mouse el mockup se desenfoca y en el medio aparecen los
  * botones: «Ver sitio», una pastilla blanca con letra negra, y al lado,
- * cuando el caso está escrito, «Leer el caso» en el champagne del pase, el
- * único color de la página. Son blancos y champagne en los dos temas porque
- * se apoyan sobre las capturas, que son claras. Además, todo el plano lleva
+ * cuando el caso está escrito, «Leer el caso», negra con letra blanca. Son
+ * fijos y no tokens del tema porque se apoyan sobre las capturas, que son
+ * claras en los dos temas. «Leer el caso» fue champagne, el del pase, y a la
+ * usuaria le pareció un color de plantilla, ajeno a la marca. Además, todo el plano lleva
  * al sitio: el clic fuera de los botones no se pierde.
  *
  * Los botones son enlaces de verdad. Con el teclado, el foco en cualquiera
@@ -135,7 +136,7 @@ export function ProyectoTarjeta({
   const conBotones = Boolean(sitio || caso);
 
   const boton =
-    "inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-4 py-2 text-[0.82rem] font-medium md:px-5 md:py-2.5 md:text-[0.88rem] text-[#121212] shadow-[0_12px_30px_-12px_rgba(0,0,0,0.35)] transition-transform duration-200 hover:-translate-y-px focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#121212]";
+    "inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-4 py-2 text-[0.82rem] font-medium md:px-5 md:py-2.5 md:text-[0.88rem] shadow-[0_12px_30px_-12px_rgba(0,0,0,0.35)] transition-transform duration-200 hover:-translate-y-px focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#121212]";
 
   return (
     <article>
@@ -188,7 +189,7 @@ export function ProyectoTarjeta({
                 href={sitio}
                 target="_blank"
                 rel="noreferrer"
-                className={`pointer-events-auto bg-white ${boton}`}
+                className={`pointer-events-auto bg-white text-[#121212] ${boton}`}
               >
                 {work.view}
                 <span className="sr-only">: {proyecto.title}</span>
@@ -198,7 +199,7 @@ export function ProyectoTarjeta({
             {caso ? (
               <Link
                 href={caso}
-                className={`pointer-events-auto bg-[#c8ae84] ${boton}`}
+                className={`pointer-events-auto bg-[#121212] text-white ${boton}`}
               >
                 {work.readCase}
                 <span className="sr-only">: {proyecto.title}</span>

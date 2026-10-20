@@ -82,20 +82,14 @@ export const es: SiteCopy = {
     reservado: "Reservado",
     nombre: {
       label: "Tu nombre",
-      placeholder: "Cómo te llamás",
+      placeholder: "Tu nombre",
       missing: "Falta tu nombre.",
     },
   },
 
   lugar: {
-    eyebrow: "Próximo cupo",
-    title: "El próximo lugar es tuyo.",
-    lead: "Tomamos pocos proyectos por mes para hacerlos enteros nosotros. Dejanos tu nombre y tu mail y te escribimos primero cuando se libere un cupo, antes de anunciarlo.",
-    points: [
-      "Te avisamos antes que a nadie.",
-      "Un solo mail: no es un newsletter.",
-      "Sin compromiso. Si no te sirve, lo dejás pasar.",
-    ],
+    title: "Tomamos pocos proyectos por mes.",
+    lead: "Dejanos tu nombre y tu mail y te avisamos antes que a nadie cuando se libere un lugar.",
     hueco: "Tu pase va acá",
   },
 

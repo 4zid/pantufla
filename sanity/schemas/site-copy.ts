@@ -944,15 +944,8 @@ export const siteCopy = defineType({
       type: "object",
       options: { collapsible: true, collapsed: true },
       fields: [
-        defineField({ name: "eyebrow", title: "Etiqueta", type: "string" }),
         defineField({ name: "title", title: "Título", type: "string" }),
         texto("lead", "Bajada"),
-        defineField({
-          name: "points",
-          title: "Puntos",
-          type: "array",
-          of: [{ type: "string" }],
-        }),
         defineField({
           name: "hueco",
           title: "Texto del hueco",

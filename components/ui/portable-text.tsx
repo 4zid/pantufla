@@ -7,7 +7,9 @@ import { urlForImage } from "@/sanity/image";
 const components: PortableTextComponents = {
   block: {
     normal: ({ children }) => (
-      <p className="mt-5 text-[1.02rem] leading-[1.7] text-ink-soft">{children}</p>
+      <p className="mt-5 text-[1.02rem] leading-[1.7] text-ink-soft">
+        {children}
+      </p>
     ),
     h2: ({ children }) => (
       <h2 className="mt-12 text-[1.6rem] font-semibold tracking-[-0.025em]">
@@ -20,7 +22,7 @@ const components: PortableTextComponents = {
       </h3>
     ),
     blockquote: ({ children }) => (
-      <blockquote className="mt-8 border-l-2 border-aqua pl-5 text-[1.1rem] leading-relaxed">
+      <blockquote className="mt-8 border-l-2 border-ink pl-5 text-[1.1rem] leading-relaxed">
         {children}
       </blockquote>
     ),
@@ -46,7 +48,7 @@ const components: PortableTextComponents = {
         href={value?.href}
         target="_blank"
         rel="noreferrer"
-        className="text-ink underline decoration-line-strong underline-offset-4 transition-colors hover:decoration-aqua-deep"
+        className="text-ink underline decoration-line-strong underline-offset-4 transition-colors hover:decoration-ink"
       >
         {children}
       </a>

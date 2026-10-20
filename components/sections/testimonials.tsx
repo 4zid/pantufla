@@ -24,8 +24,8 @@ import { cn } from "@/lib/cn";
  * la derecha la empresa en versalitas, y abajo la cita grande con el nombre y
  * el cargo. Una celda va en la tinta, como la oscura de la referencia: arranca
  * en la primera y sigue al mouse, así la cita que se está leyendo es la que
- * resalta. Su número va en el champagne del pase, el único color de la
- * página. Es decorado y no estado: la cita está entera en todas las celdas,
+ * resalta. Su número se da vuelta con ella: el papel sobre la tinta. Es
+ * decorado y no estado: la cita está entera en todas las celdas,
  * así que en un teléfono, sin mouse, no se pierde nada.
  *
  * Fue una sola cita grande con las caras arriba, rotando sola cada seis
@@ -115,9 +115,7 @@ export function Testimonials({
                   aria-hidden
                   className={cn(
                     "grid h-10 w-10 place-items-center rounded-[0.7rem] text-[0.78rem] font-semibold tabular-nums transition-colors duration-300",
-                    prendida
-                      ? "bg-[#c8ae84] text-[#121212]"
-                      : "bg-card text-ink",
+                    prendida ? "bg-on-ink text-ink" : "bg-card text-ink",
                   )}
                 >
                   {numero(i)}

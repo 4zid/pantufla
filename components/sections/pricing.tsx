@@ -14,7 +14,6 @@ import { useCopy } from "@/components/copy-provider";
 import { ButtonLink } from "@/components/ui/button";
 import { CheckIcon } from "@/components/ui/icons";
 import { Section, SectionHead, type Surface } from "@/components/ui/section";
-import { toneTextBase, toneTextDeep, type Tone } from "@/lib/tones";
 import { cn } from "@/lib/cn";
 
 const money = new Intl.NumberFormat("es-AR", { maximumFractionDigits: 0 });
@@ -126,7 +125,7 @@ export function Pricing({ surface }: { surface?: Surface }) {
                       "transition-colors duration-300",
                       active
                         ? "bg-on-ink/15 text-on-ink"
-                        : "bg-verde-soft text-verde-deep",
+                        : "bg-ink/[0.07] text-ink",
                     )}
                   >
                     <span className="sm:hidden">{option.note}</span>
@@ -245,12 +244,13 @@ export function Pricing({ surface }: { surface?: Surface }) {
               <ul className="mt-6 space-y-2.5">
                 {plan.features.map((feature) => (
                   <li key={feature} className="flex gap-2.5 text-[0.92rem]">
+                    {/* La tilde en la tinta de la tarjeta y no en el color
+                        del plan: los cuatro pasteles en las listas se leían
+                        a plantilla, no a la marca. */}
                     <CheckIcon
                       className={cn(
                         "mt-[4px] h-3.5 w-3.5 shrink-0",
-                        dark
-                          ? toneTextBase[plan.tone as Tone]
-                          : toneTextDeep[plan.tone as Tone],
+                        dark ? "text-white" : "text-ink",
                       )}
                     />
                     <span
@@ -294,7 +294,7 @@ export function Pricing({ surface }: { surface?: Surface }) {
           <ul className="mt-6 space-y-2.5">
             {pricing.contact.features.map((feature) => (
               <li key={feature} className="flex gap-2.5 text-[0.92rem]">
-                <CheckIcon className="mt-[4px] h-3.5 w-3.5 shrink-0 text-miel-deep" />
+                <CheckIcon className="mt-[4px] h-3.5 w-3.5 shrink-0 text-ink" />
                 <span className="leading-snug">{feature}</span>
               </li>
             ))}
