@@ -189,7 +189,7 @@ export const siteCopy = defineType({
       name: "pase",
       title: "Pase",
       description:
-        "El pase de la portada, el que vuela con el scroll y el que se acuesta en el banner son el mismo. El dibujo es una imagen; acá van los textos de los formularios y lo que el pase imprime al reservar.",
+        "El pase de la portada, el que vuela con el scroll y el que se acuesta en el banner son el mismo. El dibujo es una imagen; acá van los textos del formulario del banner y lo que el pase imprime al reservar.",
       type: "object",
       options: { collapsible: true, collapsed: true },
       fields: [
@@ -199,7 +199,13 @@ export const siteCopy = defineType({
           type: "string",
           description: "Para quien no ve la imagen.",
         }),
-        texto("body", "Línea de arriba del formulario"),
+        defineField({
+          name: "body",
+          title: "Qué hace el pase de la portada",
+          type: "string",
+          description:
+            "El pase de la portada es un enlace que baja al banner. Esto es lo que dice el lector de pantalla al llegar a él.",
+        }),
         defineField({
           name: "label",
           title: "Etiqueta del campo",

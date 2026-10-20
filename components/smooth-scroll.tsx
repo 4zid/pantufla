@@ -85,8 +85,20 @@ export function SmoothScroll() {
       history.pushState(null, "", destino.search + destino.hash);
       // El destino se calcula acá, en número, con el margen de la barra,
       // para que Lenis no le sume además el scroll-padding.
-      const y =
-        seccion.getBoundingClientRect().top + window.scrollY - MARGEN_BARRA;
+      //
+      // Un enlace puede pedir, con data-centrar, que un elemento de la
+      // sección quede en el medio de la pantalla en vez de la sección
+      // arriba. Lo usa el pase de la portada: lleva al banner, y el pase 3D
+      // termina de aterrizar cuando el hueco está en el medio (ver
+      // pase-3d.ts); con la sección arriba quedaba a mitad de la bajada,
+      // inclinado y fuera del hueco.
+      const centrar = enlace.dataset.centrar
+        ? seccion.querySelector<HTMLElement>(enlace.dataset.centrar)
+        : null;
+      const caja = (centrar ?? seccion).getBoundingClientRect();
+      const y = centrar
+        ? caja.top + window.scrollY - (window.innerHeight - caja.height) / 2
+        : caja.top + window.scrollY - MARGEN_BARRA;
       lenis.scrollTo(y);
     }
 

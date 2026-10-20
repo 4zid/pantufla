@@ -5,11 +5,11 @@ import type { Locale } from "@/lib/i18n";
 /**
  * El estado del pase, compartido por todo lo que lo muestra.
  *
- * El formulario de la portada y el del banner son dos, pero para quien los
- * usa son el mismo pase: si reservó arriba, el de abajo tiene que estar ya
- * reservado, no volver a pedirle los datos. Y el pase 3D imprime el nombre y
- * el mail en su cara apenas se reserva. Por eso el estado vive acá, fuera de
- * React, y cada parte se suscribe.
+ * El formulario del banner y el pase 3D muestran lo mismo: el pase imprime
+ * el nombre y el mail en su cara apenas se reserva. Por eso el estado vive
+ * acá, fuera de React, y cada parte se suscribe. (Hubo un segundo
+ * formulario en la portada, que compartía este estado; se fue, y el origen
+ * «hero» queda para las reservas que se hicieron desde ahí.)
  *
  * La reserva se recuerda en el navegador (localStorage): quien vuelve otro
  * día ve su lugar guardado en vez del campo vacío. Es una comodidad y nada

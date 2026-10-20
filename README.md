@@ -334,8 +334,14 @@ objeciones → contacto**:
   estudio toma proyectos, el titular dice para qué sirve el sitio —«Sitios que
   convierten *visitantes* en *clientes*»—, la bajada lo cuenta, y hay un CTA
   principal al formulario y uno secundario a los planes. A la derecha, el pase
-  de Pantufla con el formulario para reservar un lugar en la agenda; abajo, de
-  punta a punta, la galería de pantallas (ver *El hero*).
+  de Pantufla, que es un enlace: tocarlo baja al banner, donde se reserva;
+  abajo, de punta a punta, la galería de pantallas (ver *El hero*).
+  Las dos columnas son mitades iguales dentro del mismo ancho que el resto de
+  la página, y el pase va centrado en la suya, así el texto
+  y el pase quedan a la misma distancia del centro. Antes el hero tenía un
+  ancho propio más grande, el pase pegado al borde derecho, un hueco grande al
+  medio, el titular a 68px y botones grandes: se veía grande y descentrado. La
+  referencia fue la portada de Resend.
 - **Prueba social.** Solo los logos de los clientes, corriendo de punta a punta
   de la pantalla.
 - **Cómo lo resolvemos.** Tres pilares: alcance cerrado, ritmo corto con fechas
@@ -457,8 +463,12 @@ cobrar rápido.
 
 En escritorio son dos columnas y una franja. A la izquierda, todo el texto
 alineado: la pastilla de «Disponibles», el titular, la bajada y los dos
-botones. A la derecha, el pase de Pantufla y, debajo, el formulario para
-reservar un lugar. Abajo, de punta a punta, la galería de pantallas corriendo.
+botones. A la derecha, el pase de Pantufla, que lleva al banner donde se
+reserva (tuvo un formulario con el mail debajo; era el mismo pedido dos veces
+en la página). Abajo, de punta a punta, la galería de pantallas corriendo.
+Desde tablet el texto y el pase van centrados en el alto de la primera
+pantalla, y de la galería asoman apenas las puntas de las capturas (unos 56px):
+el bloque de arriba mide la pantalla menos 5rem.
 Abajo de 1024 el pase pasa debajo de los botones, y en el teléfono todo corre
 seguido.
 
@@ -484,21 +494,23 @@ seguido.
   baja, se acuesta un cuarto de vuelta, crece y calza exactamente en el hueco
   de ahí (llega cuando el hueco está en el medio de la pantalla). Lo mueven el
   scroll y el puntero: cuando el papel se asienta, deja de dibujar. Si alguien
-  está escribiendo en uno de los formularios, el pase se queda en ese lugar.
+  está escribiendo en el formulario del banner, el pase se queda ahí. Tocar el
+  pase de la portada baja al banner, y el pase hace el viaje con el scroll.
   En el teléfono no vuela: se queda en el lugar que se ve, también acostado en
   el banner. Con movimiento reducido, sin placa de video o sin JavaScript se
   ve la imagen del pase, quieta, en los dos lugares.
-- **Los formularios** van debajo del pase, no adentro: un campo tiene que
-  quedarse quieto para que alguien escriba. El de la portada pide el mail
-  solo; el del banner, nombre y mail. Van a `/api/lugar`, que los guarda en
-  el Studio como *Lugar reservado* (una sola fila por mail; si alguien dejó
-  primero el mail solo y después vuelve con su nombre, el nombre se suma) y
+- **El formulario** va debajo del pase, en el banner, no adentro: un campo
+  tiene que quedarse quieto para que alguien escriba. Pide nombre y mail y va
+  a `/api/lugar`, que lo guarda en el Studio como *Lugar reservado* (una sola
+  fila por mail; si alguien dejó primero el mail solo, cuando había un
+  formulario en la portada, y vuelve con su nombre, el nombre se suma) y
   avisa por mail con las mismas variables de Resend que el brief. Al
   reservar, el pase imprime en su cara el nombre (y el mail abajo, en chico)
   con la etiqueta «Reservado», y el navegador lo recuerda: quien vuelve ve su
-  pase con sus datos, y un enlace para usar otro mail. Reservar en uno deja
-  reservado al otro. Los textos de los formularios están en el Studio, en
-  *Pase*; los del banner, en *Banner del pase*.
+  pase con sus datos, y un enlace para usar otro mail. Los textos del
+  formulario están en el Studio, en *Pase* (ahí también el nombre del enlace
+  del pase de la portada, para el lector de pantalla); los del banner, en
+  *Banner del pase*.
 - **El dibujo del pase** son imágenes en `public/pase` (la cara en español y
   en inglés, el dorso y un mapa de qué es holográfico, satinado o mate). Se
   generan con `node scripts/generar-pase.mjs`, que las dibuja en HTML: para
@@ -697,8 +709,8 @@ CTA), con el margen justo para que el título no quede debajo del header.
 - **Mucho aire y letra contenida.** El contenido vive en un ancho de 72rem
   con márgenes que crecen con la pantalla (192px de cada lado a 1440), las
   secciones llevan 144–176px arriba y abajo en escritorio, y los titulares
-  son un escalón más chicos que antes (42px el de sección y 68px el del hero
-  a 1440). El espaciado de cada sección se elige con un ritmo con nombre en
+  son un escalón más chicos que antes (42px el de sección y 52px el del hero
+  a 1440, con los botones del hero en el tamaño mediano). El espaciado de cada sección se elige con un ritmo con nombre en
   `components/ui/section.tsx` (normal, compacto para planes y preguntas,
   amplio para el proceso), no con clases sueltas.
 - **Fondo blanco** en claro y casi negro en oscuro, con un grano muy leve

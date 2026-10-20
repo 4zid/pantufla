@@ -36,15 +36,29 @@ export const GIROS: Record<OrigenPase, number> = { hero: -3, banner: -90 };
  * eso: se apoya girado y con el ancho del pase igual al alto del lugar. La
  * imagen hace lo mismo: una caja vertical del tamaño del pase, centrada y
  * girada.
+ *
+ * Con `href` el lugar es un enlace: en la portada, el pase lleva al banner
+ * donde se reserva. El canvas del 3D no recibe el mouse, así que el clic cae
+ * en este rectángulo aunque lo que se vea sea el pase de papel. El nombre
+ * del enlace es la línea del pase (pase.body), no la descripción del dibujo.
  */
 export function PaseLugar({
   origen,
   entra,
   acostado = false,
   sizes = "(min-width: 1280px) 280px, 256px",
+  href,
+  centrar,
   className,
 }: {
   origen: OrigenPase;
+  /** Si el pase es un enlace, adónde lleva. */
+  href?: string;
+  /**
+   * Con href, qué elemento del destino queda en el medio de la pantalla al
+   * llegar (ver smooth-scroll.tsx).
+   */
+  centrar?: string;
   /** Si entra con la animación de CSS del hero, y con qué demora. */
   entra?: number;
   acostado?: boolean;
@@ -54,38 +68,52 @@ export function PaseLugar({
   const { pase } = useCopy();
   const locale = useLocale();
 
-  return (
+  const caja = cn(
+    "relative touch-pan-y",
+    acostado ? "aspect-[1000/640]" : "aspect-[640/1000]",
+    href &&
+      "block rounded-[1.25rem] focus-visible:outline-2 focus-visible:outline-offset-8 focus-visible:outline-ink",
+    className,
+  );
+  const contenido = (
     <div
-      data-pase-lugar={origen}
-      className={cn(
-        "relative touch-pan-y",
-        acostado ? "aspect-[1000/640]" : "aspect-[640/1000]",
-        className,
-      )}
+      data-entra={entra === undefined ? undefined : ""}
+      style={
+        entra === undefined
+          ? undefined
+          : ({ "--entra": `${entra}s` } as React.CSSProperties)
+      }
+      className={
+        acostado
+          ? "absolute left-1/2 top-1/2 h-[156.25%] w-[64%] -translate-x-1/2 -translate-y-1/2"
+          : "absolute inset-0"
+      }
     >
-      <div
-        data-entra={entra === undefined ? undefined : ""}
-        style={
-          entra === undefined
-            ? undefined
-            : ({ "--entra": `${entra}s` } as React.CSSProperties)
-        }
-        className={
-          acostado
-            ? "absolute left-1/2 top-1/2 h-[156.25%] w-[64%] -translate-x-1/2 -translate-y-1/2"
-            : "absolute inset-0"
-        }
-      >
-        <Image
-          data-pase-respaldo
-          src={`/pase/cara-${locale}.webp`}
-          alt={pase.alt}
-          fill
-          sizes={sizes}
-          className="object-contain drop-shadow-[0_22px_30px_rgba(17,24,60,0.22)] transition-opacity duration-300"
-          style={{ transform: `rotate(${GIROS[origen]}deg)` }}
-        />
-      </div>
+      <Image
+        data-pase-respaldo
+        src={`/pase/cara-${locale}.webp`}
+        alt={pase.alt}
+        fill
+        sizes={sizes}
+        className="object-contain drop-shadow-[0_22px_30px_rgba(17,24,60,0.22)] transition-opacity duration-300"
+        style={{ transform: `rotate(${GIROS[origen]}deg)` }}
+      />
+    </div>
+  );
+
+  return href ? (
+    <a
+      href={href}
+      data-centrar={centrar}
+      aria-label={pase.body}
+      data-pase-lugar={origen}
+      className={caja}
+    >
+      {contenido}
+    </a>
+  ) : (
+    <div data-pase-lugar={origen} className={caja}>
+      {contenido}
     </div>
   );
 }

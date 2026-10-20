@@ -132,6 +132,11 @@ type Pose = {
   rz: number;
   /** 1: apoyado en un lugar; 0: volando. */
   apoyo: number;
+  /**
+   * En qué lugar está, o hacia cuál va más, si está apoyado o por apoyarse.
+   * Sirve para que el puntero de un lugar no incline el pase en el otro.
+   */
+  lugar?: LugarPase;
 };
 
 const acotar = (v: number, a = 0, b = 1) => Math.min(b, Math.max(a, v));
@@ -145,6 +150,7 @@ const mezclar = (a: Pose, b: Pose, t: number): Pose => ({
   ry: entre(a.ry, b.ry, t),
   rz: entre(a.rz, b.rz, t),
   apoyo: entre(a.apoyo, b.apoyo, t),
+  lugar: t < 0.5 ? a.lugar : b.lugar,
 });
 const RAD = Math.PI / 180;
 
@@ -494,6 +500,7 @@ export async function montarPase(o: OpcionesPase): Promise<ControlPase> {
       // mismo giro va con el signo dado vuelta.
       rz: -o.giros[lugar] * RAD,
       apoyo: 1,
+      lugar,
     };
   };
 
@@ -590,6 +597,18 @@ export async function montarPase(o: OpcionesPase): Promise<ControlPase> {
     puntero = null;
     despertar();
   };
+  /*
+     El puntero que vale para una pose: el del lugar donde el pase está
+     apoyado. En la portada el pase es un enlace al banner: el clic hace
+     bajar la página sin que el mouse se mueva, así que no llega ningún
+     pointerleave y el puntero de la portada quedaba vivo. Sin este filtro
+     el pase aterrizaba inclinado en el banner, despegado del hueco, y el
+     cuadro no se dormía nunca.
+  */
+  const punteroDe = (p: Pose) =>
+    puntero && p.apoyo > 0.5 && (!p.lugar || p.lugar === puntero.lugar)
+      ? puntero
+      : null;
   const oyentes: [HTMLElement, string, EventListener][] = [];
   for (const lugar of CON_PUNTERO) {
     const el = o.lugares[lugar];
@@ -600,6 +619,8 @@ export async function montarPase(o: OpcionesPase): Promise<ControlPase> {
       ["pointerdown", mover],
       ["pointerleave", alSalir as EventListener],
       ["pointercancel", alSalir as EventListener],
+      // El clic se va a otro lado (el pase de la portada lleva al banner).
+      ["click", alSalir as EventListener],
     ] as [string, EventListener][]) {
       el.addEventListener(tipo, fn, { passive: true });
       oyentes.push([el, tipo, fn]);
@@ -616,9 +637,10 @@ export async function montarPase(o: OpcionesPase): Promise<ControlPase> {
   const calcularMetas = (p: Pose) => {
     let rx = p.rx;
     let ry = p.ry;
-    if (puntero && p.apoyo > 0.5) {
-      ry += (puntero.u - 0.5) * 0.32;
-      rx += (puntero.v - 0.5) * 0.26;
+    const pk = punteroDe(p);
+    if (pk) {
+      ry += (pk.u - 0.5) * 0.32;
+      rx += (pk.v - 0.5) * 0.26;
     }
     eu.set(rx, ry, p.rz);
     q4.setFromEuler(eu);
@@ -658,7 +680,7 @@ export async function montarPase(o: OpcionesPase): Promise<ControlPase> {
 
     const pasos = Math.min(3, Math.max(1, Math.round(dtCuadro / PASO)));
     const viento = 1 - apoyo;
-    const pk = puntero && apoyo > 0.5 ? puntero : null;
+    const pk = punteroDe(p);
     /* Dónde hunde el dedo, en las medidas del pase sin girar: el puntero se
        mide sobre el lugar en la pantalla, y en el banner el pase está
        acostado, así que hay que deshacer el giro. */
@@ -783,7 +805,7 @@ export async function montarPase(o: OpcionesPase): Promise<ControlPase> {
     if (p) {
       calcularMetas(p);
       const { lejos, rapido } = fisica(p, dt);
-      quieto = rapido < 0.012 && (p.apoyo < 1 || lejos < 0.06) && !puntero;
+      quieto = rapido < 0.012 && (p.apoyo < 1 || lejos < 0.06) && !punteroDe(p);
     } else {
       sacudir = true;
     }
