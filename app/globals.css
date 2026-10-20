@@ -895,14 +895,6 @@ html.lenis {
   pointer-events: none;
 }
 
-/* La barra arranca quieta: hasta su primer cálculo no transiciona nada, así
-   una página que abre a mitad de camino la muestra compacta de entrada en vez
-   de achicarla medio segundo a la vista (ver components/site-header.tsx). */
-header[data-quieta],
-header[data-quieta] * {
-  transition: none !important;
-}
-
 /* Deriva lenta de los blobs. Se apaga sola con reduced-motion (ver abajo). */
 @keyframes drift {
   0% {
