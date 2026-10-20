@@ -58,7 +58,7 @@ export const en: SiteCopy = {
 
   pase: {
     alt: "Pantufla priority pass: admits one to the calendar.",
-    body: "Save your spot for the next opening in the calendar.",
+    body: "Save your spot for the next opening.",
     label: "Your email",
     placeholder: "you@mail.com",
     submit: "Save my spot",

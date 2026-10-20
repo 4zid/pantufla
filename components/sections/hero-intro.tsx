@@ -24,9 +24,11 @@ export const entra = (s: number) => ({ "--entra": `${s}s` }) as CSSProperties;
  *
  * El titular tiene un tope en em y no en píxeles para que corte siempre en
  * el mismo lugar con el tamaño que sea. «Sitios que convierten» mide 9,2em:
- * con el tope de 84px entra en una línea al lado del pase a 1440, y el
- * titular queda en dos («Sitios que convierten / visitantes en clientes.»),
- * que deja ver más de la galería sin scrollear. Más angosto pasa a tres.
+ * con el tope de 52px mide 478px y entra en una línea en la mitad del hero
+ * (504px desde 1280; a 1024 el titular baja a 47px y la mitad a 448), así
+ * que el titular queda en dos («Sitios que convierten / visitantes en
+ * clientes.»). Más angosto pasa a tres. Llegó a 68px y, con los botones
+ * grandes, la portada se veía toda un poco grande.
  * Con balance, en el teléfono reparte las líneas parejas en vez de dejar una
  * palabra sola abajo.
  */
@@ -51,13 +53,13 @@ export function HeroTexto() {
         segments={hero.headline}
         delay={0.1}
         immediate
-        className="mt-5 max-w-[9.4em] text-[clamp(2.5rem,1.85rem+2.667vw,4.25rem)] font-semibold leading-[0.98] tracking-[-0.045em] [text-wrap:balance] md:mt-6 md:-ml-[0.035em]"
+        className="mt-5 max-w-[9.4em] text-[clamp(2.25rem,1.75rem+1.9vw,3.25rem)] font-semibold leading-[0.98] tracking-[-0.045em] [text-wrap:balance] md:mt-6 md:-ml-[0.035em]"
       />
 
       <p
         data-entra
         style={entra(0.3)}
-        className="mt-6 max-w-[34rem] text-lead text-ink-soft md:mt-7"
+        className="mt-5 max-w-[30rem] text-lead text-ink-soft md:mt-6"
       >
         {hero.lead}
       </p>
@@ -65,21 +67,16 @@ export function HeroTexto() {
       <div
         data-entra
         style={entra(0.45)}
-        className="mt-7 flex flex-col gap-2.5 sm:flex-row sm:items-center sm:gap-3 md:mt-8"
+        className="mt-7 flex flex-col gap-2.5 sm:flex-row sm:items-center sm:gap-3"
       >
         <Magnetic className="w-full sm:w-auto">
-          <ButtonLink
-            href={hero.primary.href}
-            size="lg"
-            className="w-full sm:w-auto"
-          >
+          <ButtonLink href={hero.primary.href} className="w-full sm:w-auto">
             {hero.primary.label}
           </ButtonLink>
         </Magnetic>
         <ButtonLink
           href={hero.secondary.href}
           variant="secondary"
-          size="lg"
           className="w-full sm:w-auto"
         >
           {hero.secondary.label}

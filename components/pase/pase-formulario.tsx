@@ -98,13 +98,16 @@ export function PaseFormulario({
      un gris al enfocarlo. */
   const entrada = cn(
     "h-12 w-full min-w-0 rounded-full border border-line-strong bg-card px-5 text-[0.95rem] text-ink placeholder:text-ink-faint focus:border-ink focus:outline-none",
-    conNombre && "sm:h-11 sm:border-0 sm:bg-transparent sm:focus:bg-paper-alt",
+    conNombre
+      ? "sm:h-11 sm:border-0 sm:bg-transparent sm:focus:bg-paper-alt"
+      : /* En la portada, del alto de los botones del hero que tiene al lado. */
+        "sm:h-10 sm:px-4 sm:text-[0.9rem]",
   );
 
   return (
     <div className={className}>
       {conNombre ? null : (
-        <p className="text-[0.95rem] font-medium text-ink">{pase.body}</p>
+        <p className="text-[0.9rem] font-medium text-ink">{pase.body}</p>
       )}
       <form
         noValidate
@@ -191,6 +194,7 @@ export function PaseFormulario({
           disabled={enviando}
           className={cn(
             "h-12 whitespace-nowrap rounded-full px-6 text-[0.95rem] font-medium transition-[opacity,transform] disabled:opacity-70",
+            !conNombre && "sm:h-10 sm:px-5 sm:text-[0.9rem]",
             sobreTinta
               ? /* Sobre la tinta, el botón es el papel: blanco sobre la
                    tarjeta oscura, y oscuro cuando el tema la da vuelta.
