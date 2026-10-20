@@ -6,8 +6,10 @@ import { z } from "zod";
 import { getWriteClient } from "@/sanity/client";
 
 /**
- * Recibe el pase: alguien que quiere su lugar en la agenda. Desde la portada
- * deja el mail solo; desde el banner de la mitad de la home, nombre y mail.
+ * Recibe el pase: alguien que quiere su lugar en la agenda, con nombre y
+ * mail, desde el banner de la mitad de la home. La portada tuvo un formulario
+ * con el mail solo; ya no está, pero el origen «hero» se sigue aceptando por
+ * si queda alguna página vieja abierta.
  *
  * Sigue el camino del brief (api/brief): se guarda en Sanity, para que quede
  * en el Studio como «Lugar reservado», y se avisa por mail con las mismas

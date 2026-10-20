@@ -97,6 +97,7 @@ export default async function HomePage({
         surface={surface}
         pantallas={pantallas}
         galeria={copy.hero.gallery}
+        conBanner={secciones.lugar}
       />
     ),
     socialProof: (surface) => <SocialProof surface={surface} />,
