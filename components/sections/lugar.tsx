@@ -111,14 +111,11 @@ export function Lugar({ surface = "mist" }: { surface?: Surface }) {
           />
         </div>
 
-        <Reveal delay={0.1}>
-          <PaseFormulario
-            origen="banner"
-            conNombre
-            sobreTinta
-            className="mx-auto mt-10 max-w-[36rem]"
-          />
-        </Reveal>
+        {/* Sin Reveal: el pase de la portada es un enlace que baja hasta acá
+            (#lugar), y el salto deja el formulario justo en el borde de abajo
+            de la pantalla, donde la entrada no llegaba a dispararse. Quien
+            vino a reservar caía en un banner sin formulario. */}
+        <PaseFormulario className="mx-auto mt-10 max-w-[36rem]" />
       </div>
     </Section>
   );

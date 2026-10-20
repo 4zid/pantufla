@@ -1,7 +1,6 @@
 import { preload } from "react-dom";
 
 import type { Surface } from "@/components/ui/section";
-import { PaseFormulario } from "@/components/pase/pase-formulario";
 import { PaseLugar } from "@/components/pase/pase-lugar";
 import { HeroGaleria } from "@/components/sections/hero-galeria";
 import { HeroTexto } from "@/components/sections/hero-intro";
@@ -12,8 +11,14 @@ import type { Pantalla } from "@/content/hero-galeria";
  *
  * Arriba, dos columnas: a la izquierda todo el texto alineado —la pastilla de
  * disponibilidad, el titular, la bajada y los botones— y a la derecha el pase
- * de Pantufla, con el formulario para reservar un lugar en la agenda debajo.
- * Abajo, de punta a punta, la galería de pantallas corriendo como un riel.
+ * de Pantufla. Abajo, de punta a punta, la galería de pantallas corriendo
+ * como un riel.
+ *
+ * El pase es un enlace al banner (#lugar), donde se reserva con nombre y
+ * mail: tocarlo baja hasta ahí, y el pase 3D hace el viaje con el scroll.
+ * Tenía su propio formulario abajo, con el mail solo: era el mismo pedido dos
+ * veces en la página y se fue. Si el banner está apagado en el Studio, el
+ * pase no lleva a ningún lado y es solo el dibujo.
  *
  * El pase es un papel en 3D (components/pase) que no se queda acá: cuando el
  * hero se va de la pantalla se despega de su lugar, acompaña el scroll y
@@ -40,9 +45,12 @@ export function Hero({
   surface = "mist",
   pantallas,
   galeria,
+  conBanner = false,
 }: {
   surface?: Surface;
   pantallas: Pantalla[];
+  /** Si el banner del pase está prendido: el pase lleva hasta ahí. */
+  conBanner?: boolean;
   /** El nombre de la galería para el lector de pantalla. */
   galeria: string;
 }) {
@@ -67,25 +75,19 @@ export function Hero({
       <div className="shell grid items-center gap-12 pt-28 md:pt-36 lg:grid-cols-2 lg:gap-12">
         <HeroTexto />
 
-        <div
-          data-pase-zona="hero"
-          className="mx-auto w-full max-w-[21rem] lg:justify-self-center"
-        >
-          <PaseLugar
-            origen="hero"
-            entra={0.5}
-            sizes="(min-width: 1280px) 208px, 192px"
-            className="mx-auto w-[12rem] xl:w-[13rem]"
-          />
-          <div data-entra style={{ "--entra": "0.6s" } as React.CSSProperties}>
-            {/* Centrado, como el pase que tiene arriba: la columna entera
-                queda sobre un mismo eje, el del centro de su mitad. */}
-            <PaseFormulario
-              origen="hero"
-              className="mt-6 text-center [text-wrap:balance]"
-            />
-          </div>
-        </div>
+        {/* Sin data-pase-zona a propósito: el foco adentro de una zona deja
+            el pase apoyado ahí (ver pase-3d.ts), y el clic en el enlace lo
+            enfoca. Con la zona, el pase se quedaba en la portada mientras la
+            página bajaba al banner. La zona era para el formulario que había
+            acá, para que el pase no se fuera mientras alguien escribía. */}
+        <PaseLugar
+          origen="hero"
+          entra={0.5}
+          href={conBanner ? "#lugar" : undefined}
+          centrar='[data-pase-lugar="banner"]'
+          sizes="(min-width: 1280px) 232px, 208px"
+          className="mx-auto w-[13rem] xl:w-[14.5rem] lg:justify-self-center"
+        />
       </div>
 
       <HeroGaleria pantallas={pantallas} label={galeria} />

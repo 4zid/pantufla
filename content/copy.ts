@@ -78,7 +78,11 @@ export type SiteCopy = {
   pase: {
     /** Lo que muestra el dibujo, para quien no lo ve. */
     alt: string;
-    /** La línea de arriba del formulario. */
+    /**
+     * El pase de la portada es un enlace que baja al banner: esto es su
+     * nombre para el lector de pantalla. Era la línea de arriba del
+     * formulario de la portada, que ya no está.
+     */
     body: string;
     label: string;
     placeholder: string;
