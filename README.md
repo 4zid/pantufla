@@ -524,9 +524,8 @@ seguido.
     que son las mismas capturas de Kine, Daily, Tierras Argentinas y 2MG.
     Las tres primeras salen de sus HTML de Claude Design, recortadas pantalla
     por pantalla; las de 2MG, de sus mockups en `assets/proyectos/2mg`.
-- **La barra de arriba**, en el tope de la página, no tiene fondo: el logo, el
-  menú en su pastilla de vidrio y los botones flotan con el mismo margen que el
-  hero (96px a 1440). Al bajar se arma la barra compacta de siempre.
+- **La barra de arriba** lleva el contenido con el mismo margen que el hero
+  (96px a 1440), así la marca cae justo encima del titular.
 
 ### Los proyectos
 
@@ -622,21 +621,16 @@ nativos pasan a su versión oscura (`color-scheme`).
 
 ## La barra
 
-`components/site-header.tsx`. Una píldora flotante que se compacta al bajar y
-se esconde mientras se lee; vuelve apenas se sube.
+`components/site-header.tsx`. Una franja fija arriba, de lado a lado, con el
+fondo de la página a medias y desenfoque detrás: la marca a la izquierda, el
+menú en el medio, el idioma y el botón a la derecha. Nada más: no cambia de
+ancho ni de alto, no se esconde al bajar y no marca la sección en curso.
 
-- **Se queda a la vista** cuando bajar no es leer: en un salto desde el menú
-  (la página va a «Planes», no se está leyendo), con el foco del teclado
-  adentro, y con el menú del teléfono abierto. El salto lo avisa el scroll
-  suave por `lib/scroll.ts`; cualquier gesto propio en el medio lo corta.
-- **Marca la sección en curso.** Una pastilla se corre detrás del enlace de la
-  sección que cruza la pantalla (y en el menú del teléfono, un punto). El
-  enlace lleva `aria-current="location"`.
-- **No se anima al cargar.** Si la página abre a mitad de camino (recargar, un
-  enlace a `/#planes`), la barra sale compacta de entrada en vez de achicarse a
-  la vista.
-- **El botón tiene un solo tamaño.** Cambiaba de golpe al compactar mientras la
-  barra se achicaba suave.
+- **Antes** era una píldora flotante que se compactaba al bajar, se escondía
+  mientras se leía y corría una pastilla detrás de la sección en curso. Se
+  movía todo el tiempo, y la quisimos quieta. No hace falta volver a eso.
+- **Sigue los temas** sola: el fondo es el token del papel al 75%, así que en
+  las secciones oscuras se oscurece con la página.
 - **El menú del teléfono** frena el scroll de verdad (Lenis también, no solo el
   body), deja la página de atrás `inert`, se cierra con Escape devolviendo el
   foco al botón, y se cierra solo si la ventana pasa a escritorio.
@@ -703,7 +697,7 @@ CTA), con el margen justo para que el título no quede debajo del header.
 - **Fondo blanco** en claro y casi negro en oscuro, con un grano muy leve
   para que no quede plano. Era bruma (`#eaedf8`), un lila que teñía toda la
   página. Lo que antes se separaba del fondo por ser blanco ahora lleva su
-  filete (tarjetas, campos, la píldora del menú) o un gris apenas más oscuro
+  filete (tarjetas, campos) o un gris apenas más oscuro
   (las preguntas frecuentes, el tablero de capacidades, las etiquetas).
 - **Cuatro colores de marca** en pastel: aqua, rosa, verde y miel.
 - **La etiqueta de sección** es una pastilla con ícono y el texto en mayúsculas,

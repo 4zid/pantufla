@@ -4,7 +4,7 @@ import Lenis from "lenis";
 import { useEffect } from "react";
 
 import { gsap, registerGsap, ScrollTrigger } from "@/lib/motion";
-import { empezarSalto, registrarLenis, terminarSalto } from "@/lib/scroll";
+import { registrarLenis } from "@/lib/scroll";
 
 /**
  * El scroll suave de todo el sitio.
@@ -29,10 +29,6 @@ import { empezarSalto, registrarLenis, terminarSalto } from "@/lib/scroll";
  *    scroll-behavior de CSS apagado (ver globals.css), saltaban de golpe.
  *    Y los que van a la misma página sin ancla —la marca, estando en la
  *    home— suben con Lenis en vez de saltar arriba de un golpe.
- *
- * Los saltos se le avisan a la barra (lib/scroll.ts), para que no se esconda
- * mientras la página baja hacia donde el visitante pidió ir. Cualquier gesto
- * propio —rueda, dedo— corta el aviso: desde ahí vuelve a estar leyendo.
  */
 
 /** Lo que tapa la barra: el mismo 6rem del scroll-padding-top. */
@@ -74,8 +70,7 @@ export function SmoothScroll() {
       if (!destino.hash) {
         if (destino.search !== location.search) return;
         e.preventDefault();
-        empezarSalto();
-        lenis.scrollTo(0, { onComplete: terminarSalto });
+        lenis.scrollTo(0);
         return;
       }
 
@@ -92,13 +87,9 @@ export function SmoothScroll() {
       // para que Lenis no le sume además el scroll-padding.
       const y =
         seccion.getBoundingClientRect().top + window.scrollY - MARGEN_BARRA;
-      empezarSalto();
-      lenis.scrollTo(y, { onComplete: terminarSalto });
+      lenis.scrollTo(y);
     }
 
-    /* Un gesto propio en medio de un salto lo convierte en lectura. */
-    window.addEventListener("wheel", terminarSalto, { passive: true });
-    window.addEventListener("touchstart", terminarSalto, { passive: true });
     // En captura, para llegar antes que el Link de Next: si ve el clic
     // prevenido no navega él, y el ancla queda para Lenis. Si no, el salto
     // es de Next, instantáneo, y el scroll suave se pierde justo ahí.
@@ -106,8 +97,6 @@ export function SmoothScroll() {
 
     return () => {
       document.removeEventListener("click", alClic, true);
-      window.removeEventListener("wheel", terminarSalto);
-      window.removeEventListener("touchstart", terminarSalto);
       gsap.ticker.remove(tick);
       registrarLenis(null);
       lenis.destroy();
