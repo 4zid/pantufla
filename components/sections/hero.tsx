@@ -72,7 +72,15 @@ export function Hero({
         className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(140%_60%_at_50%_0%,rgba(255,255,255,0.7)_0%,transparent_55%)] md:bg-[radial-gradient(90%_70%_at_75%_10%,rgba(255,255,255,0.75)_0%,transparent_60%)]"
       />
 
-      <div className="shell grid items-center gap-12 pt-28 md:pt-36 lg:grid-cols-2 lg:gap-12">
+      {/* Desde md el bloque ocupa la pantalla menos 5rem y centra su
+          contenido en el alto: el texto y el pase quedan en el medio de la
+          primera pantalla, y de la galería de abajo asoman apenas las
+          puntas de las capturas (los 5rem son los 24px de aire de arriba de
+          la galería más unos 56 de pantallas). El relleno de arriba es el
+          de la barra flotante, así el centro es el del espacio libre y no el
+          de la ventana entera. En el teléfono el texto y el pase no entran
+          en una pantalla, y todo corre seguido. */}
+      <div className="shell grid items-center gap-12 pt-28 md:min-h-[calc(100svh-5rem)] md:content-center md:pb-10 md:pt-24 lg:grid-cols-2 lg:gap-12">
         <HeroTexto />
 
         {/* Sin data-pase-zona a propósito: el foco adentro de una zona deja

@@ -466,6 +466,9 @@ alineado: la pastilla de «Disponibles», el titular, la bajada y los dos
 botones. A la derecha, el pase de Pantufla, que lleva al banner donde se
 reserva (tuvo un formulario con el mail debajo; era el mismo pedido dos veces
 en la página). Abajo, de punta a punta, la galería de pantallas corriendo.
+Desde tablet el texto y el pase van centrados en el alto de la primera
+pantalla, y de la galería asoman apenas las puntas de las capturas (unos 56px):
+el bloque de arriba mide la pantalla menos 5rem.
 Abajo de 1024 el pase pasa debajo de los botones, y en el teléfono todo corre
 seguido.
 
