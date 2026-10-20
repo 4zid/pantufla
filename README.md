@@ -336,6 +336,12 @@ objeciones → contacto**:
   principal al formulario y uno secundario a los planes. A la derecha, el pase
   de Pantufla con el formulario para reservar un lugar en la agenda; abajo, de
   punta a punta, la galería de pantallas (ver *El hero*).
+  Las dos columnas son mitades iguales dentro del mismo ancho que el resto de
+  la página, y el pase y su formulario van centrados en la suya, así el texto
+  y el pase quedan a la misma distancia del centro. Antes el hero tenía un
+  ancho propio más grande, el pase pegado al borde derecho, un hueco grande al
+  medio, el titular a 68px y botones grandes: se veía grande y descentrado. La
+  referencia fue la portada de Resend.
 - **Prueba social.** Solo los logos de los clientes, corriendo de punta a punta
   de la pantalla.
 - **Cómo lo resolvemos.** Tres pilares: alcance cerrado, ritmo corto con fechas
@@ -697,8 +703,8 @@ CTA), con el margen justo para que el título no quede debajo del header.
 - **Mucho aire y letra contenida.** El contenido vive en un ancho de 72rem
   con márgenes que crecen con la pantalla (192px de cada lado a 1440), las
   secciones llevan 144–176px arriba y abajo en escritorio, y los titulares
-  son un escalón más chicos que antes (42px el de sección y 68px el del hero
-  a 1440). El espaciado de cada sección se elige con un ritmo con nombre en
+  son un escalón más chicos que antes (42px el de sección y 52px el del hero
+  a 1440, con los botones del hero en el tamaño mediano). El espaciado de cada sección se elige con un ritmo con nombre en
   `components/ui/section.tsx` (normal, compacto para planes y preguntas,
   amplio para el proceso), no con clases sueltas.
 - **Fondo blanco** en claro y casi negro en oscuro, con un grano muy leve

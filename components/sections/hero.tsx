@@ -20,6 +20,15 @@ import type { Pantalla } from "@/content/hero-galeria";
  * aterriza en el de la última sección. Lo que hay en la página es el lugar
  * (PaseLugar), con una imagen del pase que es lo que se ve sin 3D.
  *
+ * Las dos columnas son mitades iguales adentro del mismo ancho que el resto
+ * de la página (.shell), y el pase va centrado en la suya: así el texto y el
+ * pase quedan a la misma distancia del centro y la portada se lee centrada
+ * debajo de la barra, que también va al medio. Antes el hero tenía su propio
+ * ancho, más grande que el de las secciones (90rem con 96px de margen), el
+ * pase pegado al borde derecho y un hueco grande en el medio, con el titular a
+ * 68px y los botones grandes: se veía todo un poco grande y corrido. Tomamos
+ * de referencia la portada de Resend, más armónica.
+ *
  * Abajo de lg el pase va debajo de los botones, y en el teléfono todo corre
  * seguido.
  *
@@ -55,21 +64,26 @@ export function Hero({
         className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(140%_60%_at_50%_0%,rgba(255,255,255,0.7)_0%,transparent_55%)] md:bg-[radial-gradient(90%_70%_at_75%_10%,rgba(255,255,255,0.75)_0%,transparent_60%)]"
       />
 
-      <div className="mx-auto grid w-full max-w-[90rem] items-center gap-12 px-5 pt-[120px] md:px-10 md:pt-[176px] lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-20 xl:px-24">
+      <div className="shell grid items-center gap-12 pt-28 md:pt-36 lg:grid-cols-2 lg:gap-12">
         <HeroTexto />
 
         <div
           data-pase-zona="hero"
-          className="mx-auto w-full max-w-[23rem] lg:mx-0 lg:w-[21rem] xl:w-[23rem]"
+          className="mx-auto w-full max-w-[21rem] lg:justify-self-center"
         >
           <PaseLugar
             origen="hero"
             entra={0.5}
-            sizes="(min-width: 1280px) 232px, 216px"
-            className="mx-auto w-[13rem] sm:w-[13.5rem] xl:w-[14.5rem]"
+            sizes="(min-width: 1280px) 208px, 192px"
+            className="mx-auto w-[12rem] xl:w-[13rem]"
           />
           <div data-entra style={{ "--entra": "0.6s" } as React.CSSProperties}>
-            <PaseFormulario origen="hero" className="mt-7" />
+            {/* Centrado, como el pase que tiene arriba: la columna entera
+                queda sobre un mismo eje, el del centro de su mitad. */}
+            <PaseFormulario
+              origen="hero"
+              className="mt-6 text-center [text-wrap:balance]"
+            />
           </div>
         </div>
       </div>
