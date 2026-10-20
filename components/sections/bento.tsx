@@ -27,9 +27,10 @@ import { cn } from "@/lib/cn";
  * en gris con el texto arriba; a la usuaria le resultó feo las dos veces. Con
  * las cuatro iguales la sección se lee como una sola grilla.
  *
- * El único color es el champagne del foil del pase (las tildes y la barra
- * del documento); el resto es la tinta del tema, así que con la sección en
- * oscuro desde el panel se da vuelta sola.
+ * Sin colores: todo es la tinta del tema, también las tildes y la barra del
+ * documento, así que con la sección en oscuro desde el panel se da vuelta
+ * sola. Esas dos iban en el champagne del foil del pase, y a la usuaria le
+ * pareció un color de plantilla, ajeno a la marca, que es blanco y negro.
  *
  * Se mueven al entrar y nada más: cada viñeta tiene su coreografía (ver
  * `entrada` en cada una). El estado inicial de cada pieza (invisible,
@@ -40,9 +41,6 @@ import { cn } from "@/lib/cn";
  * envoltorio aparte del elemento que anima GSAP, porque los dos escriben
  * transform.
  */
-
-/** El único color: el champagne del foil del pase. */
-const CHAMPAGNE = "#c8ae84";
 
 /** La itálica del hero, para las cifras y la respuesta del chat. */
 const SERIF = "font-serif font-normal italic";
@@ -116,15 +114,14 @@ function Hoja({ className }: { className?: string }) {
   );
 }
 
-/** La tilde en un círculo champagne: lo hecho. */
+/** La tilde en un círculo de tinta: lo hecho. */
 function Tilde({ className }: { className?: string }) {
   return (
     <span
       className={cn(
-        "grid shrink-0 place-items-center rounded-full text-[#121212]",
+        "grid shrink-0 place-items-center rounded-full bg-ink text-on-ink",
         className,
       )}
-      style={{ background: CHAMPAGNE }}
     >
       <CheckIcon className="h-[55%] w-[55%]" />
     </span>
@@ -323,7 +320,7 @@ const entradaVelocidad: Entrada = (tl, q) => {
 
 /**
  * Pantallas: la misma página en una ventana y en un teléfono. La ventana es
- * un documento con su barra de carga en champagne arriba, a medio llenar;
+ * un documento con su barra de carga en tinta arriba, a medio llenar;
  * el teléfono se apoya adelante, abajo a la derecha. Al pasar el mouse el
  * teléfono se levanta.
  */
@@ -336,7 +333,7 @@ function Pantallas() {
         className={cn(PIEZA, "absolute inset-y-0 left-0 right-[18%] p-5")}
       >
         <div className="h-1 overflow-hidden rounded-full bg-paper-alt">
-          <div className="h-full w-[68%]" style={{ background: CHAMPAGNE }} />
+          <div className="h-full w-[68%] bg-ink" />
         </div>
         <div className="mt-5 h-10 w-10 rounded-[10px] bg-paper-alt" />
         <div className="mt-5 space-y-2.5">
@@ -356,7 +353,7 @@ function Pantallas() {
         >
           <div className="mx-auto h-1 w-6 rounded-full bg-ink" />
           <div className="mt-2.5 h-1 overflow-hidden rounded-full bg-paper-alt">
-            <div className="h-full w-[68%]" style={{ background: CHAMPAGNE }} />
+            <div className="h-full w-[68%] bg-ink" />
           </div>
           <div className="mt-3 h-7 w-7 rounded-[8px] bg-paper-alt" />
           <div className="mt-3 space-y-1.5">

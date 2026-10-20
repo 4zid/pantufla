@@ -358,25 +358,29 @@ objeciones → contacto**:
   —un chat con su campo para escribir, una lista con la fila hecha, un
   documento con su barra de carga y un teléfono, una línea de tiempo con la
   consulta nueva— y abajo el titular grande y una bajada corta. Las piezas son
-  blancas con borde finito sobre el gris de la tarjeta; el único color es el
-  champagne del foil del pase (las tildes y la barra) y la cifra de velocidad
-  y la respuesta del chat van en la itálica del hero. Antes fue un damero en
+  blancas con borde finito sobre el gris de la tarjeta, sin colores: las
+  tildes y la barra van en la tinta, y la cifra de velocidad y la respuesta
+  del chat en la itálica del hero. Antes fue un damero en
   cuatro colores y después en gris con el texto arriba, y las dos veces quedó
   feo.
 - **Pase (banner).** A la mitad de la home, después de ver el trabajo y lo
   que incluye: el camino corto, nombre y mail para guardarse un lugar en el
   próximo cupo. La sección está armada alrededor de un hueco: una tarjeta en
-  la tinta del tema con una tira de cupones punteados, y al del medio le
-  falta el suyo. El hueco tiene la forma exacta del pase acostado —las
-  esquinas y dos pestañas que entran en las muescas del talón—, una línea de
-  corte punteada en blanco y un halo tenue; el único color es el champagne
-  del foil del pase, en las tildes. El pase que vino volando desde la portada
-  se acuesta y calza ahí, como la pieza que faltaba. Ahí no responde al
-  mouse: inclinado, se despegaba del borde del hueco.
-  Va centrada y apilada —el titular, el hueco y abajo el formulario en una
-  fila— con el aire justo para que no sea altísima: probó dos columnas y se
-  volvió, porque el hueco al medio de la tira es lo que hace que el pase se
-  lea como la pieza que faltaba. Antes era la última sección y el pase
+  la tinta del tema con un recorte de la forma exacta del pase acostado —las
+  esquinas y dos pestañas que entran en las muescas del talón— y una línea de
+  corte punteada en blanco. El pase que vino volando desde la portada se
+  acuesta y calza ahí, como la pieza que faltaba. Ahí no responde al mouse:
+  inclinado, se despegaba del borde del hueco.
+  Se lee en tres pasos: el título dice qué es («Tomamos pocos proyectos por
+  mes»), la bajada qué hacer, y abajo del hueco el formulario, que desde sm es
+  una sola barra blanca con el nombre, el mail y el botón adentro, más una
+  línea de letra chica. Las etiquetas de los campos quedan para el lector de
+  pantalla: el ejemplo de adentro ya dice qué va. Tuvo una etiqueta arriba
+  del título, una bajada de tres renglones, tres tildes debajo del formulario
+  y cupones vecinos a los costados del hueco; era demasiado y no se entendía.
+  Va centrada y apilada, con el aire justo para que no sea altísima: probó
+  dos columnas y se volvió, porque el hueco al medio es lo que hace que el
+  pase se lea como la pieza que faltaba. Antes era la última sección y el pase
   acompañaba la página entera, que era demasiado.
 - **Proceso.** Cuatro etapas, cada una con fecha: quince días hábiles un
   Sitio, una semana una Landing. El riel que las une lleva
@@ -394,7 +398,7 @@ objeciones → contacto**:
   separadas por una línea fina, como la referencia de la grilla de etapas.
   Cada celda lleva el número arriba a la izquierda, la empresa arriba a la
   derecha y la cita con el nombre y el cargo; una va en la tinta, con el
-  número en champagne, y sigue al mouse. En tablet son dos por dos y en el
+  número dado vuelta, y sigue al mouse. En tablet son dos por dos y en el
   teléfono una debajo de otra. Los títulos quedan escondidos para el lector de
   pantalla y el índice. Con uno solo prendido, ese sale solo.
 
@@ -547,7 +551,7 @@ alcanza con cargarle pantallas, y eso también lo suma a la galería del hero.
 Los botones viven adentro del mockup, y abajo quedan solo el nombre, el rubro
 y la bajada. Al pasar el mouse el mockup se desenfoca y en el medio aparecen
 «Ver sitio», una pastilla blanca con letra negra, y al lado, si el caso está
-escrito, «Leer el caso» en el champagne del pase. El clic en el resto del
+escrito, «Leer el caso», negra con letra blanca. El clic en el resto del
 plano lleva al sitio. Con el teclado, el foco en un botón hace lo mismo que
 el mouse; en el teléfono, donde no hay mouse, los botones están siempre,
 abajo del plano y sin desenfoque.
@@ -702,7 +706,12 @@ CTA), con el margen justo para que el título no quede debajo del header.
   página. Lo que antes se separaba del fondo por ser blanco ahora lleva su
   filete (tarjetas, campos) o un gris apenas más oscuro
   (las preguntas frecuentes, el tablero de capacidades, las etiquetas).
-- **Cuatro colores de marca** en pastel: aqua, rosa, verde y miel.
+- **Cuatro colores de marca** en pastel: aqua, rosa, verde y miel. Hoy casi no
+  se usan: los acentos (tildes, botones, números, el botón que abre un panel)
+  van en la tinta, porque la marca es blanco y negro y los toques de color
+  —el champagne del pase, el verde de un botón, una tilde por plan— se leían
+  a plantilla. El único color que queda en la interfaz es el de los mensajes
+  de error.
 - **La etiqueta de sección** es una pastilla con ícono y el texto en mayúsculas,
   en gris neutro. Suelto sobre el fondo, ese tratamiento se lee a plantilla;
   adentro de una pastilla se lee como un rótulo de sistema. El color lo ponen
