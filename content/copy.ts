@@ -108,12 +108,14 @@ export type SiteCopy = {
       missing: string;
     };
   };
-  /** El banner de la mitad de la home, donde aterriza el pase acostado. */
+  /**
+   * El banner de la mitad de la home, donde aterriza el pase acostado. Sin
+   * etiqueta ni lista de puntos: el título dice qué es, la bajada qué hacer,
+   * y la letra chica del formulario (pase.fine) cierra.
+   */
   lugar: {
-    eyebrow: string;
     title: string;
     lead: string;
-    points: string[];
     /** Lo que dice el hueco del pase mientras está vacío. */
     hueco: string;
   };

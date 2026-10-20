@@ -3,7 +3,6 @@
 import { useCopy } from "@/components/copy-provider";
 import { Reveal } from "@/components/motion/reveal";
 import { SplitHeading } from "@/components/motion/split-heading";
-import { CheckIcon, TagIcon } from "@/components/ui/icons";
 import { Section, type Surface } from "@/components/ui/section";
 import { PaseFormulario } from "@/components/pase/pase-formulario";
 import { PaseLugar } from "@/components/pase/pase-lugar";
@@ -17,35 +16,24 @@ import { PaseLugar } from "@/components/pase/pase-lugar";
 const ESQUINAS = "rounded-[4%/6.25%]";
 const MUESCA = "left-[74.2%] w-[4.4%]";
 
-/** Un cupón vecino de la tira: el contorno punteado, con su talón. */
-function Vecino({ lado }: { lado: "izquierda" | "derecha" }) {
-  return (
-    <div
-      aria-hidden
-      className={`absolute top-0 hidden h-full w-full sm:block ${ESQUINAS} border-[1.5px] border-dashed border-on-ink/20 bg-on-ink/[0.035] ${
-        lado === "izquierda"
-          ? "right-[calc(100%+1.75rem)]"
-          : "left-[calc(100%+1.75rem)]"
-      }`}
-    >
-      <span className="absolute inset-y-[8%] left-[74.2%] border-l border-dashed border-on-ink/15" />
-    </div>
-  );
-}
-
 /**
  * El banner del pase, a mitad de la home: donde aterriza.
  *
  * Toda la sección está armada alrededor de un hueco. Es una tarjeta en la
- * tinta del tema con una tira de cupones punteados de punta a punta, y al
- * del medio le falta el suyo: en su lugar hay un recorte del color de la
- * página, con la forma exacta del pase acostado —las esquinas, y dos
- * pestañas que calzan en las muescas del talón—, la línea de corte punteada
- * en blanco y un halo tenue. El único color es el champagne del foil del
- * pase, en las tildes: el resto es la tinta. El pase que vino volando desde
- * la portada (components/pase) baja, se acuesta y calza ahí: es la pieza que
- * faltaba. Ahí no responde al mouse (ver pase-3d.ts): inclinado dejaría de
- * calzar. Abajo, el formulario con nombre y mail.
+ * tinta del tema con un recorte del color de la página, con la forma exacta
+ * del pase acostado —las esquinas, y dos pestañas que calzan en las muescas
+ * del talón— y la línea de corte punteada en blanco. El pase que vino
+ * volando desde la portada (components/pase) baja, se acuesta y calza ahí:
+ * es la pieza que faltaba. Ahí no responde al mouse (ver pase-3d.ts):
+ * inclinado dejaría de calzar.
+ *
+ * Se lee en tres pasos, de arriba abajo: el título dice qué es (tomamos
+ * pocos proyectos), la bajada qué hacer (dejar nombre y mail) y el
+ * formulario lo hace, con una sola línea de letra chica. Tenía además una
+ * etiqueta que repetía el título, una bajada de tres renglones, etiquetas
+ * arriba de cada campo, tres tildes que repetían la letra chica y cupones
+ * vecinos punteados a los costados del hueco: a la usuaria le pareció
+ * cargadísimo y que no se entendía. Las tildes eran champagne, y tampoco.
  *
  * Antes era la última sección y el pase acompañaba toda la home hasta el
  * final, que era demasiado. A la mitad el vuelo es la mitad de largo y el
@@ -65,42 +53,27 @@ export function Lugar({ surface = "mist" }: { surface?: Surface }) {
      Centrada y apilada, pero contenida: el ritmo compacto, la tarjeta con
      menos relleno, el hueco un poco más chico y los saltos entre partes más
      cortos. Pasó por dos columnas —texto a la izquierda, hueco a la
-     derecha— para que no fuera altísima, y se volvió: el hueco al medio,
-     con la tira de cupones de punta a punta, es lo que hace que el pase se
-     lea como la pieza que faltaba.
+     derecha— para que no fuera altísima, y se volvió: el hueco al medio es
+     lo que hace que el pase se lea como la pieza que faltaba.
   */
   return (
     <Section id="lugar" surface={surface} ritmo="compacto">
       <div
         data-pase-zona="banner"
-        className="relative isolate overflow-hidden rounded-[2rem] bg-ink px-6 pb-10 pt-12 text-center text-on-ink sm:px-12 md:rounded-[2.5rem] md:px-16 md:pb-12 md:pt-14"
+        className="relative rounded-[2rem] bg-ink px-6 pb-8 pt-12 text-center text-on-ink sm:px-12 md:rounded-[2.5rem] md:px-16 md:pb-10 md:pt-14"
       >
-        <Reveal>
-          <span className="inline-flex items-center gap-2 rounded-full border border-on-ink/15 bg-on-ink/[0.06] px-3.5 py-1.5 text-[0.7rem] font-medium uppercase tracking-[0.12em] text-on-ink/75">
-            <TagIcon className="h-3.5 w-3.5 shrink-0" />
-            {lugar.eyebrow}
-          </span>
-        </Reveal>
         <SplitHeading
           text={lugar.title}
-          className="mx-auto mt-5 max-w-[14em] text-h2"
+          className="mx-auto max-w-[14em] text-h2"
         />
         <Reveal delay={0.15}>
-          <p className="mx-auto mt-4 max-w-[38rem] text-lead text-on-ink/70">
+          <p className="mx-auto mt-4 max-w-[30rem] text-lead text-on-ink/70">
             {lugar.lead}
           </p>
         </Reveal>
 
-        {/* La tira de cupones y el hueco. El contenedor mide lo que el hueco:
-            los vecinos y el halo se ubican desde él y la tarjeta los corta. */}
+        {/* El hueco. El contenedor mide lo que mide el pase acostado. */}
         <div className="relative mx-auto mt-10 w-full max-w-[16rem] sm:max-w-[20rem] md:mt-12 lg:max-w-[22rem]">
-          <div
-            aria-hidden
-            className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[150%] w-[130%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,#e6d7bb,transparent)] opacity-25 blur-3xl"
-          />
-          <Vecino lado="izquierda" />
-          <Vecino lado="derecha" />
-
           {/* La línea de corte: punteada y en el color del texto de la
               tarjeta, blanca sobre la tinta. Llevaba una tijera y era
               champagne; con el pase encima sobraban las dos cosas. */}
@@ -143,19 +116,8 @@ export function Lugar({ surface = "mist" }: { surface?: Surface }) {
             origen="banner"
             conNombre
             sobreTinta
-            className="mx-auto mt-10 max-w-[42rem]"
+            className="mx-auto mt-10 max-w-[36rem]"
           />
-        </Reveal>
-
-        <Reveal delay={0.2}>
-          <ul className="mx-auto mt-4 flex max-w-[56rem] flex-wrap justify-center gap-x-6 gap-y-1.5 text-[0.78rem] text-on-ink/60">
-            {lugar.points.map((punto) => (
-              <li key={punto} className="flex items-center gap-2">
-                <CheckIcon className="h-3.5 w-3.5 shrink-0 text-[#c8ae84]" />
-                {punto}
-              </li>
-            ))}
-          </ul>
         </Reveal>
       </div>
     </Section>

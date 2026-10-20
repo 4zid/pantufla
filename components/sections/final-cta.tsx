@@ -51,7 +51,7 @@ export function FinalCta({
               <ul className="mt-9 space-y-3.5 border-t border-line pt-8">
                 {finalCta.expectations.map((item) => (
                   <li key={item} className="flex gap-3 text-[0.93rem]">
-                    <CheckIcon className="mt-[5px] h-3.5 w-3.5 shrink-0 text-aqua" />
+                    <CheckIcon className="mt-[5px] h-3.5 w-3.5 shrink-0 text-ink" />
                     <span className="leading-relaxed text-ink-soft">
                       {item}
                     </span>

@@ -8,7 +8,6 @@ import { ButtonLink } from "@/components/ui/button";
 import { PlusIcon } from "@/components/ui/icons";
 import { useCopy } from "@/components/copy-provider";
 import { gsap, registerGsap } from "@/lib/motion";
-import { toneTextDeep } from "@/lib/tones";
 import { cn } from "@/lib/cn";
 
 /**
@@ -95,7 +94,7 @@ export function PricingExisting() {
           className={cn(
             "grid h-11 w-11 shrink-0 place-items-center rounded-full border transition-colors duration-300",
             open
-              ? "border-verde-deep bg-verde-deep text-white"
+              ? "border-ink bg-ink text-on-ink"
               : "border-line-strong text-ink-soft group-hover:border-ink group-hover:text-ink",
           )}
         >
@@ -172,14 +171,7 @@ export function PricingExisting() {
                     className="flex gap-5 border-b border-line py-4"
                   >
                     <dt className="flex min-w-0 shrink-0 items-baseline gap-3 sm:w-44">
-                      <span
-                        className={cn(
-                          "text-[0.8rem] font-semibold tabular-nums",
-                          toneTextDeep[
-                            (["aqua", "rosa", "verde", "miel"] as const)[i % 4]
-                          ],
-                        )}
-                      >
+                      <span className="text-[0.8rem] font-semibold tabular-nums text-ink-faint">
                         {String(i + 1).padStart(2, "0")}
                       </span>
                       <span className="text-[0.98rem] font-medium leading-snug">

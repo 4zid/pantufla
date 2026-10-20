@@ -76,7 +76,7 @@ export function BriefForm() {
         role="status"
         className="rounded-panel border border-line bg-card p-8 text-ink md:p-10"
       >
-        <span className="flex h-11 w-11 items-center justify-center rounded-full bg-aqua-soft text-aqua-deep">
+        <span className="flex h-11 w-11 items-center justify-center rounded-full bg-ink text-on-ink">
           <CheckIcon className="h-5 w-5" />
         </span>
         <h2 ref={exito} tabIndex={-1} className="mt-5 text-h3">
@@ -230,7 +230,10 @@ export function BriefForm() {
       </div>
 
       {error ? (
-        <p role="alert" className="mt-5 text-[0.9rem] text-aqua-deep">
+        <p
+          role="alert"
+          className="mt-5 text-[0.9rem] font-medium text-rosa-deep"
+        >
           {error}
         </p>
       ) : null}
