@@ -524,8 +524,8 @@ seguido.
     que son las mismas capturas de Kine, Daily, Tierras Argentinas y 2MG.
     Las tres primeras salen de sus HTML de Claude Design, recortadas pantalla
     por pantalla; las de 2MG, de sus mockups en `assets/proyectos/2mg`.
-- **La barra de arriba** lleva el contenido con el mismo margen que el hero
-  (96px a 1440), así la marca cae justo encima del titular.
+- **La barra de arriba** es una píldora flotante con desenfoque, que se va al
+  bajar y vuelve al subir (ver *La barra*).
 
 ### Los proyectos
 
@@ -621,14 +621,17 @@ nativos pasan a su versión oscura (`color-scheme`).
 
 ## La barra
 
-`components/site-header.tsx`. Una franja fija arriba, de lado a lado, con el
-fondo de la página a medias y desenfoque detrás: la marca a la izquierda, el
-menú en el medio, el idioma y el botón a la derecha. Nada más: no cambia de
-ancho ni de alto, no se esconde al bajar y no marca la sección en curso.
+`components/site-header.tsx`. Una píldora que flota arriba, despegada del
+borde, con el fondo de la página a medias y desenfoque detrás: la marca, el
+menú en el medio, el idioma y el botón. Tiene un solo tamaño (no se compacta al
+bajar) y no marca la sección en curso.
 
-- **Antes** era una píldora flotante que se compactaba al bajar, se escondía
-  mientras se leía y corría una pastilla detrás de la sección en curso. Se
-  movía todo el tiempo, y la quisimos quieta. No hace falta volver a eso.
+- **Se va al bajar y vuelve solo al subir.** Hace falta recorrer 24px seguidos
+  para el mismo lado, así el rebote del trackpad no la hace entrar y salir.
+  En los primeros 80px de la página no se va nunca.
+- **El teclado la trae.** Con el foco del teclado adentro se queda a la vista
+  (una barra escondida con el foco en un enlace es un anillo de foco en ningún
+  lado). El clic con el mouse no cuenta.
 - **Sigue los temas** sola: el fondo es el token del papel al 75%, así que en
   las secciones oscuras se oscurece con la página.
 - **El menú del teléfono** frena el scroll de verdad (Lenis también, no solo el
