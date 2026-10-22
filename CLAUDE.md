@@ -24,7 +24,7 @@ npx prettier --write <files>   # formatting (Prettier defaults, no config file)
 
 - `main` is production (Vercel's production branch and the repo's default branch). **Every push to it goes live** at www.pantufla.design.
 - `staging` is the preview at `pantufla-git-staging-kalada.vercel.app` (behind Vercel login), for trying designs before they ship.
-- Work goes on a branch cut from `main`: `feat/<topic>` for new things, `fix/<topic>` for fixes (lowercase, hyphens). Merge it into `staging` to preview, then into `main` through a pull request once approved, and delete it. Merge `main` back into `staging` whenever `main` gets something `staging` lacks. Do not commit straight to `main` unless the user asks for it.
+- Work goes on a branch cut from `main`: `feat/<topic>` for new things, `fix/<topic>` for fixes (lowercase, hyphens). Merge it into `staging` to preview, then into `main` through a pull request once approved, and delete it. Vercel only builds `main` and `staging` (`git.deploymentEnabled` in `vercel.json`): feature branches get no preview of their own and their PRs no Vercel check, on purpose, because every deployment's functions count toward the project's stored size; preview through `staging`. Merge `main` back into `staging` whenever `main` gets something `staging` lacks. Do not commit straight to `main` unless the user asks for it.
 - Non-production deployments (`VERCEL_ENV=preview`) render `noindex` and a closed `robots.txt` via `lib/entorno.ts`.
 - Vercel does not build a branch whose head commit was already built on another branch; it needs its own commit.
 - Pages that were removed (`/contacto`, `/notas`) redirect in `next.config.ts`. The `/proyectos` listing was redirected too and is a page again.
