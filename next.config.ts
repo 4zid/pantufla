@@ -25,6 +25,25 @@ const nextConfig: NextConfig = {
      una vez, la primera visita importa más.
   */
   experimental: { inlineCss: true },
+  /*
+     sharp afuera de las funciones del servidor.
+
+     Llega solo: viene instalado con next (para optimizar imágenes con
+     `next start`), y el generador de las imágenes para redes (next/og, en
+     las opengraph-image) lo pide con un import opcional. Como esas imágenes
+     son metadatos de [locale], Next mete next/og en cada página, y el
+     rastreo de archivos se llevaba sharp entero —las librerías de libvips
+     para glibc y para musl, y la versión wasm—: unos 47 MB en cada función,
+     de los 55 que pesaba cada página. Vercel guarda las funciones de cada
+     deploy, así que eso se multiplicaba por cada preview.
+
+     No hace falta: en Vercel las imágenes de next/image las optimiza la
+     plataforma, no la función, y next/og sin sharp pasa el SVG a PNG con
+     resvg, que ya trae adentro. Es el camino que usa siempre en el Edge.
+  */
+  outputFileTracingExcludes: {
+    "/**": ["node_modules/sharp/**", "node_modules/@img/**"],
+  },
   images: {
     remotePatterns: [{ protocol: "https", hostname: "cdn.sanity.io" }],
   },
