@@ -100,6 +100,18 @@ apex está cargado como redirección 308 hacia él— y ese es el valor que usa
 hreflang, el sitemap y los `@id` del grafo de datos estructurados, así que
 apuntarlo a un host que no resuelve es peor que no tenerlo.
 
+**El espacio de las funciones.** Vercel guarda las funciones del servidor de
+cada deploy (producción y staging; las ramas de cambio ya no se construyen,
+ver más abajo), y el panel las suma en
+*Functions Storage*. Cada página llevaba adentro `sharp`, una librería de
+imágenes de unos 47 MB que llegaba de rebote (viene con Next, y el generador
+de imágenes para redes la pide si está): eran unos 470 MB de funciones por
+deploy. `next.config.ts` la deja afuera (`outputFileTracingExcludes`) y bajó
+a unos 80 MB; las imágenes para redes se dibujan igual, con el motor que trae
+`next/og`. Lo que ya está guardado no baja solo: baja cuando se borran los
+deploys viejos, a mano desde el panel o con la política de retención de
+deploys del proyecto, en la configuración del proyecto en Vercel.
+
 ### Ramas: main, staging y una por cambio
 
 | Rama | Qué es |
@@ -123,7 +135,11 @@ Sobre la vista previa:
 
 - Cada push a `staging` arma una vista previa en Vercel, siempre en la misma
   dirección: `pantufla-git-staging-kalada.vercel.app`. Las ramas `feat/` y
-  `fix/` también tienen la suya. Están detrás del login de Vercel del equipo;
+  `fix/` no se construyen en Vercel (`vercel.json`, `git.deploymentEnabled`:
+  solo `main` y `staging`): cada cambio se veía dos veces, en su rama y en
+  staging, y cada deploy suma al espacio guardado del proyecto. Por eso los
+  pull requests no traen el chequeo de Vercel; el cambio se prueba en
+  staging. La vista previa está detrás del login de Vercel del equipo;
   para mostrársela a alguien de afuera se comparte un link desde el panel del
   despliegue, o se le asigna un dominio propio (`staging.pantufla.design`) en
   Settings → Domains, eligiendo la rama.
