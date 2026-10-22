@@ -100,6 +100,17 @@ apex está cargado como redirección 308 hacia él— y ese es el valor que usa
 hreflang, el sitemap y los `@id` del grafo de datos estructurados, así que
 apuntarlo a un host que no resuelve es peor que no tenerlo.
 
+**El espacio de las funciones.** Vercel guarda las funciones del servidor de
+cada deploy (producción, staging y cada rama), y el panel las suma en
+*Functions Storage*. Cada página llevaba adentro `sharp`, una librería de
+imágenes de unos 47 MB que llegaba de rebote (viene con Next, y el generador
+de imágenes para redes la pide si está): eran unos 470 MB de funciones por
+deploy. `next.config.ts` la deja afuera (`outputFileTracingExcludes`) y bajó
+a unos 80 MB; las imágenes para redes se dibujan igual, con el motor que trae
+`next/og`. Lo que ya está guardado no baja solo: baja cuando se borran los
+deploys viejos, a mano desde el panel o con la política de retención de
+deploys del proyecto, en la configuración del proyecto en Vercel.
+
 ### Ramas: main, staging y una por cambio
 
 | Rama | Qué es |
