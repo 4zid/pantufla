@@ -566,9 +566,24 @@ no hay ninguno marcado, los cuatro primeros) en una grilla de dos por dos, una
 columna en el teléfono. En `/proyectos` están todos, con la misma tarjeta y en
 el mismo orden, destacados incluidos.
 
-Cada tarjeta es un mockup mínimo sobre un plano gris: una ventana de navegador
-con el dominio del sitio en la barra y, montado abajo a la derecha, un
-teléfono. Las capturas salen de las mismas *Pantallas para la portada* que
+Cada tarjeta es un mockup mínimo: una ventana de navegador con el dominio del
+sitio en la barra y un teléfono, acomodados en una **escena propia** por
+proyecto (`tarjetaDesign` en `content/site.ts`, por slug), para que cuatro
+tarjetas seguidas no sean la misma miniatura cuatro veces:
+
+- **Kine** (*ficha*): plano verde salvia, el teléfono con el mapa corporal
+  grande y derecho al frente, la ventana atrás cortada por el borde.
+- **Daily** (*informe*): plano lavanda, la ventana del panel en perspectiva
+  saliendo por la derecha y el teléfono de frente adelante.
+- **Tierras Argentinas** (*mapa*): plano papel con la grilla de puntitos del
+  sitio dibujada en CSS, todo plano y de frente.
+- **2MG** (*escenario*): plano negro con un resplandor naranja, la ventana y
+  el teléfono inclinados en sentidos opuestos.
+
+Un proyecto sin escena lleva la base: ventana arriba a la izquierda y teléfono
+abajo a la derecha sobre el gris de las tarjetas. Los planos son colores
+fijos del proyecto, iguales en los dos temas, como los logos. Las capturas
+salen de las mismas *Pantallas para la portada* que
 corren en el hero: de las de escritorio entra la que mejor llena una ventana
 16:10, y del teléfono la primera. Un proyecto sin pantallas muestra la ventana
 con su nombre adentro; la portada no se usa ahí, porque es una imagen

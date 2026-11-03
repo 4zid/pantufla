@@ -74,6 +74,29 @@ export const platformDesign: Record<
   framer: { logo: "/logos/framer-wordmark.svg", logoWidth: 89 },
 };
 
+/**
+ * La escena de la tarjeta de cada proyecto (ver ui/proyecto-tarjeta.tsx),
+ * por slug. Cada una arma la ventana y el teléfono de otra manera y sobre
+ * otro plano, para que las cuatro de la home no sean la misma miniatura
+ * cuatro veces: la identidad sale del gesto del sitio (el verde clínico de
+ * Kine, el panel de Daily, la grilla de puntos de Tierras, el escenario
+ * oscuro de 2MG), no de un color pegado al azar. Los planos son fijos y no
+ * tokens: son el color del proyecto, igual en los dos temas, como los logos.
+ *
+ * Un proyecto sin entrada acá lleva la escena base: ventana arriba a la
+ * izquierda y teléfono abajo a la derecha, sobre el gris de las tarjetas.
+ */
+export type EscenaTarjeta = "base" | "ficha" | "informe" | "mapa" | "escenario";
+export const tarjetaDesign: Record<
+  string,
+  { escena: EscenaTarjeta; plano: string }
+> = {
+  kine: { escena: "ficha", plano: "#e3ece6" },
+  daily: { escena: "informe", plano: "#e6e8fb" },
+  "tierras-argentinas": { escena: "mapa", plano: "#f4f2ec" },
+  "2mg": { escena: "escenario", plano: "#121212" },
+};
+
 /* ------------------------------------------------------------------ */
 /* Prueba social                                                       */
 /* ------------------------------------------------------------------ */
