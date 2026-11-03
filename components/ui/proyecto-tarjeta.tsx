@@ -7,7 +7,9 @@ import { useCopy, useHref } from "@/components/copy-provider";
 import { Reveal } from "@/components/motion/reveal";
 import { ArrowIcon, ArrowUpRightIcon } from "@/components/ui/icons";
 import { dominioDe, mockupDe, type PantallaMockup } from "@/content/mockup";
+import { tarjetaDesign, type EscenaTarjeta } from "@/content/site";
 import type { SanityProject } from "@/sanity/types";
+import { cn } from "@/lib/cn";
 
 /*
    Los tamaños pedidos al optimizador. La grilla es de dos columnas desde md
@@ -93,9 +95,130 @@ function Telefono({ pantalla }: { pantalla: PantallaMockup }) {
 }
 
 /**
+ * Las escenas: cómo se acomodan la ventana y el teléfono en cada tarjeta
+ * (content/site.ts dice cuál lleva cada proyecto). Todas reciben las mismas
+ * piezas; lo que cambia es la composición, y es lo que hace que cuatro
+ * tarjetas seguidas no se lean como cuatro copias.
+ *
+ * - base: ventana arriba a la izquierda, teléfono abajo a la derecha.
+ * - ficha (Kine): el teléfono con el mapa corporal es el protagonista,
+ *   grande y derecho en el centro; la ventana queda atrás, corrida a la
+ *   derecha y cortada por el borde, como una ficha detrás de otra.
+ * - informe (Daily): la ventana del panel en perspectiva, grande y saliendo
+ *   por abajo a la derecha, con el teléfono de frente adelante a la
+ *   izquierda. El giro es el gesto: un panel que se mira de costado.
+ * - mapa (Tierras Argentinas): todo plano y de frente, como un mapa. La
+ *   ventana ancha ocupa el centro, el teléfono se apoya a la derecha, y el
+ *   plano lleva la grilla de puntitos del sitio dibujada en CSS.
+ * - escenario (2MG): plano negro con un resplandor naranja abajo, como la
+ *   luz de un escenario; la ventana inclinada, grande, saliendo por la
+ *   izquierda, y el teléfono inclinado al revés a la derecha.
+ *
+ * Los giros son CSS puro y van adentro del envoltorio que desenfoca el
+ * hover: ese escribe transform también, por eso cada pieza inclinada tiene
+ * su propio elemento.
+ */
+function Escena({
+  escena,
+  ventana,
+  telefono,
+}: {
+  escena: EscenaTarjeta;
+  ventana: React.ReactNode;
+  telefono: React.ReactNode | null;
+}) {
+  switch (escena) {
+    case "ficha":
+      return (
+        <>
+          <div className="absolute -right-[14%] top-[7%] w-[78%]">
+            <div className="aspect-[16/10.6]">{ventana}</div>
+          </div>
+          {telefono ? (
+            <div className="absolute bottom-[7%] left-[20%] aspect-[9/19.5] w-[29%]">
+              {telefono}
+            </div>
+          ) : null}
+        </>
+      );
+    case "informe":
+      return (
+        <>
+          <div className="absolute -right-[10%] top-[10%] w-[86%] [perspective:1400px]">
+            <div className="aspect-[16/10.6] origin-left [transform:rotateY(-16deg)_rotateX(4deg)]">
+              {ventana}
+            </div>
+          </div>
+          {telefono ? (
+            <div className="absolute bottom-[8%] left-[9%] aspect-[9/19.5] w-[22%]">
+              {telefono}
+            </div>
+          ) : null}
+        </>
+      );
+    case "mapa":
+      return (
+        <>
+          {/* La grilla de puntitos del sitio, en el gris de las líneas. */}
+          <div
+            aria-hidden
+            className="absolute inset-0 bg-[radial-gradient(circle,rgba(17,24,60,0.16)_1.1px,transparent_1.3px)] bg-[size:14px_14px] bg-[position:7px_7px]"
+          />
+          <div className="absolute left-[7%] top-[13%] w-[76%]">
+            <div className="aspect-[16/10.6]">{ventana}</div>
+          </div>
+          {telefono ? (
+            <div className="absolute bottom-[9%] right-[7%] aspect-[9/19.5] w-[21%]">
+              {telefono}
+            </div>
+          ) : null}
+        </>
+      );
+    case "escenario":
+      return (
+        <>
+          <div
+            aria-hidden
+            className="absolute inset-x-0 bottom-0 h-[70%] bg-[radial-gradient(70%_80%_at_50%_100%,rgba(255,122,24,0.42),transparent_70%)]"
+          />
+          <div className="absolute -left-[12%] top-[14%] w-[84%] [transform:rotate(-4deg)]">
+            <div className="aspect-[16/10.6]">{ventana}</div>
+          </div>
+          {telefono ? (
+            <div className="absolute bottom-[4%] right-[8%] aspect-[9/19.5] w-[22%] [transform:rotate(5deg)]">
+              {telefono}
+            </div>
+          ) : null}
+        </>
+      );
+    default:
+      return (
+        <>
+          {/* Con teléfono, la ventana se corre arriba a la izquierda y el
+              teléfono se apoya abajo a la derecha, montado sobre ella. Sin
+              teléfono, la ventana va al centro. */}
+          <div
+            className={`absolute left-[10%] w-[80%] ${
+              telefono ? "top-[12%]" : "top-1/2 -translate-y-1/2"
+            }`}
+          >
+            <div className="aspect-[16/10.6]">{ventana}</div>
+          </div>
+          {telefono ? (
+            <div className="absolute bottom-[7%] right-[7%] aspect-[9/19.5] w-[21%]">
+              {telefono}
+            </div>
+          ) : null}
+        </>
+      );
+  }
+}
+
+/**
  * La tarjeta de un proyecto: el mockup arriba —una ventana y un teléfono
- * sobre un plano gris, nada más— y abajo el nombre, el rubro y la bajada.
- * Sin enlaces de texto: los botones viven adentro del mockup.
+ * en la escena del proyecto (ver Escena y content/site.ts)— y abajo el
+ * nombre, el rubro y la bajada. Sin enlaces de texto: los botones viven
+ * adentro del mockup.
  *
  * Al pasar el mouse el mockup se desenfoca y en el medio aparecen los
  * botones: «Ver sitio», una pastilla blanca con letra negra, y al lado,
@@ -130,6 +253,8 @@ export function ProyectoTarjeta({
   const href = useHref();
   const { escritorio, telefono } = mockupDe(proyecto);
   const dominio = dominioDe(proyecto.url);
+  const diseno = tarjetaDesign[proyecto.slug];
+  const escena: EscenaTarjeta = diseno?.escena ?? "base";
 
   const caso = proyecto.conCaso ? href(`/proyectos/${proyecto.slug}`) : null;
   const sitio = proyecto.url;
@@ -140,10 +265,13 @@ export function ProyectoTarjeta({
 
   return (
     <article>
-      <div className="group/escenario relative aspect-[4/3] overflow-hidden rounded-[1.25rem] border border-line bg-paper-alt md:rounded-[1.5rem]">
-        {/* Con teléfono, la ventana se corre arriba a la izquierda y el
-            teléfono se apoya abajo a la derecha, montado sobre ella. Sin
-            teléfono, la ventana va al centro. */}
+      <div
+        className={cn(
+          "group/escenario relative aspect-[4/3] overflow-hidden rounded-[1.25rem] border border-line md:rounded-[1.5rem]",
+          !diseno && "bg-paper-alt",
+        )}
+        style={diseno ? { backgroundColor: diseno.plano } : undefined}
+      >
         <div
           className={`absolute inset-0 transition-[filter,transform] duration-500 ease-out motion-reduce:transition-none ${
             conBotones
@@ -151,24 +279,17 @@ export function ProyectoTarjeta({
               : ""
           }`}
         >
-          <div
-            className={`absolute left-[10%] w-[80%] ${
-              telefono ? "top-[12%]" : "top-1/2 -translate-y-1/2"
-            }`}
-          >
-            <div className="aspect-[16/10.6]">
+          <Escena
+            escena={escena}
+            ventana={
               <Ventana
                 pantalla={escritorio}
                 dominio={dominio}
                 titulo={proyecto.title}
               />
-            </div>
-          </div>
-          {telefono ? (
-            <div className="absolute bottom-[7%] right-[7%] aspect-[9/19.5] w-[21%]">
-              <Telefono pantalla={telefono} />
-            </div>
-          ) : null}
+            }
+            telefono={telefono ? <Telefono pantalla={telefono} /> : null}
+          />
         </div>
 
         {sitio ? (
