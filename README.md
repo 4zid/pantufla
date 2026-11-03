@@ -567,22 +567,25 @@ columna en el teléfono. En `/proyectos` están todos, con la misma tarjeta y en
 el mismo orden, destacados incluidos.
 
 Cada tarjeta es un mockup mínimo: una ventana de navegador con el dominio del
-sitio en la barra y un teléfono, acomodados en una **escena propia** por
-proyecto (`tarjetaDesign` en `content/site.ts`, por slug), para que cuatro
-tarjetas seguidas no sean la misma miniatura cuatro veces:
+sitio en la barra y un teléfono. Los cuatro destacados llevan además una
+**escena propia** (`tarjetaDesign` en `content/site.ts`, por slug;
+`components/ui/proyecto-escenas.tsx`): una sola pieza, derecha y centrada,
+sobre un plano del color del proyecto, con aire, como esas miniaturas de
+portfolio que sacan un componente de la página y lo vuelven la imagen.
 
-- **Kine** (*ficha*): plano verde salvia, el teléfono con el mapa corporal
-  grande y derecho al frente, la ventana atrás cortada por el borde.
-- **Daily** (*informe*): plano lavanda, la ventana del panel en perspectiva
-  saliendo por la derecha y el teléfono de frente adelante.
-- **Tierras Argentinas** (*mapa*): plano papel con la grilla de puntitos del
-  sitio dibujada en CSS, todo plano y de frente.
-- **2MG** (*escenario*): plano negro con un resplandor naranja, la ventana y
-  el teléfono inclinados en sentidos opuestos.
+- **Kine** (*ficha*): el teléfono solo, grande, con el mapa corporal, sobre
+  verde salvia.
+- **Daily** (*informe*): la tarjeta índigo del resumen semanal, rehecha en
+  HTML, sola sobre lavanda.
+- **Tierras Argentinas** (*mapa*): la grilla de cuadraditos del sitio con los
+  azules en manos extranjeras, sobre papel, con una línea que la lee.
+- **2MG** (*escenario*): el mockup de siempre sobre negro, con un resplandor
+  naranja suave desde abajo.
 
-Un proyecto sin escena lleva la base: ventana arriba a la izquierda y teléfono
-abajo a la derecha sobre el gris de las tarjetas. Los planos son colores
-fijos del proyecto, iguales en los dos temas, como los logos. Las capturas
+Nada inclinado, nada flotando alrededor, nada en serif ni en mayúsculas
+espaciadas: una primera versión con eso se descartó. Un proyecto sin escena
+lleva la base sobre el gris de las tarjetas. Los planos son colores fijos del
+proyecto, iguales en los dos temas, como los logos. Las capturas
 salen de las mismas *Pantallas para la portada* que
 corren en el hero: de las de escritorio entra la que mejor llena una ventana
 16:10, y del teléfono la primera. Un proyecto sin pantallas muestra la ventana
