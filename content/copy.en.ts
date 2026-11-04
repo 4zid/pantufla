@@ -43,7 +43,6 @@ export const en: SiteCopy = {
   },
 
   hero: {
-    eyebrow: "Available for new projects",
     headline: [
       { text: "Websites" },
       { text: "a website", icon: "ventana" },
