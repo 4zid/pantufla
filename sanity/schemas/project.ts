@@ -89,16 +89,15 @@ export const project = defineType({
       ],
     }),
     /*
-       Las pantallas que este proyecto pone en la galería que corre abajo del
-       hero. La galería no tiene lista propia: se arma sola con las pantallas
-       de todos los proyectos, en el orden de los proyectos y, dentro de cada
-       uno, en el orden de acá. Un proyecto sin pantallas no aparece en ella.
+       Las capturas del proyecto, sin marco. Las usan los teléfonos del
+       mosaico del hero (Kine, 2MG y Tierras Argentinas, ver
+       hero-mosaico.tsx) y la tarjeta del proyecto (ver content/mockup.ts).
     */
     defineField({
       name: "pantallas",
       title: "Pantallas para la portada",
       description:
-        "Capturas sueltas, sin marco: el navegador y el teléfono los dibuja la galería. El orden arma las columnas: dos de escritorio seguidas van una arriba de la otra, y una de escritorio sola antes de una de teléfono va grande. Conviene alternar.",
+        "Capturas sueltas, sin marco: el navegador y el teléfono los dibuja el sitio. Las de teléfono van en los teléfonos del mosaico de la portada y en la tarjeta del proyecto; de las de escritorio, la tarjeta usa la más cercana a 16:10.",
       type: "array",
       of: [
         defineArrayMember({
