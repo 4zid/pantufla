@@ -12,11 +12,13 @@ la página, y la ficha las muestra enteras, con su proporción.
 ## Tierras Argentinas
 
 Salen de los mockups de Tierras Argentinas (capturas reales del sitio, con sus
-colores), exportados marco por marco.
+colores), exportados marco por marco. La portada es la excepción: es una
+composición aparte, la laptop con el sitio sobre una escultura negra, en
+3:2 (2000×1333).
 
 | Archivo | En Sanity | Qué muestra |
 | --- | --- | --- |
-| `portada.jpg` | Imagen de portada | El titular y el mapa por provincia |
+| `portada.jpg` | Imagen de portada | La laptop con el titular y la grilla, sobre la escultura negra |
 | `casos.jpg` | Galería, 1 | Caso por caso |
 | `senado.jpg` | Galería, 2 | El Senado banca por banca |
 | `mobile.jpg` | Galería, 3 | Tres pantallas en el teléfono |
