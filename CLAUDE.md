@@ -80,7 +80,9 @@ Canonical, hreflang, sitemap and JSON-LD all derive from `siteUrl` (`lib/site-ur
 
 ## Design skills vs. project decisions
 
-Two third-party skills live in `.claude/skills` (sources and hashes in `skills-lock.json`, update with `npx skills update`): `design-taste-frontend` (from `Leonxlnx/taste-skill`), a general guide for new design work, and `web-design-guidelines` (from `vercel-labs/agent-skills`), a UI audit that fetches Vercel's rule list at run time. Where either conflicts with this site, the site's existing decisions win; do not "fix" these to satisfy a skill:
+Third-party skills live in `.claude/skills` (sources and hashes in `skills-lock.json`, update with `npx skills update`): `design-taste-frontend` (from `Leonxlnx/taste-skill`), a general guide for new design work, and `web-design-guidelines` (from `vercel-labs/agent-skills`), a UI audit that fetches Vercel's rule list at run time. Seven marketing skills come from `coreyhaines31/marketingskills` (Markdown only, reviewed before install; the repo's tool CLIs and partner integrations were left out): `product-marketing`, `copywriting`, `copy-editing`, `cro`, `seo-audit`, `ai-seo` and `schema`. They all read `.agents/product-marketing.md` first: the studio's positioning, prices, objections, voice and the clients' own words (from the testimonials), written in Spanish, with `[FALTA: …]` where the repo has no data. Keep it in step when prices, plans or positioning change, and log decisions the user makes about copy in its Aprendizajes table. A copy edit still has to land in Sanity too (see «Content comes in three layers»).
+
+Where any skill conflicts with this site, the site's existing decisions win; do not "fix" these to satisfy a skill:
 
 - Motion is GSAP + ScrollTrigger + Lenis, not Motion/Framer.
 - The page switches theme on scroll (Proceso, Proyectos and the form default to dark).

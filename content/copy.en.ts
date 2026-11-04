@@ -13,7 +13,7 @@ export const en: SiteCopy = {
   meta: {
     tagline: "Web design and development studio",
     description:
-      "We design and build websites with a fixed scope, a fixed price and a delivery date. From the first conversation to a published site, in weeks.",
+      "We design and build websites with scope, price and date fixed before we start. Landing pages from USD 850 in a week; a site with an editing panel in three.",
     keywords: [
       "web design",
       "web development",
@@ -67,7 +67,7 @@ export const en: SiteCopy = {
   approach: {
     eyebrow: "How we work",
     title: "One scope, one price, one date.",
-    lead: "Pantufla is a small studio with a fixed method. That is what lets us deliver fast without dropping the quality of the design.",
+    lead: "Pantufla is a small studio with a fixed method. That is why we deliver in weeks without dropping the quality of the design.",
     pillars: [
       {
         id: "alcance",
@@ -77,7 +77,7 @@ export const en: SiteCopy = {
       {
         id: "ritmo",
         title: "Short cycles, dates you can see",
-        body: "We work in blocks of days, not months. Every stage has a date and a single round of changes, so the project never goes cold.",
+        body: "Each stage lasts days and has its own date on the calendar. There is a single round of changes per stage, so the project never goes cold.",
       },
       {
         id: "entrega",
@@ -139,7 +139,7 @@ export const en: SiteCopy = {
   stack: {
     eyebrow: "Tools",
     title: "Tools you can keep using.",
-    lead: "Nothing exotic and nothing homemade: tools you already know, that you will be able to keep using with any other studio.",
+    lead: "We design in Figma and build in Webflow, Framer or Next.js. If you ever switch studios, anyone can pick up where we left off.",
   },
 
   pricing: {
@@ -244,8 +244,8 @@ export const en: SiteCopy = {
     },
     alwaysIncluded: [
       "Original design, no templates",
-      "Real responsive on mobile, tablet and desktop",
-      "Fast loading and solid Core Web Vitals",
+      "Looks right on a phone, a tablet and a computer",
+      "Load target: under two seconds on a phone",
       "Technical SEO: metadata, sitemap and structured data",
       "The code, the domain and the accounts stay in your name",
       "A closing call to leave you up and running",
@@ -256,12 +256,12 @@ export const en: SiteCopy = {
   bento: {
     eyebrow: "What the site gets you",
     title: "Looking good is half of it.",
-    lead: "The other half is not something you look at: it is measured. These four ship on every project, whichever plan you pick.",
+    lead: "The other half is measured in load time, searches and enquiries. These four ship on every plan.",
     cards: [
       {
         id: "velocidad",
         title: "Loads before they decide to leave",
-        body: "Half of all visitors leave if a site takes over three seconds. We measure yours on a phone before it goes live: the goal is under two.",
+        body: "According to Google, more than half of mobile visits are abandoned if a page takes over three seconds to load. We measure yours on a phone before it goes live, aiming for under two.",
       },
       {
         id: "seo",
@@ -271,12 +271,12 @@ export const en: SiteCopy = {
       {
         id: "pantallas",
         title: "Just as tidy on a phone",
-        body: "Every section is rebuilt for the screen it is on. We test on all three before publishing.",
+        body: "Every section is rebuilt for the screen it is on. Before publishing we test it on a phone, a tablet and a computer.",
       },
       {
         id: "resultados",
         title: "Built so they write to you",
-        body: "A beautiful site that does not convert is an expensive brochure. Every decision comes from one question: what makes someone commit.",
+        body: "A beautiful site that does not convert is an expensive brochure. Every page ends in one clear step (write to you, book a call or ask for a price) and the form emails you the moment an enquiry comes in.",
       },
     ],
     figures: {
@@ -298,7 +298,7 @@ export const en: SiteCopy = {
   work: {
     eyebrow: "Work",
     title: "Some of the sites that came out of here.",
-    lead: "Different industries, different sizes, the same method.",
+    lead: "From clinical records for physiotherapists to an open-data atlas, with the same method.",
     view: "Visit site",
     readCase: "Read the case study",
     all: "See all projects",
@@ -349,6 +349,14 @@ export const en: SiteCopy = {
       {
         q: "Do you use AI to work?",
         a: "Yes, on the technical and repetitive parts: code scaffolding, configuration, first drafts of copy. The design, the structure and the decisions are ours. It is the reason we can deliver in weeks and charge what we charge.",
+      },
+      {
+        q: "What if I don't like the design?",
+        a: "We stop there and refund the full deposit. That delivery arrives on day 6 of a Site, before development starts.",
+      },
+      {
+        q: "Do you work with clients outside Argentina?",
+        a: "Yes. We have clients in Argentina, Colombia, the United States, Spain and Denmark. The whole process runs in writing and over video, and you can pay by bank transfer, Wise, Payoneer or stablecoins.",
       },
       {
         q: "What do you need from me to start?",
@@ -466,7 +474,7 @@ export const en: SiteCopy = {
     proyectos: {
       metaTitle: "Work",
       metaDescription:
-        "Sites and landing pages we designed and built: industry, scope and the real delivery time for each one.",
+        "Sites and landing pages we designed and built for healthcare, events, open data, real estate and agencies.",
       eyebrow: "Work",
       title: "Sites that came out of here.",
       lead: "From single-page landings to full sites with a content panel.",

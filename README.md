@@ -709,6 +709,28 @@ que las variantes están escritas enteras ahí.
 
 ---
 
+## Skills de marketing
+
+En `.claude/skills` hay siete skills de [coreyhaines31/marketingskills](https://github.com/coreyhaines31/marketingskills)
+para trabajar los textos con Claude Code: `product-marketing`, `copywriting`,
+`copy-editing`, `cro`, `seo-audit`, `ai-seo` y `schema`. Son solo Markdown (se
+revisaron antes de instalarlas); del repo original quedaron afuera las
+herramientas de línea de comandos y las integraciones con sus partners. Se
+actualizan con `npx skills update`, y el origen de cada una queda en
+`skills-lock.json`.
+
+Antes de escribir, todas leen `.agents/product-marketing.md`: qué vende el
+estudio, a quién, cuánto sale, las objeciones, la voz y cómo hablan los
+clientes (sacado de los testimonios). Lo que dice `[FALTA: …]` es información
+que no está en el repo: completarla mejora lo que escriben las skills. Si
+cambian los precios, los planes o el posicionamiento, hay que actualizar ese
+archivo también.
+
+Un cambio de texto hecho en el repo no se ve en producción hasta que se carga
+en Sanity (ver «Contenido de respaldo»).
+
+---
+
 ## Comandos
 
 ```bash
