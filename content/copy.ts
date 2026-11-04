@@ -66,63 +66,6 @@ export type SiteCopy = {
     /** El nombre de la galería de pantallas, para el lector de pantalla. */
     gallery: string;
   };
-  /**
-   * El pase: el de la portada, el que vuela con el scroll y el que se acuesta
-   * en el banner son el mismo. El dibujo es una imagen (public/pase); acá van
-   * los textos de los formularios y lo que el pase imprime en su cara cuando
-   * se reserva.
-   *
-   * Reserva un lugar en la agenda: quien deja sus datos pide que le escriban
-   * primero cuando se abra el próximo cupo.
-   */
-  pase: {
-    /** Lo que muestra el dibujo, para quien no lo ve. */
-    alt: string;
-    /**
-     * El pase de la portada es un enlace que baja al banner: esto es su
-     * nombre para el lector de pantalla. Era la línea de arriba del
-     * formulario de la portada, que ya no está.
-     */
-    body: string;
-    label: string;
-    placeholder: string;
-    submit: string;
-    sending: string;
-    /** La letra chica de abajo del campo. */
-    fine: string;
-    /** Si el mail no es válido. */
-    invalid: string;
-    /** Si no se pudo guardar. Lleva {email}, el del estudio. */
-    error: string;
-    success: {
-      title: string;
-      /** Lleva {email}, el que dejó la persona. */
-      body: string;
-      reset: string;
-    };
-    /** La etiqueta del panel del pase, arriba del nombre o el mail impreso. */
-    titular: string;
-    /** El estado que imprime al lado del nombre o el mail. */
-    reservado: string;
-    /** El campo del nombre, que solo pide el formulario del banner. */
-    nombre: {
-      label: string;
-      placeholder: string;
-      /** Si se manda vacío. */
-      missing: string;
-    };
-  };
-  /**
-   * El banner de la mitad de la home, donde aterriza el pase acostado. Sin
-   * etiqueta ni lista de puntos: el título dice qué es, la bajada qué hacer,
-   * y la letra chica del formulario (pase.fine) cierra.
-   */
-  lugar: {
-    title: string;
-    lead: string;
-    /** Lo que dice el hueco del pase mientras está vacío. */
-    hueco: string;
-  };
   socialProof: { label: string };
   approach: {
     eyebrow: string;

@@ -185,108 +185,6 @@ export const siteCopy = defineType({
     }),
 
     /* --- Pase --- */
-    defineField({
-      name: "pase",
-      title: "Pase",
-      description:
-        "El pase de la portada, el que vuela con el scroll y el que se acuesta en el banner son el mismo. El dibujo es una imagen; acá van los textos del formulario del banner y lo que el pase imprime al reservar.",
-      type: "object",
-      options: { collapsible: true, collapsed: true },
-      fields: [
-        defineField({
-          name: "alt",
-          title: "Qué muestra el pase",
-          type: "string",
-          description: "Para quien no ve la imagen.",
-        }),
-        defineField({
-          name: "body",
-          title: "Qué hace el pase de la portada",
-          type: "string",
-          description:
-            "El pase de la portada es un enlace que baja al banner. Esto es lo que dice el lector de pantalla al llegar a él.",
-        }),
-        defineField({
-          name: "label",
-          title: "Etiqueta del campo",
-          type: "string",
-        }),
-        defineField({
-          name: "placeholder",
-          title: "Ejemplo del campo",
-          type: "string",
-        }),
-        defineField({ name: "submit", title: "Botón", type: "string" }),
-        defineField({
-          name: "sending",
-          title: "Botón mientras envía",
-          type: "string",
-        }),
-        defineField({ name: "fine", title: "Letra chica", type: "string" }),
-        defineField({
-          name: "invalid",
-          title: "Mail inválido",
-          type: "string",
-        }),
-        defineField({
-          name: "error",
-          title: "Si no se pudo reservar",
-          type: "string",
-          description: "Usá {email} donde va la dirección del estudio.",
-        }),
-        defineField({
-          name: "success",
-          title: "Reservado",
-          type: "object",
-          fields: [
-            defineField({ name: "title", title: "Título", type: "string" }),
-            defineField({
-              name: "body",
-              title: "Texto",
-              type: "string",
-              description: "Usá {email} donde va el mail que dejó la persona.",
-            }),
-            defineField({
-              name: "reset",
-              title: "Usar otro mail",
-              type: "string",
-            }),
-          ],
-        }),
-        defineField({
-          name: "titular",
-          title: "Etiqueta del panel",
-          type: "string",
-          description:
-            "Lo que el pase imprime arriba del mail cuando se reserva.",
-        }),
-        defineField({
-          name: "reservado",
-          title: "Estado al reservar",
-          type: "string",
-          description: "La etiqueta que el pase imprime al lado del mail.",
-        }),
-        defineField({
-          name: "nombre",
-          title: "Campo del nombre",
-          description: "Solo lo pide el formulario del banner.",
-          type: "object",
-          fields: [
-            defineField({ name: "label", title: "Etiqueta", type: "string" }),
-            defineField({
-              name: "placeholder",
-              title: "Ejemplo del campo",
-              type: "string",
-            }),
-            defineField({
-              name: "missing",
-              title: "Si queda vacío",
-              type: "string",
-            }),
-          ],
-        }),
-      ],
-    }),
 
     /* --- Tira de prueba social --- */
     defineField({
@@ -937,27 +835,6 @@ export const siteCopy = defineType({
           title: "Enlace de mail",
           type: "string",
           description: "Usá {email} donde va la dirección.",
-        }),
-      ],
-    }),
-
-    /* --- El banner del pase: donde aterriza --- */
-    defineField({
-      name: "lugar",
-      title: "Banner del pase",
-      description:
-        "La sección de la mitad de la home donde el pase aterriza acostado, en el hueco que le falta al banner.",
-      type: "object",
-      options: { collapsible: true, collapsed: true },
-      fields: [
-        defineField({ name: "title", title: "Título", type: "string" }),
-        texto("lead", "Bajada"),
-        defineField({
-          name: "hueco",
-          title: "Texto del hueco",
-          type: "string",
-          description:
-            "Lo que se lee en el hueco mientras el pase todavía no aterrizó.",
         }),
       ],
     }),

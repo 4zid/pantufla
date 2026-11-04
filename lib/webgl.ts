@@ -7,8 +7,9 @@
  * imagen. failIfMajorPerformanceCaveat ya lo pide, pero algunos navegadores
  * lo ignoran, y por eso también se mira el nombre del renderizador.
  *
- * Lo usan el pase y el globo. `forzar` es el parámetro de la URL que lo
- * fuerza (?pase3d, ?globo3d), para probarlo en un navegador sin placa.
+ * Lo usa el globo (lo usó también el pase 3D, que ya no está). `forzar` es
+ * el parámetro de la URL que lo fuerza (?globo3d), para probarlo en un
+ * navegador sin placa.
  */
 export function sePuede3d(forzar: string): { si: boolean; forzado: boolean } {
   if (new URLSearchParams(window.location.search).has(forzar)) {
