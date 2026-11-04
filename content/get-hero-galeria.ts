@@ -22,11 +22,10 @@ type ProyectoCms = {
 };
 
 /**
- * Las pantallas de la galería del hero, armada sola con las de los
- * proyectos: primero todas las del primer proyecto, después las del segundo,
- * y así, en el orden que tienen los proyectos en el Studio. Cargar las
- * pantallas de un proyecto nuevo alcanza para que entre en la galería; no
- * hay otra lista que mantener.
+ * Las pantallas de los proyectos para el hero: primero todas las del primer
+ * proyecto, después las del segundo, y así, en el orden que tienen los
+ * proyectos en el Studio. El mosaico elige de acá las de teléfono de cada
+ * proyecto (ver hero-mosaico.tsx).
  *
  * Una pantalla lleva al caso de su proyecto solo si el caso está escrito, que
  * es lo que hace que la ficha exista para el público. Sin descripción, el
@@ -36,8 +35,9 @@ type ProyectoCms = {
  * las de respaldo (content/hero-galeria.ts), que son las mismas capturas.
  * Es todo o nada, como antes: mezclar las dos listas repetiría pantallas.
  *
- * El ancho pedido a Sanity alcanza para la columna más ancha de la galería
- * (la de escritorio grande, ~700px) en pantallas de doble densidad.
+ * El ancho pedido a Sanity alcanza para el teléfono más ancho del mosaico
+ * (~240px) en pantallas de doble densidad, con margen: viene de cuando
+ * estas pantallas armaban una galería con columnas de escritorio de ~700px.
  */
 export async function getHeroGaleria(locale: Locale): Promise<Pantalla[]> {
   const cms = await sanityFetch<ProyectoCms[] | null>(

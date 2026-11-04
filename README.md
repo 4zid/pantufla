@@ -347,8 +347,9 @@ objeciones → contacto**:
 - **Portada.** Tipográfica y centrada: una pastilla dice que el estudio
   toma proyectos, el titular grande dice para qué sirve el sitio —«Sitios que
   convierten *visitantes* en *clientes*»—, la bajada lo cuenta, y hay un CTA
-  principal al formulario y uno secundario a los planes. Abajo, de punta a
-  punta y más alta que antes, la galería de pantallas (ver *El hero*). Adentro
+  principal al formulario y uno secundario a los planes. Abajo, el mosaico:
+  una grilla quieta de placas negras con teléfonos, íconos y una pieza de
+  interfaz (ver *El hero*). Adentro
   del titular van tres pictogramas en pastillas: la ventana de un sitio, el
   cursor del visitante y el sobre del cliente que escribe.
 - **Prueba social.** Solo los logos de los clientes, corriendo de punta a punta
@@ -361,8 +362,7 @@ objeciones → contacto**:
   Son cuatro tarjetas con mockup, en una grilla de dos por dos: los proyectos
   marcados como *Destacado en la home* (hoy Kine, Daily, Tierras Argentinas y
   2MG), en el orden del campo *Orden*. El resto está en `/proyectos`, al que
-  lleva «Ver todos los proyectos» (ver *Los proyectos*). El mismo orden manda
-  en la galería del hero.
+  lleva «Ver todos los proyectos» (ver *Los proyectos*).
 - **Capacidades.** Un bento de cuatro celdas, cada una con su viñeta animada:
   velocidad de carga, que te encuentren (también en asistentes de IA), el
   sitio en el teléfono, y las consultas que llegan. Las promesas son las que
@@ -452,10 +452,9 @@ cobrar rápido.
 ### El hero
 
 Un bloque de texto centrado —la pastilla de «Disponibles», el titular a 72px
-en escritorio, la bajada y los dos botones en fila— y, debajo, de punta a
-punta, la galería de pantallas corriendo, más alta que antes (520px en
-escritorio): el texto y la galería son una sola primera pantalla, y la galería
-es el visual del hero.
+en escritorio, la bajada y los dos botones en fila— y, debajo, el mosaico: el
+texto y el mosaico son una sola primera pantalla, y el mosaico es el visual
+del hero.
 
 Tuvo a la derecha **el pase de Pantufla**: un papel 3D con física de tela
 (Three.js) que volaba con el scroll hasta un banner a mitad de la home con un
@@ -475,30 +474,35 @@ historial del repo (hasta el PR que lo sacó).
   escribe). En el Studio son tramos del titular con un *Pictograma* elegido;
   el texto de ese tramo («un sitio», «un cursor», «un mail») es lo que lee el
   lector de pantalla. Al pasar el mouse se inclinan apenas.
-- **La galería** son capturas de los proyectos, de escritorio y de teléfono,
-  en columnas tipo masonry: dos de escritorio apiladas, un teléfono de alto
-  entero, o una de escritorio grande cuando queda sola antes de un teléfono.
-  Corre como los otros rieles y se frena igual. **Se arma sola**: no tiene
-  lista propia, son las pantallas que cada proyecto carga en el Studio, en
-  *Pantallas para la portada*, una atrás de la otra en el orden de los
-  proyectos. Para sumar un proyecto a la galería alcanza con cargarle
-  pantallas; para sacarlo, con borrárselas.
-  - Cada pantalla es una captura suelta, **sin marco**: el navegador y el
-    teléfono los dibuja la galería. Dice si es de escritorio o de teléfono y
-    qué se ve (para quien no ve la imagen).
-  - El orden dentro del proyecto arma sus columnas: dos de escritorio
-    seguidas van apiladas, y una de escritorio sola antes de un teléfono va
-    grande. Las columnas no mezclan proyectos.
-  - Cada columna toma el ancho que piden sus capturas, así se ven enteras:
-    una captura de escritorio de proporción común (16:10, 16:9) entra justa;
-    una muy rara se recorta. Los teléfonos miden todos lo mismo; una captura
-    de teléfono más corta que la pantalla se recorta abajo.
-  - Si el proyecto tiene el caso escrito, sus pantallas llevan al caso.
-  - Si ningún proyecto tiene pantallas, o Sanity no contesta, salen las del
-    respaldo (`content/hero-galeria.ts`, archivos en `public/hero/pantallas`),
-    que son las mismas capturas de Kine, Daily, Tierras Argentinas y 2MG.
-    Las tres primeras salen de sus HTML de Claude Design, recortadas pantalla
-    por pantalla; las de 2MG, de sus mockups en `assets/proyectos/2mg`.
+- **El mosaico** es una grilla quieta de placas casi negras, como la
+  referencia de portfolio de producto que se eligió. A 1440 son
+  cuatro columnas:
+  - los íconos de Pantufla: la chinela en tinta sobre los cuatro colores de
+    la marca (el color va en la placa, nunca en el iso);
+  - un teléfono con Kine, alto;
+  - el dock: los íconos de los proyectos en una repisa, con el del medio
+    agrandado y su nombre arriba;
+  - un teléfono con 2MG, que asoma desde abajo;
+  - la semana de Daily, rehecha en HTML sobre un plano verde;
+  - un teléfono con Tierras Argentinas, alto.
+
+  Nada se mueve solo. El único detalle interactivo es el dock: al pasar el
+  mouse se agranda el ícono que está debajo y aparece su nombre. Los
+  teléfonos suben apenas con el mouse encima. En el teléfono se ven tres
+  placas (Kine, los íconos y 2MG) y en tablet, cinco.
+  - **Las pantallas de los teléfonos** salen de las que cada proyecto carga
+    en el Studio, en *Pantallas para la portada* (las de teléfono): de Kine y
+    Tierras Argentinas va la segunda, de 2MG la primera (`TELEFONOS` en
+    `components/sections/hero-mosaico.tsx`). Si un proyecto no tiene, van las
+    del respaldo (`content/hero-galeria.ts`, archivos en
+    `public/hero/pantallas`). Las de Kine, Daily y Tierras Argentinas salen de
+    sus HTML de Claude Design, recortadas pantalla por pantalla; las de 2MG,
+    de sus mockups en `assets/proyectos/2mg`.
+  - **Los íconos de los proyectos** están dibujados a mano a partir de cada
+    marca, a escala de ícono de app. Cambiar un proyecto del dock o de la
+    semana de Daily es tocar el componente.
+  - Reemplazó a una galería de pantallas que corría como un riel: era muy
+    grande y el teléfono se movía muy lento.
 - **La barra de arriba** es una píldora flotante con desenfoque, que se va al
   bajar y vuelve al subir (ver *La barra*).
 
@@ -530,12 +534,12 @@ espaciadas: una primera versión con eso se descartó. Un proyecto sin escena
 lleva la base sobre el gris de las tarjetas. Los planos son colores fijos del
 proyecto, iguales en los dos temas, como los logos. Las capturas
 salen de las mismas *Pantallas para la portada* que
-corren en el hero: de las de escritorio entra la que mejor llena una ventana
+usan los teléfonos del hero: de las de escritorio entra la que mejor llena una ventana
 16:10, y del teléfono la primera. Un proyecto sin pantallas muestra la ventana
 con su nombre adentro; la portada no se usa ahí, porque es una imagen
 compuesta (un mockup con sus propios marcos, o una ilustración) y adentro de
 una ventana parecería un sitio roto. Para que la tarjeta tenga capturas
-alcanza con cargarle pantallas, y eso también lo suma a la galería del hero.
+alcanza con cargarle pantallas.
 
 Los botones viven adentro del mockup, y abajo quedan solo el nombre, el rubro
 y la bajada. Al pasar el mouse el mockup se desenfoca y en el medio aparecen
@@ -666,8 +670,8 @@ CTA), con el margen justo para que el título no quede debajo del header.
 5. Lo que se mueve solo se puede frenar. Los rieles de herramientas y de
    clientes paran al pasar el mouse, con el foco adentro, con un toque en el
    teléfono y con un botón que aparece al llegar con el teclado
-   (`components/ui/riel-pausable.tsx`). El globo y la galería del hero se
-   frenan igual. Los testimonios ya no rotan: están los cuatro a la vista.
+   (`components/ui/riel-pausable.tsx`). El globo se frena igual. El mosaico
+   del hero no se mueve solo. Los testimonios ya no rotan: están los cuatro a la vista.
 
 ---
 

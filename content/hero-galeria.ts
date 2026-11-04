@@ -1,15 +1,12 @@
 /**
- * Las pantallas que corren abajo del hero.
+ * Las capturas de los proyectos, de escritorio y de teléfono, sin marco (el
+ * navegador y el teléfono los dibuja el sitio). Las de teléfono van en los
+ * teléfonos del mosaico del hero (ver hero-mosaico.tsx) y todas en las
+ * tarjetas de proyecto (ver mockup.ts).
  *
- * Son capturas sueltas de los proyectos, de escritorio y de teléfono, sin
- * marco (el navegador y el teléfono los dibuja la galería), y la galería las
- * acomoda en columnas tipo masonry: dos de escritorio apiladas, una de
- * teléfono de alto entero, o una de escritorio grande cuando le sigue un
- * teléfono (ver hero-galeria.tsx).
- *
- * La galería no tiene lista propia. Cada proyecto carga las suyas en el
- * Studio, en «Pantallas para la portada», y la galería se arma sola con las
- * de todos, en el orden de los proyectos (ver get-hero-galeria.ts).
+ * Cada proyecto carga las suyas en el Studio, en «Pantallas para la
+ * portada» (ver get-hero-galeria.ts). Fueron la galería que corría abajo del
+ * hero, armada en columnas tipo masonry; el orden de acá abajo viene de ahí.
  *
  * Estas son el respaldo para cuando Sanity no contesta, y también el
  * original de lo que se subió: las mismas capturas, en el mismo orden. Las de
