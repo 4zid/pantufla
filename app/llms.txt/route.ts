@@ -83,6 +83,8 @@ ${planes.join("\n")}
 
 Incluido en todos los planes: ${copy.pricing.alwaysIncluded.join(", ")}.
 
+Garantía: ${copy.pricing.guarantee}
+
 Sitios ya publicados que hay que retomar: ${copy.pricing.existing.summary}
 `,
 )}

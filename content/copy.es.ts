@@ -20,7 +20,7 @@ export const es: SiteCopy = {
   meta: {
     tagline: "Estudio de diseño y desarrollo web",
     description:
-      "Diseñamos y desarrollamos sitios web con alcance cerrado, precio cerrado y fecha de entrega. De la primera charla al sitio publicado, en semanas.",
+      "Diseñamos y desarrollamos sitios web con alcance, precio y fecha cerrados antes de empezar. Landing desde USD 850 en una semana; sitio con panel de edición en tres.",
     keywords: [
       "diseño web",
       "desarrollo web",
@@ -74,7 +74,7 @@ export const es: SiteCopy = {
   approach: {
     eyebrow: "Cómo lo resolvemos",
     title: "Un alcance, un precio, una fecha.",
-    lead: "Pantufla es un estudio chico que trabaja con un método fijo. Eso es lo que nos permite entregar rápido sin bajar el nivel del diseño.",
+    lead: "Pantufla es un estudio chico que trabaja con un método fijo. Por eso entregamos en semanas sin bajar el nivel del diseño.",
     pillars: [
       {
         id: "alcance",
@@ -84,7 +84,7 @@ export const es: SiteCopy = {
       {
         id: "ritmo",
         title: "Ritmo corto y fechas visibles",
-        body: "Trabajamos en bloques de días, no de meses. Cada etapa tiene una fecha y una sola ronda de cambios para que el proyecto no se enfríe.",
+        body: "Cada etapa dura días y tiene su fecha en el calendario. Hay una sola ronda de cambios por etapa, así el proyecto no se enfría.",
       },
       {
         id: "entrega",
@@ -146,7 +146,7 @@ export const es: SiteCopy = {
   stack: {
     eyebrow: "Herramientas",
     title: "Herramientas que vas a poder seguir usando.",
-    lead: "Nada exótico y nada casero: herramientas conocidas, que vas a poder seguir usando con cualquier otro estudio.",
+    lead: "Diseñamos en Figma y construimos en Webflow, Framer o Next.js. Si mañana cambiás de estudio, cualquiera puede seguir donde lo dejamos.",
   },
 
   pricing: {
@@ -251,8 +251,8 @@ export const es: SiteCopy = {
     },
     alwaysIncluded: [
       "Diseño original, nada de plantillas",
-      "Responsive real en mobile, tablet y desktop",
-      "Carga rápida y buenas métricas de Core Web Vitals",
+      "Se ve bien en el teléfono, la tablet y la computadora",
+      "Objetivo de carga: menos de dos segundos en un teléfono",
       "SEO técnico: metadatos, sitemap y datos estructurados",
       "El código, el dominio y las cuentas quedan a tu nombre",
       "Una llamada de cierre para dejarte andando",
@@ -263,12 +263,12 @@ export const es: SiteCopy = {
   bento: {
     eyebrow: "Qué se lleva el sitio",
     title: "Que se vea bien es la mitad.",
-    lead: "La otra mitad no se mira: se mide. Estas cuatro van en todos los proyectos, sin importar el plan.",
+    lead: "La otra mitad se mide en segundos de carga, búsquedas y consultas. Estas cuatro van en todos los planes.",
     cards: [
       {
         id: "velocidad",
         title: "Carga antes de que decidan irse",
-        body: "La mitad de la gente se va si un sitio tarda más de tres segundos. Al tuyo lo medimos en un teléfono antes de publicarlo: el objetivo es que cargue en menos de dos.",
+        body: "Según Google, más de la mitad de las visitas desde el teléfono se van si la página tarda más de tres segundos. Al tuyo lo medimos en un teléfono antes de publicarlo, con el objetivo de que cargue en menos de dos.",
       },
       {
         id: "seo",
@@ -278,12 +278,12 @@ export const es: SiteCopy = {
       {
         id: "pantallas",
         title: "Igual de prolijo en el teléfono",
-        body: "Cada sección se rearma para la pantalla en la que está. Probamos en las tres antes de publicar.",
+        body: "Cada sección se rearma para la pantalla en la que está. Antes de publicar lo probamos en teléfono, tablet y computadora.",
       },
       {
         id: "resultados",
         title: "Hecho para que te escriban",
-        body: "Un sitio lindo que no convierte es un folleto caro. Cada decisión sale de una pregunta: qué hace que alguien se decida.",
+        body: "Un sitio lindo que no convierte es un folleto caro. Cada página termina en un paso claro (escribirte, agendar o pedir precio) y el formulario te avisa por mail apenas llega una consulta.",
       },
     ],
     figures: {
@@ -305,7 +305,7 @@ export const es: SiteCopy = {
   work: {
     eyebrow: "Proyectos",
     title: "Algunos sitios que salieron de acá.",
-    lead: "Distintos rubros, distintos tamaños, el mismo método.",
+    lead: "De una historia clínica para kinesiólogos a un atlas de datos abiertos, con el mismo método.",
     view: "Ver sitio",
     readCase: "Leer el caso",
     all: "Ver todos los proyectos",
@@ -356,6 +356,14 @@ export const es: SiteCopy = {
       {
         q: "¿Usan inteligencia artificial para trabajar?",
         a: "Sí, en la parte técnica y repetitiva: andamiaje de código, tareas de configuración, primeras versiones de textos. El diseño, la estructura y las decisiones las tomamos nosotros. Es la razón por la que podemos entregar en semanas y cobrar lo que cobramos.",
+      },
+      {
+        q: "¿Qué pasa si el diseño no me convence?",
+        a: "Cortamos ahí y te devolvemos el anticipo completo. Esa entrega llega el día 6 de un Sitio, antes de que empiece el desarrollo.",
+      },
+      {
+        q: "¿Trabajan con clientes de afuera de Argentina?",
+        a: "Sí. Hoy tenemos clientes en Argentina, Colombia, Estados Unidos, España y Dinamarca. Todo el proceso pasa por escrito y por video, y se puede pagar con transferencia, Wise, Payoneer o stablecoins.",
       },
       {
         q: "¿Qué necesitan de mí para arrancar?",
@@ -470,7 +478,7 @@ export const es: SiteCopy = {
     proyectos: {
       metaTitle: "Proyectos",
       metaDescription:
-        "Sitios y landings que diseñamos y desarrollamos: rubro, alcance y tiempo real de entrega de cada uno.",
+        "Sitios y landings que diseñamos y desarrollamos para salud, eventos, datos abiertos, inmobiliarias y agencias.",
       eyebrow: "Proyectos",
       title: "Sitios que salieron de acá.",
       lead: "Entre landings de una sola página y sitios completos con panel de carga.",
