@@ -7,6 +7,7 @@ import { useCopy, useHref } from "@/components/copy-provider";
 import { Reveal } from "@/components/motion/reveal";
 import { ArrowIcon, ArrowUpRightIcon } from "@/components/ui/icons";
 import { dominioDe, mockupDe, type PantallaMockup } from "@/content/mockup";
+import { urlForImage } from "@/sanity/image";
 import type { SanityProject } from "@/sanity/types";
 
 /*
@@ -16,6 +17,8 @@ import type { SanityProject } from "@/sanity/types";
 */
 const SIZES_VENTANA = "(min-width: 768px) 460px, 82vw";
 const SIZES_TELEFONO = "(min-width: 768px) 120px, 22vw";
+/** La imagen armada ocupa la tarjeta entera. */
+const SIZES_MINIATURA = "(min-width: 768px) 560px, 92vw";
 
 /**
  * La ventana: una barra con tres puntos y el dominio, y la captura abajo.
@@ -130,6 +133,15 @@ export function ProyectoTarjeta({
   const href = useHref();
   const { escritorio, telefono } = mockupDe(proyecto);
   const dominio = dominioDe(proyecto.url);
+  /* La imagen armada para la tarjeta, si el proyecto tiene una: va entera en
+     el plano, recortada a 4:3 por Sanity (que respeta el punto marcado en el
+     Studio), en lugar del mockup que se arma solo. Se pide al doble del ancho
+     más grande de la tarjeta. */
+  const miniatura = urlForImage(proyecto.miniatura)
+    ?.width(1200)
+    .height(900)
+    .fit("crop")
+    .url();
 
   const caso = proyecto.conCaso ? href(`/proyectos/${proyecto.slug}`) : null;
   const sitio = proyecto.url;
@@ -151,24 +163,36 @@ export function ProyectoTarjeta({
               : ""
           }`}
         >
-          <div
-            className={`absolute left-[10%] w-[80%] ${
-              telefono ? "top-[12%]" : "top-1/2 -translate-y-1/2"
-            }`}
-          >
-            <div className="aspect-[16/10.6]">
-              <Ventana
-                pantalla={escritorio}
-                dominio={dominio}
-                titulo={proyecto.title}
-              />
-            </div>
-          </div>
-          {telefono ? (
-            <div className="absolute bottom-[7%] right-[7%] aspect-[9/19.5] w-[21%]">
-              <Telefono pantalla={telefono} />
-            </div>
-          ) : null}
+          {miniatura ? (
+            <Image
+              src={miniatura}
+              alt=""
+              fill
+              sizes={SIZES_MINIATURA}
+              className="object-cover"
+            />
+          ) : (
+            <>
+              <div
+                className={`absolute left-[10%] w-[80%] ${
+                  telefono ? "top-[12%]" : "top-1/2 -translate-y-1/2"
+                }`}
+              >
+                <div className="aspect-[16/10.6]">
+                  <Ventana
+                    pantalla={escritorio}
+                    dominio={dominio}
+                    titulo={proyecto.title}
+                  />
+                </div>
+              </div>
+              {telefono ? (
+                <div className="absolute bottom-[7%] right-[7%] aspect-[9/19.5] w-[21%]">
+                  <Telefono pantalla={telefono} />
+                </div>
+              ) : null}
+            </>
+          )}
         </div>
 
         {sitio ? (

@@ -10,6 +10,11 @@ export type SanityProject = {
   plan?: string;
   deliveredIn?: string;
   cover?: Image & { alt?: string };
+  /**
+   * La imagen armada para la tarjeta («Imagen para la tarjeta»). Si está,
+   * reemplaza al mockup de ventana y teléfono (ver proyecto-tarjeta.tsx).
+   */
+  miniatura?: Image & { alt?: string };
   gallery?: (Image & {
     alt?: string;
     dimensiones?: { width: number; height: number };

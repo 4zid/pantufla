@@ -79,8 +79,12 @@ export const fallbackProjects: SanityProject[] = [
     sector: "Datos abiertos",
     services: ["Diseño", "Desarrollo"],
     cover: enSanity(
-      "image-59a9137d6a6bea3685c10049e2ce1e6eeeab45c5-2560x1600-jpg",
-      "El sitio de Tierras Argentinas en escritorio: el titular «¿De quién es la tierra argentina?» con la grilla que muestra la proporción en manos extranjeras, y abajo el mapa provincia por provincia.",
+      "image-de5e727edd4c34185753cc80b3ff82c70e136d8c-2000x1333-jpg",
+      "El sitio de Tierras Argentinas en una laptop apoyada sobre una escultura negra: el titular «¿De quién es la tierra argentina?» y la grilla con los cuadraditos azules en manos extranjeras.",
+    ),
+    miniatura: enSanity(
+      "image-de5e727edd4c34185753cc80b3ff82c70e136d8c-2000x1333-jpg",
+      "El sitio de Tierras Argentinas en una laptop apoyada sobre una escultura negra: el titular «¿De quién es la tierra argentina?» y la grilla con los cuadraditos azules en manos extranjeras.",
     ),
     gallery: [
       enSanity(
