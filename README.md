@@ -348,9 +348,9 @@ objeciones → contacto**:
   toma proyectos, el titular grande dice para qué sirve el sitio —«Sitios que
   convierten *visitantes* en *clientes*»—, la bajada lo cuenta, y hay un CTA
   principal al formulario y uno secundario a los planes. Abajo, de punta a
-  punta y más alta que antes, la galería de pantallas (ver *El hero*). Detrás
-  del titular hay un lugar reservado para un objeto oscuro y metálico que se
-  inclina con el mouse (pendiente de la referencia estética).
+  punta y más alta que antes, la galería de pantallas (ver *El hero*). Adentro
+  del titular van tres pictogramas en pastillas: la ventana de un sitio, el
+  cursor del visitante y el sobre del cliente que escribe.
 - **Prueba social.** Solo los logos de los clientes, corriendo de punta a punta
   de la pantalla.
 - **Cómo lo resolvemos.** Tres pilares: alcance cerrado, ritmo corto con fechas
@@ -468,7 +468,13 @@ historial del repo (hasta el PR que lo sacó).
 - **El titular** lleva dos palabras en la itálica de Newsreader, en el mismo
   negro que el resto. Es la única otra letra del sitio y solo se baja en la
   home. En el Studio son los tramos con estilo «Itálica». A 1440 entra en dos
-  líneas; más angosto, en tres.
+  líneas; más angosto, en tres o cuatro.
+- **Los pictogramas del titular** son tres pastillas adentro de la frase,
+  como los íconos de apps en el titular de Mobbin pero propios y monocromos:
+  la ventana (un sitio), el cursor (el visitante) y el sobre (el cliente que
+  escribe). En el Studio son tramos del titular con un *Pictograma* elegido;
+  el texto de ese tramo («un sitio», «un cursor», «un mail») es lo que lee el
+  lector de pantalla. Al pasar el mouse se inclinan apenas.
 - **La galería** son capturas de los proyectos, de escritorio y de teléfono,
   en columnas tipo masonry: dos de escritorio apiladas, un teléfono de alto
   entero, o una de escritorio grande cuando queda sola antes de un teléfono.

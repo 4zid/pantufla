@@ -9,6 +9,7 @@ import {
   type ElementType,
 } from "react";
 
+import { CursorIcon, SobreIcon, VentanaIcon } from "@/components/ui/icons";
 import { ease, gsap, registerGsap, START } from "@/lib/motion";
 import { cn } from "@/lib/cn";
 
@@ -18,10 +19,24 @@ import { cn } from "@/lib/cn";
  * `serif` no es una pastilla: son palabras en la itálica de Newsreader, del
  * mismo color que el resto (el titular del hero). Suben palabra por palabra
  * como el texto suelto.
+ *
+ * Con `icon` el tramo no es texto: es un pictograma en una pastilla chica
+ * adentro de la frase (el titular del hero: la ventana, el cursor, el
+ * sobre). El `text` queda para el lector de pantalla, que sin eso leería
+ * la frase con un hueco.
  */
 export type Segment = {
   text: string;
   mark?: "paper" | "ink" | "aqua" | "rosa" | "verde" | "miel" | "serif";
+  icon?: IconoTitular;
+};
+
+export type IconoTitular = "ventana" | "cursor" | "sobre";
+
+const iconos: Record<IconoTitular, typeof VentanaIcon> = {
+  ventana: VentanaIcon,
+  cursor: CursorIcon,
+  sobre: SobreIcon,
 };
 
 type Pastilla = Exclude<NonNullable<Segment["mark"]>, "serif">;
@@ -104,7 +119,7 @@ export function SplitHeading({
    * solo se vuelve a animar si el titular de verdad cambió.
    */
   const firma = partes
-    .map((p) => `${p.mark ?? ""}\u0000${p.text}`)
+    .map((p) => `${p.mark ?? ""}\u0000${p.icon ?? ""}\u0000${p.text}`)
     .join("\u0001");
 
   useGSAP(
@@ -170,6 +185,29 @@ export function SplitHeading({
     immediate ? ({ "--i": unidades.length } as CSSProperties) : undefined;
 
   partes.forEach((parte, p) => {
+    /*
+       El pictograma: una pastilla de 0,8em con filete y sombra apenas, como
+       las piezas de interfaz del bento, con el dibujo en la tinta. Entra
+       como una pastilla (opacidad y desplazamiento, sin máscara) y al pasar
+       el mouse se inclina y crece un poco; con menos movimiento pedido se
+       queda quieta. Está alineada un poco por debajo del centro de la x
+       para que pese como una letra más y no flote.
+    */
+    if (parte.icon) {
+      const Icono = iconos[parte.icon];
+      unidades.push(
+        <span
+          key={`i-${p}`}
+          data-word
+          style={indice()}
+          className="group/icono mx-[0.04em] inline-flex h-[0.8em] w-[0.8em] translate-y-[-0.08em] items-center justify-center rounded-[0.22em] border border-line bg-card align-middle text-ink shadow-[0_0.06em_0.2em_-0.06em_rgba(17,24,60,0.35)] transition-transform duration-300 ease-out hover:-rotate-6 hover:scale-110 motion-reduce:transition-none motion-reduce:hover:rotate-0 motion-reduce:hover:scale-100"
+        >
+          <Icono className="h-[62%] w-[62%]" />
+          <span className="sr-only">{parte.text}</span>
+        </span>,
+      );
+      return;
+    }
     if (parte.mark && parte.mark !== "serif") {
       unidades.push(
         <span

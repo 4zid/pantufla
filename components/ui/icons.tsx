@@ -8,6 +8,46 @@ const stroke = {
   strokeLinejoin: "round" as const,
 };
 
+/*
+   Los tres pictogramas del titular del hero (ver split-heading.tsx, los
+   tramos con `icon`): la ventana de un sitio, el cursor del visitante y el
+   sobre del cliente que escribe. Van en una pastilla chica adentro de la
+   frase, como los íconos de apps en el titular de Mobbin, pero propios y
+   monocromos, en la tinta del sitio.
+*/
+export function VentanaIcon({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 16 16" className={className} aria-hidden="true">
+      <rect x="2" y="3" width="12" height="10" rx="2" {...stroke} />
+      <path d="M2 6.2h12" {...stroke} />
+      <circle cx="4.6" cy="4.6" r="0.55" fill="currentColor" stroke="none" />
+      <circle cx="6.4" cy="4.6" r="0.55" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+
+export function CursorIcon({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 16 16" className={className} aria-hidden="true">
+      <path
+        d="M3.5 2.8 13 7.3l-4 1.2-1.4 4L3.5 2.8Z"
+        {...stroke}
+        fill="currentColor"
+        fillOpacity={0.12}
+      />
+    </svg>
+  );
+}
+
+export function SobreIcon({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 16 16" className={className} aria-hidden="true">
+      <rect x="2" y="3.5" width="12" height="9" rx="2" {...stroke} />
+      <path d="m2.6 5 5.4 4 5.4-4" {...stroke} />
+    </svg>
+  );
+}
+
 export function CheckIcon({ className }: IconProps) {
   return (
     <svg viewBox="0 0 16 16" className={className} aria-hidden="true">

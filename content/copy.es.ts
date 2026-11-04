@@ -52,10 +52,14 @@ export const es: SiteCopy = {
   hero: {
     eyebrow: "Disponibles para nuevos proyectos",
     headline: [
-      { text: "Sitios que convierten" },
+      { text: "Sitios" },
+      { text: "un sitio", icon: "ventana" },
+      { text: "que convierten" },
       { text: "visitantes", mark: "serif" },
+      { text: "un cursor", icon: "cursor" },
       { text: "en" },
       { text: "clientes.", mark: "serif" },
+      { text: "un mail", icon: "sobre" },
     ],
     lead: "Diseño, textos y desarrollo para que la gente que entra entienda qué hacés en diez segundos y termine escribiéndote.",
     primary: { label: "Empezar un proyecto", href: "/#brief" },
