@@ -106,9 +106,9 @@ function anchoDe(c: Columna, alto: number, g: number) {
    ser los mismos que las clases de la sección.
 */
 const ALTOS = [
-  { alto: 300, g: 12 },
-  { alto: 400, g: 16, desde: 768 },
-  { alto: 440, g: 16, desde: 1280 },
+  { alto: 320, g: 12 },
+  { alto: 460, g: 16, desde: 768 },
+  { alto: 520, g: 16, desde: 1280 },
 ] as const;
 
 /** Qué ancho pedirle a la imagen en cada tamaño del riel. */
@@ -235,10 +235,10 @@ export function HeroGaleria({
   const duracion = `${Math.max(30, Math.round(largo / VELOCIDAD))}s`;
 
   return (
-    <RielPausable className="mt-16 md:mt-0">
+    <RielPausable className="mt-12 md:mt-14">
       <section
         aria-label={label}
-        className="ticker w-full overflow-hidden [--alto:300px] [--g:12px] md:[--alto:400px] md:[--g:16px] xl:[--alto:440px]"
+        className="ticker w-full overflow-hidden [--alto:320px] [--g:12px] md:[--alto:460px] md:[--g:16px] xl:[--alto:520px]"
         style={{ "--ticker-fade": "3rem" } as CSSProperties}
       >
         <ul

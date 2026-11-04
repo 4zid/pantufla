@@ -56,36 +56,6 @@ export const en: SiteCopy = {
     gallery: "Screens from sites we made",
   },
 
-  pase: {
-    alt: "Pantufla priority pass: admits one to the calendar.",
-    body: "Save your spot for the next opening.",
-    label: "Your email",
-    placeholder: "you@mail.com",
-    submit: "Save my spot",
-    sending: "Saving…",
-    fine: "One email, when a slot opens.",
-    invalid: "Check the email.",
-    error: "We could not save it. Try again or write to {email}.",
-    success: {
-      title: "Spot saved.",
-      body: "We will write to {email} when the next slot opens.",
-      reset: "Use another email",
-    },
-    titular: "Holder",
-    reservado: "Saved",
-    nombre: {
-      label: "Your name",
-      placeholder: "Your name",
-      missing: "Add your name.",
-    },
-  },
-
-  lugar: {
-    title: "We only take a few projects a month.",
-    lead: "Leave your name and email and you will hear before anyone else when a spot opens.",
-    hueco: "Your pass goes here",
-  },
-
   socialProof: {
     label: "Clients",
   },

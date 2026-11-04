@@ -1012,16 +1012,6 @@ html.lenis {
   }
 
   /*
-     El pase 3D (components/pase). Mientras corre, la imagen de respaldo de
-     cada lugar se apaga: el pase de verdad se dibuja encima, en el canvas
-     fijo. Si el 3D no arranca o se cae, el atributo no está y la imagen
-     queda.
-  */
-  [data-pase-3d] [data-pase-respaldo] {
-    opacity: 0;
-  }
-
-  /*
      La imagen quieta del globo (components/sections/globo.tsx) está sacada
      con el tema claro. Es blanco y negro, así que invertida da el globo
      oscuro: mar casi negro, tierra gris oscuro y los países en la tinta

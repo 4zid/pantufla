@@ -63,36 +63,6 @@ export const es: SiteCopy = {
     gallery: "Pantallas de sitios que hicimos",
   },
 
-  pase: {
-    alt: "Pase prioritario de Pantufla: vale por un lugar en la agenda.",
-    body: "Reservá tu lugar para el próximo cupo.",
-    label: "Tu mail",
-    placeholder: "vos@mail.com",
-    submit: "Reservar mi lugar",
-    sending: "Reservando…",
-    fine: "Un solo mail, cuando se abra el cupo.",
-    invalid: "Revisá el mail.",
-    error: "No pudimos reservarlo. Probá de nuevo o escribinos a {email}.",
-    success: {
-      title: "Lugar reservado.",
-      body: "Te escribimos a {email} cuando se abra el próximo cupo.",
-      reset: "Usar otro mail",
-    },
-    titular: "Titular",
-    reservado: "Reservado",
-    nombre: {
-      label: "Tu nombre",
-      placeholder: "Tu nombre",
-      missing: "Falta tu nombre.",
-    },
-  },
-
-  lugar: {
-    title: "Tomamos pocos proyectos por mes.",
-    lead: "Dejanos tu nombre y tu mail y te avisamos antes que a nadie cuando se libere un lugar.",
-    hueco: "Tu pase va acá",
-  },
-
   socialProof: {
     label: "Clientes",
   },

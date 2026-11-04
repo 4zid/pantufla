@@ -2,7 +2,6 @@ import type { SchemaTypeDefinition } from "sanity";
 
 import { blockContent } from "./blockContent";
 import { brief } from "./brief";
-import { lugar } from "./lugar";
 import { meeting } from "./meeting";
 import { project } from "./project";
 import { siteCopy } from "./site-copy";
@@ -16,6 +15,5 @@ export const schemaTypes: SchemaTypeDefinition[] = [
   testimonial,
   brief,
   meeting,
-  lugar,
   blockContent,
 ];
