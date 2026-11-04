@@ -49,8 +49,6 @@ export type SiteCopy = {
     resumeMotion: string;
   };
   hero: {
-    /** La pastilla de arriba del titular: si el estudio toma trabajo. */
-    eyebrow: string;
     /**
      * El titular por tramos. Los de `mark: "serif"` salen en la itálica de
      * acento («visitantes», «clientes»); el resto, en la letra del sitio.

@@ -143,7 +143,6 @@ export const siteCopy = defineType({
       type: "object",
       options: { collapsible: true, collapsed: true },
       fields: [
-        texto("eyebrow", "Pastilla de arriba"),
         defineField({
           name: "headline",
           title: "Titular por tramos",

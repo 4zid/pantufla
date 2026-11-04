@@ -344,8 +344,8 @@ dice sale como viene de fábrica: prendida, salvo el stack.
 El recorrido sigue **promesa → prueba → qué incluye → cómo → precio →
 objeciones → contacto**:
 
-- **Portada.** Tipográfica y centrada: una pastilla dice que el estudio
-  toma proyectos, el titular grande dice para qué sirve el sitio —«Sitios que
+- **Portada.** Tipográfica y centrada: el titular grande dice para qué sirve
+  el sitio —«Sitios que
   convierten *visitantes* en *clientes*»—, la bajada lo cuenta, y hay un CTA
   principal al formulario y uno secundario a los planes. Abajo, el mosaico:
   una grilla quieta de placas negras con teléfonos, íconos y una pieza de
@@ -451,8 +451,8 @@ cobrar rápido.
 
 ### El hero
 
-Un bloque de texto centrado —la pastilla de «Disponibles», el titular a 72px
-en escritorio, la bajada y los dos botones en fila— y, debajo, el mosaico: el
+Un bloque de texto centrado —el titular a 72px en escritorio, la bajada y los
+dos botones en fila— y, debajo, el mosaico: el
 texto y el mosaico son una sola primera pantalla, y el mosaico es el visual
 del hero.
 

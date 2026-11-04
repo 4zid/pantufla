@@ -50,7 +50,6 @@ export const es: SiteCopy = {
   },
 
   hero: {
-    eyebrow: "Disponibles para nuevos proyectos",
     headline: [
       { text: "Sitios" },
       { text: "un sitio", icon: "ventana" },

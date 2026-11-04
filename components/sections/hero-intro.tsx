@@ -18,10 +18,11 @@ import { ButtonLink } from "@/components/ui/button";
 export const entra = (s: number) => ({ "--entra": `${s}s` }) as CSSProperties;
 
 /**
- * El texto del hero, todo centrado: la pastilla de disponibilidad, el
- * titular, la bajada y los dos botones en fila. Fue una columna alineada a
- * la izquierda con el pase a la derecha; sin el pase, el centro es el único
- * eje que queda.
+ * El texto del hero, todo centrado: el titular, la bajada y los dos botones
+ * en fila. Fue una columna alineada a la izquierda con el pase a la derecha;
+ * sin el pase, el centro es el único eje que queda. Arriba del titular había
+ * una pastilla de «Disponibles para nuevos proyectos»; se sacó a pedido, y
+ * con ella el campo del copy y del Studio.
  *
  * El titular tiene un tope en em y no en píxeles para que corte siempre en
  * el mismo lugar con el tamaño que sea: con 11em, «Sitios que convierten»
@@ -35,23 +36,12 @@ export function HeroTexto() {
 
   return (
     <div className="mx-auto flex min-w-0 max-w-[52rem] flex-col items-center text-center">
-      <p
-        data-entra
-        className="inline-flex items-center gap-2 whitespace-nowrap rounded-full border border-line bg-card/70 py-1.5 pl-2.5 pr-3 text-[0.8rem] font-medium tracking-[-0.01em] text-ink backdrop-blur-md md:text-[0.85rem]"
-      >
-        <span
-          aria-hidden
-          className="h-[7px] w-[7px] shrink-0 rounded-full bg-verde-deep shadow-[0_0_0_3px_var(--color-verde-soft)]"
-        />
-        {hero.eyebrow}
-      </p>
-
       <SplitHeading
         as="h1"
         segments={hero.headline}
         delay={0.1}
         immediate
-        className="mt-6 max-w-[12.8em] text-[clamp(2.5rem,1.55rem+3.3vw,4.5rem)] font-semibold leading-[0.98] tracking-[-0.045em] [text-wrap:balance] md:mt-7"
+        className="max-w-[12.8em] text-[clamp(2.5rem,1.55rem+3.3vw,4.5rem)] font-semibold leading-[0.98] tracking-[-0.045em] [text-wrap:balance]"
       />
 
       <p

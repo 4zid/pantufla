@@ -8,8 +8,7 @@ import type { Pantalla } from "@/content/hero-galeria";
 /**
  * La portada.
  *
- * Tipográfica y centrada: la pastilla de disponibilidad, el titular grande
- * a todo el ancho, la bajada y los dos botones, todo al centro. Abajo, el
+ * Tipográfica y centrada: el titular grande a todo el ancho, la bajada y los dos botones, todo al centro. Abajo, el
  * mosaico: una grilla quieta de placas negras con teléfonos, íconos y una
  * pieza de interfaz (ver hero-mosaico.tsx). El texto y el mosaico son una
  * sola primera pantalla, y el mosaico es el visual del hero. Antes iba ahí
