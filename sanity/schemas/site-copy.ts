@@ -166,8 +166,23 @@ export const siteCopy = defineType({
                     ],
                   },
                 },
+                {
+                  name: "icon",
+                  title: "Pictograma",
+                  type: "string",
+                  description:
+                    "Con un pictograma el tramo no se ve como texto: va la pastilla con el dibujo, y el texto queda para el lector de pantalla («un sitio», «un cursor», «un mail»).",
+                  options: {
+                    list: [
+                      { title: "Ninguno", value: "" },
+                      { title: "Ventana (un sitio)", value: "ventana" },
+                      { title: "Cursor (el visitante)", value: "cursor" },
+                      { title: "Sobre (el cliente escribe)", value: "sobre" },
+                    ],
+                  },
+                },
               ],
-              preview: { select: { title: "text", subtitle: "mark" } },
+              preview: { select: { title: "text", subtitle: "icon" } },
             },
           ],
         }),

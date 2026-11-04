@@ -45,10 +45,14 @@ export const en: SiteCopy = {
   hero: {
     eyebrow: "Available for new projects",
     headline: [
-      { text: "Websites that turn" },
+      { text: "Websites" },
+      { text: "a website", icon: "ventana" },
+      { text: "that turn" },
       { text: "visitors", mark: "serif" },
+      { text: "a cursor", icon: "cursor" },
       { text: "into" },
       { text: "clients.", mark: "serif" },
+      { text: "an email", icon: "sobre" },
     ],
     lead: "Design, copy and development, so that whoever lands on your site knows what you do in ten seconds and ends up writing to you.",
     primary: { label: "Start a project", href: "/#brief" },

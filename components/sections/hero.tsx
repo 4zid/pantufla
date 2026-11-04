@@ -14,9 +14,11 @@ import type { Pantalla } from "@/content/hero-galeria";
  * más cerca que antes: el texto y la galería son una sola primera pantalla,
  * y la galería es el visual del hero.
  *
- * Detrás del titular hay un lugar reservado ([data-hero-objeto]) para un
- * objeto oscuro y metálico que se inclina apenas con el mouse; el texto va
- * encima. Todavía no está: espera la referencia estética de la usuaria.
+ * Adentro del titular van tres pictogramas en pastillas —la ventana de un
+ * sitio, el cursor del visitante, el sobre del cliente que escribe—, como
+ * los íconos de apps en el titular de Mobbin, pero propios y monocromos (ver
+ * split-heading.tsx, los tramos con `icon`). Son la identidad del hero: se
+ * pensó un objeto 3D metálico detrás del texto y la usuaria prefirió esto.
  *
  * Tuvo a la derecha el pase de Pantufla, un papel 3D que volaba con el
  * scroll hasta un banner a mitad de página con un formulario para reservar
@@ -58,12 +60,6 @@ export function Hero({
       {/* El relleno de arriba despeja la barra flotante y deja el titular en
           el primer tercio de la pantalla; lo que sigue es la galería. */}
       <div className="shell relative pt-32 md:pt-40">
-        {/* El lugar del objeto: detrás del texto, centrado en el titular. */}
-        <div
-          data-hero-objeto
-          aria-hidden
-          className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[32rem] w-[32rem] -translate-x-1/2 -translate-y-1/2"
-        />
         <HeroTexto />
       </div>
 
