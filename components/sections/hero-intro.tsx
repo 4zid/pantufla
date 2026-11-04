@@ -18,25 +18,23 @@ import { ButtonLink } from "@/components/ui/button";
 export const entra = (s: number) => ({ "--entra": `${s}s` }) as CSSProperties;
 
 /**
- * La columna de texto del hero, toda alineada a la izquierda: la pastilla de
- * disponibilidad, el titular, la bajada y los dos botones, uno debajo del
- * otro.
+ * El texto del hero, todo centrado: la pastilla de disponibilidad, el
+ * titular, la bajada y los dos botones en fila. Fue una columna alineada a
+ * la izquierda con el pase a la derecha; sin el pase, el centro es el único
+ * eje que queda.
  *
  * El titular tiene un tope en em y no en píxeles para que corte siempre en
- * el mismo lugar con el tamaño que sea. «Sitios que convierten» mide 9,2em:
- * con el tope de 52px mide 478px y entra en una línea en la mitad del hero
- * (504px desde 1280; a 1024 el titular baja a 47px y la mitad a 448), así
- * que el titular queda en dos («Sitios que convierten / visitantes en
- * clientes.»). Más angosto pasa a tres. Llegó a 68px y, con los botones
- * grandes, la portada se veía toda un poco grande.
- * Con balance, en el teléfono reparte las líneas parejas en vez de dejar una
- * palabra sola abajo.
+ * el mismo lugar con el tamaño que sea: con 11em, «Sitios que convierten»
+ * (9,2em) entra en una línea y «visitantes en clientes.» en la otra, a
+ * cualquier tamaño. Sube a 72px a 1440, que centrado y solo ya no se ve
+ * grande como cuando compartía la fila con el pase. Con balance, en el
+ * teléfono reparte las líneas parejas en vez de dejar una palabra sola abajo.
  */
 export function HeroTexto() {
   const { hero } = useCopy();
 
   return (
-    <div className="min-w-0">
+    <div className="mx-auto flex min-w-0 max-w-[52rem] flex-col items-center text-center">
       <p
         data-entra
         className="inline-flex items-center gap-2 whitespace-nowrap rounded-full border border-line bg-card/70 py-1.5 pl-2.5 pr-3 text-[0.8rem] font-medium tracking-[-0.01em] text-ink backdrop-blur-md md:text-[0.85rem]"
@@ -53,13 +51,13 @@ export function HeroTexto() {
         segments={hero.headline}
         delay={0.1}
         immediate
-        className="mt-5 max-w-[9.4em] text-[clamp(2.25rem,1.75rem+1.9vw,3.25rem)] font-semibold leading-[0.98] tracking-[-0.045em] [text-wrap:balance] md:mt-6 md:-ml-[0.035em]"
+        className="mt-6 max-w-[12.8em] text-[clamp(2.5rem,1.55rem+3.3vw,4.5rem)] font-semibold leading-[0.98] tracking-[-0.045em] [text-wrap:balance] md:mt-7"
       />
 
       <p
         data-entra
         style={entra(0.3)}
-        className="mt-5 max-w-[30rem] text-lead text-ink-soft md:mt-6"
+        className="mt-6 max-w-[32rem] text-lead text-ink-soft md:mt-7"
       >
         {hero.lead}
       </p>
@@ -67,7 +65,7 @@ export function HeroTexto() {
       <div
         data-entra
         style={entra(0.45)}
-        className="mt-7 flex flex-col gap-2.5 sm:flex-row sm:items-center sm:gap-3"
+        className="mt-8 flex w-full flex-col gap-2.5 sm:w-auto sm:flex-row sm:items-center sm:justify-center sm:gap-3"
       >
         <Magnetic className="w-full sm:w-auto">
           <ButtonLink href={hero.primary.href} className="w-full sm:w-auto">

@@ -45,45 +45,19 @@ export const en: SiteCopy = {
   hero: {
     eyebrow: "Available for new projects",
     headline: [
-      { text: "Websites that turn" },
+      { text: "Websites" },
+      { text: "a website", icon: "ventana" },
+      { text: "that turn" },
       { text: "visitors", mark: "serif" },
+      { text: "a cursor", icon: "cursor" },
       { text: "into" },
       { text: "clients.", mark: "serif" },
+      { text: "an email", icon: "sobre" },
     ],
     lead: "Design, copy and development, so that whoever lands on your site knows what you do in ten seconds and ends up writing to you.",
     primary: { label: "Start a project", href: "/#brief" },
     secondary: { label: "See plans and pricing", href: "/#planes" },
     gallery: "Screens from sites we made",
-  },
-
-  pase: {
-    alt: "Pantufla priority pass: admits one to the calendar.",
-    body: "Save your spot for the next opening.",
-    label: "Your email",
-    placeholder: "you@mail.com",
-    submit: "Save my spot",
-    sending: "Saving…",
-    fine: "One email, when a slot opens.",
-    invalid: "Check the email.",
-    error: "We could not save it. Try again or write to {email}.",
-    success: {
-      title: "Spot saved.",
-      body: "We will write to {email} when the next slot opens.",
-      reset: "Use another email",
-    },
-    titular: "Holder",
-    reservado: "Saved",
-    nombre: {
-      label: "Your name",
-      placeholder: "Your name",
-      missing: "Add your name.",
-    },
-  },
-
-  lugar: {
-    title: "We only take a few projects a month.",
-    lead: "Leave your name and email and you will hear before anyone else when a spot opens.",
-    hueco: "Your pass goes here",
   },
 
   socialProof: {

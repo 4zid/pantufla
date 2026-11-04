@@ -52,8 +52,7 @@ funciona sin configurar nada. Si algún día se vaciara, `/studio` muestra una
 pantalla con los pasos que faltan en vez de romper.
 
 Lo único que hace falta cargar es el token de escritura, que se usa para guardar
-los briefs que llegan del formulario, las reuniones que llegan de Cal.com y los
-lugares que se reservan con el pase:
+los briefs que llegan del formulario y las reuniones que llegan de Cal.com:
 
 1. En [sanity.io/manage](https://www.sanity.io/manage) → API → Tokens, creá uno
    con permiso *Editor*.
@@ -334,30 +333,24 @@ dice sale como viene de fábrica: prendida, salvo el stack.
 | 3 | Cómo lo resolvemos | `#metodo` | claro |
 | 4 | Proyectos | `#proyectos` | oscuro |
 | 5 | Capacidades (bento) | `#capacidades` | claro |
-| 6 | Pase (banner) | `#lugar` | claro |
-| 7 | Proceso | `#proceso` | oscuro |
-| 8 | Con qué está hecho | `#stack` | claro, **apagada** |
-| 9 | Planes | `#planes` | claro |
-| 10 | Testimonios | `#testimonios` | claro |
-| 11 | Dónde trabajamos (globo) | `#clientes` | claro |
-| 12 | Preguntas frecuentes | `#faq` | claro |
-| 13 | Formulario | `#brief` | oscuro |
+| 6 | Proceso | `#proceso` | oscuro |
+| 7 | Con qué está hecho | `#stack` | claro, **apagada** |
+| 8 | Planes | `#planes` | claro |
+| 9 | Testimonios | `#testimonios` | claro |
+| 10 | Dónde trabajamos (globo) | `#clientes` | claro |
+| 11 | Preguntas frecuentes | `#faq` | claro |
+| 12 | Formulario | `#brief` | oscuro |
 
 El recorrido sigue **promesa → prueba → qué incluye → cómo → precio →
 objeciones → contacto**:
 
-- **Portada.** Todo el texto alineado a la izquierda: una pastilla dice que el
-  estudio toma proyectos, el titular dice para qué sirve el sitio —«Sitios que
+- **Portada.** Tipográfica y centrada: una pastilla dice que el estudio
+  toma proyectos, el titular grande dice para qué sirve el sitio —«Sitios que
   convierten *visitantes* en *clientes*»—, la bajada lo cuenta, y hay un CTA
-  principal al formulario y uno secundario a los planes. A la derecha, el pase
-  de Pantufla, que es un enlace: tocarlo baja al banner, donde se reserva;
-  abajo, de punta a punta, la galería de pantallas (ver *El hero*).
-  Las dos columnas son mitades iguales dentro del mismo ancho que el resto de
-  la página, y el pase va centrado en la suya, así el texto
-  y el pase quedan a la misma distancia del centro. Antes el hero tenía un
-  ancho propio más grande, el pase pegado al borde derecho, un hueco grande al
-  medio, el titular a 68px y botones grandes: se veía grande y descentrado. La
-  referencia fue la portada de Resend.
+  principal al formulario y uno secundario a los planes. Abajo, de punta a
+  punta y más alta que antes, la galería de pantallas (ver *El hero*). Adentro
+  del titular van tres pictogramas en pastillas: la ventana de un sitio, el
+  cursor del visitante y el sobre del cliente que escribe.
 - **Prueba social.** Solo los logos de los clientes, corriendo de punta a punta
   de la pantalla.
 - **Cómo lo resolvemos.** Tres pilares: alcance cerrado, ritmo corto con fechas
@@ -385,25 +378,6 @@ objeciones → contacto**:
   del chat en la itálica del hero. Antes fue un damero en
   cuatro colores y después en gris con el texto arriba, y las dos veces quedó
   feo.
-- **Pase (banner).** A la mitad de la home, después de ver el trabajo y lo
-  que incluye: el camino corto, nombre y mail para guardarse un lugar en el
-  próximo cupo. La sección está armada alrededor de un hueco: una tarjeta en
-  la tinta del tema con un recorte de la forma exacta del pase acostado —las
-  esquinas y dos pestañas que entran en las muescas del talón— y una línea de
-  corte punteada en blanco. El pase que vino volando desde la portada se
-  acuesta y calza ahí, como la pieza que faltaba. Ahí no responde al mouse:
-  inclinado, se despegaba del borde del hueco.
-  Se lee en tres pasos: el título dice qué es («Tomamos pocos proyectos por
-  mes»), la bajada qué hacer, y abajo del hueco el formulario, que desde sm es
-  una sola barra blanca con el nombre, el mail y el botón adentro, más una
-  línea de letra chica. Las etiquetas de los campos quedan para el lector de
-  pantalla: el ejemplo de adentro ya dice qué va. Tuvo una etiqueta arriba
-  del título, una bajada de tres renglones, tres tildes debajo del formulario
-  y cupones vecinos a los costados del hueco; era demasiado y no se entendía.
-  Va centrada y apilada, con el aire justo para que no sea altísima: probó
-  dos columnas y se volvió, porque el hueco al medio es lo que hace que el
-  pase se lea como la pieza que faltaba. Antes era la última sección y el pase
-  acompañaba la página entera, que era demasiado.
 - **Proceso.** Cuatro etapas, cada una con fecha: quince días hábiles un
   Sitio, una semana una Landing. El riel que las une lleva
   los cuatro colores de la marca y llega a cada número con su color ya hecho.
@@ -477,61 +451,30 @@ cobrar rápido.
 
 ### El hero
 
-En escritorio son dos columnas y una franja. A la izquierda, todo el texto
-alineado: la pastilla de «Disponibles», el titular, la bajada y los dos
-botones. A la derecha, el pase de Pantufla, que lleva al banner donde se
-reserva (tuvo un formulario con el mail debajo; era el mismo pedido dos veces
-en la página). Abajo, de punta a punta, la galería de pantallas corriendo.
-Desde tablet el texto y el pase van centrados en el alto de la primera
-pantalla, y de la galería asoman apenas las puntas de las capturas (unos 56px):
-el bloque de arriba mide la pantalla menos 5rem.
-Abajo de 1024 el pase pasa debajo de los botones, y en el teléfono todo corre
-seguido.
+Un bloque de texto centrado —la pastilla de «Disponibles», el titular a 72px
+en escritorio, la bajada y los dos botones en fila— y, debajo, de punta a
+punta, la galería de pantallas corriendo, más alta que antes (520px en
+escritorio): el texto y la galería son una sola primera pantalla, y la galería
+es el visual del hero.
+
+Tuvo a la derecha **el pase de Pantufla**: un papel 3D con física de tela
+(Three.js) que volaba con el scroll hasta un banner a mitad de la home con un
+formulario para reservar un cupo, guardado en el Studio y avisado por mail.
+Se sacó entero —componentes, texturas, `/api/lugar`, el documento *Lugar
+reservado* y los textos del Studio— porque con poco flujo de clientes la idea
+del cupón no se entendía. Si alguna vez vuelve algo parecido, está en el
+historial del repo (hasta el PR que lo sacó).
 
 - **El titular** lleva dos palabras en la itálica de Newsreader, en el mismo
   negro que el resto. Es la única otra letra del sitio y solo se baja en la
   home. En el Studio son los tramos con estilo «Itálica». A 1440 entra en dos
-  líneas; más angosto, en tres.
-- **El pase** es una pieza 3D (Three.js) con física de papel: una malla de
-  puntos unidos por resortes que se dobla, flamea y se asienta como un papel
-  blando. Es sobrio a propósito: papel marfil, una sola tinta, la itálica de
-  Newsreader mezclada con Schibsted («*Pase* prioritario», «*Tu lugar*»), un
-  sello negro como un foil estampado y el dorso negro. El único color es el
-  borde, un foil champagne y perla que rodea toda la silueta (también las
-  muescas y el troquel) y que en el 3D brilla como metal y cambia apenas de
-  tono cuando el papel se dobla. Antes iba en los cuatro colores de la marca
-  y era demasiado. En la portada, con
-  el mouse encima se hunde donde apoya y se inclina hacia el puntero.
-- **El vuelo.** Cuando el pase de la portada llega arriba de la pantalla, se
-  despega curvándose, se achica (a un tercio, para que moleste poco mientras
-  se lee) y acompaña el scroll cruzando la página de un costado al otro en el
-  tercio de abajo de la ventana, una ida y vuelta cada cuatro pantallas, dando
-  vueltas (a mitad de cada cruce se ve el dorso). Al llegar al banner de la mitad de la home
-  baja, se acuesta un cuarto de vuelta, crece y calza exactamente en el hueco
-  de ahí (llega cuando el hueco está en el medio de la pantalla). Lo mueven el
-  scroll y el puntero: cuando el papel se asienta, deja de dibujar. Si alguien
-  está escribiendo en el formulario del banner, el pase se queda ahí. Tocar el
-  pase de la portada baja al banner, y el pase hace el viaje con el scroll.
-  En el teléfono no vuela: se queda en el lugar que se ve, también acostado en
-  el banner. Con movimiento reducido, sin placa de video o sin JavaScript se
-  ve la imagen del pase, quieta, en los dos lugares.
-- **El formulario** va debajo del pase, en el banner, no adentro: un campo
-  tiene que quedarse quieto para que alguien escriba. Pide nombre y mail y va
-  a `/api/lugar`, que lo guarda en el Studio como *Lugar reservado* (una sola
-  fila por mail; si alguien dejó primero el mail solo, cuando había un
-  formulario en la portada, y vuelve con su nombre, el nombre se suma) y
-  avisa por mail con las mismas variables de Resend que el brief. Al
-  reservar, el pase imprime en su cara el nombre (y el mail abajo, en chico)
-  con la etiqueta «Reservado», y el navegador lo recuerda: quien vuelve ve su
-  pase con sus datos, y un enlace para usar otro mail. Los textos del
-  formulario están en el Studio, en *Pase* (ahí también el nombre del enlace
-  del pase de la portada, para el lector de pantalla); los del banner, en
-  *Banner del pase*.
-- **El dibujo del pase** son imágenes en `public/pase` (la cara en español y
-  en inglés, el dorso y un mapa de qué es holográfico, satinado o mate). Se
-  generan con `node scripts/generar-pase.mjs`, que las dibuja en HTML: para
-  cambiar un texto o un color del pase se edita ese archivo y se vuelve a
-  correr.
+  líneas; más angosto, en tres o cuatro.
+- **Los pictogramas del titular** son tres pastillas adentro de la frase,
+  como los íconos de apps en el titular de Mobbin pero propios y monocromos:
+  la ventana (un sitio), el cursor (el visitante) y el sobre (el cliente que
+  escribe). En el Studio son tramos del titular con un *Pictograma* elegido;
+  el texto de ese tramo («un sitio», «un cursor», «un mail») es lo que lee el
+  lector de pantalla. Al pasar el mouse se inclinan apenas.
 - **La galería** son capturas de los proyectos, de escritorio y de teléfono,
   en columnas tipo masonry: dos de escritorio apiladas, un teléfono de alto
   entero, o una de escritorio grande cuando queda sola antes de un teléfono.
@@ -706,8 +649,7 @@ CTA), con el margen justo para que el título no quede debajo del header.
    clientes paran al pasar el mouse, con el foco adentro, con un toque en el
    teléfono y con un botón que aparece al llegar con el teclado
    (`components/ui/riel-pausable.tsx`). El globo y la galería del hero se
-   frenan igual. Los testimonios ya no rotan: están los cuatro a la vista. El
-   pase que vuela no se mueve solo: lo mueve el scroll.
+   frenan igual. Los testimonios ya no rotan: están los cuatro a la vista.
 
 ---
 
@@ -719,8 +661,7 @@ CTA), con el margen justo para que el título no quede debajo del header.
   medidas para que el texto no salte cuando llega la fuente. Si se cambia el
   archivo, hay que subir el `-vN` del nombre: se sirve con caché inmutable.
   Y una itálica de acento, Newsreader, para las palabras en itálica del
-  titular del hero y para el pase (va dibujada en sus texturas, y el nombre
-  que imprime al reservar también va en ella): fijada en un peso y un tamaño
+  titular del hero y dos cifras del bento: fijada en un peso y un tamaño
   óptico y recortada al latino (19 KB).
 - **Mucho aire y letra contenida.** El contenido vive en un ancho de 72rem
   con márgenes que crecen con la pantalla (192px de cada lado a 1440), las
