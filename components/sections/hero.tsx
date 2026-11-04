@@ -1,18 +1,20 @@
 import { preload } from "react-dom";
 
 import type { Surface } from "@/components/ui/section";
-import { HeroGaleria } from "@/components/sections/hero-galeria";
 import { HeroTexto } from "@/components/sections/hero-intro";
+import { HeroMosaico } from "@/components/sections/hero-mosaico";
 import type { Pantalla } from "@/content/hero-galeria";
 
 /**
  * La portada.
  *
  * Tipográfica y centrada: la pastilla de disponibilidad, el titular grande
- * a todo el ancho, la bajada y los dos botones, todo al centro. Abajo, de
- * punta a punta, la galería de pantallas corriendo como un riel, más alta y
- * más cerca que antes: el texto y la galería son una sola primera pantalla,
- * y la galería es el visual del hero.
+ * a todo el ancho, la bajada y los dos botones, todo al centro. Abajo, el
+ * mosaico: una grilla quieta de placas negras con teléfonos, íconos y una
+ * pieza de interfaz (ver hero-mosaico.tsx). El texto y el mosaico son una
+ * sola primera pantalla, y el mosaico es el visual del hero. Antes iba ahí
+ * una galería de pantallas que corría como un riel; se sacó porque
+ * resultaba muy grande y lenta.
  *
  * Adentro del titular van tres pictogramas en pastillas —la ventana de un
  * sitio, el cursor del visitante, el sobre del cliente que escribe—, como
@@ -26,8 +28,8 @@ import type { Pantalla } from "@/content/hero-galeria";
  * entendía, y a la usuaria le quedó rara.
  *
  * Entra sin JavaScript: la pastilla, el titular, la bajada y los botones
- * tienen su entrada de CSS (ver globals.css), y la galería es HTML que el
- * riel mueve con CSS.
+ * tienen su entrada de CSS (ver globals.css), y el mosaico es HTML quieto
+ * con la misma entrada.
  */
 export function Hero({
   surface = "mist",
@@ -63,7 +65,7 @@ export function Hero({
         <HeroTexto />
       </div>
 
-      <HeroGaleria pantallas={pantallas} label={galeria} />
+      <HeroMosaico pantallas={pantallas} label={galeria} />
     </section>
   );
 }
