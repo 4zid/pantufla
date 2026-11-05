@@ -9,6 +9,7 @@ import { ArrowIcon, ArrowUpRightIcon } from "@/components/ui/icons";
 import { dominioDe, mockupDe, type PantallaMockup } from "@/content/mockup";
 import { EscenaDaily, EscenaTierras } from "@/components/ui/proyecto-escenas";
 import { tarjetaDesign, type EscenaTarjeta } from "@/content/site";
+import { urlForImage } from "@/sanity/image";
 import type { SanityProject } from "@/sanity/types";
 import { cn } from "@/lib/cn";
 
@@ -19,6 +20,8 @@ import { cn } from "@/lib/cn";
 */
 const SIZES_VENTANA = "(min-width: 768px) 460px, 82vw";
 const SIZES_TELEFONO = "(min-width: 768px) 220px, 40vw";
+/** La imagen armada ocupa la tarjeta entera. */
+const SIZES_MINIATURA = "(min-width: 768px) 560px, 92vw";
 
 /**
  * La ventana: una barra con tres puntos y el dominio, y la captura abajo.
@@ -205,6 +208,15 @@ export function ProyectoTarjeta({
   const dominio = dominioDe(proyecto.url);
   const diseno = tarjetaDesign[proyecto.slug];
   const escena: EscenaTarjeta = diseno?.escena ?? "base";
+  /* La imagen armada para la tarjeta, si el proyecto tiene una: va entera en
+     el plano, recortada a 4:3 por Sanity (que respeta el punto marcado en el
+     Studio), en lugar del mockup que se arma solo. Se pide al doble del ancho
+     más grande de la tarjeta. */
+  const miniatura = urlForImage(proyecto.miniatura)
+    ?.width(1200)
+    .height(900)
+    .fit("crop")
+    .url();
 
   const caso = proyecto.conCaso ? href(`/proyectos/${proyecto.slug}`) : null;
   const sitio = proyecto.url;
@@ -229,17 +241,27 @@ export function ProyectoTarjeta({
               : ""
           }`}
         >
-          <Escena
-            escena={escena}
-            ventana={
-              <Ventana
-                pantalla={escritorio}
-                dominio={dominio}
-                titulo={proyecto.title}
-              />
-            }
-            telefono={telefono ? <Telefono pantalla={telefono} /> : null}
-          />
+          {miniatura ? (
+            <Image
+              src={miniatura}
+              alt=""
+              fill
+              sizes={SIZES_MINIATURA}
+              className="object-cover"
+            />
+          ) : (
+            <Escena
+              escena={escena}
+              ventana={
+                <Ventana
+                  pantalla={escritorio}
+                  dominio={dominio}
+                  titulo={proyecto.title}
+                />
+              }
+              telefono={telefono ? <Telefono pantalla={telefono} /> : null}
+            />
+          )}
         </div>
 
         {sitio ? (

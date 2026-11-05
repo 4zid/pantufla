@@ -74,6 +74,21 @@ export const project = defineType({
       options: { hotspot: true },
       fields: [{ name: "alt", type: "string", title: "Texto alternativo" }],
     }),
+    /*
+       La imagen de la tarjeta, cuando el proyecto tiene una pieza armada
+       para eso (un mockup fotográfico, una composición). Si está, la tarjeta
+       la muestra entera en el plano en lugar del mockup de ventana y
+       teléfono que se arma solo con las pantallas.
+    */
+    defineField({
+      name: "miniatura",
+      title: "Imagen para la tarjeta",
+      description:
+        "Opcional. Reemplaza al mockup armado en la tarjeta de la home y de /proyectos. Se recorta a 4:3 desde el centro (o desde el punto que marques).",
+      type: "image",
+      options: { hotspot: true },
+      fields: [{ name: "alt", type: "string", title: "Texto alternativo" }],
+    }),
     defineField({
       name: "gallery",
       title: "Galería",

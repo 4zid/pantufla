@@ -23,6 +23,7 @@ const projectFields = `
   plan,
   deliveredIn,
   cover,
+  miniatura,
   social,
   services,
   results,
