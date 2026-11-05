@@ -118,8 +118,12 @@ export const fallbackProjects: SanityProject[] = [
     plan: "Sitio",
     services: ["Diseño", "Desarrollo"],
     cover: enSanity(
-      "image-9148913396ddc8e6c64eff638ef53e8d7731fdaf-3200x2400-jpg",
-      "El sitio de 2MG en escritorio y en el teléfono: el titular «Tecnología que potencia cada mensaje», los botones de WhatsApp y de propuesta, y abajo las etiquetas con todo lo que hacen, de pantallas LED a hologramas.",
+      "image-5ae7a5ce07f3bc97ea91dad293f7ad3645f85365-2000x1333-jpg",
+      "El sitio de 2MG en un teléfono apoyado sobre una estructura negra, contra una pared naranja con sombras: el titular «Tecnología que potencia cada mensaje», el botón de WhatsApp y las etiquetas de servicios.",
+    ),
+    miniatura: enSanity(
+      "image-5ae7a5ce07f3bc97ea91dad293f7ad3645f85365-2000x1333-jpg",
+      "El sitio de 2MG en un teléfono apoyado sobre una estructura negra, contra una pared naranja con sombras: el titular «Tecnología que potencia cada mensaje», el botón de WhatsApp y las etiquetas de servicios.",
     ),
     gallery: [
       enSanity(

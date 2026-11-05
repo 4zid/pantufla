@@ -37,7 +37,7 @@ mosaicos de 256px y, exportadas así, quedaban en bloques; se exportan con
 
 | Archivo | En Sanity | Qué muestra |
 | --- | --- | --- |
-| `portada.jpg` | Imagen de portada | El hero en escritorio y en el teléfono |
+| `portada.jpg` | Imagen de portada y de la tarjeta | El teléfono sobre una estructura negra contra una pared naranja (3:2, 2000×1333); no es un marco de los mockups |
 | `secciones.jpg` | Galería, 1 | Las tres áreas y el proceso de un evento |
 | `mobile.jpg` | Galería, 2 | Tres pantallas en el teléfono |
 | `componentes.jpg` | Galería, 3 | Componentes: tarjetas, botones, preguntas, chat |
