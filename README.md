@@ -544,9 +544,10 @@ alcanza con cargarle pantallas.
 Si el proyecto tiene una imagen armada para la tarjeta (un mockup fotográfico,
 una composición), va en *Imagen para la tarjeta* en el Studio: la tarjeta la
 muestra entera en el plano, recortada a 4:3 desde el punto que marques, en
-lugar del mockup, con los mismos botones al pasar el mouse. Hoy la tiene
-Tierras Argentinas: la laptop con el sitio sobre la escultura negra, que es
-también su portada.
+lugar del mockup, con los mismos botones al pasar el mouse. Hoy la tienen
+Tierras Argentinas (la laptop sobre la escultura negra) y 2MG (el teléfono
+sobre una estructura negra contra la pared naranja), con la misma imagen que
+su portada.
 
 Los botones viven adentro del mockup, y abajo quedan solo el nombre, el rubro
 y la bajada. Al pasar el mouse el mockup se desenfoca y en el medio aparecen
